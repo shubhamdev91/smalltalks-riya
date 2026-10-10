@@ -390,7 +390,7 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
       <li>Route: App Proxy <code>/apps/talks</code> → <code>…/api/talks</code>, HMAC-verified. Decision A: no IP key behind the proxy; per-device limits + duplicate check + store-wide flood hold.</li>
       <li>Theme: posting OFF via <code>snippets/st-talk-live.liquid</code>; TLK-154 pre-launch notice shown. Posting-ON window (HD avatars + switch + E2E + delete test posts) queued after owner says "talks app installed".</li>
       <li>Owner setup done 10 Oct (app installed, keys in Vercel, v0 published).</li>
-      <li><b>Moderation (owner decision, 10 Oct):</b> NO review queue. Posts and replies publish immediately; anything risky (contact details, links, handles, slurs, spam, possible real names) is refused at submit with nothing saved; the only automatic removal is auto-hide at 3 distinct reports. Riya's talks task is an OPTIONAL occasional look at reported posts; never describe approving or reviewing posts.</li>
+      <li><b>Moderation (owner decision, 10 Oct):</b> NO review queue. Posts and replies publish immediately; anything risky (contact details, links, handles, slurs, spam, possible real names) is refused at submit with nothing saved; the only automatic removal is auto-hide at 3 distinct reports. Riya's talks task is an OPTIONAL occasional look at reported posts; never describe approving or reviewing posts. Legal texts aligned in copy register v1.7 (TLK-155 privacy paragraph, Terms §6); Riya's task p-repaste re-pastes them.</li>
       <li>Requested next (owner, not started): reply pings with consent (WhatsApp/email) and private signed-in customer link (logged_in_customer_id), privacy text update. Brief in Tab 1 §9.</li>
     </ul>
   </article>
@@ -560,7 +560,7 @@ const TERMS_TEXT = `Terms of service
 Last updated: 9 October 2026
 
 1. Who we are
-This website is run by Small Talk ("we", "us"). By using the site or placing an order, you agree to these terms. If you don't agree, please don't use the site.
+This website is run by Small Talk (“we”, “us”). By using the site or placing an order, you agree to these terms. If you don’t agree, please don’t use the site.
 
 2. Our products
 We sell press-on nail sets. Product colours on screen can look slightly different from the real thing. Campaign illustrations on the site are artwork, not photos of the product. Please follow the instructions that come with your kit and on our Nail Guide.
@@ -578,14 +578,14 @@ Delivery, returns, refunds and cancellations are covered by our Shipping policy 
 the talks is our community board.
 - You can post without a name, email or account. Your alias is the only name shown.
 - When you post a talk or a reply, you keep ownership of what you wrote. You give us permission to show it on our site.
-- Don't post real names, phone numbers, emails, links, handles, or anything that could identify someone.
-- Don't post anything hateful, harassing, defamatory, illegal or spam.
-- Our filter may hold a post for a check before it shows. We may hide or remove any post, at any time, without notice.
+- Don’t post real names, phone numbers, emails, links, handles, or anything that could identify someone.
+- Don’t post anything hateful, harassing, defamatory, illegal or spam.
+- Our filter may stop a post from going up. We may hide or remove any post, at any time, without notice.
 - To stop spam, we keep a scrambled device code (never your IP address) for a short time. Our Privacy policy has the details.
 - To report a post, tap Report. If something on the board is about you, email us with the link.
 
 7. Our content
-The Small Talk name, logo, packaging, illustrations, stories and site content belong to us. Please don't copy or reuse them without permission.
+The Small Talk name, logo, packaging, illustrations, stories and site content belong to us. Please don’t copy or reuse them without permission.
 
 8. Liability
 We provide the site and our products as described. To the extent the law allows, we are not liable for indirect or unexpected losses. If something goes wrong with an order, our responsibility is limited to the amount you paid for that order. Nothing in these terms limits your rights under Indian consumer law.
@@ -600,7 +600,16 @@ These terms are governed by the laws of India.
 Questions about these terms? Email riyaagg24@gmail.com.`;
 
 const PRIVACY_TALKS = `the talks (our community board)
-You can post on the talks without a name, email address or account. What you post is public on our site: your talk or reply, the alias you chose, your avatar and the time you posted. Your alias, avatar, a random device ID and any unsent draft are saved only in your browser's storage, and clearing your browser data removes them. To prevent spam and abuse, each time you post, reply or report, we keep a short record made from a scrambled, one-way version of that device ID, plus a scrambled version of the text so we can catch repeats. We do not store your IP address with these records, and we delete them automatically within 30 days. Posts are stored in our Shopify store, and our posting service runs on Vercel, a hosting provider; both process each request only to deliver it. Posts may be held for review or removed if they break our house rules. If something posted on the talks is about you, email us at riyaagg24@gmail.com with the link and we'll take it down.`;
+You can post on the talks without a name, email address or account. What you post is public on our site: your talk or reply, the alias you chose, your avatar and the time you posted. Your alias, avatar, a random device ID and any unsent draft are saved only in your browser’s storage, and clearing your browser data removes them. To prevent spam and abuse, each time you post, reply or report, we keep a short record made from a scrambled, one-way version of that device ID, plus a scrambled version of the text so we can catch repeats. We do not store your IP address with these records, and we delete them automatically within 30 days. Posts are stored in our Shopify store, and our posting service runs on Vercel, a hosting provider; both process each request only to deliver it. Posts that break our house rules may be refused when you submit them, or removed later. If something posted on the talks is about you, email us at riyaagg24@gmail.com with the link and we’ll take it down.`;
+const TERMS_S6 = `6. the talks
+the talks is our community board.
+- You can post without a name, email or account. Your alias is the only name shown.
+- When you post a talk or a reply, you keep ownership of what you wrote. You give us permission to show it on our site.
+- Don’t post real names, phone numbers, emails, links, handles, or anything that could identify someone.
+- Don’t post anything hateful, harassing, defamatory, illegal or spam.
+- Our filter may stop a post from going up. We may hide or remove any post, at any time, without notice.
+- To stop spam, we keep a scrambled device code (never your IP address) for a short time. Our Privacy policy has the details.
+- To report a post, tap Report. If something on the board is about you, email us with the link.`;
 
 const SECTIONS_A = [
 {
@@ -1662,10 +1671,20 @@ Please answer in numbered steps with the exact buttons to click (Shopify/Meta/Go
 const RIYA = [
 {
   id: 's1', set: 'on-me', icon: '💳', title: 'Make the store able to sell',
-  sub: 'Two things only you can do.',
+  sub: 'Payments, a test order, and two policy snippets.',
   tasks: [
     pick('pay', { lock: true }),
-    pick('g-test')
+    pick('g-test'),
+    { id: 'p-repaste', t: 'Re-paste 2 updated policy snippets', min: '5 min',
+      why: 'The talks have no review queue any more, so two pasted texts that say posts may be "held" need the new wording. Needed only if the old versions are in your policies (they were pasted on 10 Oct).',
+      steps: [
+        '<b>Settings → Policies → Privacy policy</b>. Find the section "the talks (our community board)". Replace that whole paragraph with the new one (copy below). <b>Save</b>.',
+        '<b>Settings → Policies → Terms of service</b>. Replace section "6. the talks" with the new section 6 (copy below), or replace the whole Terms with the full text. <b>Save</b>.',
+        'Check: the privacy text now says "may be refused when you submit them, or removed later", and Terms §6 says "Our filter may stop a post from going up".'
+      ],
+      copy: [['Copy privacy paragraph', PRIVACY_TALKS], ['Copy Terms section 6', TERMS_S6], ['Copy full Terms', TERMS_TEXT]],
+      links: [['Settings → Policies', A + '/settings/legal'], ['Check: Privacy policy', STORE + '/policies/privacy-policy'], ['Check: Terms of service', STORE + '/policies/terms-of-service']],
+      note: 'Skip this if the policies already show the new wording. Words by the copy session (register v1.7). Not legal advice.' }
   ]
 },
 {
@@ -2058,6 +2077,7 @@ const PRIORITY = [
   ['P1', 'f-confirm', 'Wrong kit facts mean returns and lost trust from the first order.'],
   ['P1', 'g-preview', 'Catch anything broken before real shoppers see it.'],
   ['P1', 'g-test', 'Proves bag → checkout → payment → email works end to end.'],
+  ['P1', 'p-repaste', 'Your legal texts should match how the talks really work before launch.'],
   ['P1', 'g-publish', 'Makes the newest store live; everything after builds on it.'],
   ['P1', 't-email', 'Talks setup step (done 10 Oct).'],
   ['P1', 't-vercel', 'Talks setup step (done 10 Oct).'],
@@ -2113,7 +2133,7 @@ OUR.forEach(s => s.tasks.forEach(t => {
 const NEEDS = {
   'pay': [], 'f-confirm': [], 'g-preview': [], 't-email': [], 'g-privacy': [], 'm-biz': [], 'ig-profile': [],
   'e-discount': [], 'r-links': [], 'ig-setup': [], 'v-start': [], 'v-example': [], 'seo-basics': [], 'e-wa': [],
-  'f-photos': [], 'g-domain': [], 'u-build': [],
+  'f-photos': [], 'g-domain': [], 'u-build': [], 'p-repaste': [],
   'g-test': ['pay'],
   'g-publish': ['g-preview', 'g-test', 'f-confirm'],
   't-vercel': ['t-email'],

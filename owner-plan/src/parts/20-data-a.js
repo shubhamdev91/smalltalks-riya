@@ -37,7 +37,7 @@ const TERMS_TEXT = `Terms of service
 Last updated: 9 October 2026
 
 1. Who we are
-This website is run by Small Talk ("we", "us"). By using the site or placing an order, you agree to these terms. If you don't agree, please don't use the site.
+This website is run by Small Talk (“we”, “us”). By using the site or placing an order, you agree to these terms. If you don’t agree, please don’t use the site.
 
 2. Our products
 We sell press-on nail sets. Product colours on screen can look slightly different from the real thing. Campaign illustrations on the site are artwork, not photos of the product. Please follow the instructions that come with your kit and on our Nail Guide.
@@ -55,14 +55,14 @@ Delivery, returns, refunds and cancellations are covered by our Shipping policy 
 the talks is our community board.
 - You can post without a name, email or account. Your alias is the only name shown.
 - When you post a talk or a reply, you keep ownership of what you wrote. You give us permission to show it on our site.
-- Don't post real names, phone numbers, emails, links, handles, or anything that could identify someone.
-- Don't post anything hateful, harassing, defamatory, illegal or spam.
-- Our filter may hold a post for a check before it shows. We may hide or remove any post, at any time, without notice.
+- Don’t post real names, phone numbers, emails, links, handles, or anything that could identify someone.
+- Don’t post anything hateful, harassing, defamatory, illegal or spam.
+- Our filter may stop a post from going up. We may hide or remove any post, at any time, without notice.
 - To stop spam, we keep a scrambled device code (never your IP address) for a short time. Our Privacy policy has the details.
 - To report a post, tap Report. If something on the board is about you, email us with the link.
 
 7. Our content
-The Small Talk name, logo, packaging, illustrations, stories and site content belong to us. Please don't copy or reuse them without permission.
+The Small Talk name, logo, packaging, illustrations, stories and site content belong to us. Please don’t copy or reuse them without permission.
 
 8. Liability
 We provide the site and our products as described. To the extent the law allows, we are not liable for indirect or unexpected losses. If something goes wrong with an order, our responsibility is limited to the amount you paid for that order. Nothing in these terms limits your rights under Indian consumer law.
@@ -77,7 +77,16 @@ These terms are governed by the laws of India.
 Questions about these terms? Email riyaagg24@gmail.com.`;
 
 const PRIVACY_TALKS = `the talks (our community board)
-You can post on the talks without a name, email address or account. What you post is public on our site: your talk or reply, the alias you chose, your avatar and the time you posted. Your alias, avatar, a random device ID and any unsent draft are saved only in your browser's storage, and clearing your browser data removes them. To prevent spam and abuse, each time you post, reply or report, we keep a short record made from a scrambled, one-way version of that device ID, plus a scrambled version of the text so we can catch repeats. We do not store your IP address with these records, and we delete them automatically within 30 days. Posts are stored in our Shopify store, and our posting service runs on Vercel, a hosting provider; both process each request only to deliver it. Posts may be held for review or removed if they break our house rules. If something posted on the talks is about you, email us at riyaagg24@gmail.com with the link and we'll take it down.`;
+You can post on the talks without a name, email address or account. What you post is public on our site: your talk or reply, the alias you chose, your avatar and the time you posted. Your alias, avatar, a random device ID and any unsent draft are saved only in your browser’s storage, and clearing your browser data removes them. To prevent spam and abuse, each time you post, reply or report, we keep a short record made from a scrambled, one-way version of that device ID, plus a scrambled version of the text so we can catch repeats. We do not store your IP address with these records, and we delete them automatically within 30 days. Posts are stored in our Shopify store, and our posting service runs on Vercel, a hosting provider; both process each request only to deliver it. Posts that break our house rules may be refused when you submit them, or removed later. If something posted on the talks is about you, email us at riyaagg24@gmail.com with the link and we’ll take it down.`;
+const TERMS_S6 = `6. the talks
+the talks is our community board.
+- You can post without a name, email or account. Your alias is the only name shown.
+- When you post a talk or a reply, you keep ownership of what you wrote. You give us permission to show it on our site.
+- Don’t post real names, phone numbers, emails, links, handles, or anything that could identify someone.
+- Don’t post anything hateful, harassing, defamatory, illegal or spam.
+- Our filter may stop a post from going up. We may hide or remove any post, at any time, without notice.
+- To stop spam, we keep a scrambled device code (never your IP address) for a short time. Our Privacy policy has the details.
+- To report a post, tap Report. If something on the board is about you, email us with the link.`;
 
 const SECTIONS_A = [
 {

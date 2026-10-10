@@ -101,10 +101,20 @@ Please answer in numbered steps with the exact buttons to click (Shopify/Meta/Go
 const RIYA = [
 {
   id: 's1', set: 'on-me', icon: '💳', title: 'Make the store able to sell',
-  sub: 'Two things only you can do.',
+  sub: 'Payments, a test order, and two policy snippets.',
   tasks: [
     pick('pay', { lock: true }),
-    pick('g-test')
+    pick('g-test'),
+    { id: 'p-repaste', t: 'Re-paste 2 updated policy snippets', min: '5 min',
+      why: 'The talks have no review queue any more, so two pasted texts that say posts may be "held" need the new wording. Needed only if the old versions are in your policies (they were pasted on 10 Oct).',
+      steps: [
+        '<b>Settings → Policies → Privacy policy</b>. Find the section "the talks (our community board)". Replace that whole paragraph with the new one (copy below). <b>Save</b>.',
+        '<b>Settings → Policies → Terms of service</b>. Replace section "6. the talks" with the new section 6 (copy below), or replace the whole Terms with the full text. <b>Save</b>.',
+        'Check: the privacy text now says "may be refused when you submit them, or removed later", and Terms §6 says "Our filter may stop a post from going up".'
+      ],
+      copy: [['Copy privacy paragraph', PRIVACY_TALKS], ['Copy Terms section 6', TERMS_S6], ['Copy full Terms', TERMS_TEXT]],
+      links: [['Settings → Policies', A + '/settings/legal'], ['Check: Privacy policy', STORE + '/policies/privacy-policy'], ['Check: Terms of service', STORE + '/policies/terms-of-service']],
+      note: 'Skip this if the policies already show the new wording. Words by the copy session (register v1.7). Not legal advice.' }
   ]
 },
 {

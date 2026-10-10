@@ -10,6 +10,7 @@ const PRIORITY = [
   ['P1', 'f-confirm', 'Wrong kit facts mean returns and lost trust from the first order.'],
   ['P1', 'g-preview', 'Catch anything broken before real shoppers see it.'],
   ['P1', 'g-test', 'Proves bag → checkout → payment → email works end to end.'],
+  ['P1', 'p-repaste', 'Your legal texts should match how the talks really work before launch.'],
   ['P1', 'g-publish', 'Makes the newest store live; everything after builds on it.'],
   ['P1', 't-email', 'Talks setup step (done 10 Oct).'],
   ['P1', 't-vercel', 'Talks setup step (done 10 Oct).'],

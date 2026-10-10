@@ -3,7 +3,7 @@
 const NEEDS = {
   'pay': [], 'f-confirm': [], 'g-preview': [], 't-email': [], 'g-privacy': [], 'm-biz': [], 'ig-profile': [],
   'e-discount': [], 'r-links': [], 'ig-setup': [], 'v-start': [], 'v-example': [], 'seo-basics': [], 'e-wa': [],
-  'f-photos': [], 'g-domain': [], 'u-build': [],
+  'f-photos': [], 'g-domain': [], 'u-build': [], 'p-repaste': [],
   'g-test': ['pay'],
   'g-publish': ['g-preview', 'g-test', 'f-confirm'],
   't-vercel': ['t-email'],
