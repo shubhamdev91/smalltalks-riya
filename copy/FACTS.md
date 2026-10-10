@@ -111,7 +111,7 @@ Tip: keep the glue off your skin, and use only a thin layer.
 - A live thread board. Anyone can start a talk or reply with **no name, email, login or account**. She picks a topic (or types her own) and taps Post, and the talk goes live straight away. Replies work the same way.
 - Each device gets a playful alias (adjective + noun, editable, 2–24 characters) and a set-nail avatar, both **saved on that device only** (localStorage). Talks posted by the brand show the alias “small talk”.
 - **What is stored:** the talk or reply text, alias, avatar and time (all public). For spam control: a salted, one-way **device** code plus a scrambled copy of the text (to catch repeats). **No IP address**: behind the App Proxy the backend never sees it, so there is no per-IP limit. Deleted automatically after 7 days by the backend (the shopper-facing promise is “within 30 days”). Alias, avatar, a random device ID and drafts live only in the browser (localStorage).
-- **Filters:** phone numbers, emails, UPI IDs, links, @handles and slurs are blocked. Posts that might name or target a real person are **held for a quick check** (Draft) before they show.
+- **Filters:** phone numbers, emails, UPI IDs, links, @handles and slurs are blocked. Posts that might name or target a real person are **refused at submit** (nothing is saved, and her text stays in the box). There is no review queue (owner, 10 Oct): everything else publishes at once.
 - **Reports:** every talk and reply has Report. Three reports from different people hide it until the owner checks.
 - **Moderation:** the owner publishes, hides or deletes in Shopify admin (metaobjects).
 - **Grievance:** “Something here about you?” → the store contact email (F13). No response time is promised.

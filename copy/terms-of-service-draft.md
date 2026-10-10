@@ -33,7 +33,7 @@ the talks is our community board.
 - When you post a talk or a reply, you keep ownership of what you wrote. You give us permission to show it on our site.
 - Don’t post real names, phone numbers, emails, links, handles, or anything that could identify someone.
 - Don’t post anything hateful, harassing, defamatory, illegal or spam.
-- Our filter may hold a post for a check before it shows. We may hide or remove any post, at any time, without notice.
+- Our filter may stop a post from going up. We may hide or remove any post, at any time, without notice.
 - To stop spam, we keep a scrambled device code (never your IP address) for a short time. Our Privacy policy has the details.
 - To report a post, tap Report. If something on the board is about you, email us with the link.
 
