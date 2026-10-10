@@ -28,5 +28,23 @@ Claude Code session logs from the Small Talk build, 9–10 Oct 2026.
 | Shopify connector vs plugin | Q&A | `79692800-285b-48f0-86b6-49d3a7b22768` | 9 Oct 05:31 | 1 / 2 |
 | GitHub repo setup for Smalltalks | Repository setup | `64c80f4e-a97f-4023-97b5-237feeb1f3d7` | 10 Oct 19:51 → 20:13 | 74 / 124 |
 
+## session-notes/
+
+Shared notes between sessions, one folder per session that hosted them. The main folder
+`local_04b83008-0590-42b6-b099-ee4eb0903f2d/` holds `00-orchestrator-protocol.md` (write lock, reporting rules) and the
+worker handoffs and reports (artwork phases, motion handoff, hero data contract, talks, product media, owner plan).
+
+## claude-memory/
+
+Lessons Claude recorded for this project: theme write-lock protocol, the owner-edited `settings_data.json`, the live
+publish flow, silent Shopify upsert failures, CDN asset minification. `MEMORY.md` is the index.
+
+## inputs/
+
+Original material the project started from: the brand brief, the Shopify implementation handoff, the motion
+sketchboard (PDF + PNG), the earlier "Sol to Astra" theme package, and the two WhatsApp zips of design boards.
+
+## Notes on transcripts
+
 Transcripts end at the time they were captured (10 Oct ~20:14 UTC); sessions that continued afterwards are not
 included past that point.

@@ -17,3 +17,6 @@ __pycache__/
 .env
 .env.*
 .vercel/
+
+# Personal Claude Code settings
+.claude/settings.local.json

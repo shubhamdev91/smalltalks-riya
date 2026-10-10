@@ -1,0 +1,5 @@
+- [Theme write lock protocol](theme-write-lock-protocol.md) — write to theme 186651934933 only after a lock grant newer than my last release
+- [settings_data is owner-edited](settings-data-owner-edited.md) — never upload the local config/settings_data.json; re-fetch and merge one key if ever needed; the live (MAIN) theme is never written
+- [Live theme publish flow](live-theme-publish-flow.md) — live store only updates when the owner duplicates the build and publishes the copy; re-check which theme is MAIN
+- [Shopify URL upserts fail silently](shopify-url-upsert-silent-failure.md) — invalid Liquid is dropped with job done + no errors; lint before upload, read back md5s
+- [Shopify CDN minifies assets](shopify-cdn-minifies-assets.md) — served JS md5 never equals checksumMd5; verify by Admin read-back + content markers
