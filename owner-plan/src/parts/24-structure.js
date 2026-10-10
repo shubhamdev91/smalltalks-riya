@@ -114,7 +114,7 @@ const RIYA = [
       ],
       copy: [['Copy privacy paragraph', PRIVACY_TALKS], ['Copy Terms section 6', TERMS_S6], ['Copy full Terms', TERMS_TEXT]],
       links: [['Settings → Policies', A + '/settings/legal'], ['Check: Privacy policy', STORE + '/policies/privacy-policy'], ['Check: Terms of service', STORE + '/policies/terms-of-service']],
-      note: 'Skip this if the policies already show the new wording. Words by the copy session (register v1.7). Not legal advice.' }
+      note: 'Done 11 Oct, 02:07 IST: both snippets re-pasted and checked in Shopify. Kept here for reference. Words by the copy session (register v1.7). Not legal advice.' }
   ]
 },
 {
