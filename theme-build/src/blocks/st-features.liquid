@@ -1,0 +1,105 @@
+{% doc %}
+  Two short feature columns (Our Story, board 4): small line icon, heading, one sentence. A column renders only
+  with a heading.
+{% enddoc %}
+
+<ul class="st-features" role="list" {{ block.shopify_attributes }}>
+  {%- for i in (1..2) -%}
+    {%- liquid
+      assign h_key = 'heading_' | append: i
+      assign t_key = 'text_' | append: i
+      assign i_key = 'icon_' | append: i
+      assign heading = block.settings[h_key]
+      assign text = block.settings[t_key]
+      assign icon = block.settings[i_key]
+    -%}
+    {%- if heading != blank -%}
+      <li class="st-features__item">
+        {%- case icon -%}
+          {%- when 'sparkle' -%}
+            <svg class="st-features__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.4 2.4M15.3 15.3l2.4 2.4M6.3 17.7l2.4-2.4M15.3 8.7l2.4-2.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          {%- when 'heart' -%}
+            <svg class="st-features__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        {%- endcase -%}
+        <h2 class="st-features__heading">{{ heading | escape }}</h2>
+        {%- if text != blank -%}
+          <p class="st-features__text">{{ text | escape }}</p>
+        {%- endif -%}
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>
+
+{% stylesheet %}
+  .st-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+    gap: 1.5rem 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-features__item {
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+  }
+
+  .st-features__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--st-plum);
+  }
+
+  .st-features__heading {
+    margin: 0;
+    color: var(--st-plum);
+    font-family: var(--st-font-button);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.2;
+  }
+
+  .st-features__text {
+    margin: 0;
+    color: var(--st-body);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk features",
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon_1",
+      "label": "Icon 1",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "sparkle", "label": "Sparkle" },
+        { "value": "heart", "label": "Heart" }
+      ],
+      "default": "sparkle"
+    },
+    { "type": "text", "id": "heading_1", "label": "Heading 1" },
+    { "type": "textarea", "id": "text_1", "label": "Text 1" },
+    {
+      "type": "select",
+      "id": "icon_2",
+      "label": "Icon 2",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "sparkle", "label": "Sparkle" },
+        { "value": "heart", "label": "Heart" }
+      ],
+      "default": "heart"
+    },
+    { "type": "text", "id": "heading_2", "label": "Heading 2" },
+    { "type": "textarea", "id": "text_2", "label": "Text 2" }
+  ],
+  "presets": [{ "name": "Small Talk features" }]
+}
+{% endschema %}

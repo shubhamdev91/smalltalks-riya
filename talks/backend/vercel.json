@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "app.py": { "maxDuration": 20 }
+  },
+  "crons": [
+    { "path": "/api/talks?task=prune", "schedule": "17 3 * * *" }
+  ]
+}

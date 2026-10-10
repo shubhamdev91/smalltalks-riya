@@ -1,0 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "di-review-copy",
+      "settings": {
+        "heading": "Find your fit.",
+        "body": "<p>A little help, at your fingertips.</p><h2>Start with your own nails</h2><p>Look at the shape and width of each natural nail. Each hand can be different, so check both when comparing a set.</p><h2>Choose with the right information</h2><p>Check the product\u2019s available options and fit details. If you need help choosing, send us the set name and your question before ordering.</p><h2>Application and removal</h2><p>Follow the instructions supplied with your specific kit. Adhesives and removal methods can differ between products. Contact us if you need the instructions for your set.</p><p><a href=\"/pages/help\">Ask us about fit and care \u2192</a></p>"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

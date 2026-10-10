@@ -1,0 +1,189 @@
+{% doc %}
+  Board fonts (spec/tokens.css type picks), all SIL OFL 1.1. Sources and licences are kept in theme-build/fonts/<family>/.
+  The woff2 files are subsets: Basic Latin, Latin-1, ‘ ’ “ ” … – — · • ₹ ‹ › − and ← → ↗ where the source has them. Fraunces and
+  Source Serif 4 are static instances at the spec axes; Caveat (500–700) and DM Sans (400–800, opsz 14) keep a trimmed weight axis.
+  Each family gets a metric-matched local fallback (size-adjust / ascent / descent overrides) so font-display: swap
+  doesn't move the hero. The stacks below repeat the tokens.css stacks with the fallback face inserted, plus DM Sans
+  for glyphs a face lacks (↗ in Caveat, Kalam, Barlow; ₹ in Barlow). Preloads (hero headline + note) live in
+  layout/theme.liquid on the home page only.
+
+  @example
+  {% render 'st-fonts' %}
+{% enddoc %}
+{% style %}
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('{{ 'st-fraunces-900.woff2' | asset_url }}') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* Chapter headlines (board 3 is lighter than the hero): static wght 700 / SOFT 50 / WONK 1 / opsz 144. */
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('{{ 'st-fraunces-700.woff2' | asset_url }}') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Caveat';
+    src: url('{{ 'st-caveat.woff2' | asset_url }}') format('woff2');
+    font-weight: 500 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Barlow Semi Condensed';
+    src: url('{{ 'st-barlow-sc-600.woff2' | asset_url }}') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* the landing chapter set name (spec/name-highlight.md, --fw-chapter-name): the true Bold (OFL, same family files;
+     112-glyph Latin subset incl. the curly quotes). Loads only where it is used. */
+  @font-face {
+    font-family: 'Barlow Semi Condensed';
+    src: url('{{ 'st-barlow-sc-700.woff2' | asset_url }}') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('{{ 'st-source-serif-700.woff2' | asset_url }}') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* the talks hub sub (board serif): Source Serif 4 roman 500 at opsz 24 (OFL; 206-glyph Latin subset). */
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('{{ 'st-source-serif-500.woff2' | asset_url }}') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* the talks tagline (tokens round 10, --font-talks-tagline): the true italic, static wght 400 / opsz 20 (OFL; 206-glyph
+     Latin subset). Loads only where it is used. */
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('{{ 'st-source-serif-italic-400.woff2' | asset_url }}') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+  /* Wordmark only (tokens --font-logo: Source Serif 4 Black, opsz 60): glyphs of "small talk". */
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('{{ 'st-source-serif-logo-900.woff2' | asset_url }}') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+20, U+41, U+4B-4D, U+53-54, U+61, U+6B-6D, U+73-74;
+  }
+  /* Card names and card prices (shop, bag): IBM Plex Sans Condensed Bold, round 6 (OFL; 206-glyph Latin subset). */
+  @font-face {
+    font-family: 'IBM Plex Sans Condensed';
+    src: url('{{ 'st-plex-cond-700.woff2' | asset_url }}') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* Board-5 page headings ("Pick your plot twist."): the board ink is Black opsz 60, not the spec's 700. Its own family
+     so the wordmark subset above stays the only 900 file on other pages. */
+  @font-face {
+    font-family: 'Source Serif 4 Black';
+    src: url('{{ 'st-source-serif-900.woff2' | asset_url }}') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kalam';
+    src: url('{{ 'st-kalam-300.woff2' | asset_url }}') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'DM Sans';
+    src: url('{{ 'st-dm-sans.woff2' | asset_url }}') format('woff2');
+    font-weight: 400 800; /* 700/800 for the Journal names and labels (board 4) */
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Metric-matched fallbacks (hhea metrics; width matched on each role's register strings). */
+  @font-face {
+    font-family: 'Fraunces Fallback';
+    src: local('Georgia Bold'), local('Georgia-Bold');
+    size-adjust: 84.24%;
+    ascent-override: 116.09%;
+    descent-override: 30.27%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Caveat Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 71.86%;
+    ascent-override: 133.6%;
+    descent-override: 41.75%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Barlow Semi Condensed Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 79.63%;
+    ascent-override: 125.58%;
+    descent-override: 25.12%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Source Serif 4 Fallback';
+    src: local('Georgia Bold'), local('Georgia-Bold');
+    size-adjust: 81.8%;
+    ascent-override: 126.65%;
+    descent-override: 40.95%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'IBM Plex Sans Condensed Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 89.91%;
+    ascent-override: 114.0%;
+    descent-override: 30.59%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Kalam Fallback';
+    src: local('Arial'), local('ArialMT');
+    size-adjust: 95%;
+    ascent-override: 111.89%;
+    descent-override: 55.89%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'DM Sans Fallback';
+    src: local('Arial'), local('ArialMT');
+    size-adjust: 103.72%;
+    ascent-override: 95.64%;
+    descent-override: 29.89%;
+    line-gap-override: 0%;
+  }
+
+  :root {
+    --font-headline: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
+    --font-note: 'Caveat', 'Caveat Fallback', 'DM Sans', 'Segoe Print', cursive;
+    --font-pill: 'Barlow Semi Condensed', 'Barlow Semi Condensed Fallback', 'DM Sans', 'Arial Narrow', sans-serif;
+    --font-talks: 'Caveat', 'Caveat Fallback', 'DM Sans', cursive;
+    --font-shop-heading: 'Source Serif 4', 'Source Serif 4 Fallback', Georgia, serif;
+    --font-shop-display: 'Source Serif 4 Black', 'Source Serif 4 Fallback', Georgia, serif;
+    /* tokens.css --font-pdp-title is Source Serif 4 at wght 900; here that weight is the full 'Source Serif 4 Black' face. */
+    --font-pdp-title: 'Source Serif 4 Black', 'Source Serif 4 Fallback', Georgia, serif;
+    --font-card-name: 'IBM Plex Sans Condensed', 'IBM Plex Sans Condensed Fallback', 'Barlow Semi Condensed', system-ui, sans-serif;
+    --font-price: 'IBM Plex Sans Condensed', 'IBM Plex Sans Condensed Fallback', system-ui, sans-serif;
+    --font-annotation: 'Kalam', 'Kalam Fallback', 'DM Sans', 'Segoe Print', cursive;
+    --font-ui: 'DM Sans', 'DM Sans Fallback', system-ui, sans-serif;
+  }
+{% endstyle %}

@@ -1,0 +1,52 @@
+{% doc %}
+  Settings and copy for st-talks.js (posting, replies, reports), rendered once per talks page as JSON. Every string is
+  a locale value (small_talk.talks.live.*, register TLK-1xx), so the script holds no shopper-visible copy.
+
+  @param {string} [endpoint] - Where posts go. Default /apps/talks (Shopify App Proxy to the talks backend).
+
+  @example
+  {% render 'st-talk-config', endpoint: section.settings.endpoint %}
+{% enddoc %}
+
+{%- liquid
+  assign sets = 'on-me,brainwave,diet-cherry,green-flag,shaadi-shift,wild-card,pinky-promise' | split: ','
+  assign adjectives = 'small_talk.talks.live.alias_adjectives' | t | split: ','
+  assign nouns = 'small_talk.talks.live.alias_nouns' | t | split: ','
+  assign error_keys = 'need_topic,too_short,too_long,blocked_contact,blocked_link,blocked_handle,blocked_words,bad_alias,rate_limited,duplicate,closed,not_found,server' | split: ','
+  assign string_keys = 'posting_as,replying_as,change,posting,posted,view,held,held_tag,failed,retry,edit,left,reply,reply_to_label,replying_to,cancel,report_confirm,report_yes,reported,hidden_for_you,show' | split: ','
+-%}
+<script type="application/json" id="st-talks-config">
+  {
+    "endpoint": {{ endpoint | default: '/apps/talks' | json }},
+    "sets": {{ sets | json }},
+    "sprites": {
+      {%- for s in sets -%}
+        {{ s | json }}: {{ 'st-nails-' | append: s | append: '.webp' | asset_url | json }}{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    },
+    "lightInk": ["brainwave", "diet-cherry", "green-flag", "pinky-promise"],
+    "max": { "thread": 1200, "reply": 800, "alias": 24, "own": 30 },
+    "adjectives": [
+      {%- for w in adjectives -%}{{ w | strip | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}
+    ],
+    "nouns": [
+      {%- for w in nouns -%}{{ w | strip | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}
+    ],
+    "strings": {
+      {%- for k in string_keys -%}
+        {%- assign key = 'small_talk.talks.live.' | append: k -%}
+        {{ k | json }}: {{ key | t: alias: '__alias__', count: '__n__' | json }},
+      {%- endfor -%}
+      "report": {{ 'small_talk.talks.thread.report' | t | json }},
+      "first_reply": {{ 'small_talk.talks.hub.first_reply' | t | json }},
+      "reply_one": {{ 'small_talk.talks.replies.one' | t | json }},
+      "reply_other": {{ 'small_talk.talks.replies.other' | t: count: '__n__' | json }},
+      "errors": {
+        {%- for k in error_keys -%}
+          {%- assign key = 'small_talk.talks.live.errors.' | append: k -%}
+          {{ k | json }}: {{ key | t: max: '__max__' | json }}{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      }
+    }
+  }
+</script>

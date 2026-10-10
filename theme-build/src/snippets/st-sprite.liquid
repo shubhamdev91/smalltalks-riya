@@ -1,0 +1,72 @@
+{% doc %}
+  Renders one cell of an image atlas as a real <img> (intrinsic width/height, srcset, sizes)
+  cropped by an overflow box. The crop box is given in atlas pixels relative to the cell.
+  The wrapper takes the crop's aspect ratio; size it with width from the caller.
+
+  @param {image} image - Atlas image (image or media image object).
+  @param {number} cols - Atlas columns.
+  @param {number} rows - Atlas rows.
+  @param {number} col - Cell column (0-based).
+  @param {number} row - Cell row (0-based).
+  @param {number} x - Crop left inside the cell, px.
+  @param {number} y - Crop top inside the cell, px.
+  @param {number} w - Crop width, px.
+  @param {number} h - Crop height, px.
+  @param {string} [sizes] - sizes attribute for the full atlas image as rendered.
+  @param {string} [loading] - 'eager' or 'lazy' (default 'lazy').
+  @param {string} [fetchpriority] - 'high' for the first-paint hero image.
+  @param {string} [class] - Extra class on the wrapper.
+  @param {string} [attrs] - Extra raw attributes on the wrapper (e.g. data-*).
+
+  @example
+  {% render 'st-sprite', image: atlas, cols: 7, rows: 2, col: 0, row: 0, x: 80, y: 28, w: 184, h: 319 %}
+{% enddoc %}
+
+{%- liquid
+  assign atlas = image
+  if image.preview_image
+    assign atlas = image.preview_image
+  endif
+  assign cell_w = atlas.width | times: 1.0 | divided_by: cols
+  assign cell_h = atlas.height | times: 1.0 | divided_by: rows
+  assign crop_left = cell_w | times: col | plus: x
+  assign crop_top = cell_h | times: row | plus: y
+  assign sprite_scale = atlas.width | times: 1.0 | divided_by: w | round: 4
+  assign sprite_left = crop_left | divided_by: w | times: -100 | round: 4
+  assign sprite_top = crop_top | divided_by: h | times: -100 | round: 4
+  assign sprite_loading = loading | default: 'lazy'
+  assign sprite_sizes = sizes | default: '100vw'
+-%}
+
+{%- if atlas != blank -%}
+  <span
+    class="st-sprite {{ class }}"
+    style="--sprite-ratio: {{ w }} / {{ h }}; --sprite-scale: {{ sprite_scale }}; --sprite-left: {{ sprite_left }}%; --sprite-top: {{ sprite_top }}%;"
+    {{ attrs }}
+  >
+    {%- if fetchpriority == 'high' -%}
+      {{ atlas | image_url: width: 2400 | image_tag: class: 'st-sprite__img', alt: '', loading: sprite_loading, fetchpriority: 'high', sizes: sprite_sizes, widths: '800, 1200, 1600, 2000, 2400' }}
+    {%- else -%}
+      {{ atlas | image_url: width: 2400 | image_tag: class: 'st-sprite__img', alt: '', loading: sprite_loading, sizes: sprite_sizes, widths: '800, 1200, 1600, 2000, 2400' }}
+    {%- endif -%}
+  </span>
+{%- endif -%}
+
+{% stylesheet %}
+  .st-sprite {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: var(--sprite-ratio);
+    pointer-events: none;
+  }
+
+  .st-sprite__img {
+    position: absolute;
+    left: var(--sprite-left);
+    top: var(--sprite-top);
+    width: calc(var(--sprite-scale) * 100%);
+    max-width: none;
+    height: auto;
+  }
+{% endstylesheet %}

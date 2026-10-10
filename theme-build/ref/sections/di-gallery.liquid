@@ -1,0 +1,23 @@
+<section class="di-gallery"><a href="{{ section.settings.story_url }}"><div class="di-gallery-art"></div><span>Our Vision <span aria-hidden="true">↗</span></span></a><a href="{{ section.settings.shop_url }}"><div class="di-gallery-nails">{% for i in (0..6) %}{% render 'di-nail',index:i %}{% endfor %}</div><span>Shop all nails <span aria-hidden="true">↗</span></span></a></section>
+{% schema %}
+{
+  "name": "Gallery",
+  "settings": [
+    {
+      "type": "url",
+      "id": "story_url",
+      "label": "Our Story link"
+    },
+    {
+      "type": "url",
+      "id": "shop_url",
+      "label": "Shop link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gallery"
+    }
+  ]
+}
+{% endschema %}

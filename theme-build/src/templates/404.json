@@ -1,0 +1,27 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "st-404",
+      "settings": {
+        "heading": "This page wandered off.",
+        "body": "It might have moved, or the link’s a little off. Let’s get you back.",
+        "label_1": "Shop all sets",
+        "link_1": "/collections/all",
+        "label_2": "Go home",
+        "link_2": "/"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

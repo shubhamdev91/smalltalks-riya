@@ -1,0 +1,259 @@
+{% comment %}
+  Section contract.
+  Cream teaser between chapters, board 3 (spec/landing.md; STORE-DESKTOP-SPEC v1.1 §1). Three kinds:
+  - talks: heading, headline, support line, a slice of the real board (topic chips, "latest talks", the newest real
+    threads with their reply stubs), the pre-launch line while posting is off, and the "spill your tea" CTA. Only real
+    thread data renders: no invented threads, aliases, times or counts.
+  - journal: half a screen: handwritten heading, two landscape cards, outline pill, closing line (from 1024).
+  - guide: eyebrow, serif heading, rotated handwriting, the nail-guide illustration bleeding right, filled pill.
+  Each kind clips its own curved top edge and draws its segment of the red dashed beeline (snippets/st-landing-join).
+  @example
+  <!-- templates/index.json: st-teaser with kind talks / journal / guide. -->
+{% endcomment %}
+
+{%- liquid
+  assign kind = section.settings.kind
+  assign held = false
+  if section.settings.gate != blank and section.settings.gate_confirmed == false
+    assign held = true
+  endif
+  case kind
+    when 'talks'
+      assign jkey = 'talks-teaser'
+    when 'guide'
+      assign jkey = 'nail-guide-teaser'
+    else
+      assign jkey = 'journal-teaser'
+  endcase
+  assign ex = section.settings.example_campaign
+-%}
+
+{%- if held -%}
+  {%- if request.design_mode -%}
+    <p style="padding: 1rem; text-align: center;">Teaser hidden on the storefront until {{ section.settings.gate | escape }} is confirmed.</p>
+  {%- endif -%}
+{%- else -%}
+  <section
+    class="st-land st-land--cream st-teaser2 st-teaser2--{{ kind }}"
+    data-land="{{ jkey }}"
+    style="{% render 'st-landing-join', key: jkey, part: 'style' %}"
+    aria-labelledby="StTeaser-{{ section.id }}"
+  >
+    <div class="st-land__inner">
+      {% render 'st-landing-join', key: jkey, part: 'beeline' %}
+
+      {%- case kind -%}
+        {%- when 'talks' -%}
+          {%- comment -%}
+            STORE-DESKTOP-SPEC v1.1 §1a (owner 10 Oct, copy v1.4.9/1.4.10): a slice of the real board. Heading (LND-025),
+            headline (LND-026), support line (LND-032), then the board: the first three topic chips in the hub's order
+            (LND-064, lowercase via CSS here only), "latest talks" (LND-063) and the newest real threads from talk_topic
+            "all" (2 on phones, 3 from 1024; drafts never come through), each one link with avatar, "alias · time" and
+            " · n replies" only when n > 0 (LND-065), the title as written, a desktop-only excerpt and the reply stub
+            (LND-066: "no replies yet", plus "· be the first ›" while posting is open). The pre-launch line (LND-067)
+            shows only while posting is off; the CTA (LND-031) closes the section. No invented threads, aliases or counts.
+            Short times (LND-065) come from st-talks' assets/st-talk-ago.js through the strings on the board.
+          {%- endcomment -%}
+          {%- capture live_flag -%}{%- render 'st-talk-live' -%}{%- endcapture -%}
+          {%- liquid
+            assign posting = false
+            if live_flag == 'on'
+              assign posting = true
+            endif
+            assign feed = metaobjects.talk_topic['all']
+            assign topic_order = section.settings.topic_order | split: ','
+            assign cta_label = section.settings.label | remove: '↗' | strip
+          -%}
+          <div class="st-tt">
+            <h2 class="st-tt__h" id="StTeaser-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+            {%- if section.settings.note != blank -%}
+              <p class="st-tt__hl">{{ section.settings.note | escape }}</p>
+            {%- endif -%}
+            {%- if section.settings.copy != blank -%}
+              <p class="st-tt__sup">{{ section.settings.copy | escape }}</p>
+            {%- endif -%}
+            <div
+              class="st-tt__board"
+              data-st-ago-strings
+              data-ago-now="{{ 'small_talk.landing.talks.ago.just_now' | t | escape }}"
+              data-ago-minutes="{{ 'small_talk.landing.talks.ago.minutes' | t: count: '__n__' | escape }}"
+              data-ago-hours="{{ 'small_talk.landing.talks.ago.hours' | t: count: '__n__' | escape }}"
+              data-ago-days="{{ 'small_talk.landing.talks.ago.days' | t: count: '__n__' | escape }}"
+            >
+              {%- capture chips -%}
+                {%- assign chip_count = 0 -%}
+                {%- for raw in topic_order -%}
+                  {%- assign h = raw | strip -%}
+                  {%- if h == blank or h == 'all' -%}{%- continue -%}{%- endif -%}
+                  {%- assign topic = metaobjects.talk_topic[h] -%}
+                  {%- if topic and topic.label.value != blank -%}
+                    <li><a class="st-tt__chip" href="{{ topic.system.url }}">{{ topic.label.value | escape }}</a></li>
+                    {%- assign chip_count = chip_count | plus: 1 -%}
+                    {%- if chip_count >= 3 -%}{%- break -%}{%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endcapture -%}
+              {%- if chips contains '<li' -%}
+                <nav class="st-tt__chips" aria-label="{{ 'small_talk.talks.hub.topics_label' | t | escape }}"><ul role="list">{{ chips }}</ul></nav>
+              {%- endif -%}
+              {%- if section.settings.list_label != blank -%}
+                <p class="st-tt__label" id="StTalksLatest-{{ section.id }}">{{ section.settings.list_label | escape }}</p>
+              {%- endif -%}
+              {%- if feed and feed.threads.value != blank -%}
+                <ol class="st-tt__rows" role="list"{% if section.settings.list_label != blank %} aria-labelledby="StTalksLatest-{{ section.id }}"{% endif %}>
+                  {%- assign row_n = 0 -%}
+                  {%- for thread in feed.threads.value -%}
+                    {%- if thread == blank or thread.title.value == blank -%}{%- continue -%}{%- endif -%}
+                    {%- liquid
+                      assign row_n = row_n | plus: 1
+                      assign t_alias = thread.alias.value | default: 'small talk'
+                      assign replies = thread.reply_count.value | default: 0 | plus: 0
+                      assign row_label = 'small_talk.talks.hub.row_label' | t: title: '@@T@@', count: replies | replace: '@@T@@', thread.title.value
+                      assign excerpt = thread.body.value | newline_to_br | replace: '<br />', ' ' | strip_newlines | strip
+                    -%}
+                    <li class="st-tt__row{% if row_n > 2 %} st-tt__row--desk{% endif %}">
+                      <a class="st-tt__link" href="{{ thread.system.url }}" aria-label="{{ row_label | escape }}">
+                        {%- render 'st-talk-avatar', set: thread.avatar.value, alias: t_alias -%}
+                        <span class="st-tt__text">
+                          <span class="st-tt__meta">
+                            <b>{{ t_alias | escape }}</b> ·
+                            {% if thread.posted_at.value != blank %}{% render 'st-talk-time', at: thread.posted_at.value %}{% endif %}
+                            {%- if replies > 0 %} · {{ 'small_talk.talks.replies' | t: count: replies }}{% endif -%}
+                          </span>
+                          <span class="st-tt__title">{{ thread.title.value | escape }}</span>
+                          {%- if excerpt != blank -%}
+                            <span class="st-tt__ex">{{ excerpt | truncate: 120 | escape }}</span>
+                          {%- endif -%}
+                        </span>
+                        <span class="st-tt__reply">
+                          {%- if replies > 0 -%}
+                            {{- 'small_talk.talks.replies' | t: count: replies }} ›
+                          {%- elsif posting -%}
+                            {{- 'small_talk.talks.live.no_replies_closed' | t }} · {{ 'small_talk.landing.talks.be_first' | t }} ›
+                          {%- else -%}
+                            {{- 'small_talk.talks.live.no_replies_closed' | t -}}
+                          {%- endif -%}
+                        </span>
+                      </a>
+                    </li>
+                    {%- if row_n >= 3 -%}{%- break -%}{%- endif -%}
+                  {%- endfor -%}
+                </ol>
+              {%- endif -%}
+            </div>
+            {%- unless posting -%}
+              <p class="st-tt__pre">{{ 'small_talk.talks.live.prelaunch' | t }}</p>
+            {%- endunless -%}
+            {%- if cta_label != blank and section.settings.link != blank -%}
+              <a class="st-tt__cta" href="{{ section.settings.link }}"{% if section.settings.cta_aria != blank %} aria-label="{{ section.settings.cta_aria | escape }}"{% endif %}>
+                {{- cta_label | escape }} <span class="st-arrow" aria-hidden="true">↗</span>
+              </a>
+            {%- endif -%}
+          </div>
+          <script type="module" src="{{ 'st-talk-ago.js' | asset_url }}" fetchpriority="low"></script>
+
+        {%- when 'journal' -%}
+          {%- comment -%}
+            STORE-DESKTOP-SPEC v1.1 §1b: half a screen. Heading, two landscape cards (rotated, overlapping) and the pill;
+            the closing line (LND-038) is hidden on phones and kept from 1024.
+          {%- endcomment -%}
+          <div class="st-jt">
+            <h2 class="st-jt__h" id="StTeaser-{{ section.id }}">
+              {{- section.settings.heading | escape | replace_first: '. ', '.<br>' -}}
+            </h2>
+            <div class="st-jt__cards">
+              <div class="st-jt__card st-jt__card--1">
+                {%- if section.settings.image != blank -%}
+                  {{ section.settings.image | image_url: width: 600 | image_tag: alt: section.settings.tile_1_alt, loading: 'lazy', fetchpriority: 'low', widths: '300, 450, 600', sizes: '(min-width: 1024px) 300px, 168px' }}
+                {%- else -%}
+                  <img src="{{ 'st-hd-journal-writing.webp' | asset_url }}" width="526" height="607" alt="{{ section.settings.tile_1_alt | escape }}" loading="lazy" decoding="async" fetchpriority="low">
+                {%- endif -%}
+              </div>
+              <div class="st-jt__card st-jt__card--2">
+                {%- if section.settings.image_2 != blank -%}
+                  {{ section.settings.image_2 | image_url: width: 600 | image_tag: alt: section.settings.tile_2_alt, loading: 'lazy', fetchpriority: 'low', widths: '300, 450, 600', sizes: '(min-width: 1024px) 300px, 168px' }}
+                {%- else -%}
+                  <img src="{{ 'st-hd-journal-bag-notebook.webp' | asset_url }}" width="526" height="607" alt="{{ section.settings.tile_2_alt | escape }}" loading="lazy" decoding="async" fetchpriority="low">
+                {%- endif -%}
+              </div>
+            </div>
+            {%- if section.settings.label != blank and section.settings.link != blank -%}
+              <a class="st-jt__pill" href="{{ section.settings.link }}">
+                {{- section.settings.label | escape }} <span class="st-arrow" aria-hidden="true">↗</span>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.note != blank -%}
+              <p class="st-jt__note">{{ section.settings.note | escape }}</p>
+            {%- endif -%}
+          </div>
+
+        {%- else -%}
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="st-land__box st-guide__eyebrow" style="--x: 40; --y: 43; --w: 200;">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 class="st-land__box st-guide__heading" id="StTeaser-{{ section.id }}" style="--x: 40; --y: 78; --w: 340;">{{ section.settings.heading | escape }}</h2>
+          {%- if section.settings.note != blank -%}
+            <p class="st-land__box st-land__hand" style="--x: 30; --y: 170; --w: 210; --fs: 30; --rot: -12deg;">{{ section.settings.note | escape }}</p>
+          {%- endif -%}
+          <div class="st-land__art" style="left: calc(67 * var(--k)); top: calc(10 * var(--k)); width: calc(400 * var(--k));">
+            {%- if section.settings.image != blank -%}
+              {{ section.settings.image | image_url: width: 720 | image_tag: alt: section.settings.image_alt, loading: 'lazy', fetchpriority: 'low', widths: '360, 540, 720', sizes: '(min-width: 560px) 336px, 62vw' }}
+            {%- else -%}
+              <img src="{{ 'st-nail-guide.webp' | asset_url }}" width="1086" height="1448" alt="{{ section.settings.image_alt | escape }}" loading="lazy" decoding="async" fetchpriority="low">
+            {%- endif -%}
+          </div>
+          {%- if section.settings.label != blank and section.settings.link != blank -%}
+            <a class="st-land__pill st-land__pill--filled" href="{{ section.settings.link }}" style="--x: 45; --y: 460; --w: 305; --ph: 58; --pill-bg: #c3021d;">
+              {{- section.settings.label | escape }} <span class="st-arrow" aria-hidden="true">↗</span>
+            </a>
+          {%- endif -%}
+      {%- endcase -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Small Talk teaser",
+  "class": "st-land-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "kind",
+      "label": "Style",
+      "options": [
+        { "value": "talks", "label": "the talks" },
+        { "value": "journal", "label": "Journal" },
+        { "value": "guide", "label": "Nail Guide" }
+      ],
+      "default": "journal"
+    },
+    { "type": "text", "id": "gate", "label": "Gate", "info": "Register gate ID. If set, the teaser stays hidden until the gate is confirmed." },
+    { "type": "checkbox", "id": "gate_confirmed", "label": "Gate confirmed", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (guide)" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Small stories. Big feelings." },
+    { "type": "text", "id": "note", "label": "Handwritten line" },
+    { "type": "textarea", "id": "copy", "label": "Support line (talks)" },
+    { "type": "text", "id": "list_label", "label": "List label (talks)", "default": "latest talks" },
+    { "type": "text", "id": "topic_order", "label": "Topic chips (talks)", "info": "Topic handles in the hub's chip order; the first three that exist show.", "default": "plot-twists, tiny-wins, nail-talk, something-else" },
+    { "type": "image_picker", "id": "image", "label": "Image (guide art, or journal card 1)" },
+    { "type": "text", "id": "image_alt", "label": "Guide image alt text" },
+    { "type": "image_picker", "id": "image_2", "label": "Journal card 2 image" },
+    { "type": "text", "id": "tile_1_alt", "label": "Journal card 1 alt text" },
+    { "type": "text", "id": "tile_2_alt", "label": "Journal card 2 alt text" },
+    {
+      "type": "metaobject",
+      "id": "example_campaign",
+      "label": "Example set (talks avatar / journal cards)",
+      "metaobject_type": "small_talk_campaign"
+    },
+    { "type": "text", "id": "example_label", "label": "Example label", "info": "The example renders only with its label." },
+    { "type": "textarea", "id": "example_text", "label": "Example talk text" },
+    { "type": "text", "id": "example_alias", "label": "Example alias" },
+    { "type": "url", "id": "link", "label": "Button link" },
+    { "type": "text", "id": "label", "label": "Button label" },
+    { "type": "text", "id": "cta_aria", "label": "Button accessible name (talks)", "info": "Read by screen readers instead of the label, e.g. where the button goes." }
+  ],
+  "presets": [{ "name": "Small Talk teaser" }]
+}
+{% endschema %}

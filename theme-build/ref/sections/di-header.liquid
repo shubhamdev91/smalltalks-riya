@@ -1,0 +1,25 @@
+<header class="di-header">
+ <details class="di-menu"><summary aria-label="Open menu"><span aria-hidden="true">☰</span></summary><nav aria-label="Main navigation">
+ {% for link in section.settings.menu.links %}<a href="{{ link.url }}">{{ link.title | escape }}</a>{% else %}<a href="/collections/all">Shop</a><a href="/pages/our-story">Our Story</a><a href="/blogs/journal">Journal</a><a href="/pages/nail-guide">Nail Guide</a><a href="/pages/help">Help</a>{% endfor %}<a href="{{ routes.search_url }}">Search</a></nav></details>
+ <a class="di-wordmark" href="{{ routes.root_url }}" aria-label="Small Talk home">small<br>talk</a>
+ <nav class="di-desktop-nav" aria-label="Shop navigation">{% for link in section.settings.menu.links %}<a href="{{ link.url }}">{{ link.title | escape }}</a>{% endfor %}</nav>
+ <a class="di-talks-word" href="/pages/the-talks">the talks</a>
+ <a class="di-bag" href="{{ routes.cart_url }}" aria-label="Your bag, {{ cart.item_count }} items"><svg width="27" height="32" viewBox="0 0 30 34" fill="none" aria-hidden="true"><path d="M6 10h18l3 21H3L6 10Z M10 12V6a5 5 0 0 1 10 0v6" stroke="currentColor" stroke-width="1.6"/></svg>{% if cart.item_count > 0 %}<span>{{ cart.item_count }}</span>{% endif %}</a>
+</header>
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}

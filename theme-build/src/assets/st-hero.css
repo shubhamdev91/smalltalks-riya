@@ -1,0 +1,527 @@
+/* Small Talk hero v3.8 (desktop composition >= 1024; v3.7.3 campaign body at 50%; v3.7.2 held first-paint art; v3.7 hero-v2 cuts: Green Flag, Shaadi Shift, Pinky Promise; v3.6 HD nail sheets; v3.5 HD fingers + Brainwave/Wild Card v2 art; v3.4 HD hand + half-faces; v3 = board 2 re-fit) (spec/hero.md, spec/tokens.css). 390 px phone = the bar.
+   Rules: no CSS transforms on any ancestor of a nail element (the controller measures the offset chain);
+   nails rotate only via the `rotate` property on the nail element itself, transform-origin at the cuticle.
+
+   Scaling: the root is a size container. Board px (at 390, scene = frame minus the 69 px header) map to
+     --kx  horizontal positions  (100cqw / 390)
+     --ky  vertical positions    (100cqh / 775, a 390x844 phone scene)
+     --k   sizes                 (the smaller of the two, so nothing distorts)
+   Per-set geometry (copy, accents, character, colours) is keyed on the root's data-active-key, which the
+   Liquid first paint sets and the controller updates on commit. The finger and main nail never move. */
+
+.st-hero {
+  container-type: size;
+  position: relative;
+  height: clamp(30rem, calc(100svh - var(--st-header-h, 69px)), 60rem);   /* 30rem keeps the pill above the fold on 320x568 */
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--hero-glow, var(--st-scene, #f5a908));
+  color: var(--hero-ink, #180e0b);
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+
+  --kx: calc(100cqw / 390);
+  --ky: calc(100cqh / 775);
+  --k: min(var(--kx), var(--ky));
+
+  /* fixed finger cluster: cuticle of the main nail (board average, scene px) */
+  --cx: calc(205 * var(--kx));
+  --cy: calc(562 * var(--ky));
+  --nail-w: calc(148 * var(--k));          /* cell; HD plate 0.846 -> 125 px visible at 390 (board 2 frame 1: 122) */
+  --nail-h: calc(var(--nail-w) * 354 / 204);
+  --finger-w: calc(var(--nail-w) / 0.526);          /* 204 x 0.8 / 310: nail cell width on the finger canvas */
+  --finger-h: calc(var(--finger-w) * 840 / 310);
+  --acc-w: calc(82 * var(--k));            /* v3.6: HD nail plates are 0.846 of the cell (P1 0.895), so 82 keeps the v3.3 loose-nail size */
+  --acc-h: calc(var(--acc-w) * 354 / 204);
+  --hand-w: calc(335 * var(--k));          /* v3.4 HD hand: press-ons match the v3.3 board fit (~28 css px) */
+  --note-scale: 0.5;                        /* v3.7.3 owner override: campaign body at 50% (board size x 0.5) */
+
+  /* sparkle ticks after the note: 3 or 2 strokes, round caps (spec: -80, -35, -5 degrees) */
+  --ticks-3: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 36'%3E%3Cg stroke='%23000' stroke-width='2.5' stroke-linecap='round' fill='none'%3E%3Cpath d='M3.4 26.1 7.2 4.5M8.6 29.4 26.6 16.8M10 33.3 29.9 31.6'/%3E%3C/g%3E%3C/svg%3E");
+  --ticks-2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 36'%3E%3Cg stroke='%23000' stroke-width='2.5' stroke-linecap='round' fill='none'%3E%3Cpath d='M3.4 26.1 7.2 4.5M8.6 29.4 26.6 16.8'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ---------- per-set tokens (values from spec/tokens.css and spec/hero.md) ---------- */
+.st-hero[data-active-key='on-me'] {
+  --hero-glow: radial-gradient(circle at 46% 34%, #fcc01d 0, #f5a908 calc(99 * var(--k)), #e18e05 calc(225 * var(--k)));
+  --hero-ink: #180e0b; --hero-pill: #9c0219; --hero-pill-ink: #ffffff; --hero-pill-line: #ffffff;
+  --note-x: 45; --note-y: 113; --note-rot: -10deg; --note-fs: 58; --note-w: 158; --ticks: var(--ticks-3);
+  --hl-x: 35; --hl-y: 178; --hl-fs: 85; --hl-i2: 0;
+  --a1-dx: -143; --a1-dy: -97; --a1-rot: 30deg; --a2-dx: -210; --a2-dy: -138; --a2-rot: 40deg; --a1-z: 5; --a2-z: 4;
+  --ch-w: 270; --ch-left: calc(-8 * var(--k)); --ch-top: calc(631 * var(--ky) - 182 * var(--k));
+  --ch-mask: none;
+}
+.st-hero[data-active-key='brainwave'] {
+  --hero-glow: radial-gradient(circle at 52% 28%, #0958f4 0, #0444d9 calc(132 * var(--k)), #032cb8 calc(300 * var(--k)));
+  --hero-ink: #ffffff; --hero-pill: #ffffff; --hero-pill-ink: #0f0bcd; --hero-pill-line: transparent;
+  --note-x: 104; --note-y: 169; --note-rot: -12deg; --note-fs: 52; --note-w: 200; --ticks: var(--ticks-2);
+  --hl-x: 30; --hl-y: 214; --hl-fs: 71; --hl-i2: 90;
+  --a1-dx: -181; --a1-dy: -77; --a1-rot: 25deg; --a2-dx: -144; --a2-dy: -35; --a2-rot: 30deg; --a1-z: 4; --a2-z: 5;
+  --ch-w: 134.6; --ch-left: calc(-2 * var(--k)); --ch-top: calc(-8.2 * var(--k));   /* v3.5 HD half-face, bleeds left + top */
+  --ch-mask: none;
+}
+.st-hero[data-active-key='diet-cherry'] {
+  --hero-glow: radial-gradient(circle at 35% 33%, #d41614 0, #b70a09 calc(132 * var(--k)), #780303 calc(300 * var(--k)));
+  --hero-ink: #ffffff; --hero-pill: #ffffff; --hero-pill-ink: #d6171a; --hero-pill-line: transparent;
+  --note-x: 45; --note-y: 109; --note-rot: -10deg; --note-fs: 52; --note-w: 200; --ticks: none;
+  --hl-x: 45; --hl-y: 150; --hl-fs: 76; --hl-i2: 0;
+  --a1-dx: 122; --a1-dy: -108; --a1-rot: -25deg; --a2-dx: 163; --a2-dy: -41; --a2-rot: -20deg; --a1-z: 4; --a2-z: 5;
+  --ch-w: 230; --ch-left: calc(-62 * var(--k)); --ch-top: calc(306 * var(--ky));
+  --ch-mask: linear-gradient(to bottom, #000 calc(520 * var(--ky)), transparent calc(560 * var(--ky)));
+}
+.st-hero[data-active-key='green-flag'] {
+  --hero-glow: radial-gradient(circle at 43% 38%, #0d7b4e 0, #04673c calc(176 * var(--k)), #034727 calc(400 * var(--k)));
+  --hero-ink: #ffffff; --hero-pill: #ffffff; --hero-pill-ink: #107247; --hero-pill-line: transparent;
+  --note-x: 35; --note-y: 146; --note-rot: -12deg; --note-fs: 52; --note-w: 200; --ticks: var(--ticks-3);
+  --hl-x: 30; --hl-y: 186; --hl-fs: 53; --hl-i2: 0;
+  --a1-dx: -173; --a1-dy: -80; --a1-rot: 25deg; --a2-dx: -141; --a2-dy: -5; --a2-rot: 20deg; --a1-z: 4; --a2-z: 5;
+  /* v3.7 hero-v2 cut: face at the board-4 scale, arm + cord run down behind the pill; slivers and top cut fixed in the file */
+  --ch-w: 298.9; --ch-left: calc(100cqw - 290.6 * var(--k)); --ch-top: calc(516.6 * var(--ky) - 209.1 * var(--k));
+  --ch-mask: none;
+}
+.st-hero[data-active-key='shaadi-shift'] {
+  --hero-glow: radial-gradient(circle at 49% 40%, #fa357f 0, #f61d6d calc(176 * var(--k)), #df0a4d calc(400 * var(--k)));
+  --hero-ink: #180e0b; --hero-pill: #9b021a; --hero-pill-ink: #ffffff; --hero-pill-line: #ffffff;
+  --note-x: 35; --note-y: 152; --note-rot: -8deg; --note-fs: 56; --note-w: 200; --ticks: var(--ticks-3);
+  --hl-x: 30; --hl-y: 196; --hl-fs: 72; --hl-i2: 0;
+  --a1-dx: -126; --a1-dy: -110; --a1-rot: 25deg; --a2-dx: -174; --a2-dy: -125; --a2-rot: 20deg; --a1-z: 5; --a2-z: 4;
+  /* v3.7 hero-v2 cut: tall dupatta strip, pin vertical; anchored to the hero bottom so the strip always reaches the pill */
+  --ch-w: 125.8; --ch-left: calc(-8.4 * var(--k)); --ch-top: calc(100cqh - 446.3 * var(--k));
+  --ch-mask: none;
+}
+.st-hero[data-active-key='wild-card'] {
+  --hero-glow: radial-gradient(circle at 51% 34%, #d2fb23 0, #b4f50a calc(88 * var(--k)), #94e004 calc(200 * var(--k)));
+  --hero-ink: #0f0b5c; --hero-pill: #ffffff; --hero-pill-ink: #0f0cce; --hero-pill-line: transparent;
+  --note-x: 35; --note-y: 109; --note-rot: -18deg; --note-fs: 56; --note-w: 300; --ticks: var(--ticks-2);
+  --hl-x: 80; --hl-y: 150; --hl-fs: 65; --hl-i1: 15; --hl-i2: 0;
+  --a1-dx: 113; --a1-dy: -101; --a1-rot: -15deg; --a2-dx: 155; --a2-dy: -63; --a2-rot: -10deg; --a1-z: 4; --a2-z: 5;
+  --ch-w: 164.7; --ch-left: calc(-8.1 * var(--k)); --ch-top: calc(472.2 * var(--ky) - 229.3 * var(--k));   /* v3.5 v2 art */
+  --ch-mask: none;
+  /* part 1: the hand holding the cards (red backs), over the woman; its wrist fades out behind the pill */
+  --chp1-w: 120.4; --chp1-left: calc(-8.1 * var(--k)); --chp1-top: calc(589.2 * var(--ky) - 81.9 * var(--k));
+}
+.st-hero[data-active-key='pinky-promise'] {
+  --hero-glow: radial-gradient(circle at 38% 32%, #792ffb 0, #621dec calc(132 * var(--k)), #4812c8 calc(300 * var(--k)));
+  --hero-ink: #ffffff; --hero-pill: #ffffff; --hero-pill-ink: #d6181b; --hero-pill-line: transparent;
+  --note-x: 78; --note-y: 172; --note-rot: -8deg; --note-fs: 48; --note-w: 300; --ticks: var(--ticks-3);
+  --hl-x: 45; --hl-y: 214; --hl-fs: 66; --hl-i2: 30;
+  --a1-dx: -150; --a1-dy: -41; --a1-rot: 30deg; --a2-dx: -190; --a2-dy: -78; --a2-rot: 30deg; --a1-z: 5; --a2-z: 4;
+  /* v3.7 hero-v2 cut: full profile (cheek, lips, chin); bleeds left + top; soften two hair curls that touch the right edge */
+  --ch-w: 119.8; --ch-left: calc(-8.2 * var(--k)); --ch-top: calc(-8.3 * var(--k));
+  --ch-mask: none;
+  --ch-img-mask: linear-gradient(to left, transparent 0, #000 5%);
+}
+
+/* next scene colour, cross-faded in by the controller (it sets data-key on this element) */
+.st-hero__scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.st-hero__scene[data-key='on-me'] { background: radial-gradient(circle at 46% 34%, #fcc01d 0, #f5a908 calc(99 * var(--k)), #e18e05 calc(225 * var(--k))); }
+.st-hero__scene[data-key='brainwave'] { background: radial-gradient(circle at 52% 28%, #0958f4 0, #0444d9 calc(132 * var(--k)), #032cb8 calc(300 * var(--k))); }
+.st-hero__scene[data-key='diet-cherry'] { background: radial-gradient(circle at 35% 33%, #d41614 0, #b70a09 calc(132 * var(--k)), #780303 calc(300 * var(--k))); }
+.st-hero__scene[data-key='green-flag'] { background: radial-gradient(circle at 43% 38%, #0d7b4e 0, #04673c calc(176 * var(--k)), #034727 calc(400 * var(--k))); }
+.st-hero__scene[data-key='shaadi-shift'] { background: radial-gradient(circle at 49% 40%, #fa357f 0, #f61d6d calc(176 * var(--k)), #df0a4d calc(400 * var(--k))); }
+.st-hero__scene[data-key='wild-card'] { background: radial-gradient(circle at 51% 34%, #d2fb23 0, #b4f50a calc(88 * var(--k)), #94e004 calc(200 * var(--k))); }
+.st-hero__scene[data-key='pinky-promise'] { background: radial-gradient(circle at 38% 32%, #792ffb 0, #621dec calc(132 * var(--k)), #4812c8 calc(300 * var(--k))); }
+
+.st-hero__halo { display: none; }   /* v2 layer; the per-set glow replaces it */
+
+/* ---------- copy ---------- */
+.st-hero__copy {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.st-hero__note {
+  position: absolute;
+  left: calc(var(--note-x) * var(--kx));
+  top: calc(var(--note-y) * var(--ky));
+  max-width: calc(var(--note-w) * var(--note-scale, 1) * var(--k));   /* line breaks unchanged */
+  margin: 0;
+  font-family: "Caveat", "Segoe Print", cursive;
+  font-weight: 700;
+  font-size: max(16px, calc(var(--note-fs) * var(--note-scale, 1) * var(--k)));
+  line-height: 0.95;
+  color: inherit;
+  rotate: var(--note-rot);
+  transform-origin: left bottom;
+}
+.st-hero[data-active-key='diet-cherry'] .st-hero__note::after { display: none; }   /* board frame 3 has no ticks */
+.st-hero__note::after {
+  content: '';
+  display: inline-block;
+  width: 0.48em;                /* v3.7.3: ticks scale with the note (was 26 x 30 k at board size) */
+  height: 0.55em;
+  margin-left: 0.1em;
+  vertical-align: 0.15em;
+  background: currentColor;
+  -webkit-mask: var(--ticks, none) no-repeat center / contain;
+  mask: var(--ticks, none) no-repeat center / contain;
+}
+
+.st-hero__headline {
+  position: absolute;
+  left: calc(var(--hl-x) * var(--kx));
+  top: calc(var(--hl-y) * var(--ky));
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 900;
+  font-variation-settings: "wght" 900, "SOFT" 100, "WONK" 1, "opsz" 144;
+  font-size: calc(var(--hl-fs) * var(--k));
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+  word-spacing: 0.2em;          /* v3.1: the tight tracking also ate the word spaces ("Billidhar."); board 2 shows clear gaps */
+  white-space: nowrap;
+  color: inherit;
+  rotate: -3deg;
+  transform-origin: left top;
+  --arc-r: 380;               /* arc radius in board px at 390 (spec), scaled by k in the controller */
+}
+/* The controller splits the headline into lines, words and letters for the arc. */
+.st-hero__headline .st-hero__sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+.st-hero__arc {                /* the visual letters only (aria-hidden); the screen-reader text is never scaled */
+  display: block;
+  scale: var(--hl-sx, 0.9) 1;   /* board letterforms are taller and narrower than Fraunces 900: condense slightly */
+  transform-origin: left top;
+}
+.st-hero__line { display: block; }
+.st-hero__line:nth-child(1) { padding-left: calc(var(--hl-i1, 0) * var(--k)); }
+.st-hero__line:nth-child(2) { padding-left: calc(var(--hl-i2, 0) * var(--k)); }
+.st-hero__word { display: inline-block; white-space: nowrap; }
+.st-hero__letter { display: inline-block; transform-origin: 50% 100%; }
+
+/* ---------- nails ---------- */
+.st-nail {
+  display: block;
+  aspect-ratio: 204 / 354;
+  background-image: var(--st-nails);
+  background-repeat: no-repeat;
+  background-size: 300% 100%;
+  background-position: calc(var(--col, 0) * 50%) 0;
+  transform-origin: 50% 92.5%;
+  rotate: var(--rot, 0deg);
+  pointer-events: none;
+}
+.st-nail.is-hidden { opacity: 0; }
+
+.st-hero__finger {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--cx) - var(--finger-w) / 2);
+  top: calc(var(--cy) - var(--finger-h) * 0.2649);
+  width: var(--finger-w);
+  height: var(--finger-h);
+}
+.st-hero__tone {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+/* Main nail: a button so it can be held. Its cell anchor sits on the finger's nail bed (0.5, 0.2649). */
+.st-hero__main {
+  position: absolute;
+  z-index: 2;
+  left: calc(50% - var(--nail-w) / 2);
+  top: calc(var(--finger-h) * 0.2649 - var(--nail-h) * 0.925);
+  width: var(--nail-w);
+  height: var(--nail-h);
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 50% 50% 45% 45%;
+  cursor: grab;
+  touch-action: pan-y;
+}
+.st-hero__main:active { cursor: grabbing; }
+.st-hero__main .st-nail { width: 100%; height: 100%; }
+
+/* Loose accents: cuticle placed relative to the main cuticle (board offsets), tilted toward the finger. */
+.st-hero__accent {
+  position: absolute;
+  width: var(--acc-w);
+  height: var(--acc-h);
+}
+.st-hero__accent--1 {
+  z-index: var(--a1-z, 5);
+  left: calc(var(--cx) + var(--a1-dx, -138) * var(--k) - var(--acc-w) / 2);
+  top: calc(var(--cy) + var(--a1-dy, -107) * var(--k) - var(--acc-h) * 0.925);
+  --rot: var(--a1-rot, 30deg);
+}
+.st-hero__accent--2 {
+  z-index: var(--a2-z, 4);
+  left: calc(var(--cx) + var(--a2-dx, -203) * var(--k) - var(--acc-w) / 2);
+  top: calc(var(--cy) + var(--a2-dy, -147) * var(--k) - var(--acc-h) * 0.925);
+  --rot: var(--a2-rot, 40deg);
+}
+.st-hero__accent .st-nail { width: 100%; height: 100%; }
+
+/* Preview hand: a button entering from the top-right corner; wrist bleeds off the top and right edges. */
+.st-hero__preview {
+  position: absolute;
+  z-index: 2;
+  top: calc(-139 * var(--k));            /* v3.4: least-squares fit of the HD slots to the v3.3 board fit, then -8 */
+  right: calc(-170 * var(--k));
+  width: var(--hand-w);
+  aspect-ratio: 510 / 498;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.st-hero__hand { display: block; width: 100%; height: 100%; pointer-events: none; }
+.st-hero__preview .st-nail {
+  position: absolute;
+  width: calc(var(--hand-w) * var(--cell-frac));
+  height: calc(var(--hand-w) * var(--cell-frac) * 354 / 204);
+  left: calc(var(--cx-h) * 100% - var(--hand-w) * var(--cell-frac) * 0.5);
+  top: calc(var(--cy-h) * 100% - var(--hand-w) * var(--cell-frac) * 354 / 204 * 0.925);
+}
+/* Slot geometry from artwork/hand/hd/preview-hand.json (v3.4 HD hand, 510 x 498) */
+[data-st-hero-preview-nail='0'] { --cx-h: 0.1104; --cy-h: 0.7119; --rot: -151.9deg; --cell-frac: 0.0828; }
+[data-st-hero-preview-nail='1'] { --cx-h: 0.1784; --cy-h: 0.7836; --rot: -156.8deg; --cell-frac: 0.1144; }
+[data-st-hero-preview-nail='2'] { --cx-h: 0.3019; --cy-h: 0.8128; --rot: -154.0deg; --cell-frac: 0.1035; }
+[data-st-hero-preview-nail='3'] { --cx-h: 0.4607; --cy-h: 0.7894; --rot: -154.7deg; --cell-frac: 0.0812; }
+
+.st-hero__flyers { position: absolute; inset: 0; z-index: 7; pointer-events: none; }
+.st-hero__flyer { position: absolute; left: 0; top: 0; will-change: transform; }
+
+/* ---------- character: a full-width clip layer; the art is placed per set and may be cropped ---------- */
+.st-hero__character {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: var(--ch-mask, none);
+  mask-image: var(--ch-mask, none);
+}
+.st-hero__character img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  width: calc(var(--ch-w, 250) * var(--k));
+  height: auto;
+  left: var(--ch-left, 0);
+  top: var(--ch-top, auto);
+}
+.st-hero__character [data-st-hero-character-img] {
+  -webkit-mask-image: var(--ch-img-mask, none);
+  mask-image: var(--ch-img-mask, none);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+/* v3.4: optional extra layers from the campaign JSON (character.parts), above the main image */
+.st-hero__character [data-st-hero-character-part='1'] {
+  width: calc(var(--chp1-w, 0) * var(--k));
+  left: var(--chp1-left, 0);
+  top: var(--chp1-top, auto);
+}
+.st-hero__character [data-st-hero-character-part][hidden] { display: none; }
+
+/* v3.7.2: first-paint art held until the LCP image has loaded (img[data-st-src], set by the Liquid, cleared by the
+   controller once the image has loaded): transparent while held, then a short fade. */
+.st-hero img[data-st-src] { opacity: 0; }
+.st-hero__character img, .st-hero__hand { transition: opacity 0.25s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .st-hero__character img, .st-hero__hand { transition: none; }
+}
+
+/* ---------- controls ---------- */
+.st-hero__controls {
+  position: absolute;
+  z-index: 8;
+  right: calc(19 * var(--k));
+  bottom: calc(102 * var(--k));
+  display: flex;
+  flex-direction: column;
+  gap: calc(4 * var(--k));
+}
+.st-hero__control {
+  display: grid;
+  place-items: center;
+  width: max(44px, calc(52 * var(--k)));
+  height: max(44px, calc(52 * var(--k)));
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #1412d5;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.18);
+}
+.st-hero__control svg { width: calc(15 * var(--k)); height: auto; }
+.st-hero__control[aria-disabled='true'] { cursor: default; }
+.st-hero__control--pause .st-hero__icon-play,
+.st-hero__control--pause[data-state='paused'] .st-hero__icon-pause,
+.st-hero__control--pause[data-state='replay'] .st-hero__icon-pause { display: none; }
+.st-hero__control--pause[data-state='paused'] .st-hero__icon-play,
+.st-hero__control--pause[data-state='replay'] .st-hero__icon-play { display: block; }
+.st-hero__swatch {
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  border-radius: 50%;
+  background: var(--st-tone-swatch, #d7895d);
+}
+
+/* ---------- pill ---------- */
+.st-hero__cta {
+  position: absolute;
+  z-index: 8;
+  left: calc(24 * var(--kx));
+  right: calc(27 * var(--kx));
+  bottom: calc(28 * var(--k));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--k));
+  min-height: max(44px, calc(62 * var(--k)));
+  padding: 0 calc(20 * var(--k));
+  border: calc(2 * var(--k)) solid var(--hero-pill-line, transparent);
+  border-radius: 999px;
+  background: var(--hero-pill, #9c0219);
+  color: var(--hero-pill-ink, #ffffff);
+  font-family: "Barlow Semi Condensed", "Arial Narrow", sans-serif;
+  font-weight: 600;
+  font-size: calc(30 * var(--k));
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.st-hero .st-hero__cta[hidden] { display: none; }
+.st-hero__cta .st-arrow {
+  display: inline-block;
+  flex: none;
+  width: calc(22 * var(--k));
+  height: calc(22 * var(--k));
+  font-size: 0;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'%3E%3Cpath d='M4 18 18 4M7 4h11v11'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'%3E%3Cpath d='M4 18 18 4M7 4h11v11'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+.st-hero :focus-visible { outline: 3px solid currentColor; outline-offset: 4px; }
+.st-hero__cta:focus-visible { outline-color: var(--hero-pill, #fff); outline-offset: 3px; }
+
+/* ---------- desktop: same composition, spread across the width; the pill keeps a phone width ---------- */
+@media (min-width: 990px) {
+  .st-hero { height: clamp(36rem, calc(100svh - var(--st-header-h, 69px)), 54rem); }
+  /* copy and pill start right of the character column (characters keep their phone size, k) */
+  .st-hero__note { left: calc((var(--note-x) + 200) * var(--k)); }
+  .st-hero__headline { left: calc((var(--hl-x) + 200) * var(--k)); }
+  .st-hero__cta { left: calc(224 * var(--k)); right: auto; width: calc(340 * var(--k)); }
+}
+
+/* ---------- v3.8: desktop / laptop composition (>= 1024 px). Phones (< 990) are unchanged; 990-1023 keeps the v3 rule.
+   Owner brief: bigger finger, the art composed as one scene (not pushed into the corners), a bigger headline anchored to
+   the scene, the glow centred on the subject.
+   Layout: the scene (finger + loose tips + character) sits left of centre at a height-driven size; the note, headline
+   and pill form one copy block to its right, vertically centred; the next-set hand keeps its top-right entry.
+   --k becomes a height unit (hero height / 560), so every k-sized element grows together and stays in proportion. */
+@media (min-width: 1024px) {
+  .st-hero {
+    --k: min(calc(100cqh / 560), calc(100cqw / 1100));             /* height-driven; width caps it on narrow laptops (1024 x 768) */
+    --hd: calc(var(--k) * 1.1);                                   /* headline factor */
+    --cx: max(calc(380 * var(--k)), calc(50cqw - 260 * var(--k)));  /* finger: left of centre, closer to centre on wide screens */
+    --cy: calc(100cqh - 175 * var(--k));
+    --gx: var(--cx);                                              /* glow on the nail */
+    --gy: calc(var(--cy) - 130 * var(--k));
+    --x0: calc(var(--cx) + 230 * var(--k));                       /* copy column start (clears the right-side loose tips) */
+    --dhl-y: calc(48cqh - var(--dl, 2) * 0.46 * var(--hl-fs) * var(--hd));
+    --arc-r: 680;                                                 /* flatter than the phone arc (380 x hd would be 578) */
+  }
+  /* Loose tips sit right of the nail on every set (reading order: character, finger, tips, copy). */
+  .st-hero[data-active-key] {
+    --a1-dx: 122; --a1-dy: -108; --a1-rot: -25deg; --a2-dx: 163; --a2-dy: -41; --a2-rot: -20deg;
+  }
+  .st-hero__note {
+    left: var(--x0);
+    top: calc(var(--dhl-y) - 20 * var(--k) - var(--nl, 1) * 0.95 * var(--note-fs) * var(--note-scale, 1) * var(--k));
+  }
+  .st-hero__headline {
+    left: var(--x0);
+    top: var(--dhl-y);
+    font-size: calc(var(--hl-fs) * var(--hd));
+  }
+  .st-hero__line:nth-child(1) { padding-left: calc(var(--hl-i1, 0) * var(--hd)); }
+  .st-hero__line:nth-child(2) { padding-left: calc(var(--hl-i2, 0) * var(--hd)); }
+  .st-hero__cta {
+    left: var(--x0);
+    right: auto;
+    top: calc(var(--dhl-y) + var(--dl, 2) * 0.92 * var(--hl-fs) * var(--hd) + (64 + var(--dpg, 0)) * var(--k));   /* + arc sag allowance, per set */
+    bottom: auto;
+    width: min(calc(330 * var(--k)), calc(100cqw - var(--x0) - 96px));
+    min-height: max(44px, calc(56 * var(--k)));
+    font-size: calc(26 * var(--k));
+  }
+  /* Green Flag's woman bleeds right on phones; on desktop the copy owns the right, so she is mirrored to bleed left
+     beside the finger (no lettering in the art). */
+  .st-hero[data-active-key='green-flag'] [data-st-hero-character-img] { scale: -1 1; }
+  .st-hero[data-active-key='on-me'] {
+    --dpg: 32;
+    --hero-glow: radial-gradient(circle at var(--gx) var(--gy), #fcc01d 0, #f5a908 calc(158 * var(--k)), #e18e05 calc(360 * var(--k)));
+    --dl: 1; --nl: 2;
+    --ch-w: 270; --ch-left: calc(-8 * var(--k)); --ch-top: calc(100cqh - 330 * var(--k));
+  }
+  .st-hero__scene[data-key='on-me'] { background: radial-gradient(circle at var(--gx) var(--gy), #fcc01d 0, #f5a908 calc(158 * var(--k)), #e18e05 calc(360 * var(--k))); }
+  .st-hero[data-active-key='brainwave'] {
+    --dpg: -13;
+    --hero-glow: radial-gradient(circle at var(--gx) var(--gy), #0958f4 0, #0444d9 calc(211 * var(--k)), #032cb8 calc(480 * var(--k)));
+    --dl: 2; --nl: 1;
+    --ch-w: 200; --ch-left: calc(-2 * var(--k)); --ch-top: calc(-8.2 * var(--k));
+  }
+  .st-hero__scene[data-key='brainwave'] { background: radial-gradient(circle at var(--gx) var(--gy), #0958f4 0, #0444d9 calc(211 * var(--k)), #032cb8 calc(480 * var(--k))); }
+  .st-hero[data-active-key='diet-cherry'] {
+    --dpg: 21;
+    --hero-glow: radial-gradient(circle at var(--gx) var(--gy), #d41614 0, #b70a09 calc(211 * var(--k)), #780303 calc(480 * var(--k)));
+    --dl: 2; --nl: 1;
+    --ch-w: 250; --ch-left: calc(-62 * var(--k)); --ch-top: calc(100cqh - 430 * var(--k));
+    --ch-mask: linear-gradient(to bottom, #000 calc(100cqh - 200 * var(--k)), transparent calc(100cqh - 160 * var(--k)));
+  }
+  .st-hero__scene[data-key='diet-cherry'] { background: radial-gradient(circle at var(--gx) var(--gy), #d41614 0, #b70a09 calc(211 * var(--k)), #780303 calc(480 * var(--k))); }
+  .st-hero[data-active-key='green-flag'] {
+    --dpg: 45;
+    --hero-glow: radial-gradient(circle at var(--gx) var(--gy), #0d7b4e 0, #04673c calc(282 * var(--k)), #034727 calc(640 * var(--k)));
+    --dl: 2; --nl: 1;
+    --ch-w: 298.9; --ch-left: calc(-8.3 * var(--k)); --ch-top: calc(100cqh - 467.5 * var(--k));
+  }
+  .st-hero__scene[data-key='green-flag'] { background: radial-gradient(circle at var(--gx) var(--gy), #0d7b4e 0, #04673c calc(282 * var(--k)), #034727 calc(640 * var(--k))); }
+  .st-hero[data-active-key='shaadi-shift'] {
+    --dpg: 22;
+    --hero-glow: radial-gradient(circle at var(--gx) var(--gy), #fa357f 0, #f61d6d calc(282 * var(--k)), #df0a4d calc(640 * var(--k)));
+    --dl: 2; --nl: 1;
+    --ch-w: 125.8; --ch-left: calc(-8.4 * var(--k)); --ch-top: calc(100cqh - 446.3 * var(--k));
+  }
+  .st-hero__scene[data-key='shaadi-shift'] { background: radial-gradient(circle at var(--gx) var(--gy), #fa357f 0, #f61d6d calc(282 * var(--k)), #df0a4d calc(640 * var(--k))); }
+  .st-hero[data-active-key='wild-card'] {
+    --dpg: 13;
+    --hero-glow: radial-gradient(circle at var(--gx) var(--gy), #d2fb23 0, #b4f50a calc(141 * var(--k)), #94e004 calc(320 * var(--k)));
+    --dl: 2; --nl: 1;
+    --ch-w: 164.7; --ch-left: calc(-8.1 * var(--k)); --ch-top: calc(100cqh - 532.1 * var(--k));
+    --chp1-w: 120.4; --chp1-left: calc(-8.1 * var(--k)); --chp1-top: calc(100cqh - 267.7 * var(--k));
+  }
+  .st-hero__scene[data-key='wild-card'] { background: radial-gradient(circle at var(--gx) var(--gy), #d2fb23 0, #b4f50a calc(141 * var(--k)), #94e004 calc(320 * var(--k))); }
+  .st-hero[data-active-key='pinky-promise'] {
+    --dpg: 16;
+    --hero-glow: radial-gradient(circle at var(--gx) var(--gy), #792ffb 0, #621dec calc(211 * var(--k)), #4812c8 calc(480 * var(--k)));
+    --dl: 2; --nl: 1;
+    --ch-w: 200; --ch-left: calc(-8.2 * var(--k)); --ch-top: calc(-8.3 * var(--k));
+  }
+  .st-hero__scene[data-key='pinky-promise'] { background: radial-gradient(circle at var(--gx) var(--gy), #792ffb 0, #621dec calc(211 * var(--k)), #4812c8 calc(480 * var(--k))); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-hero__flyer { display: none; }
+}

@@ -1,0 +1,103 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-help",
+      "settings": {
+        "heading": "Need a hand?",
+        "sub": "We’re here to help.",
+        "search_placeholder": "Search for a topic or keyword…"
+      },
+      "blocks": {
+        "topics": {
+          "type": "st-help-topics",
+          "settings": {
+            "heading": "Browse help topics"
+          },
+          "blocks": {
+            "delivery": {
+              "type": "st-help-topic",
+              "settings": {
+                "anchor": "delivery",
+                "icon": "delivery",
+                "label": "Delivery",
+                "sub": "Shipping timelines and tracking",
+                "body": "<p>We currently ship within India. Orders are packed and dispatched within 2 business days, and delivery takes up to 7 days from the day you order. You’ll get a tracking link by email once your parcel is on its way. Any shipping charge is shown at checkout before you pay.</p><p>Not arrived within 7 days? <a href=\"#contact\">Email us</a> with your order number and we’ll chase it for you.</p>",
+                "link_label": "Read the shipping policy",
+                "policy": "shipping",
+                "gate": "",
+                "confirmed": false
+              }
+            },
+            "returns": {
+              "type": "st-help-topic",
+              "settings": {
+                "anchor": "returns",
+                "icon": "returns",
+                "label": "Returns",
+                "sub": "Returns and exchanges",
+                "body": "<p>You can return a set within 15 days of delivery if it’s unused and unopened, in its original packaging with the seal intact.</p><p>If your set arrives damaged, defective or isn’t what you ordered, email us within 15 days of delivery with your order number and a photo. We’ll send a replacement or a full refund, including any shipping you paid.</p><p>To start a return, email us within 15 days of delivery with your order number and the reason, and we’ll tell you where to send it. For change-of-mind returns, return shipping is on you; for damaged, defective or wrong items, we cover it.</p><p>Refunds go back to your original payment method within 7 business days of us receiving and checking the return.</p><p>We don’t offer direct exchanges right now. Return the set for a refund and place a new order for the one you want.</p>",
+                "link_label": "Read the refund policy",
+                "policy": "refund",
+                "gate": "",
+                "confirmed": false
+              }
+            },
+            "fit": {
+              "type": "st-help-topic",
+              "settings": {
+                "anchor": "fit",
+                "icon": "fit",
+                "label": "Fit & application",
+                "sub": "Sizing, application and care",
+                "body": "<p>Every kit has 12 sizes, so there’s nothing to pick at checkout.</p><p>Glue lasts up to about 2 weeks, tabs 1–3 days.</p><p>To take them off, soak for 10–15 minutes and lift gently from the side. Never force them.</p><p>Want them again? Take them off gently and they can be reused.</p>",
+                "link_label": "Open the Nail Guide",
+                "link_url": "/pages/nail-guide-desi",
+                "policy": "none",
+                "gate": "G2-G4",
+                "confirmed": true
+              }
+            },
+            "orders": {
+              "type": "st-help-topic",
+              "settings": {
+                "anchor": "orders",
+                "icon": "orders",
+                "label": "Orders",
+                "sub": "Order changes and support",
+                "body": "<p>Need to change your delivery address? <a href=\"#contact\">Email us</a> as soon as you can. We can update it while your order is still being packed, but not once it’s been dispatched.</p><p>Want to cancel? You can, for a full refund, any time before your order is dispatched. <a href=\"#contact\">Email us</a> with your order number.</p>",
+                "policy": "none",
+                "gate": "G13",
+                "confirmed": true
+              }
+            }
+          },
+          "block_order": [
+            "delivery",
+            "returns",
+            "fit",
+            "orders"
+          ]
+        },
+        "form": {
+          "type": "st-help-form",
+          "settings": {
+            "g8_confirmed": true,
+            "heading": "Still need help?",
+            "intro": "Send us a message and we’ll get back to you soon.",
+            "success": "Got it, thank you. We’ll reply to the email you gave us.",
+            "anchor": "contact",
+            "show_email": false,
+            "show_order": false
+          }
+        }
+      },
+      "block_order": [
+        "topics",
+        "form"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

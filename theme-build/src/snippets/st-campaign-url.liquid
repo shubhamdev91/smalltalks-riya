@@ -1,0 +1,19 @@
+{% doc %}
+  Prints the shopper URL for a campaign: the product's own URL when the product is published,
+  otherwise /products/<product_handle> (resolves once the product is active). No review-mode rewriting.
+
+  @param {metaobject} campaign - small_talk_campaign entry.
+
+  @example
+  {% capture url %}{% render 'st-campaign-url', campaign: c %}{% endcapture %}
+{% enddoc %}
+{%- liquid
+  assign campaign_product = campaign.product.value
+  if campaign_product != blank and campaign_product.url != blank
+    echo campaign_product.url
+  elsif campaign.product_handle.value != blank
+    echo routes.root_url | remove_last: '/' | append: '/products/' | append: campaign.product_handle.value
+  else
+    echo routes.all_products_collection_url
+  endif
+-%}

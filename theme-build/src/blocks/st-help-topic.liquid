@@ -1,0 +1,231 @@
+{% doc %}
+  One Help topic row (PG-037…047, board 4 frame 6): line icon, label, one-line summary and a chevron; the body opens
+  in place (a disclosure with an anchor id), then an optional link. A topic tied to a policy renders only once that policy's body exists and links to it (G6 shipping, G7
+  refund; the refund topic also needs the theme setting "Refund policy text verified"); otherwise a topic with a gate
+  renders only when "Gate confirmed" is on.
+{% enddoc %}
+
+{%- liquid
+  assign visible = true
+  if block.settings.gate != blank and block.settings.confirmed == false
+    assign visible = false
+  endif
+  assign link_url = block.settings.link_url
+  case block.settings.policy
+    when 'shipping'
+      assign visible = false
+      if shop.shipping_policy.body != blank
+        assign visible = true
+        assign link_url = shop.shipping_policy.url
+      endif
+    when 'refund'
+      assign visible = false
+      if shop.refund_policy.body != blank and settings.st_refund_verified
+        assign visible = true
+        assign link_url = shop.refund_policy.url
+      endif
+  endcase
+-%}
+
+{%- if visible and block.settings.label != blank and block.settings.body != blank -%}
+  <details class="st-topic__item" id="{{ block.settings.anchor | default: block.id | handleize }}" {{ block.shopify_attributes }}>
+    <summary class="st-topic__summary">
+      <span class="st-topic__glyph" aria-hidden="true">
+        {%- case block.settings.icon -%}
+          {%- when 'delivery' -%}
+            <svg viewBox="0 0 36 36" focusable="false"><path d="M3.5 7.5 Q3.5 5.5 5.5 5.5 H22.5 V27.5 H3.5 Z"/><path d="M22.5 12.5 H28.5 L32.5 18.5 V27.5 H22.5"/><path d="M25.5 12.5 V18.5 H32.5"/><circle cx="9.5" cy="28.5" r="3.2"/><circle cx="26.5" cy="28.5" r="3.2"/><path d="M13 10.5 V16.5 L16.5 18.5"/></svg>
+          {%- when 'returns' -%}
+            <svg viewBox="0 0 36 36" focusable="false"><path d="M7.5 11 A13 13 0 1 1 5 18.5"/><path d="M3.5 6.5 L7.5 11 L12.5 8.5"/><path d="M18 10.5 V18.5 L23 21.5"/></svg>
+          {%- when 'fit' -%}
+            <svg viewBox="0 0 36 36" focusable="false"><path d="M24.5 4.5 L31.5 11.5 L13 30 L5 31 L6 23 Z"/><path d="M21 8 L28 15"/><path d="M6 23 L13 30"/></svg>
+          {%- when 'orders' -%}
+            <svg viewBox="0 0 36 36" focusable="false"><path d="M4.5 11.5 H31.5 V31 H4.5 Z"/><path d="M13 11.5 V6.5 H23 V11.5"/><path d="M11 21 H25"/><circle cx="18" cy="21" r="2.5"/></svg>
+        {%- endcase -%}
+      </span>
+      <span class="st-topic__text">
+        <span class="st-topic__label">{{ block.settings.label | escape }}</span>
+        {%- if block.settings.sub != blank -%}<span class="st-topic__sub">{{ block.settings.sub | escape }}</span>{%- endif -%}
+      </span>
+      <svg class="st-topic__chevron" viewBox="0 0 10 18" aria-hidden="true" focusable="false"><path d="M1.5 1.5 L8.5 9 L1.5 16.5"/></svg>
+    </summary>
+    <div class="st-topic__body st-rte">
+      {{ block.settings.body }}
+      {%- if block.settings.link_label != blank and link_url != blank -%}
+        <p><a class="st-link" href="{{ link_url }}">{{ block.settings.link_label | escape }} <span class="st-arrow" aria-hidden="true">→</span></a></p>
+      {%- endif -%}
+    </div>
+  </details>
+{%- elsif request.design_mode -%}
+  <p class="st-topic__held" {{ block.shopify_attributes }}>
+    {{ block.settings.label | default: 'Topic' | escape }}: hidden until {{ block.settings.gate | default: 'its policy has text' | escape }}{% if block.settings.gate != blank %} is confirmed{% endif %}.
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Topic rows, 95 px each (board y 425 / 520 / 615 / 712): line icon 36 px at x 30–70 (1.75 px, #1a1a2e), title
+     DM Sans 700 17 px from x 100, sub 15 px muted, chevron 2 px at x 354–363, dividers #efeff2. */
+  .st-topic__item {
+    border-block-end: 1px solid #efeff2;
+    scroll-margin-block-start: 5rem;
+  }
+
+  .st-topic__summary {
+    display: grid;
+    grid-template-columns: 69px minmax(0, 1fr) 10px;
+    align-items: center;
+    min-block-size: 95px;
+    padding: 0 2px 0 5px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .st-topic__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .st-topic__summary:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: -2px;
+  }
+
+  .st-topic__glyph svg {
+    display: block;
+    inline-size: 36px;
+    block-size: 36px;
+    fill: none;
+    stroke: #1a1a2e;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-topic__text {
+    display: grid;
+    gap: 6px;
+    padding-block: 14px 20px;
+  }
+
+  .st-topic__label {
+    color: #111;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.25;
+  }
+
+  .st-topic__sub {
+    color: var(--st-muted-text);
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .st-topic__chevron {
+    inline-size: 10px;
+    block-size: 18px;
+    fill: none;
+    stroke: #111;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: rotate 0.2s ease;
+  }
+
+  .st-topic__item[open] .st-topic__chevron {
+    rotate: 90deg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .st-topic__chevron {
+      transition: none;
+    }
+  }
+
+  .st-topic__body {
+    padding: 0 12px 20px 74px;
+    color: #1a1a2e;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .st-topic__body p {
+    margin: 0;
+  }
+
+  .st-topic__body p + p {
+    margin-block-start: 0.7em;
+  }
+
+  /* Inline links get a 44 px tall hit area without moving the text. */
+  .st-topic__body a {
+    display: inline-block;
+    padding-block: 11px;
+    margin-block: -11px;
+    color: var(--st-burgundy);
+    text-underline-offset: 3px;
+  }
+
+  .st-topic__body .st-link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 359px) {
+    .st-topic__summary {
+      grid-template-columns: 58px minmax(0, 1fr) 10px;
+    }
+
+    .st-topic__body {
+      padding-inline-start: 63px;
+    }
+  }
+
+  .st-topic__held {
+    margin: 0;
+    padding: 0.75rem 0;
+    border-block-end: 1px dashed var(--st-divider);
+    color: var(--st-muted);
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk help topic",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anchor id", "info": "e.g. delivery, returns, orders" },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "delivery", "label": "Delivery (van)" },
+        { "value": "returns", "label": "Returns (clock and arrow)" },
+        { "value": "fit", "label": "Fit (pen)" },
+        { "value": "orders", "label": "Orders (bag)" }
+      ],
+      "default": "none"
+    },
+    { "type": "text", "id": "label", "label": "Label" },
+    { "type": "text", "id": "sub", "label": "Summary line" },
+    { "type": "richtext", "id": "body", "label": "Body" },
+    { "type": "text", "id": "link_label", "label": "Link label" },
+    { "type": "url", "id": "link_url", "label": "Link", "info": "Ignored when the topic follows a policy." },
+    {
+      "type": "select",
+      "id": "policy",
+      "label": "Follows policy",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "shipping", "label": "Shipping policy" },
+        { "value": "refund", "label": "Refund policy" }
+      ],
+      "default": "none"
+    },
+    { "type": "text", "id": "gate", "label": "Gate", "info": "Register gate ID, if any." },
+    { "type": "checkbox", "id": "confirmed", "label": "Gate confirmed", "default": false }
+  ],
+  "presets": [{ "name": "Small Talk help topic" }]
+}
+{% endschema %}

@@ -1,0 +1,107 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "st-guide",
+      "settings": {
+        "heading": "Find your fit.",
+        "note": "A great fit makes it all click.",
+        "note_break": "makes",
+        "peek": "on-me",
+        "quick_heading": "Quick answers"
+      },
+      "blocks": {
+        "step1": {
+          "type": "step",
+          "settings": {
+            "number": "01",
+            "heading": "Measure your nails",
+            "body": "Use a paper strip or a soft tape measure to find the widest part of your natural nail.",
+            "image": "measure",
+            "image_alt": "A paper strip across the widest part of a bare natural nail, with a pen mark on each side.",
+            "list": "Place a strip of paper or a soft tape measure across your nail.\nMark the widest points on both sides.\nMeasure the gap in mm and match it to the size chart.",
+            "card_title": "Size chart",
+            "card_sub": "Sizes 0–11, width in mm",
+            "card_body": "<ul><li>0 = 18 mm</li><li>1 = 17 mm</li><li>2 = 16 mm</li><li>3 = 15 mm</li><li>4 = 14 mm</li><li>5 = 13 mm</li><li>6 = 12 mm</li><li>7 = 11 mm</li><li>8 = 10 mm</li><li>9 = 9 mm</li><li>10 = 8 mm</li><li>11 = 7 mm</li></ul><p>Between two sizes? Go one size up and file the sides gently to fit.</p><p>Quicker: hold the press-ons against each nail and pick the one that covers it side to side without touching your skin.</p>"
+          }
+        },
+        "step2": {
+          "type": "step",
+          "settings": {
+            "number": "02",
+            "heading": "Apply your press-ons",
+            "body": "Follow the step-by-step instructions included in your kit.",
+            "image": "apply",
+            "image_alt": "A tortoiseshell almond press-on being pressed on at the cuticle.",
+            "list": "",
+            "card_title": "Follow your kit instructions",
+            "card_sub": "",
+            "card_body": "<ol><li>Wash and dry your hands. Gently push back your cuticles with the cuticle stick.</li><li>Lightly buff the shine off each nail with the file, then wipe with the prep pad. Let it dry.</li><li>Lay out your 10 sizes in order.</li><li>Glue: a thin layer on your nail and a small drop on the press-on. Tabs: stick a tab on your nail and peel off the top film.</li><li>Place the press-on at the cuticle, angle it down, and press firmly for 20–30 seconds.</li><li>File the tips if you like. With glue, keep your hands out of water for the first hour.</li></ol><p>Tip: keep the glue off your skin, and use only a thin layer.</p>"
+          }
+        },
+        "step3": {
+          "type": "step",
+          "settings": {
+            "number": "03",
+            "heading": "Remove with care",
+            "body": "Follow the removal method printed in your kit.",
+            "image": "remove",
+            "image_alt": "A wooden cuticle stick gently lifting the edge of a burgundy press-on.",
+            "list": "",
+            "card_title": "Follow your kit instructions",
+            "card_sub": "",
+            "card_body": "<ol><li>Soak your fingertips in warm soapy water, or work cuticle oil around the edges, for 10–15 minutes.</li><li>Gently lift each press-on from the side with the cuticle stick.</li><li>Still stuck? Soak a few minutes more. Never force or peel.</li><li>Want to wear them again? Clean the old glue or tab off the press-on and your nail.</li></ol>"
+          }
+        },
+        "q_size": {
+          "type": "question",
+          "settings": {
+            "question": "How do I choose my size?",
+            "answer": "<p>Every kit has all 12 sizes, so you don’t pick one when you order. Measure each nail, or hold the press-ons against it, and match it to the chart above.</p>"
+          }
+        },
+        "q_last": {
+          "type": "question",
+          "settings": {
+            "question": "How long do they last?",
+            "answer": "<p>With glue, up to about 2 weeks. With adhesive tabs, 1–3 days. It depends on your prep and how much your hands do that week.</p>"
+          }
+        },
+        "q_reuse": {
+          "type": "question",
+          "settings": {
+            "question": "Can I re-use them?",
+            "answer": "<p>Yes, if you take them off gently. Clean off the old glue or tab, keep them in the tray, and reapply with fresh glue or a new tab.</p>"
+          }
+        },
+        "q_else": {
+          "type": "question",
+          "settings": {
+            "question": "Anything else I should know?",
+            "answer": "<p>Wear gloves for dishes, don’t use your nails as tools, and keep the glue away from children. Still unsure? Message us from the <a href=\"/pages/help#contact\">Help page</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "step1",
+        "step2",
+        "step3",
+        "q_size",
+        "q_last",
+        "q_reuse",
+        "q_else"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

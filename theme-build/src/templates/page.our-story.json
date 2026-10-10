@@ -1,0 +1,62 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-page",
+      "settings": {
+        "title_style": "display",
+        "heading": "Small talk. A lot said.",
+        "show_content": true
+      },
+      "blocks": {
+        "packaging": {
+          "type": "st-packaging",
+          "settings": {
+            "campaigns": [
+              "on-me",
+              "brainwave",
+              "pinky-promise"
+            ]
+          }
+        },
+        "features": {
+          "type": "st-features",
+          "settings": {
+            "icon_1": "sparkle",
+            "heading_1": "Small moments",
+            "text_1": "Conversations, gestures, inside jokes. The little things that stay with you.",
+            "icon_2": "heart",
+            "heading_2": "A little attitude. A kind heart.",
+            "text_2": "For friends who show up, pick you up and make everything a little more fun."
+          }
+        },
+        "note": {
+          "type": "st-note",
+          "settings": {
+            "style": "pen",
+            "alignment": "center",
+            "text": "Same people. New stories."
+          }
+        },
+        "buttons": {
+          "type": "st-buttons",
+          "settings": {
+            "alignment": "stretch",
+            "label_1": "Shop all sets",
+            "link_1": "/collections/all",
+            "label_2": "Read the Journal",
+            "link_2": "/blogs/journal"
+          }
+        }
+      },
+      "block_order": [
+        "packaging",
+        "features",
+        "note",
+        "buttons"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

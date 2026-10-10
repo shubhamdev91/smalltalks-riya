@@ -1,0 +1,273 @@
+{% doc %}
+  "Still need help?" contact form for the Help page (PG-048…PG-060). HIDDEN SLOT: the intro (PG-049) and the
+  success message (PG-059) promise a reply, which is fact G8 (a working, staffed contact channel). A form
+  without a truthful confirmation shouldn't go live, so nothing renders on the storefront until "G8 confirmed"
+  is on and the success message is filled in. Field labels and messages come from locale small_talk.help.form
+  and small_talk.forms; validation messages are applied by st-forms.js.
+{% enddoc %}
+
+{%- liquid
+  assign form_id = 'StHelpForm-' | append: block.id
+  assign ready = false
+  if block.settings.g8_confirmed and block.settings.success != blank
+    assign ready = true
+  endif
+-%}
+
+{%- if ready -%}
+  <div class="st-help-form" id="{{ block.settings.anchor | default: 'contact' }}" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank -%}
+      <h2 class="st-help-form__heading">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if block.settings.intro != blank -%}
+      <p class="st-help-form__intro">{{ block.settings.intro | escape }}</p>
+    {%- endif -%}
+    {%- comment -%}
+      PG-107: the store contact email, shown only when it is the same address the published policies give (the
+      policies' phone number is not shown, D10).
+    {%- endcomment -%}
+    {%- if block.settings.show_email and shop.email != blank -%}
+      {%- assign policy_text = shop.shipping_policy.body | append: shop.refund_policy.body | append: shop.privacy_policy.body -%}
+      {%- if policy_text contains shop.email -%}
+        {%- capture email_link -%}<a class="st-link" href="mailto:{{ shop.email }}">{{ shop.email }}</a>{%- endcapture -%}
+        <p class="st-help-form__intro">{{ 'small_talk.help.email_line_html' | t: email: email_link }}</p>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- form 'contact', id: form_id, class: 'st-help-form__form', data-st-form: '', novalidate: 'novalidate' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="st-help-form__success" role="status" tabindex="-1">{{ block.settings.success | escape }}</p>
+      {%- else -%}
+        {%- if form.errors -%}
+          <div class="st-help-form__errors" role="alert" tabindex="-1" data-st-form-summary>
+            <p>{{ 'small_talk.forms.summary' | t }}</p>
+            {%- if form.errors contains 'email' -%}
+              {%- assign email_error = form.errors.messages['email'] | downcase -%}
+              <p>{% if email_error contains 'blank' %}{{ 'small_talk.forms.email_missing' | t }}{% else %}{{ 'small_talk.forms.email_invalid' | t }}{% endif %}</p>
+            {%- elsif form.errors contains 'form' -%}
+              <p>{{ 'small_talk.help.form.error' | t }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div
+          class="st-help-form__fields"
+          data-msg-required="{{ 'small_talk.forms.required' | t | escape }}"
+          data-msg-email-missing="{{ 'small_talk.forms.email_missing' | t | escape }}"
+          data-msg-email-invalid="{{ 'small_talk.forms.email_invalid' | t | escape }}"
+          data-msg-name-missing="{{ 'small_talk.forms.name_missing' | t | escape }}"
+          data-msg-message-missing="{{ 'small_talk.forms.message_missing' | t | escape }}"
+          data-msg-summary="{{ 'small_talk.forms.summary' | t | escape }}"
+        >
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.help.form.name' | t }}</span>
+            <input type="text" name="contact[name]" required autocomplete="name" data-msg="name-missing" placeholder="{{ 'small_talk.help.form.name_placeholder' | t }}">
+          </label>
+
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.help.form.email' | t }}</span>
+            <input type="email" name="contact[email]" required autocomplete="email" spellcheck="false" data-msg="email" placeholder="{{ 'small_talk.help.form.email_placeholder' | t }}">
+          </label>
+
+          {%- if block.settings.show_order -%}
+            <label class="st-field">
+              <span class="st-field__label">{{ 'small_talk.help.form.order' | t }}</span>
+              <input type="text" name="contact[order]" maxlength="40" autocomplete="off">
+            </label>
+          {%- endif -%}
+
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.help.form.message' | t }}</span>
+            <textarea name="contact[body]" rows="3" maxlength="2000" required data-msg="message-missing" placeholder="{{ 'small_talk.help.form.message_placeholder' | t }}"></textarea>
+          </label>
+        </div>
+
+        {%- assign submit_label = 'small_talk.help.form.submit' | t | remove: '→' | strip -%}
+        <button type="submit" class="st-help-form__submit" data-sending="{{ 'small_talk.help.form.sending' | t | escape }}">
+          {{- submit_label -}}
+          <svg viewBox="0 0 18 14" aria-hidden="true" focusable="false"><path d="M1 7 H16.5 M11 1.5 L16.5 7 L11 12.5"/></svg>
+        </button>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+  <script type="module" src="{{ 'st-forms.js' | asset_url }}" fetchpriority="low"></script>
+{%- elsif request.design_mode -%}
+  <p class="st-help-form__placeholder" {{ block.shopify_attributes }}>
+    Help form hidden until fact G8 is confirmed (a staffed contact channel) and the success message is filled in.
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  /* "Still need help?" (board 4 frame 6): heading x 25, DM Sans 700 21 px; intro 17 px #5a5a8a, 2 lines; labels DM Sans
+     700 15 px; fields white, 1 px #e6e6ea, radius 8, 44 px (textarea 80); Send pill #a80f2a, DM Sans 600 18 px, →. */
+  .st-help-form {
+    display: grid;
+    margin-block-start: 90px;
+    scroll-margin-block-start: 5rem;
+  }
+
+  .st-help-form__heading {
+    margin: 0;
+    color: #111;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 21.5px; /* board ink 154 px wide (spec 21) */
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  /* Intro: spec 17 px; the board line "Send us a message and we'll get back" is 315 px = 18 px, breaking before "to". */
+  .st-help-form__intro {
+    max-inline-size: 330px;
+    margin: 13px 0 0;
+    color: #5a5a8a;
+    font-size: 18px;
+    line-height: 1.45;
+  }
+
+  .st-help-form__intro a {
+    color: var(--st-burgundy);
+    text-underline-offset: 3px;
+  }
+
+  .st-help-form__form {
+    display: grid;
+    gap: 17px;
+    margin-block-start: 14px;
+  }
+
+  .st-help-form__fields {
+    display: grid;
+    gap: 15px;
+  }
+
+  .st-help-form .st-field {
+    display: grid;
+    gap: 7px;
+  }
+
+  .st-help-form .st-field__label {
+    color: #111;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  .st-help-form .st-field input,
+  .st-help-form .st-field textarea {
+    inline-size: 100%;
+    min-block-size: 44px;
+    padding: 10px 16px;
+    border: 1px solid #e6e6ea;
+    border-radius: 8px;
+    background: #fff;
+    color: #1a1a2e;
+    font: inherit;
+    font-size: 16px;
+    box-shadow: 0 1px 6px rgb(26 26 46 / 0.04);
+  }
+
+  .st-help-form .st-field textarea {
+    min-block-size: 80px;
+    resize: vertical;
+  }
+
+  .st-help-form .st-field input::placeholder,
+  .st-help-form .st-field textarea::placeholder {
+    color: var(--st-placeholder);
+    font-size: 15px;
+    opacity: 1;
+  }
+
+  .st-help-form .st-field input:focus-visible,
+  .st-help-form .st-field textarea:focus-visible,
+  .st-help-form__submit:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 2px;
+  }
+
+  .st-help-form .st-field__error {
+    color: #b00818;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .st-help-form .st-field [aria-invalid='true'] {
+    border-color: #b00818;
+  }
+
+  .st-help-form__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    inline-size: calc(100% + 6px);
+    min-block-size: 48px;
+    margin-inline: -3px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: var(--st-radius-pill);
+    background: #a80f2a;
+    color: #fff;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .st-help-form__submit svg {
+    inline-size: 17px;
+    block-size: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-help-form__submit[aria-disabled='true'] {
+    opacity: 0.75;
+  }
+
+  .st-help-form__success {
+    margin: 0;
+    color: #111;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.45;
+  }
+
+  .st-help-form__errors {
+    color: #b00818;
+    font-size: 15px;
+  }
+
+  .st-help-form__errors p {
+    margin: 0 0 0.25rem;
+  }
+
+  .st-help-form__placeholder {
+    margin: 0;
+    padding: 1rem;
+    border: 1px dashed var(--st-divider);
+    color: var(--st-muted);
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk help form",
+  "settings": [
+    { "type": "checkbox", "id": "g8_confirmed", "label": "G8 confirmed (staffed contact channel)", "default": false },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "text", "id": "intro", "label": "Intro (PG-049, gated G8)" },
+    { "type": "text", "id": "success", "label": "Success message (PG-059, gated G8)" },
+    { "type": "checkbox", "id": "show_email", "label": "Show the store email line (PG-107)", "default": false },
+    { "type": "checkbox", "id": "show_order", "label": "Show the order number field (PG-054; not on the board)", "default": false },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "contact" }
+  ],
+  "presets": [{ "name": "Small Talk help form" }]
+}
+{% endschema %}

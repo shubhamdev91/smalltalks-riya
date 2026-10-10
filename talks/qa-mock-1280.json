@@ -1,0 +1,120 @@
+{
+ "mode": "mock",
+ "width": 1280,
+ "checks": {
+  "hub_rows": 9,
+  "hub_first_title": "What is your smallest friendship green flag?",
+  "hub_chips": [
+   [
+    "All",
+    "/blogs/the-talks",
+    "page"
+   ],
+   [
+    "Plot twists",
+    "/pages/talks/plot-twists",
+    null
+   ],
+   [
+    "Tiny wins",
+    "/pages/talks/tiny-wins",
+    null
+   ],
+   [
+    "Nail talk",
+    "/pages/talks/nail-talk",
+    null
+   ],
+   [
+    "Something else",
+    "/pages/talks/something-else",
+    null
+   ]
+  ],
+  "hub_row_href": "/pages/talk/what-s-your-smallest-friendship-green-flag",
+  "hub_scrollW": 1280,
+  "posting_as": "Posting as plotmomo",
+  "me_avatar_sprite": "url(\"//0nev20-vn.myshopify.com/cdn/shop/t/8/assets/st-nails-",
+  "composer_open": true,
+  "need_topic_msg": "Pick a topic first.",
+  "blocked_contact_msg": "No phone numbers, emails or UPI IDs. Take it out and post again.",
+  "optimistic_ms": 59,
+  "pending_state": "Posting…",
+  "posted_href": "/pages/talk/qa-mock-828292",
+  "posted_status": "Posted. It’s live.",
+  "payload_keys": [
+   "action",
+   "alias",
+   "avatar",
+   "device",
+   "hp",
+   "t",
+   "text",
+   "topic",
+   "topic_own"
+  ],
+  "payload_t_ms": 2600,
+  "payload_has_email_or_name": false,
+  "held_tag": "Held for a check · only you can see it",
+  "held_status": "Held for a quick check. If it’s all good, it goes live once we’ve had a look.",
+  "failed_text": "That didn’t post. Check your connection and try again.\nRetry\nEdit",
+  "retry_ok": true,
+  "rate_limited_msg": "Slow down a little. Try again in a few minutes.",
+  "rate_limited_text_back": "Too many talks today [qa]",
+  "blocked_words_msg": "That word isn’t allowed here. Say it another way?",
+  "alias_reserved_hint": "Pick another alias. No real names, and nothing that sounds official.",
+  "alias_after": "Posting as chaiqueen",
+  "topic_rows": 3,
+  "topic_current": [
+   "Tiny wins"
+  ],
+  "topic_preselected": "plot-twists",
+  "topic_scrollW": 1280,
+  "thread_title": "What is your smallest friendship green flag?",
+  "thread_meta": "small talk · 21h ago",
+  "thread_report_on_brand": 0,
+  "thread_has_email_field": 0,
+  "replying_as": "Replying as chaiqueen",
+  "thread_scrollW": 1280,
+  "reply_count_text": "1 reply",
+  "replying_to_bar": "Replying to chaiqueen\nCancel",
+  "nested_order": [
+   "0",
+   "1"
+  ],
+  "nested_payload_parent": true,
+  "report_confirm": "Report this for breaking the house rules?\nYes, report\nCancel",
+  "reported_note": "Reported. Thanks for looking out.\nShow it",
+  "report_payload": {
+   "action": "report",
+   "target": "reply:r-qamock838373",
+   "device": "9584fbe1-092b-4c9a-853c-0793013bfa58"
+  },
+  "reply_blocked_handle": "No @handles or social IDs. Take it out and post again.",
+  "article_forwards_to": "/pages/talk/what-s-your-smallest-friendship-green-flag",
+  "posts_sent": 9
+ },
+ "shots": [
+  "qa\\talks\\hub-1280.png",
+  "qa\\talks\\composer-open-1280.png",
+  "qa\\talks\\blocked-contact-1280.png",
+  "qa\\talks\\posting-1280.png",
+  "qa\\talks\\posted-1280.png",
+  "qa\\talks\\held-1280.png",
+  "qa\\talks\\failed-1280.png",
+  "qa\\talks\\rate-limited-1280.png",
+  "qa\\talks\\topic-tiny-wins-1280.png",
+  "qa\\talks\\thread-1280.png",
+  "qa\\talks\\reply-posting-1280.png",
+  "qa\\talks\\reply-nested-1280.png",
+  "qa\\talks\\report-confirm-1280.png",
+  "qa\\talks\\reported-1280.png"
+ ],
+ "errors": [
+  "console: Framing 'https://shop.app/' violates the following Content Security Policy directive: \"frame-ancestors 'self' https://shop.app https://admin.shopify.com\". The request has been blocked.\n",
+  "console: Failed to load resource: the server responded with a status of 403 ()",
+  "console: Failed to load resource: net::ERR_FAILED",
+  "console: Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+  "console: Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+ ]
+}

@@ -1,0 +1,336 @@
+{% doc %}
+  One Journal story card (board 4 frame 3): nail close-up on the set colour, then "Featured" (first card only,
+  JRN-004, uppercased by CSS), the set name and headline (article title "Name: Headline"), the excerpt and
+  "Read the story →" (JRN-005). The whole card is one link; the featured card sits on a tint of its set colour.
+  From 1024 (owner v12.1 §F) the media is the set ground with the set's campaign woman bleeding from its left / bottom
+  edges (existing HD cuts, a desktop-only lazy image, decorative) and the nail close-up on its right 62 %.
+
+  @param {article} article - The story.
+  @param {string} [key] - Campaign handle for the colours and nails.
+  @param {boolean} [featured] - First card on page 1.
+
+  @example
+  {% render 'st-journal-card', article: article, key: 'on-me', featured: true %}
+{% enddoc %}
+
+{%- liquid
+  assign title_parts = article.title | split: ': '
+  assign card_title = title_parts.first
+  assign card_sub = title_parts | slice: 1, 9 | join: ': '
+  assign excerpt = article.excerpt | default: article.content | strip_html | strip | truncatewords: 22
+  assign uid = 'JCard-' | append: article.id
+  if key != blank
+    capture ground
+      echo 'var(--st-journal-' | append: key | append: ', var(--st-tile-' | append: key | append: '))'
+    endcapture
+  endif
+  # Owner v12.1 §F (>= 1024): campaign art per set: asset, natural size, placement (width / left / bottom or top, % of
+  # the media) and modifiers (top-anchored, mirrored, right-edge fade).
+  case key
+    when 'on-me'
+      assign char = 'st-hd-on-me-woman.webp'
+      assign char_w = 535
+      assign char_h = 721
+      assign char_pos = '--cw: 46%; --cl: -2%; --cb: -8%'
+    when 'brainwave'
+      assign char = 'st-hd-brainwave-woman.webp'
+      assign char_w = 299
+      assign char_h = 637
+      assign char_pos = '--cw: 30%; --cl: -1%; --ct: -2%'
+      assign char_mod = ' st-jcard__char--top st-jcard__char--fade'
+    when 'green-flag'
+      assign char = 'st-hd-green-flag-woman-hero-v2.webp'
+      assign char_w = 729
+      assign char_h = 1020
+      assign char_pos = '--cw: 46%; --cl: -3%; --cb: -2%'
+      assign char_mod = ' st-jcard__char--mirror'
+    when 'shaadi-shift'
+      assign char = 'st-hd-shaadi-shift-woman.webp'
+      assign char_w = 780
+      assign char_h = 1022
+      assign char_pos = '--cw: 44%; --cl: -2%; --cb: -4%'
+    when 'diet-cherry'
+      assign char = 'st-hd-diet-cherry-woman.webp'
+      assign char_w = 557
+      assign char_h = 909
+      assign char_pos = '--cw: 40%; --cl: -1%; --cb: -30%'
+    when 'wild-card'
+      assign char = 'st-hd-wild-card-woman-v2.webp'
+      assign char_w = 773
+      assign char_h = 1022
+      assign char_pos = '--cw: 50%; --cl: -2%; --cb: -38%'
+    when 'pinky-promise'
+      assign char = 'st-hd-pinky-promise-scene.webp'
+      assign char_w = 904
+      assign char_h = 797
+      assign char_pos = '--cw: 74%; --cl: -2%; --cb: -10%'
+  endcase
+-%}
+<li class="st-jcard{% if featured %} st-jcard--featured{% endif %}"{% if key != blank %} style="--st-jcard-set: {{ ground | strip }}"{% endif %}>
+  {%- comment -%} One link per card; its name is "Set: Headline" (aria-labelledby the h2 + headline). {%- endcomment -%}
+  <a class="st-jcard__link" href="{{ article.url }}" aria-labelledby="{{ uid }}-name{% if card_sub != blank %} {{ uid }}-sub{% endif %}">
+    <span class="st-jcard__media">
+      {%- if key != blank -%}
+        {%- render 'st-nail-closeup', key: key, journal: true -%}
+        {%- if char != blank -%}
+          <img class="st-jcard__char{{ char_mod }}" src="{{ char | asset_url }}" width="{{ char_w }}" height="{{ char_h }}" alt="" loading="lazy" decoding="async" style="{{ char_pos }}">
+        {%- endif -%}
+      {%- elsif article.image != blank -%}
+        {{ article.image | image_url: width: 400 | image_tag: alt: '', loading: 'lazy', sizes: '172px', widths: '200, 300, 400', class: 'st-jcard__image' }}
+      {%- endif -%}
+    </span>
+    <div class="st-jcard__text">
+      {%- if featured -%}
+        <span class="st-jcard__eyebrow">{{ 'small_talk.journal.featured' | t }}</span>
+      {%- endif -%}
+      <h2 class="st-jcard__name" id="{{ uid }}-name">{{ card_title | escape }}{% if card_sub != blank %}<span class="visually-hidden">:</span>{% endif %}</h2>
+      {%- if card_sub != blank -%}<span class="st-jcard__headline" id="{{ uid }}-sub">{% render 'st-sentences', text: card_sub %}</span>{%- endif -%}
+      {%- if excerpt != blank -%}<span class="st-jcard__excerpt">{{ excerpt | escape }}</span>{%- endif -%}
+      <span class="st-jcard__read">{{ 'small_talk.journal.read' | t }} <span class="st-arrow" aria-hidden="true">→</span></span>
+    </div>
+  </a>
+</li>
+
+{% stylesheet %}
+  /* Rows: image 172 × 120 at x 18, text at x 205; the featured card is a tinted panel (x 10–380, radius 8). */
+  .st-jcard__link {
+    display: grid;
+    grid-template-columns: clamp(118px, 49%, 172px) minmax(0, 1fr); /* 172 at 390 (board), ~138 at 320 */
+    align-items: center;
+    gap: 15px;
+    padding: 0 8px;
+    color: #111;
+    text-decoration: none;
+  }
+
+  .st-jcard--featured .st-jcard__link {
+    padding-block: 8px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--st-jcard-set, #fcc92a) var(--st-journal-featured-tint, 22%), #fff); /* On Me ≈ #fff3cf */
+  }
+
+  .st-jcard__media {
+    display: block;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .st-jcard--featured .st-jcard__media {
+    height: 154px;
+  }
+
+  .st-jcard__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* The campaign art exists from 1024 only (a lazy image that is not displayed is not fetched on phones). */
+  .st-jcard__char {
+    display: none;
+  }
+
+  .st-jcard__text {
+    display: grid;
+    align-content: center;
+    gap: 2px;
+    font-family: var(--font-ui);
+  }
+
+  .st-jcard__eyebrow {
+    color: #d0204a;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .st-jcard__name {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .st-jcard--featured .st-jcard__name {
+    font-size: 26px;
+  }
+
+  .st-jcard--featured .st-jcard__headline {
+    font-weight: 700;
+    font-size: 19px;
+  }
+
+  /* Row headlines: board ink ~148 px for "Haan, mera idea tha." = 16 px regular (spec said 19). */
+  .st-jcard__headline {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .st-jcard__excerpt {
+    margin-block-start: 4px;
+    color: var(--st-muted-text, #5c5f6b);
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .st-jcard__read {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    min-height: 28px;
+    color: #d0204a;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-jcard__link:focus-visible {
+    outline: 2px solid #d0204a;
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  @media (hover: hover) {
+    .st-jcard__link:hover .st-jcard__read {
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2; owner v12.1 §F, qa/desktop/owner-v12) */
+  /* >= 1024 (Journal index grid, 3 columns): one card system. Media on top at 16:10, the set ground with the campaign
+     woman bleeding from its left / bottom edges and the nail close-up on its right 62 %; then set name, line, excerpt
+     and "Read the story". Each card is a grid (rows auto 1fr), so the cards of a row are equally tall. The featured card
+     spans the row as a horizontal panel (media 7fr at 16:9 | text 5fr). */
+  @media screen and (min-width: 1024px) {
+    .st-jcard {
+      display: grid;
+    }
+
+    .st-jcard__link {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+      align-items: start;
+      gap: 18px;
+      padding: 0;
+    }
+
+    .st-jcard__media,
+    .st-jcard--featured .st-jcard__media {
+      position: relative;
+      isolation: isolate;
+      height: auto;
+      aspect-ratio: 16 / 10;
+      border-radius: 12px;
+    }
+
+    .st-jcard__media::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--st-jcard-set, #fcc92a);
+    }
+
+    .st-jcard__media .st-closeup {
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: 62%;
+      background: transparent;
+      overflow: visible;
+    }
+
+    .st-jcard__char {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      left: var(--cl, -1%);
+      bottom: var(--cb, 0%);
+      width: var(--cw, 52%);
+      max-width: none;
+      height: auto;
+      pointer-events: none;
+    }
+
+    .st-jcard__char--top {
+      top: var(--ct, -1%);
+      bottom: auto;
+    }
+
+    .st-jcard__char--mirror {
+      scale: -1 1;
+    }
+
+    /* Brainwave: hides the file's soft dark right edge */
+    .st-jcard__char--fade {
+      -webkit-mask-image: linear-gradient(to right, #000 70%, transparent 92%);
+      mask-image: linear-gradient(to right, #000 70%, transparent 92%);
+    }
+
+    .st-jcard--featured .st-jcard__link {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      grid-template-rows: auto;
+      align-items: center;
+      gap: clamp(28px, 3vw, 56px);
+      padding: clamp(16px, 1.4vw, 24px);
+      border-radius: 12px;
+    }
+
+    .st-jcard--featured .st-jcard__media {
+      aspect-ratio: 16 / 9;
+    }
+
+    .st-jcard--featured .st-jcard__text {
+      align-content: center;
+      padding-block: 12px;
+    }
+
+    .st-jcard__text {
+      gap: 6px;
+    }
+
+    .st-jcard__eyebrow {
+      font-size: 14px;
+    }
+
+    .st-jcard__name {
+      font-size: clamp(26px, 1.9vw, 32px);
+    }
+
+    .st-jcard--featured .st-jcard__name {
+      font-size: clamp(36px, 3vw, 52px);
+    }
+
+    .st-jcard__headline {
+      font-size: 19px;
+    }
+
+    .st-jcard--featured .st-jcard__headline {
+      font-size: clamp(22px, 1.6vw, 28px);
+    }
+
+    .st-jcard__excerpt {
+      max-width: 60ch;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .st-jcard--featured .st-jcard__excerpt {
+      font-size: clamp(16px, 1.05vw, 19px);
+    }
+
+    .st-jcard__read {
+      min-height: 44px;
+      font-size: 17px;
+    }
+  }
+  /* END store desktop */
+{% endstylesheet %}

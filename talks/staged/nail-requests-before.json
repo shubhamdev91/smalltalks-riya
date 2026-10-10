@@ -1,0 +1,50 @@
+{
+ "/blogs/the-talks": {
+  "p1_requests": [
+   "st-nails-brainwave.webp",
+   "st-nails-diet-cherry.webp",
+   "st-nails-green-flag.webp",
+   "st-nails-on-me.webp",
+   "st-nails-pinky-promise.webp",
+   "st-nails-shaadi-shift.webp",
+   "st-nails-wild-card.webp"
+  ],
+  "hd_requests": [],
+  "p1_style_refs": [
+   "st-tavatar <- st-nails-green-flag",
+   "st-tavatar <- st-nails-shaadi-shift",
+   "st-tavatar <- st-nails-pinky-promise",
+   "st-tavatar <- st-nails-pinky-promise",
+   "st-tavatar <- st-nails-wild-card",
+   "st-tavatar <- st-nails-diet-cherry",
+   "st-tavatar <- st-nails-on-me",
+   "st-tavatar <- st-nails-wild-card",
+   "st-tavatar <- st-nails-brainwave"
+  ],
+  "config_sprites": []
+ },
+ "/pages/talks/tiny-wins": {
+  "p1_requests": [
+   "st-nails-diet-cherry.webp",
+   "st-nails-green-flag.webp",
+   "st-nails-pinky-promise.webp"
+  ],
+  "hd_requests": [],
+  "p1_style_refs": [
+   "st-tavatar <- st-nails-green-flag",
+   "st-tavatar <- st-nails-pinky-promise",
+   "st-tavatar <- st-nails-diet-cherry"
+  ],
+  "config_sprites": []
+ },
+ "/pages/talk/what-s-your-smallest-friendship-green-flag": {
+  "p1_requests": [
+   "st-nails-green-flag.webp"
+  ],
+  "hd_requests": [],
+  "p1_style_refs": [
+   "st-tavatar <- st-nails-green-flag"
+  ],
+  "config_sprites": []
+ }
+}

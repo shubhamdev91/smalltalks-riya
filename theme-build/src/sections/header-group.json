@@ -1,0 +1,16 @@
+{
+  "type": "header",
+  "name": "t:names.header",
+  "sections": {
+    "header_section": {
+      "type": "st-header",
+      "settings": {
+        "menu": "desi-main",
+        "talks_label": "the talks",
+        "talks_link": "/blogs/the-talks",
+        "sticky": true
+      }
+    }
+  },
+  "order": ["header_section"]
+}

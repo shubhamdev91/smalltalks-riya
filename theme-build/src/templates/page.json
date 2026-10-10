@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-page",
+      "settings": {
+        "title_style": "display",
+        "show_content": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

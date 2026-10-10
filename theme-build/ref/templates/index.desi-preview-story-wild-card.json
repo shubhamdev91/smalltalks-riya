@@ -1,0 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "di-review-copy",
+      "settings": {
+        "heading": "Wild Card: Achha. Tum pehle.",
+        "body": "<p>An original Small Talk brand story</p><img src=\"https://cdn.shopify.com/s/files/1/0830/2339/7077/files/achha-tum-pehle-approved-package.png?v=1791012911&width=700\" width=\"400\" height=\"500\" alt=\"Wild Card original illustrated packaging\"><h2>Cards down. Smile on.</h2><p>Your cards face you. Your smile gives nothing away. Across the table, someone is feeling very confident. You let them take their turn, quietly hoping the next card goes your way. The fun is in what happens next.</p><div class=\"di-story-slides\" role=\"region\" aria-label=\"Story in four moments\"><section class=\"di-story-slide\"><p>1 / 4</p><h3>Cards close.</h3></section><section class=\"di-story-slide\"><p>2 / 4</p><h3>Smile easy.</h3></section><section class=\"di-story-slide\"><p>3 / 4</p><h3>Let\u2019s see how this plays out.</h3></section><section class=\"di-story-slide\"><p>4 / 4</p><h3>Achha. Tum pehle.</h3></section></div><p>Acid lime, blush and cobalt-and-white checks.</p><p><a href=\"/products/achha-tum-pehle\">Shop Wild Card \u2192</a></p>"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

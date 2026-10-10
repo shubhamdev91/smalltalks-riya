@@ -1,0 +1,110 @@
+{
+ "source": "chatgpt/E/Shaadi Shift Portrait with Gold Pin.png",
+ "source_px": [
+  1090,
+  1443
+ ],
+ "source_alpha_note": "subject alpha was 252-253 (not 255); remapped to 255 by stlib.clean; 55 alpha-1 specks (117 px) dropped",
+ "trim_box": [
+  0,
+  17,
+  1088,
+  1443
+ ],
+ "edges_master": {
+  "top": {
+   "solid_pct": 0.5,
+   "soft_pct": 1.2
+  },
+  "bottom": {
+   "solid_pct": 96.0,
+   "soft_pct": 3.4
+  },
+  "left": {
+   "solid_pct": 90.0,
+   "soft_pct": 0.1
+  },
+  "right": {
+   "solid_pct": 0.0,
+   "soft_pct": 0.0
+  }
+ },
+ "edges_web": {
+  "top": {
+   "solid_pct": 0.6,
+   "soft_pct": 1.4
+  },
+  "bottom": {
+   "solid_pct": 96.0,
+   "soft_pct": 3.5
+  },
+  "left": {
+   "solid_pct": 90.0,
+   "soft_pct": 0.1
+  },
+  "right": {
+   "solid_pct": 0.0,
+   "soft_pct": 0.0
+  }
+ },
+ "fringe_master": {
+  "rim_px": 5869,
+  "light_halo_frac": 0.0,
+  "dark_halo_frac": 0.2919,
+  "semi_alpha_px": 18312
+ },
+ "fringe_web": {
+  "rim_px": 4068,
+  "light_halo_frac": 0.0,
+  "dark_halo_frac": 0.19,
+  "semi_alpha_px": 9977
+ },
+ "fidelity": {
+  "dupatta_pink": {
+   "dE00": 1.42,
+   "ref_px": 108154,
+   "new_px": 168719
+  },
+  "gold": {
+   "dE00": 1.38,
+   "ref_px": 63420,
+   "new_px": 174369
+  },
+  "dupatta_vs_ground_dE00": 7.75,
+  "skin": {
+   "dE00": 4.92,
+   "ref_px": 9650,
+   "new_px": 1416,
+   "note": "hue-window sample (15-35 deg), opaque px only"
+  }
+ },
+ "feather": {
+  "right_px": 64,
+  "rows_ramp": [
+   1150,
+   1235
+  ]
+ },
+ "files": {
+  "master": {
+   "path": "hd/characters/shaadi-shift-woman.webp",
+   "px": [
+    1088,
+    1426
+   ],
+   "bytes": 1798606,
+   "md5": "1ebe1fee0e67400d8518df87dfbdfa2d"
+  },
+  "web": {
+   "path": "hd/characters/shaadi-shift-woman.web.webp",
+   "px": [
+    780,
+    1022
+   ],
+   "bytes": 269456,
+   "md5": "b81ba5f8f70f2a9b9960dfa4b46ee62d",
+   "theme_asset": "st-hd-shaadi-shift-woman.webp"
+  }
+ },
+ "contact_sheet": "tests/hd/contact-shaadi-shift-woman-E.png"
+}

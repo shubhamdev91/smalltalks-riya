@@ -1,0 +1,123 @@
+{% doc %}
+  Small Talk product card, board 5 (spec/shop.md, tile composition round 5): on a set-colour tile (--st-tile-<set>,
+  board-5 medians) the set's approved package box sits at the left with a stack of loose nails from the set's sprite in
+  the right-hand column (snippet st-pack-art, shared with the bag line items; this file holds the styles). Below:
+  a red serif name (h3) with the live price at the right, and "View set →". Package art is the clean-edge derivative
+  (st-package-<key>.webp, 1.3x variant in the srcset; never upscaled further, ≤380 css px). Price comes through
+  Horizon's `price` snippet (Coming soon at 0); a sold-out badge shows when unavailable. The whole card is one link. The
+  box alt is the product media's own alt (shared, SEO-033…039); the loose nails are decorative.
+
+  @param {product} product - Product to show.
+  @param {boolean} [eager] - Load the image eagerly (first row only).
+
+  @example
+  {% render 'st-product-card', product: product, eager: forloop.first %}
+{% enddoc %}
+
+{%- liquid
+  assign key = product.metafields.small_talk.campaign.value.system.handle
+-%}
+
+<article class="st-card" data-set="{{ key }}">
+  <a class="st-card__link" href="{{ product.url }}">
+    <span class="st-card__tile">
+      {%- render 'st-pack-art', product: product, eager: eager -%}
+      {%- unless product.available -%}
+        <span class="st-card__badge">{{ 'small_talk.product.sold_out' | t }}</span>
+      {%- endunless -%}
+    </span>
+    <div class="st-card__row">
+      <h2 class="st-card__title">{{ product.title | escape }}</h2>
+      <span class="st-card__price">{% render 'price', product_resource: product, trim_zeros: true %}</span>
+    </div>
+    <span class="st-card__cta"><span class="st-card__cta-text">{{ 'small_talk.product.view_set' | t }}</span> <span class="st-arrow" aria-hidden="true">→</span></span>
+  </a>
+</article>
+
+{% stylesheet %}
+  .st-card {
+    --st-tile: var(--st-cream);
+  }
+
+  .st-card__link {
+    display: grid;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .st-card__link:hover .st-card__pack {
+    transform: translateY(-2px);
+  }
+
+  .st-card__badge {
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--st-radius-pill);
+    background: var(--st-paper);
+    color: var(--st-price);
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+
+  /* Wraps only when the column is too narrow for name + price (e.g. "Brainwave" at 320 px): the price drops below. */
+  .st-card__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem;
+    margin-block-start: 6px; /* board: name baseline ~191 px below the tile top */
+  }
+
+  /* Names and prices: bold condensed sans (tokens round 6, --font-card-name; prices match per shop acceptance 2). */
+  .st-card__title {
+    margin: 0;
+    color: var(--st-red);
+    font-family: var(--font-card-name);
+    font-weight: var(--fw-card-name, 700);
+    font-size: var(--fs-card-name, 21px);
+    line-height: 1.1;
+    letter-spacing: var(--ls-card-name, 0);
+  }
+
+  .st-card__price {
+    flex: none;
+    color: var(--color-price, var(--st-price));
+    font-family: var(--font-price);
+    font-weight: var(--fw-price, 700);
+    font-size: var(--fs-price-card, 17px);
+  }
+
+  .st-card__price .price,
+  .st-card__price * {
+    color: inherit;
+    font: inherit;
+  }
+
+  .st-card__cta {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-block-start: 4px; /* the whole card is the link, so this line needs no own hit area */
+    color: #4e6dcd;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  .st-card__cta-text {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-card__link:focus-visible {
+    outline: 2px solid var(--st-pill);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+{% endstylesheet %}

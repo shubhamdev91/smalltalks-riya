@@ -1,0 +1,29 @@
+{
+ "colour": "#001df9",
+ "trim_box_in_source": [
+  113,
+  139,
+  1449,
+  957
+ ],
+ "size": [
+  1336,
+  818
+ ],
+ "subpaths": 8,
+ "verify": {
+  "diff_px_at_4x": 33001,
+  "max_dev_src_px": 0.75,
+  "p99_dev_src_px": 0.5,
+  "iou": 0.99557,
+  "components": [
+   6,
+   6
+  ],
+  "counters": [
+   2,
+   2
+  ]
+ },
+ "svg_bytes": 24936
+}

@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-talks-thread",
+      "settings": {
+        "hub_url": "/blogs/the-talks",
+        "endpoint": "/apps/talks"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

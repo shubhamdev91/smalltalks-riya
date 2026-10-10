@@ -1,0 +1,24 @@
+<footer class="di-footer"><a class="di-wordmark" href="{{ routes.root_url }}" aria-label="Small Talk home">small<br>talk</a><p>{{ section.settings.line | escape }}</p><nav aria-label="Footer">{% for link in section.settings.menu.links %}<a href="{{ link.url }}">{{ link.title | escape }}</a>{% endfor %}<a href="/pages/help">Contact</a>{% for policy in shop.policies %}{% if policy.body != blank %}<a href="{{ policy.url }}">{{ policy.title | escape }}</a>{% endif %}{% endfor %}</nav><small>© {{ 'now' | date: '%Y' }} {{ shop.name | escape }}.</small></footer>
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "line",
+      "label": "Footer line",
+      "default": "Nails for real conversations."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Footer menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer"
+    }
+  ]
+}
+{% endschema %}

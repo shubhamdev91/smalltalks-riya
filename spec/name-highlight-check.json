@@ -1,0 +1,114 @@
+{
+ "on-me": {
+  "text_px": 26,
+  "ink_box_px": [
+   80.2,
+   18.5
+  ],
+  "band_box_px": [
+   100.0,
+   28.9
+  ],
+  "min_contrast_text_vs_under_glyphs": 13.3,
+  "glyph_px_on_solid_core": 1.0,
+  "text_vs_highlight": 13.3,
+  "text_vs_ground": 9.81,
+  "highlight_vs_ground": 1.36
+ },
+ "brainwave": {
+  "text_px": 26,
+  "ink_box_px": [
+   130.2,
+   19.0
+  ],
+  "band_box_px": [
+   150.0,
+   29.4
+  ],
+  "min_contrast_text_vs_under_glyphs": 8.92,
+  "glyph_px_on_solid_core": 0.9899,
+  "text_vs_highlight": 9.26,
+  "text_vs_ground": 1.41,
+  "highlight_vs_ground": 6.54
+ },
+ "diet-cherry": {
+  "text_px": 26,
+  "ink_box_px": [
+   136.0,
+   24.0
+  ],
+  "band_box_px": [
+   155.8,
+   34.4
+  ],
+  "min_contrast_text_vs_under_glyphs": 8.23,
+  "glyph_px_on_solid_core": 0.9806,
+  "text_vs_highlight": 8.6,
+  "text_vs_ground": 2.09,
+  "highlight_vs_ground": 4.12
+ },
+ "green-flag": {
+  "text_px": 26,
+  "ink_box_px": [
+   130.0,
+   23.5
+  ],
+  "band_box_px": [
+   149.8,
+   33.9
+  ],
+  "min_contrast_text_vs_under_glyphs": 8.02,
+  "glyph_px_on_solid_core": 0.9787,
+  "text_vs_highlight": 10.37,
+  "text_vs_ground": 2.07,
+  "highlight_vs_ground": 5.02
+ },
+ "shaadi-shift": {
+  "text_px": 26,
+  "ink_box_px": [
+   145.8,
+   19.0
+  ],
+  "band_box_px": [
+   165.5,
+   29.4
+  ],
+  "min_contrast_text_vs_under_glyphs": 6.96,
+  "glyph_px_on_solid_core": 0.9894,
+  "text_vs_highlight": 7.25,
+  "text_vs_ground": 2.32,
+  "highlight_vs_ground": 3.12
+ },
+ "wild-card": {
+  "text_px": 26,
+  "ink_box_px": [
+   118.8,
+   19.0
+  ],
+  "band_box_px": [
+   138.5,
+   29.4
+  ],
+  "min_contrast_text_vs_under_glyphs": 16.03,
+  "glyph_px_on_solid_core": 0.9947,
+  "text_vs_highlight": 16.22,
+  "text_vs_ground": 11.55,
+  "highlight_vs_ground": 1.4
+ },
+ "pinky-promise": {
+  "text_px": 26,
+  "ink_box_px": [
+   168.2,
+   24.0
+  ],
+  "band_box_px": [
+   188.0,
+   34.4
+  ],
+  "min_contrast_text_vs_under_glyphs": 9.22,
+  "glyph_px_on_solid_core": 0.984,
+  "text_vs_highlight": 10.23,
+  "text_vs_ground": 2.07,
+  "highlight_vs_ground": 4.94
+ }
+}

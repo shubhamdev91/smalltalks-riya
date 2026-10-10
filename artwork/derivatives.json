@@ -1,0 +1,146 @@
+{
+  "nails/web/brainwave.webp": {
+    "master": "nails/brainwave.webp",
+    "master_bytes": 136058,
+    "bytes": 53942,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 32,
+      "mean": 1.035,
+      "p99": 9
+    },
+    "alpha_identical": true
+  },
+  "nails/web/diet-cherry.webp": {
+    "master": "nails/diet-cherry.webp",
+    "master_bytes": 126518,
+    "bytes": 45394,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 19,
+      "mean": 0.985,
+      "p99": 8
+    },
+    "alpha_identical": true
+  },
+  "nails/web/green-flag.webp": {
+    "master": "nails/green-flag.webp",
+    "master_bytes": 125802,
+    "bytes": 44060,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 24,
+      "mean": 1.053,
+      "p99": 9
+    },
+    "alpha_identical": true
+  },
+  "nails/web/on-me.webp": {
+    "master": "nails/on-me.webp",
+    "master_bytes": 155642,
+    "bytes": 66508,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 29,
+      "mean": 1.324,
+      "p99": 11
+    },
+    "alpha_identical": true
+  },
+  "nails/web/pinky-promise.webp": {
+    "master": "nails/pinky-promise.webp",
+    "master_bytes": 121632,
+    "bytes": 42308,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 23,
+      "mean": 1.009,
+      "p99": 10
+    },
+    "alpha_identical": true
+  },
+  "nails/web/shaadi-shift.webp": {
+    "master": "nails/shaadi-shift.webp",
+    "master_bytes": 117928,
+    "bytes": 40990,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 58,
+      "mean": 1.086,
+      "p99": 11
+    },
+    "alpha_identical": true
+  },
+  "nails/web/wild-card.webp": {
+    "master": "nails/wild-card.webp",
+    "master_bytes": 123558,
+    "bytes": 45078,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 48,
+      "mean": 1.503,
+      "p99": 25
+    },
+    "alpha_identical": true
+  },
+  "fingers/web/tone-1.webp": {
+    "master": "fingers/tone-1.webp",
+    "master_bytes": 201308,
+    "bytes": 73042,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 22,
+      "mean": 1.28,
+      "p99": 8
+    },
+    "alpha_identical": true
+  },
+  "fingers/web/tone-2.webp": {
+    "master": "fingers/tone-2.webp",
+    "master_bytes": 207144,
+    "bytes": 77698,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 23,
+      "mean": 1.267,
+      "p99": 8
+    },
+    "alpha_identical": true
+  },
+  "fingers/web/tone-3.webp": {
+    "master": "fingers/tone-3.webp",
+    "master_bytes": 209770,
+    "bytes": 78118,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 20,
+      "mean": 1.164,
+      "p99": 7
+    },
+    "alpha_identical": true
+  },
+  "fingers/web/tone-4.webp": {
+    "master": "fingers/tone-4.webp",
+    "master_bytes": 213578,
+    "bytes": 79896,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 17,
+      "mean": 1.119,
+      "p99": 6
+    },
+    "alpha_identical": true
+  },
+  "hand/web/preview-hand.webp": {
+    "master": "hand/preview-hand.webp",
+    "master_bytes": 197338,
+    "bytes": 92302,
+    "quality": 100,
+    "rgb_delta_on_opaque": {
+      "max": 18,
+      "mean": 1.348,
+      "p99": 8
+    },
+    "alpha_identical": true
+  }
+}

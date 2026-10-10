@@ -1,0 +1,639 @@
+{% comment %}
+  Section contract.
+  Small Talk landing hero. Each block picks one small_talk_campaign metaobject. Liquid renders the
+  FIRST campaign as a complete static scene with CSS only (no JavaScript): scene colour, note,
+  headline, finger in the default skin tone, main (signature) nail on the finger, two accent nails,
+  the next campaign's preview hand top-right, pause and tone controls, and the "Shop “Set” ↗" CTA.
+
+  Motion controller hook-up (owned by the motion session, not this file):
+  - Root: [data-st-hero] with data-active-key, data-active-index, data-next-key, data-tone,
+    data-tone-count, data-autoplay ("true"/"false"). Scene colours are CSS custom properties on the
+    root: --st-scene, --st-scene-ink, --st-cta-bg, --st-cta-ink, --st-tone-swatch.
+  - Parts: [data-st-hero-note], [data-st-hero-headline], [data-st-hero-finger] (contains the tone
+    sprite [data-st-hero-tone-sprite]), [data-st-hero-main] (signature nail, cuticle = bottom edge),
+    [data-st-hero-accent="1"] (accent nail), [data-st-hero-accent="2"] (extra nail),
+    [data-st-hero-preview] (next set's hand) with four [data-st-hero-preview-nail="0..3"], 
+    [data-st-hero-character], [data-st-hero-cta], [data-st-hero-pause], [data-st-hero-tone],
+    [data-st-hero-status] (polite live region, empty at first paint).
+  - Controls ship with aria-disabled="true"; the controller removes it when it attaches.
+  - Data: <script type="application/json" data-st-hero-data> holds every campaign (key, name,
+    headline, note, colours, url, art urls, atlas crops, preview sequence) plus tones, finger
+    atlas and preview-hand anchors. Sprite geometry: see snippets/st-sprite.liquid.
+  @example
+  <!-- templates/index.json: one "campaign" block per set, in play order. -->
+{% endcomment %}
+
+{%- liquid
+  assign first_block = section.blocks.first
+  assign c = first_block.settings.campaign
+  assign block_count = section.blocks.size
+  if block_count > 1
+    assign next_block = section.blocks[1]
+  else
+    assign next_block = first_block
+  endif
+  assign next_c = next_block.settings.campaign
+
+  assign finger_atlas = section.settings.finger_atlas | default: images['desi-finger-tones.png']
+  assign accents_atlas = section.settings.accent_atlas | default: images['desi-nail-accents-v2.png']
+  assign hand_image = next_block.settings.preview_hand | default: section.settings.hand_image | default: images['desi-preview-hand-base.png']
+
+  assign tone_xs = '111,512,905,1301' | split: ','
+  assign tone_swatches = '#efa67d,#d7895d,#9f5a3a,#713f2c' | split: ','
+  assign tone = section.settings.default_tone | default: 1
+  assign tone_i = tone | minus: 1
+  assign finger_x = tone_xs[tone_i] | plus: 0
+
+  assign nail_sizes = '(min-width: 990px) 1240px, 820px'
+  assign accent_sizes = '(min-width: 990px) 760px, 500px'
+  assign finger_sizes = '(min-width: 990px) 1260px, 820px'
+  assign character_sizes = '(min-width: 990px) 1800px, 1040px'
+-%}
+
+{%- if c != blank -%}
+  {%- liquid
+    capture first_url
+      render 'st-campaign-url', campaign: c
+    endcapture
+    capture cta_style
+      render 'st-campaign-colors', campaign: c
+    endcapture
+    capture next_sequence
+      render 'st-nail-sequence', key: next_c.system.handle
+    endcapture
+    assign next_roles = next_sequence | strip | split: ','
+  -%}
+
+  <section
+    class="st-hero"
+    data-st-hero
+    data-active-key="{{ c.system.handle }}"
+    data-active-index="0"
+    data-next-key="{{ next_c.system.handle }}"
+    data-tone="{{ tone }}"
+    data-tone-count="4"
+    data-autoplay="{{ section.settings.autoplay }}"
+    aria-label="{{ 'small_talk.hero.region_label' | t }}"
+    style="{{ cta_style | strip }} --st-tone-swatch: {{ tone_swatches[tone_i] }};"
+  >
+    {%- if section.settings.show_character and c.character_art.value != blank -%}
+      <div class="st-hero__character" data-st-hero-character aria-hidden="true">
+        {% render 'st-nail', campaign: c, role: 'character', sizes: character_sizes %}
+      </div>
+    {%- endif -%}
+
+    <div class="st-hero__preview" data-st-hero-preview data-key="{{ next_c.system.handle }}" aria-hidden="true">
+      {%- if hand_image != blank -%}
+        {{
+          hand_image
+          | image_url: width: 1100
+          | image_tag: class: 'st-hero__hand', alt: '', loading: 'lazy', sizes: '(min-width: 990px) 30vw, 60vw', widths: '400, 600, 800, 1100'
+        }}
+      {%- endif -%}
+      {%- unless next_block.settings.preview_hand != blank -%}
+        {%- for n in (1..4) -%}
+          {%- liquid
+            assign role_num = next_roles[n] | plus: 0
+            case role_num
+              when 1
+                assign role_name = 'accent'
+              when 2
+                assign role_name = 'extra'
+              else
+                assign role_name = 'signature'
+            endcase
+            assign slot = forloop.index0
+            capture slot_attrs
+              echo 'data-st-hero-preview-nail="' | append: slot | append: '"'
+            endcapture
+          -%}
+          {% render 'st-nail',
+            campaign: next_c,
+            role: role_name,
+            accents_image: accents_atlas,
+            class: 'st-hero__preview-nail',
+            sizes: nail_sizes,
+            attrs: slot_attrs
+          %}
+        {%- endfor -%}
+      {%- endunless -%}
+    </div>
+
+    <div class="st-hero__copy">
+      {%- if c.note.value != blank -%}
+        <p class="st-hero__note st-pen" data-st-hero-note>{{ c.note.value | escape }}</p>
+      {%- endif -%}
+      <h1 class="st-hero__headline st-display" data-st-hero-headline>{{ c.headline.value | escape }}</h1>
+    </div>
+
+    <div class="st-hero__accent st-hero__accent--2" aria-hidden="true">
+      {% render 'st-nail', campaign: c, role: 'extra', accents_image: accents_atlas, sizes: accent_sizes, loading: 'eager', attrs: 'data-st-hero-accent="2"' %}
+    </div>
+    <div class="st-hero__accent st-hero__accent--1" aria-hidden="true">
+      {% render 'st-nail', campaign: c, role: 'accent', sizes: nail_sizes, loading: 'eager', attrs: 'data-st-hero-accent="1"' %}
+    </div>
+
+    <div class="st-hero__finger" data-st-hero-finger aria-hidden="true">
+      {% render 'st-sprite',
+        image: finger_atlas,
+        cols: 1,
+        rows: 1,
+        col: 0,
+        row: 0,
+        x: finger_x,
+        y: 108,
+        w: 280,
+        h: 832,
+        sizes: finger_sizes,
+        loading: 'eager',
+        class: 'st-hero__tone',
+        attrs: 'data-st-hero-tone-sprite'
+      %}
+      <div class="st-hero__main" data-st-hero-main>
+        {% render 'st-nail', campaign: c, role: 'signature', sizes: nail_sizes, loading: 'eager', fetchpriority: 'high' %}
+      </div>
+    </div>
+
+    <div class="st-hero__controls">
+      <button
+        type="button"
+        class="st-hero__control st-hero__control--pause"
+        data-st-hero-pause
+        aria-pressed="false"
+        aria-disabled="true"
+        aria-label="{{ 'small_talk.hero.pause' | t }}"
+      >
+        <svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true">
+          <rect x="1" y="1" width="4" height="14" rx="1" fill="currentColor"/>
+          <rect x="9" y="1" width="4" height="14" rx="1" fill="currentColor"/>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="st-hero__control st-hero__control--tone"
+        data-st-hero-tone
+        aria-disabled="true"
+        aria-label="{{ 'small_talk.hero.tone' | t }}, {{ 'small_talk.hero.tone_status' | t: index: tone, count: 4 }}"
+      >
+        <span class="st-hero__swatch" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <a class="st-cta st-hero__cta" href="{{ first_url | strip }}" data-st-hero-cta>
+      {{- 'small_talk.hero.shop_set' | t: name: c.name.value -}}
+      <span class="st-arrow" aria-hidden="true">↗</span>
+    </a>
+
+    <p class="visually-hidden" aria-live="polite" data-st-hero-status></p>
+
+    <ul class="visually-hidden">
+      {%- for block in section.blocks -%}
+        {%- assign item = block.settings.campaign -%}
+        {%- if item != blank -%}
+          <li {{ block.shopify_attributes }}>{{ item.name.value | escape }}</li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    <script type="application/json" data-st-hero-data>
+      {
+        "version": 1,
+        "autoplay": {{ section.settings.autoplay | json }},
+        "defaultTone": {{ tone | json }},
+        "tones": [
+          {%- for tx in tone_xs -%}
+            { "index": {{ forloop.index }}, "swatch": {{ tone_swatches[forloop.index0] | json }}, "crop": { "x": {{ tx }}, "y": 108, "w": 280, "h": 832 } }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ],
+        "finger": {
+          "atlas": {% if finger_atlas != blank %}{{ finger_atlas | image_url: width: 1672 | json }}{% else %}null{% endif %},
+          "atlasWidth": {{ finger_atlas.width | default: 1672 }},
+          "atlasHeight": {{ finger_atlas.height | default: 941 }},
+          "cuticle": { "x": 0.5, "y": 0.257 },
+          "nailWidth": 0.52
+        },
+        "previewHand": {
+          "image": {% if section.settings.hand_image != blank or images['desi-preview-hand-base.png'] != blank %}{{ section.settings.hand_image | default: images['desi-preview-hand-base.png'] | image_url: width: 1100 | json }}{% else %}null{% endif %},
+          "nailWidth": 0.1,
+          "anchors": [
+            { "x": 0.138, "y": 0.805, "rotate": 225 },
+            { "x": 0.204, "y": 0.876, "rotate": 218 },
+            { "x": 0.33, "y": 0.878, "rotate": 222 },
+            { "x": 0.52, "y": 0.847, "rotate": 226 }
+          ]
+        },
+        "atlases": {
+          "accents": {% if accents_atlas != blank %}{{ accents_atlas | image_url: width: 2172 | json }}{% else %}null{% endif %}
+        },
+        "campaigns": [
+          {%- assign written = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- assign item = block.settings.campaign -%}
+            {%- if item != blank -%}
+              {%- liquid
+                capture item_url
+                  render 'st-campaign-url', campaign: item
+                endcapture
+                capture item_cta_fg
+                  render 'st-campaign-colors', campaign: item, only: 'cta_foreground'
+                endcapture
+                capture item_sequence
+                  render 'st-nail-sequence', key: item.system.handle
+                endcapture
+                assign item_roles = item_sequence | strip | split: ','
+                capture crop_sig
+                  render 'st-nail-crop', role: 'signature', index: item.motion_index.value
+                endcapture
+                capture crop_acc
+                  render 'st-nail-crop', role: 'accent', index: item.motion_index.value
+                endcapture
+                capture crop_ext
+                  render 'st-nail-crop', role: 'extra', index: item.motion_index.value
+                endcapture
+                capture crop_chr
+                  render 'st-nail-crop', role: 'character', index: item.motion_index.value
+                endcapture
+              -%}
+              {%- if written > 0 %},{% endif -%}
+              {%- assign written = written | plus: 1 -%}
+              {
+                "key": {{ item.system.handle | json }},
+                "name": {{ item.name.value | json }},
+                "headline": {{ item.headline.value | json }},
+                "note": {{ item.note.value | json }},
+                "index": {{ item.motion_index.value | plus: 0 }},
+                "colors": {
+                  "scene": {{ item.background.value | append: '' | json }},
+                  "ink": {{ item.foreground.value | append: '' | json }},
+                  "ctaBackground": {{ item.cta_background.value | append: '' | json }},
+                  "ctaForeground": {{ item_cta_fg | strip | json }}
+                },
+                "url": {{ item_url | strip | json }},
+                "ctaLabel": {{ 'small_talk.hero.shop_set' | t: name: item.name.value | json }},
+                "journalUrl": {{ item.journal.value.url | json }},
+                "art": {
+                  "nails": {{ item.nail_art.value | image_url: width: 2400 | json }},
+                  "character": {{ item.character_art.value | image_url: width: 2172 | json }},
+                  "previewHand": {% if block.settings.preview_hand != blank %}{{ block.settings.preview_hand | image_url: width: 1100 | json }}{% else %}null{% endif %},
+                  "packaging": {{ item.package_url.value | json }}
+                },
+                "crops": {
+                  "signature": {{ crop_sig | strip | json }},
+                  "accent": {{ crop_acc | strip | json }},
+                  "extra": {{ crop_ext | strip | json }},
+                  "character": {{ crop_chr | strip | json }}
+                },
+                "sequence": [{{ item_roles | join: ',' }}],
+                "previewSequence": [{{ item_roles[1] }},{{ item_roles[2] }},{{ item_roles[3] }},{{ item_roles[4] }}]
+              }
+            {%- endif -%}
+          {%- endfor -%}
+        ],
+        "cropFormat": "x,y,w,h,row,cols,rows (px inside the atlas cell; column = campaign index; nail cuticle = bottom edge)",
+        "roles": ["signature", "accent", "extra"]
+      }
+    </script>
+  </section>
+{%- elsif request.design_mode -%}
+  <div class="st-hero st-hero--empty">
+    <p>Add a campaign block to show the hero.</p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .st-hero {
+    /* Scene geometry: every size derives from the hero height so the finger, nails and
+       preview hand keep their registration at any viewport. */
+    --hero-h: clamp(34rem, calc(100svh - 4rem), 54rem);
+    --finger-h: calc(var(--hero-h) * 0.64);
+    --finger-w: calc(var(--finger-h) * 280 / 832);
+    --finger-cx: 62%;
+    --accent-w: calc(var(--finger-w) * 0.44);
+    --preview-w: 56%;
+    --preview-right: -14%;
+    --preview-lift: -74%;
+
+    position: relative;
+    height: var(--hero-h);
+    overflow: hidden;
+    isolation: isolate;
+    background-color: var(--st-scene, var(--st-tint));
+    color: var(--st-scene-ink, var(--st-ink));
+  }
+
+  .st-hero--empty {
+    display: grid;
+    place-items: center;
+  }
+
+  .st-hero__copy {
+    position: absolute;
+    z-index: 5;
+    inset-inline: 6%;
+    top: 5%;
+    pointer-events: none;
+  }
+
+  .st-hero__note {
+    max-width: 52%;
+    margin: 0 0 0.85rem;
+    font-size: clamp(1.5rem, 6.5vw, 2.25rem);
+    line-height: 1.05;
+    rotate: -6deg;
+    transform-origin: left center;
+  }
+
+  .st-hero__headline {
+    margin: 0;
+    font-size: clamp(2.75rem, 12.5vw, 4.25rem);
+    line-height: 0.92;
+    rotate: -4deg;
+    transform-origin: left center;
+    color: inherit;
+  }
+
+  .st-hero__finger {
+    position: absolute;
+    z-index: 3;
+    bottom: 0;
+    left: var(--finger-cx);
+    width: var(--finger-w);
+    translate: -50% 0;
+  }
+
+  .st-hero__tone {
+    width: 100%;
+  }
+
+  /* Cuticle of the natural nail sits 25.7% down the finger crop. */
+  .st-hero__main {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    bottom: 74.3%;
+    width: 52%;
+    translate: -50% 0;
+  }
+
+  .st-hero__accent {
+    position: absolute;
+    z-index: 4;
+    width: var(--accent-w);
+  }
+
+  .st-hero__accent--2 {
+    left: 5%;
+    top: 45%;
+    rotate: -28deg;
+  }
+
+  .st-hero__accent--1 {
+    left: 20%;
+    top: 53%;
+    rotate: -12deg;
+  }
+
+  .st-hero__preview {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: var(--preview-right);
+    width: var(--preview-w);
+    aspect-ratio: 1086 / 1448;
+    translate: 0 var(--preview-lift);
+  }
+
+  .st-hero__hand {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Preview nails are anchored at the cuticle (bottom centre) and rotated to follow each finger. */
+  .st-hero__preview .st-hero__preview-nail {
+    position: absolute;
+    width: 10%;
+    translate: -50% -100%;
+    transform-origin: 50% 100%;
+  }
+
+  [data-st-hero-preview-nail='0'] {
+    left: 13.8%;
+    top: 80.5%;
+    rotate: 225deg;
+  }
+
+  [data-st-hero-preview-nail='1'] {
+    left: 20.4%;
+    top: 87.6%;
+    rotate: 218deg;
+  }
+
+  [data-st-hero-preview-nail='2'] {
+    left: 33%;
+    top: 87.8%;
+    rotate: 222deg;
+  }
+
+  [data-st-hero-preview-nail='3'] {
+    left: 52%;
+    top: 84.7%;
+    rotate: 226deg;
+  }
+
+  .st-hero__character {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: -4%;
+    width: 40%;
+    /* Feathered silhouette: the placeholder atlas has rectangular crops, so fade every edge. */
+    -webkit-mask-image: radial-gradient(ellipse 50% 72% at 50% 72%, #000 55%, transparent 98%);
+    mask-image: radial-gradient(ellipse 50% 72% at 50% 72%, #000 55%, transparent 98%);
+  }
+
+  .st-hero__controls {
+    position: absolute;
+    z-index: 6;
+    right: 3%;
+    bottom: 15%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .st-hero__control {
+    display: grid;
+    place-items: center;
+    width: var(--minimum-touch-target);
+    height: var(--minimum-touch-target);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--st-ground);
+    color: var(--st-blue);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgb(31 26 46 / 0.18);
+  }
+
+  .st-hero__control[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  .st-hero__swatch {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--st-tone-swatch);
+    box-shadow: inset 0 0 0 2px var(--st-ground);
+  }
+
+  .st-hero__cta {
+    --st-cta-border: var(--st-cta-ink);
+
+    position: absolute;
+    z-index: 6;
+    left: 50%;
+    bottom: max(1.25rem, var(--safe-area-inset-bottom));
+    min-width: min(80%, 22rem);
+    translate: -50% 0;
+    font-size: 1.1875rem;
+  }
+
+  .st-hero__cta:hover {
+    transform: none;
+    filter: brightness(1.06);
+  }
+
+  @media screen and (min-width: 990px) {
+    .st-hero {
+      --hero-h: clamp(36rem, calc(100svh - 4.75rem), 50rem);
+      --finger-h: calc(var(--hero-h) * 0.82);
+      --finger-cx: 68%;
+      --accent-w: calc(var(--finger-w) * 0.4);
+      --preview-w: 30%;
+      --preview-right: -6%;
+      --preview-lift: -72%;
+    }
+
+    .st-hero__copy {
+      inset-inline: 7% auto;
+      top: 16%;
+      width: 44%;
+    }
+
+    .st-hero__note {
+      max-width: 80%;
+      font-size: 2.5rem;
+    }
+
+    .st-hero__headline {
+      font-size: clamp(4rem, 6vw, 5.75rem);
+    }
+
+    .st-hero__accent--2 {
+      left: 46%;
+      top: 44%;
+    }
+
+    .st-hero__accent--1 {
+      left: 51%;
+      top: 57%;
+    }
+
+    .st-hero__character {
+      left: 26%;
+      width: 16%;
+    }
+
+    .st-hero__cta {
+      left: 7%;
+      bottom: 16%;
+      min-width: 0;
+      translate: none;
+    }
+
+    .st-hero__controls {
+      right: 2.5%;
+      bottom: 8%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk hero",
+  "class": "st-hero-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Play through sets automatically (when motion is available)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "default_tone",
+      "label": "Starting skin tone",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_character",
+      "label": "Show campaign character",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Artwork"
+    },
+    {
+      "type": "paragraph",
+      "content": "Leave empty to use the placeholder atlases in Files (desi-finger-tones.png, desi-nail-accents-v2.png, desi-preview-hand-base.png)."
+    },
+    {
+      "type": "image_picker",
+      "id": "finger_atlas",
+      "label": "Finger tones atlas (4 across)"
+    },
+    {
+      "type": "image_picker",
+      "id": "accent_atlas",
+      "label": "Accent nails atlas (7 across)"
+    },
+    {
+      "type": "image_picker",
+      "id": "hand_image",
+      "label": "Preview hand (bare)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "campaign",
+      "name": "Campaign",
+      "settings": [
+        {
+          "type": "metaobject",
+          "id": "campaign",
+          "label": "Campaign",
+          "metaobject_type": "small_talk_campaign"
+        },
+        {
+          "type": "image_picker",
+          "id": "preview_hand",
+          "label": "Preview hand with this set's nails",
+          "info": "Shown top-right while the previous set is on screen. Leave empty to build it from the nail atlas."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Small Talk hero"
+    }
+  ]
+}
+{% endschema %}

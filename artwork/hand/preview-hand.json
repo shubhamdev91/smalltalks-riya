@@ -1,0 +1,90 @@
+{
+  "file": "hand/preview-hand.webp",
+  "width": 511,
+  "height": 639,
+  "bytes": 197338,
+  "encoding": "lossless",
+  "source": "desi-preview-hand-base.png, thumb removed with a smooth radial-edge contour, alpha cleaned, 0.5x",
+  "enters_from": "top-right (wrist touches top and right edges of the image)",
+  "display": {
+    "recommended_css_width_px_at_390": 146,
+    "note": "interpretation of the 20-24% brief: the four-finger span (index tip to little-finger outer edge) is ~59% of the image width, so 146 css px of image gives a ~86 css px (22%) finger span; nails render ~13 css px wide. If the brief meant the whole image width, use 78-94 css px (nails ~8 px). File is 511 px wide = 3.5x at 146 css px."
+  },
+  "slot_convention": {
+    "sprite_cell": [
+      204,
+      354
+    ],
+    "sprite_anchor": [
+      0.5,
+      0.925
+    ],
+    "how_to_place": "size the nail element to cell_width_frac_of_hand * hand width (aspect = cell), transform-origin at the sprite anchor (50% 92.5%), put that origin on `cuticle`, rotate(rotation_deg) clockwise. `center` is the same placement expressed as the cell centre (transform-origin 50% 50%).",
+    "scale": "cell px -> exported hand px",
+    "order": "index, middle, ring, little (visible top-left to bottom-right)",
+    "default_columns": [
+      0,
+      1,
+      2,
+      0
+    ]
+  },
+  "slots": [
+    {
+      "finger": "index",
+      "cuticle": {
+        "x": 0.1009,
+        "y": 0.8172
+      },
+      "center": {
+        "x": 0.054,
+        "y": 0.8598
+      },
+      "rotation_deg": -138.7,
+      "scale": 0.2413,
+      "cell_width_frac_of_hand": 0.0963
+    },
+    {
+      "finger": "middle",
+      "cuticle": {
+        "x": 0.1605,
+        "y": 0.9019
+      },
+      "center": {
+        "x": 0.1143,
+        "y": 0.9427
+      },
+      "rotation_deg": -137.8,
+      "scale": 0.2336,
+      "cell_width_frac_of_hand": 0.0933
+    },
+    {
+      "finger": "ring",
+      "cuticle": {
+        "x": 0.3003,
+        "y": 0.9071
+      },
+      "center": {
+        "x": 0.2525,
+        "y": 0.947
+      },
+      "rotation_deg": -136.2,
+      "scale": 0.2346,
+      "cell_width_frac_of_hand": 0.0937
+    },
+    {
+      "finger": "little",
+      "cuticle": {
+        "x": 0.5022,
+        "y": 0.872
+      },
+      "center": {
+        "x": 0.4591,
+        "y": 0.909
+      },
+      "rotation_deg": -137.0,
+      "scale": 0.2145,
+      "cell_width_frac_of_hand": 0.0856
+    }
+  ]
+}

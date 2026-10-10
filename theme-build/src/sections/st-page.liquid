@@ -1,0 +1,321 @@
+{% comment %}
+  Section contract.
+  Small Talk content page: heading (the section's register heading, or the page title), optional handwritten
+  note and intro line, the page's own content in editorial styling (plum headings, blue links) when "Show page
+  content" is on, then theme blocks in merchant order (notes, features, packaging, steps, questions, help
+  topics, talk examples, rules, gated groups, forms). Gated copy sits in st-gate groups and stays hidden on the
+  storefront until its fact gate is confirmed.
+  @example
+  <!-- templates/page.our-story.json, page.help.json, page.the-talks.json, page.nail-guide.json, page.desi*.json -->
+{% endcomment %}
+
+{%- liquid
+  assign title_style = section.settings.title_style
+  assign page_heading = section.settings.heading | default: page.title
+-%}
+
+<section class="st-page st-editorial st-page--{{ title_style }}" aria-labelledby="StPage-{{ section.id }}">
+  <header class="st-page__header">
+    {%- if title_style == 'hidden' -%}
+      <h1 class="visually-hidden" id="StPage-{{ section.id }}">{{ page_heading | escape }}</h1>
+    {%- elsif title_style == 'pen' -%}
+      <h1 class="st-page__title st-page__title--pen st-pen" id="StPage-{{ section.id }}">{{ page_heading | escape }}</h1>
+    {%- else -%}
+      <h1 class="st-page__title st-display" id="StPage-{{ section.id }}">{{ page_heading | escape }}</h1>
+    {%- endif -%}
+    {%- if section.settings.note != blank -%}
+      <p class="st-page__note st-pen">{{ section.settings.note | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.intro != blank -%}
+      <p class="st-page__intro">{{ section.settings.intro | escape }}</p>
+    {%- endif -%}
+  </header>
+
+  {%- if section.settings.illustration == 'nail-guide' -%}
+    {%- comment -%} Accepted Phase 2 guide illustration (theme asset, 1086×1448). {%- endcomment -%}
+    <img
+      class="st-page__illustration"
+      src="{{ 'st-nail-guide.webp' | asset_url }}"
+      width="1086"
+      height="1448"
+      alt="{{ section.settings.illustration_alt | escape }}"
+      loading="lazy"
+      decoding="async"
+    >
+  {%- endif -%}
+
+  {%- if section.settings.show_content and page.content != blank -%}
+    <div class="st-page__content st-rte">{{ page.content }}</div>
+  {%- endif -%}
+
+  <div class="st-page__blocks">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .st-page {
+    display: grid;
+    gap: 1.75rem;
+    max-width: 44rem;
+    margin-inline: auto;
+    padding: 2rem var(--st-gutter) var(--st-section-space);
+    color: var(--st-body);
+  }
+
+  .st-page__header {
+    display: grid;
+    gap: 0.25rem;
+    text-align: center;
+  }
+
+  .st-page__title {
+    margin: 0;
+    font-size: clamp(2.75rem, 12vw, 4.75rem);
+    line-height: 0.95;
+  }
+
+  .st-page__title--pen {
+    font-size: clamp(3.25rem, 15vw, 5.5rem);
+    line-height: 1;
+  }
+
+  .st-page__note {
+    margin: 0;
+    color: var(--st-plum);
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
+
+  .st-page__illustration {
+    justify-self: center;
+    width: min(100%, 22rem);
+    height: auto;
+  }
+
+  .st-page__intro {
+    max-width: 34ch;
+    margin: 0.5rem auto 0;
+    color: var(--st-body);
+    font-size: 1.0625rem;
+  }
+
+  .st-page--hidden .st-page__content > h2:first-child {
+    font-size: clamp(2.75rem, 12vw, 4.75rem);
+    line-height: 0.95;
+    text-align: center;
+  }
+
+  .st-rte > :first-child {
+    margin-block-start: 0;
+  }
+
+  .st-rte h2 {
+    margin: 2rem 0 0.5rem;
+    font-family: var(--st-font-display);
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    line-height: 1;
+  }
+
+  .st-rte h3 {
+    margin: 1.5rem 0 0.25rem;
+    color: var(--st-ink);
+    font-family: var(--st-font-button);
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+
+  .st-rte p,
+  .st-rte li {
+    max-width: 62ch;
+    line-height: 1.55;
+  }
+
+  .st-rte a {
+    color: var(--st-blue);
+    text-underline-offset: 0.2em;
+  }
+
+  .st-page__blocks {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .st-page__blocks:empty {
+    display: none;
+  }
+
+  /* Held gates (st-gate, gated questions/topics/forms) output nothing; collapse their block wrappers so they
+     don't leave grid gaps. */
+  .st-page__blocks > :not(:has(*)),
+  .st-gate > :not(:has(*)) {
+    display: none;
+  }
+
+  /* Horizon's contact form, when placed here, uses the brand input + button tokens already. */
+  .st-page .contact-form {
+    width: 100%;
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2) */
+  /* >= 1024 (long reading pages: the Nail Guide page uses this template today): the header (title, note, intro,
+     illustration) left 5fr, sticky under the header; the page text and blocks right 7fr at 18 px, 68 ch, so the first
+     screen shows the heading and the first real content side by side. */
+  @media screen and (min-width: 1024px) {
+    .st-page {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: clamp(32px, 4vw, 72px);
+      align-items: start;
+      max-width: none;
+      width: min(1240px, 100% - 2 * clamp(32px, 4vw, 64px));
+      padding: 48px 0 var(--st-section-space);
+    }
+
+    .st-page__header {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      position: sticky;
+      top: calc(var(--st-header-h, 76px) + 24px);
+      text-align: start;
+    }
+
+    .st-page__title {
+      font-size: 56px;
+    }
+
+    .st-page__title--pen {
+      font-size: 64px;
+    }
+
+    .st-page__note {
+      font-size: 26px;
+    }
+
+    .st-page__illustration {
+      justify-self: start;
+    }
+
+    .st-page__intro {
+      margin-inline: 0;
+      font-size: 18px;
+    }
+
+    .st-page__content,
+    .st-page__blocks {
+      grid-column: 2;
+    }
+
+    .st-page .st-rte p,
+    .st-page .st-rte li {
+      max-width: 68ch;
+      font-size: 18px;
+    }
+
+    .st-page .st-rte h2 {
+      font-size: 34px;
+    }
+
+    .st-page .st-rte h3 {
+      font-size: 22px;
+    }
+  }
+  /* END store desktop */
+
+  /* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+  @media screen and (min-width: 1680px) {
+    .st-page {
+      width: min(1440px, 100% - 2 * clamp(32px, 4vw, 64px));
+    }
+
+    /* the reading text keeps its 1240-frame measure (the 7fr column, 680 px): the grid widens, the paragraphs don't */
+    .st-page .st-rte p,
+    .st-page .st-rte li {
+      max-width: min(68ch, 680px);
+    }
+  }
+  /* END wide frame */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk page",
+  "class": "st-page-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "title_style",
+      "label": "Title",
+      "options": [
+        {
+          "value": "display",
+          "label": "Display"
+        },
+        {
+          "value": "pen",
+          "label": "Handwritten"
+        },
+        {
+          "value": "hidden",
+          "label": "Use the page's first heading"
+        }
+      ],
+      "default": "display"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave empty to use the page title."
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Handwritten note"
+    },
+    {
+      "type": "text",
+      "id": "intro",
+      "label": "Intro line"
+    },
+    {
+      "type": "select",
+      "id": "illustration",
+      "label": "Illustration",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "nail-guide",
+          "label": "Nail Guide"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "text",
+      "id": "illustration_alt",
+      "label": "Illustration alt text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_content",
+      "label": "Show page content",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Small Talk page"
+    }
+  ]
+}
+{% endschema %}

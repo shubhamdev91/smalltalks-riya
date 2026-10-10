@@ -1,0 +1,47 @@
+{
+  "canvas": {
+    "width": 310,
+    "height": 840
+  },
+  "nail_bed_anchor": {
+    "x": 0.5,
+    "y": 0.2649,
+    "meaning": "cuticle centre of the natural nail, normalised to the canvas; identical in all four files"
+  },
+  "bottom_edge": "finger is cropped flat at the canvas bottom (enters from below)",
+  "tones": [
+    {
+      "file": "fingers/tone-1.webp",
+      "order": "light to deep",
+      "index": 1,
+      "bytes": 201308,
+      "encoding": "lossless"
+    },
+    {
+      "file": "fingers/tone-2.webp",
+      "order": "light to deep",
+      "index": 2,
+      "bytes": 207144,
+      "encoding": "lossless"
+    },
+    {
+      "file": "fingers/tone-3.webp",
+      "order": "light to deep",
+      "index": 3,
+      "bytes": 209770,
+      "encoding": "lossless"
+    },
+    {
+      "file": "fingers/tone-4.webp",
+      "order": "light to deep",
+      "index": 4,
+      "bytes": 213578,
+      "encoding": "lossless"
+    }
+  ],
+  "main_nail_on_finger": {
+    "cell_scale": 0.76,
+    "placement": "nail cell anchor (0.5,0.925) on nail_bed_anchor; nail width = 1.08x natural plate (~130 px)",
+    "overflow": "nail tip extends ~70 px above the finger canvas top at this scale; container must not clip (overflow: visible)"
+  }
+}

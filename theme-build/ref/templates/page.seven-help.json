@@ -1,0 +1,61 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "st-seven-page",
+      "settings": {
+        "heading": "A little clarity.",
+        "body": "<p>The details behind your next set.</p>",
+        "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/tum-aa-jao-main-dekh-lungi-approved-package.png?v=1791012011",
+        "contact": false
+      },
+      "blocks": {
+        "q0": {
+          "type": "faq",
+          "settings": {
+            "question": "What is the first Small Talk collection?",
+            "answer": "<p>Seven little power moves is a collection of seven almond press-on nail designs. Each takes its name from a familiar Hinglish line and pairs a colour story with an everyday gesture.</p>"
+          }
+        },
+        "q1": {
+          "type": "faq",
+          "settings": {
+            "question": "How are the seven designs different?",
+            "answer": "<p>Each set has its own colours and accent nails. Explore the packaging gallery and the story alongside each design to find the one that feels like you.</p>"
+          }
+        },
+        "q2": {
+          "type": "faq",
+          "settings": {
+            "question": "What inspired the product names?",
+            "answer": "<p>The names come from little things we say when we take charge, show up for a friend or enjoy a familiar ritual. Each product page shares the moment behind its design.</p>"
+          }
+        },
+        "q3": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I choose between designs?",
+            "answer": "<p>Start with a colour you love or a story that feels familiar. Your own kind of sure brings confidence, For your people celebrates care, and A little play leaves room for mischief.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q0",
+        "q1",
+        "q2",
+        "q3"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

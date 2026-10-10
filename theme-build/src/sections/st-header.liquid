@@ -1,0 +1,497 @@
+{% comment %}
+  Section contract.
+  Small Talk header: menu button (mobile drawer), stacked blue "small talk" logo,
+  desktop navigation, "the talks" in handwritten lettering, and the bag with live count.
+  Board 2 header at 390 (spec/hero.md): 69 px on paper, no rule; hamburger x 14-42, logo centred at x 137 (~84x56),
+  "the talks" from x 212 (Caveat 600 34 px, near-black), bag x 338-374, icons in the logo blue. Columns are % of the width.
+  :root --st-header-h is the header's real height (hero CONTRACT v3).
+  The drawer is Horizon's `dialog-component` around a native modal <dialog>, which gives
+  focus containment, Escape to close and focus return to the menu button.
+  The bag reuses Horizon's `cart-icon` + `cart-bubble`, so the count updates on add to cart.
+  @example
+  <!-- Lives in sections/header-group.json as the only header section. -->
+{% endcomment %}
+
+{%- liquid
+  assign menu = section.settings.menu
+  assign logo_words = shop.name | downcase | split: ' '
+  # MC-096: the logo link's name, also the alt of a theme-settings logo image (not shop.name).
+  assign logo_alt = 'small_talk.header.home' | t
+  assign talks_label = section.settings.talks_label | default: 'the talks'
+-%}
+
+<script type="module" src="{{ 'cart-icon.js' | asset_url }}" fetchpriority="low"></script>
+<script type="module" src="{{ 'st-header.js' | asset_url }}" fetchpriority="low"></script>
+
+<header class="st-header{% if section.settings.sticky %} st-header--sticky{% endif %}">
+  <div class="st-header__bar">
+    <dialog-component class="st-header__menu" id="StMenu-{{ section.id }}">
+      <button
+        type="button"
+        class="st-header__icon-button st-header__menu-button"
+        on:click="/showDialog"
+        aria-haspopup="dialog"
+        aria-controls="StMenuDialog-{{ section.id }}"
+      >
+        <svg class="st-header__burger" width="28" height="24" viewBox="0 0 28 24" fill="none" aria-hidden="true">
+          <path d="M1 1.75h26M1 12h26M1 22.25h26" stroke="currentColor" stroke-width="2.5"/>
+        </svg>
+        <span class="visually-hidden">{{ 'small_talk.header.open_menu' | t }}</span>
+      </button>
+
+      <dialog
+        ref="dialog"
+        id="StMenuDialog-{{ section.id }}"
+        class="st-drawer"
+        aria-label="{{ 'accessibility.header_navigation_label' | t }}"
+      >
+        <st-focus-trap class="st-drawer__inner">
+          <div class="st-drawer__top">
+            <a class="st-logo st-logo--small" href="{{ routes.root_url }}">
+              {%- render 'st-logo-mark', size: 'drawer' -%}
+            </a>
+            <button
+              type="button"
+              class="st-header__icon-button"
+              on:click="dialog-component/closeDialog"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span class="visually-hidden">{{ 'small_talk.header.close_menu' | t }}</span>
+            </button>
+          </div>
+
+          <nav class="st-drawer__nav" aria-label="{{ 'accessibility.header_navigation_label' | t }}">
+            <ul role="list">
+              {%- for link in menu.links -%}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    class="st-drawer__link"
+                    {% if link.current %}aria-current="page"{% endif %}
+                  >{{ link.title | escape }}{% if link.current %}<span class="visually-hidden"> {{ 'small_talk.header.current_page' | t }}</span>{% endif %}</a>
+                </li>
+              {%- endfor -%}
+              {%- if section.settings.talks_link != blank -%}
+                <li>
+                  <a href="{{ section.settings.talks_link }}" class="st-drawer__link st-drawer__talks">{{ talks_label | escape }}</a>
+                </li>
+              {%- endif -%}
+            </ul>
+          </nav>
+
+          {%- comment -%} Owner 9 Oct: one account link, drawer only (MC-094 signed out / MC-095 signed in). {%- endcomment -%}
+          {%- if shop.customer_accounts_enabled -%}
+            <div class="st-drawer__account">
+              {%- if customer -%}
+                <a href="{{ routes.account_url }}" class="st-link">{{ 'small_talk.header.my_orders' | t }}</a>
+              {%- else -%}
+                {%- assign st_login_url = routes.storefront_login_url | default: routes.account_login_url -%}
+                <a href="{{ st_login_url }}" class="st-link" aria-label="{{ 'small_talk.header.sign_in_label' | t | escape }}">{{ 'small_talk.header.sign_in' | t }}</a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          <div class="st-drawer__footer">
+            <a href="{{ routes.search_url }}" class="st-link">{{ 'small_talk.header.search' | t }}</a>
+            <a href="{{ routes.cart_url }}" class="st-link">{{ 'small_talk.header.bag' | t }}</a>
+          </div>
+        </st-focus-trap>
+      </dialog>
+    </dialog-component>
+
+    <a class="st-logo" href="{{ routes.root_url }}">
+      {%- if settings.logo != blank -%}
+        {{
+          settings.logo
+          | image_url: width: 240
+          | image_tag: alt: logo_alt, class: 'st-logo__image', loading: 'eager', widths: '120, 240'
+        }}
+      {%- else -%}
+        {%- render 'st-logo-mark', size: 'header' -%}
+      {%- endif -%}
+    </a>
+
+    <nav class="st-header__nav" aria-label="{{ 'accessibility.header_navigation_label' | t }}">
+      <ul role="list">
+        {%- for link in menu.links -%}
+          <li>
+            <a
+              href="{{ link.url }}"
+              class="st-header__nav-link"
+              {% if link.current %}aria-current="page"{% endif %}
+            >{{ link.title | escape }}{% if link.current %}<span class="visually-hidden"> {{ 'small_talk.header.current_page' | t }}</span>{% endif %}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="st-header__actions">
+      {%- if section.settings.talks_link != blank -%}
+        <a href="{{ section.settings.talks_link }}" class="st-header__talks">{{ talks_label | escape }}</a>
+      {%- endif -%}
+
+      <a
+        href="{{ routes.cart_url }}"
+        class="st-header__icon-button st-header__bag"
+        aria-label="{{ 'small_talk.header.bag_count' | t: count: cart.item_count }}"
+      >
+        <cart-icon class="st-header__cart-icon{% unless cart == empty %} header-actions__cart-icon--has-cart{% endunless %}">
+          <svg class="st-header__bag-icon" width="36" height="39" viewBox="0 0 26 28" fill="none" aria-hidden="true">
+            <path d="M4.5 9h17l2 16.5h-21L4.5 9Z" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/>
+            <path d="M9 11V6.5a4 4 0 0 1 8 0V11" stroke="currentColor" stroke-width="1.45" stroke-linecap="round"/>
+          </svg>
+          {% render 'cart-bubble', limit: 100 %}
+        </cart-icon>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% stylesheet %}
+  :root {
+    --st-header-h: 69px;
+  }
+
+  @media screen and (min-width: 990px) {
+    :root {
+      --st-header-h: 76px;
+    }
+  }
+
+  .st-header {
+    background: var(--st-paper);
+    color: var(--st-talks-ink);
+  }
+
+  /* Same pattern as Horizon's header: flatten the group so the section can stick to the page. */
+  #header-group:has(.st-header--sticky) {
+    display: contents;
+  }
+
+  .st-header-section:has(.st-header--sticky) {
+    position: sticky;
+    top: 0;
+    z-index: var(--layer-header-menu);
+  }
+
+  .st-header__bar {
+    display: grid;
+    grid-template-columns: 14.4% 40% 28.2% 1fr;
+    align-items: center;
+    height: var(--st-header-h);
+    padding-inline: var(--safe-area-inset-left) var(--safe-area-inset-right);
+    max-width: var(--normal-page-width);
+    margin-inline: auto;
+  }
+
+  .st-header__menu {
+    justify-self: center;
+  }
+
+  .st-header__icon-button {
+    display: inline-grid;
+    place-items: center;
+    min-width: var(--minimum-touch-target);
+    min-height: var(--minimum-touch-target);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--st-icon-ink);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  /* Owner (10 Oct): the logo is left-aligned, right after the menu button (desktop: left, before the nav). */
+  .st-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    color: var(--st-logo-blue);
+    text-decoration: none;
+    min-height: var(--minimum-touch-target);
+  }
+
+  /* Wordmark per tokens.css --font-logo (Source Serif 4 Black, opsz 60): "talk" indented under "small", stretched
+     vertically by --logo-scale-y like the board (still real text). Box at 390: 81 x 59, top 6, centred at x 136. */
+  .st-logo__words {
+    display: inline-grid;
+    justify-items: start;
+    font-family: var(--font-logo);
+    font-variation-settings: var(--fv-logo);
+    font-weight: 900;
+    font-size: var(--fs-logo);
+    line-height: var(--lh-logo);
+    letter-spacing: var(--ls-logo);
+    color: var(--logo-color);
+    padding-block: 0.32em 0.22em;
+    transform: scaleY(var(--logo-scale-y, 1));
+  }
+
+  .st-logo__words > span:nth-child(2) {
+    margin-inline-start: var(--logo-talk-indent);
+  }
+
+  .st-logo--small .st-logo__words {
+    font-size: calc(var(--fs-logo) * 0.8);
+  }
+
+  .st-logo__image {
+    display: block;
+    height: auto;
+    width: auto;
+    max-height: 3.5rem;
+  }
+
+  .st-header__nav {
+    display: none;
+  }
+
+  /* On phones the talks link and the bag are grid columns 3 and 4. */
+  .st-header__actions {
+    display: contents;
+  }
+
+  .st-header__talks {
+    grid-column: 3;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+    font-family: var(--font-talks);
+    font-weight: var(--fw-talks);
+    font-size: min(calc(var(--fs-talks) * 0.7), 6.1vw); /* owner 10 Oct: ~30 % smaller at every breakpoint (34 -> 23.8 px); the token stays */
+    letter-spacing: var(--ls-talks);
+    line-height: 1;
+    color: var(--st-talks-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .st-header__talks:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+
+  .st-header__bag {
+    grid-column: 4;
+    justify-self: center;
+  }
+
+  .st-header__cart-icon {
+    --cart-bubble-background: var(--st-logo-blue);
+    --cart-bubble-text: var(--st-paper);
+
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .st-header__cart-icon .cart-bubble {
+    position: absolute;
+    inset-block-start: -2px;
+    inset-inline-end: -8px;
+    width: 18px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .st-header__bar {
+      grid-template-columns: auto 1fr auto;
+      gap: 1.5rem;
+      padding-inline: var(--st-gutter);
+    }
+
+    .st-header__menu {
+      display: none;
+    }
+
+    .st-logo {
+      justify-self: start;
+    }
+
+    .st-header__nav {
+      display: block;
+      justify-self: center;
+    }
+
+    .st-header__nav ul {
+      display: flex;
+      gap: 0.25rem 1.75rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .st-header__nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--minimum-touch-target);
+      color: var(--st-talks-ink);
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      text-underline-offset: 0.35em;
+    }
+
+    .st-header__nav-link:hover,
+    .st-header__nav-link[aria-current='page'] {
+      color: var(--st-logo-blue);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+    }
+
+    .st-header__actions {
+      display: flex;
+      grid-column: 3;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+  }
+
+  /* Drawer */
+  .st-drawer {
+    width: min(24rem, 88vw);
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    margin-inline-end: auto;
+    padding: 0;
+    border: 0;
+    background: var(--st-paper);
+    color: var(--st-talks-ink);
+    box-shadow: 0 0 2rem rgb(13 11 16 / 0.18);
+  }
+
+  .st-drawer::backdrop {
+    background: rgb(13 11 16 / 0.35);
+  }
+
+  .st-drawer[open] {
+    animation: st-drawer-in 0.22s var(--ease-out-cubic) both;
+  }
+
+  .st-drawer.dialog-closing {
+    animation: st-drawer-out 0.16s ease-in both;
+  }
+
+  @keyframes st-drawer-in {
+    from {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes st-drawer-out {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  .st-drawer__inner {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    min-height: 100%;
+    padding: max(0.5rem, var(--safe-area-inset-top)) 1.25rem max(1.5rem, var(--safe-area-inset-bottom));
+  }
+
+  .st-drawer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: 1.5rem;
+  }
+
+  .st-drawer__nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-drawer__link {
+    display: flex;
+    align-items: center;
+    min-height: 3.25rem;
+    border-block-end: 1px solid var(--st-chip-line);
+    color: var(--st-talks-ink);
+    font-family: var(--font-shop-heading);
+    font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .st-drawer__link:hover,
+  .st-drawer__link[aria-current='page'] {
+    color: var(--st-logo-blue);
+  }
+
+  .st-drawer__talks {
+    font-family: var(--font-talks);
+    font-weight: var(--fw-talks);
+    font-size: 2.1rem;
+  }
+
+  .st-drawer__account {
+    padding-block-start: 1rem;
+  }
+
+  .st-drawer__account a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+  }
+
+  .st-drawer__footer {
+    display: flex;
+    gap: 1.25rem;
+    margin-block-start: auto;
+    padding-block-start: 2rem;
+  }
+
+  .st-drawer__footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk header",
+  "class": "st-header-section",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "talks_label",
+      "label": "“the talks” label",
+      "default": "the talks"
+    },
+    {
+      "type": "url",
+      "id": "talks_link",
+      "label": "“the talks” link"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Keep header visible while scrolling",
+      "default": true
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

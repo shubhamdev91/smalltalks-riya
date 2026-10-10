@@ -1,0 +1,57 @@
+{% doc %}
+  The Small Talk logo inside a home link: the official logo image once st-artwork's files are in the theme (an SVG, or
+  2× / 3× WebP), else the live-text wordmark. The link's accessible name is "Small Talk home" (locale
+  small_talk.header.home = MC-004): the image's alt (MC-096 header and drawer, MC-097 footer), or visually-hidden text
+  beside the aria-hidden wordmark. Box heights (css px): header 56, drawer 45, footer 72, footer-inner 50
+  (header ~84 × 56 per spec/hero.md; footer ~100 × 72 per spec/landing.md; inner footer 50 tall per spec/talks.md).
+
+  @param {string} [size] - 'header' (default), 'drawer', 'footer' or 'footer-inner'.
+
+  @example
+  <a class="st-logo" href="{{ routes.root_url }}"><span class="visually-hidden">…</span>{% render 'st-logo-mark', size: 'header' %}</a>
+{% enddoc %}
+{%- liquid
+  # Switch, set when the official files land: '' = live text; 'svg' = assets/st-logo.svg; 'webp' = st-logo@2x.webp +
+  # st-logo@3x.webp. logo_w / logo_h = the file's intrinsic size (SVG: its viewBox), so the image keeps its aspect.
+  assign logo_kind = 'svg'
+  assign logo_w = 1336
+  assign logo_h = 818
+  assign mark_size = size | default: 'header'
+  assign logo_words = shop.name | downcase | split: ' '
+  assign logo_name = 'small_talk.header.home' | t
+  # The image needs its intrinsic size (width / height attributes → aspect ratio, so nothing shifts on load).
+  # Header mark: eager at default priority (no fetchpriority), so the hero tone and the set 1 sheet stay alone at high
+  # priority (st-fable, asset-window acceptance); the other sizes load lazily.
+  if logo_w == 0 or logo_h == 0
+    assign logo_kind = ''
+  endif
+-%}
+{%- case logo_kind -%}
+  {%- when 'svg' -%}
+    <img class="st-logo__mark st-logo__mark--{{ mark_size }}" src="{{ 'st-logo.svg' | asset_url }}" width="{{ logo_w }}" height="{{ logo_h }}" alt="{{ logo_name | escape }}" decoding="async"{% unless mark_size == 'header' %} loading="lazy"{% endunless %}>
+  {%- when 'webp' -%}
+    <img class="st-logo__mark st-logo__mark--{{ mark_size }}" src="{{ 'st-logo@2x.webp' | asset_url }}" srcset="{{ 'st-logo@2x.webp' | asset_url }} 2x, {{ 'st-logo@3x.webp' | asset_url }} 3x" width="{{ logo_w }}" height="{{ logo_h }}" alt="{{ logo_name | escape }}" decoding="async"{% unless mark_size == 'header' %} loading="lazy"{% endunless %}>
+  {%- else -%}
+    <span class="visually-hidden">{{ logo_name }}</span>
+    <span class="st-logo__words" aria-hidden="true">
+      {%- for word in logo_words -%}<span>{{ word }}</span>{%- endfor -%}
+    </span>
+{%- endcase -%}
+
+{% stylesheet %}
+  .st-logo__mark {
+    display: block;
+    width: auto;
+    max-width: none;
+  }
+
+  /* Inside the fixed-height bar (--st-header-h: 69 px phones, 76 px from 990): the logo never changes the header height. */
+  .st-logo__mark--header { height: 56px; }
+  .st-logo__mark--drawer { height: 45px; }
+  .st-logo__mark--footer { height: 72px; }
+  .st-logo__mark--footer-inner { height: 50px; }
+
+  @media screen and (max-width: 359px) {
+    .st-logo__mark--header { height: 48px; }
+  }
+{% endstylesheet %}

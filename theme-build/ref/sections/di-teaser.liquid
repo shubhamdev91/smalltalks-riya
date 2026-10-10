@@ -1,0 +1,75 @@
+<section class="di-teaser di-teaser--{{ section.settings.kind }}">
+<svg class="di-thread" viewBox="0 0 390 700" preserveAspectRatio="none" aria-hidden="true"><path d="M265 0C180 45 20 110 50 190S370 215 330 380S30 430 100 560S330 630 265 700"/></svg>
+{% if section.settings.kind == 'journal' %}
+<h2 class="di-note">{{ section.settings.heading | escape }}</h2>
+<div class="di-journal-tiles" aria-hidden="true"><div class="di-ink-tile" style="--set:1"></div><div class="di-journal-package">{% assign brainwave = shop.metaobjects.small_talk_campaign['brainwave'] %}<img src="{{ brainwave.package_url.value | escape }}&width=500" width="250" height="350" loading="lazy" alt=""></div></div>
+{% else %}
+{% if section.settings.kind == 'guide' %}<p class="di-eyebrow">Nail Guide</p>{% endif %}
+<h2{% if section.settings.kind == 'talks' %} class="di-talks-word"{% endif %}>{{ section.settings.heading | escape }}</h2><p class="di-note">{{ section.settings.note | escape }}</p>
+{% endif %}
+{% if section.settings.kind == 'talks' %}<div class="di-example"><small>Example conversation</small><div class="di-example-row"><span class="di-example-avatar" aria-hidden="true"></span><p>Anyone else rehearse a text and still send ‘hey’?</p></div><span class="di-example-alias">Velvet Mango</span></div>{% endif %}
+{% if section.settings.kind == 'guide' and section.settings.image != blank %}{{ section.settings.image | image_url: width: 800 | image_tag: class:'di-guide-art', loading:'lazy', alt:'A measuring tape placed across a fingernail' }}{% endif %}
+<a class="di-button di-outline" href="{{ section.settings.link }}">{{ section.settings.label | escape }} <span aria-hidden="true">↗</span></a>
+<p class="di-teaser-outro{% if section.settings.kind == 'journal' or section.settings.kind == 'talks' %} di-note{% endif %}">{% if section.settings.kind == 'journal' %}{{ section.settings.note | escape }}{% else %}{{ section.settings.copy | escape }}{% endif %}</p>
+</section>
+{% schema %}
+{
+  "name": "Teaser",
+  "settings": [{"type":"image_picker","id":"image","label":"Supporting illustration"},
+    {
+      "type": "select",
+      "id": "kind",
+      "label": "Section style",
+      "options": [
+        {
+          "value": "talks",
+          "label": "the talks"
+        },
+        {
+          "value": "journal",
+          "label": "Journal"
+        },
+        {
+          "value": "guide",
+          "label": "Nail Guide"
+        }
+      ],
+      "default": "journal"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Handwritten note",
+      "default": "Small stories. Big feelings."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Journal"
+    },
+    {
+      "type": "text",
+      "id": "copy",
+      "label": "Description",
+      "default": "Seven sets. So many stories."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Destination"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Button label",
+      "default": "From the Journal"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Teaser"
+    }
+  ]
+}
+{% endschema %}

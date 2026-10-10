@@ -1,0 +1,19 @@
+# Regenerable QA / lab screenshots (~1.6 GB). The notes and JSON beside them are kept.
+qa/desktop/
+qa/fidelity/
+qa/foundation/
+qa/sonnet/
+qa/motion/
+theme-build/lab/shots/
+theme-build/tmp/
+
+# Python / logs / traces
+__pycache__/
+*.pyc
+*.log
+*.json.gz
+
+# Secrets never belong here (Vercel holds the talks app secret)
+.env
+.env.*
+.vercel/

@@ -1,0 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "di-review-copy",
+      "settings": {
+        "heading": "Shaadi Shift: Dulhan tu. Duty meri.",
+        "body": "<p>An original Small Talk brand story</p><img src=\"https://cdn.shopify.com/s/files/1/0830/2339/7077/files/dulhan-tu-duty-meri-approved-package.png?v=1791012074&width=700\" width=\"400\" height=\"500\" alt=\"Shaadi Shift original illustrated packaging\"><h2>Her big day. Your cue.</h2><p>One missing safety pin. One last adjustment. One look that says, stay close. You\u2019re there for the tiny things between the big moments, keeping her laughing while the room gets louder. Her big day. Your very familiar role.</p><div class=\"di-story-slides\" role=\"region\" aria-label=\"Story in four moments\"><section class=\"di-story-slide\"><p>1 / 4</p><h3>One last adjustment.</h3></section><section class=\"di-story-slide\"><p>2 / 4</p><h3>One shared look.</h3></section><section class=\"di-story-slide\"><p>3 / 4</p><h3>All the little things, handled.</h3></section><section class=\"di-story-slide\"><p>4 / 4</p><h3>Dulhan tu. Duty meri.</h3></section></div><p>Pink and deep red, with a little yellow flower.</p><p><a href=\"/products/dulhan-tu-duty-meri\">Shop Shaadi Shift \u2192</a></p>"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

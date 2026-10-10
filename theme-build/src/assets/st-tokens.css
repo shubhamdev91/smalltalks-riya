@@ -1,0 +1,230 @@
+/* Small Talk board tokens
+   Sampled from the boards: 2.jpg (hero states), 5.jpg (shop/PDP/bag/guide), 9-14 (owner close-ups).
+   All sizes are CSS px at a 390 px-wide viewport. Scale with clamp(), e.g. size * (100vw / 390), and cap at the desktop max.
+   Board images are low resolution (a hero frame is ~271 board px wide), so hex values are medians and accurate to about ±6 per channel.
+   Retired: the blue/ink/plum chrome system. Don't reintroduce it. */
+
+:root {
+  /* ---------- chrome (landing and hero boards) ---------- */
+  --st-paper: #fdfdfc;            /* header and page paper (board 2 header #fdfdfc, board 5 page #fefdfd) */
+  --st-logo-blue: #1412d5;        /* 9.93:1 */        /* stacked "small talk" logo, board 2 (median of 7 frames: #1412d5) */
+  --st-talks-ink: #0d0b10;        /* thin black handwritten "the talks" in the header */
+  --st-header-h: 69px;            /* board 2: 48 board px -> 69 px at 390. Logo ~84x56, centred at x 35% */
+  --st-icon-ink: var(--st-logo-blue); /* hamburger and bag outline */
+
+  /* ---------- shop / PDP / bag / journal / help boards (board 5) ---------- */
+  --st-burgundy: #820622;         /* 10.32:1 on paper */
+  /* burgundy samples, serif headings: "Pick your plot twist.", "Find your fit.", "On Me" (#830623 / #800621 / #7f0521) */
+  --st-red: #a31a33;              /* 7.49:1 on paper */              /* sans subheads, product names in the grid, step numbers (#a31a33 / #a91232) */
+  --st-pill: #920324;             /* filled pills and buttons: All sets, Add to bag, Checkout (#920324 / #940326 / #8d0223) */
+  --st-pill-ink: #ffffff;         /* 9.29:1 on --st-pill */
+  --st-chip-bg: #fcfcfd;          /* unselected chip: white with a 1 px #d9d9de outline */
+  --st-chip-line: #d9d9de;
+  --st-hand-blue: #3653c7;        /* 6.41:1 paper, 5.38:1 on --st-panel-pink */        /* blue handwriting: annotations, PDP quote, guide sub, bag sub (#3655c7 / #2e4ac7 / #3a55c8 / #3f58cb) */
+  --st-price: #0b0b2e;            /* prices: near-black navy (#050642 sampled on JPEG text, rendered darker). 18.7:1 on paper */
+  --st-body: #6e7184;             /* body grey (#86899b sampled, darkened toward the stroke core). 4.73:1 on paper: passes 4.5 on paper only; on cream or panels use --st-muted-text */
+  --st-muted: #9698ab;            /* NON-TEXT ONLY (dividers, icons, disabled outlines): 2.80:1 on paper fails text contrast */
+  --st-muted-text: #6a6d85;       /* accessibility override for footer links, helper text, captions: 4.98 paper / 4.72 cream / 4.74 panel */
+  --st-placeholder: #6a6d85;      /* the board placeholder #b0b0bd is 2.14:1; placeholders are text, so use the passing grey */
+  --st-outline-red: #c22e38;      /* board outline-pill text #ce3e46 is 4.44:1 on cream; nudged to 5.22 cream / 5.61 white */
+  --st-panel: #f8f7f7;            /* "Need a hand?" panel */
+  --st-panel-pink: #fee2ed;       /* bag "Nails for every plot twist." panel */
+  --st-shopify-blue: #0164fd;     /* checkout only (Shopify, reference) */
+
+  /* ---------- hero scenes (board 2): radial glow per set ----------
+     background: radial-gradient(circle at X Y, inner 0, mid R*0.55, outer R*1.25)
+     Centre is % of the scene below the header; R is px at 390. Sampled with spec/tools/herocolors.py. */
+  --hero-on-me:         radial-gradient(circle at 46% 34%, #fcc01d 0, #f5a908 99px, #e18e05 225px);
+  --hero-brainwave:     radial-gradient(circle at 52% 28%, #0958f4 0, #0444d9 132px, #032cb8 300px);
+  --hero-diet-cherry:   radial-gradient(circle at 35% 33%, #d41614 0, #b70a09 132px, #780303 300px);
+  --hero-green-flag:    radial-gradient(circle at 43% 38%, #0d7b4e 0, #04673c 176px, #034727 400px);
+  --hero-shaadi-shift:  radial-gradient(circle at 49% 40%, #fa357f 0, #f61d6d 176px, #df0a4d 400px);
+  --hero-wild-card:     radial-gradient(circle at 51% 34%, #d2fb23 0, #b4f50a 88px, #94e004 200px);
+  --hero-pinky-promise: radial-gradient(circle at 38% 32%, #792ffb 0, #621dec 132px, #4812c8 300px);
+  /* Flat fallbacks are the metaobject backgrounds: #ffb900 #073df1 #e10019 #007948 #ff0078 #b7ef00 #6620f2.
+     Board mid-tones are darker than the metaobjects (e.g. diet-cherry #b70a09 vs #e10019); the boards win per owner directive. */
+
+  /* hero ink per set: headline + note colour, pill style.
+     Contrast (text on ground): on-me ink 9.54, brainwave white 7.41, diet-cherry white 6.86, green white 6.98,
+     shaadi ink 4.80, wild navy 13.09, pinky white 7.23. Pill ink on white: brainwave 10.77, diet-cherry 5.25,
+     green 5.97, wild 10.69, pinky 5.24; white on on-me pill 8.62, shaadi pill 8.69. Chapter pill red #cc2f36 on white 5.21.
+     Landing: white on shaadi #f30b5e = 4.18, so only large text there (notes, headlines >= 24px; product name at 24px, not 22). */
+  --ink-on-me: #180e0b;          --pill-on-me: #9c0219;          --pill-ink-on-me: #ffffff;  /* filled burgundy pill */
+  --ink-brainwave: #ffffff;      --pill-brainwave: #ffffff;      --pill-ink-brainwave: #0f0bcd;
+  --ink-diet-cherry: #ffffff;    --pill-diet-cherry: #ffffff;    --pill-ink-diet-cherry: #d6171a;
+  --ink-green-flag: #ffffff;     --pill-green-flag: #ffffff;     --pill-ink-green-flag: #107247;
+  --ink-shaadi-shift: #180e0b;   --pill-shaadi-shift: #9b021a;   --pill-ink-shaadi-shift: #ffffff;
+  --ink-wild-card: #0f0b5c;      --pill-wild-card: #ffffff;      --pill-ink-wild-card: #0f0cce;
+  --ink-pinky-promise: #ffffff;  --pill-pinky-promise: #ffffff;  --pill-ink-pinky-promise: #d6181b;
+
+  /* ---------- type ----------
+     Fonts are OFL. Files and licences are in spec/fonts/<family>/; comparison sheets are in spec/type/compare-<role>.png.
+     IoU = text-mask overlap with the board crop after fitting height and width (single-line roles only).
+     Scores are low across the board because the board text is AI-rendered and JPEG-soft; the visual check decided where scores were close. */
+
+  /* Hero headline. PICK: Fraunces 900, SOFT 100, WONK 1, opsz 144. Arc IoU 0.412.
+     Runners-up: Corben Bold 0.358; Caprasimo 0.349 (rounder, less contrast); Fraunces SOFT50 0.354.
+     Set on an arc (radius ~380 px at 390, convex up) and rotated -3deg. Arc-set with SVG textPath, or per-line
+     transform:rotate as a fallback. Must stay real text (accessibility minimum). */
+  --font-headline: "Fraunces", Georgia, serif;
+  --fv-headline: "wght" 900, "SOFT" 100, "WONK" 1, "opsz" 144;
+  --fs-headline: 86px;  --ls-headline: -0.06em;  --lh-headline: 0.92;
+
+  /* Hero note. PICK: Caveat 700 (slanted felt-tip, same letter shapes as the board's "I've got this.").
+     Runners-up: Kalam Regular (upright, too wide); Caveat Brush (too heavy).
+     Rotated -10deg; two lines when long. */
+  --font-note: "Caveat", "Segoe Print", cursive;
+  --fw-note: 700;  --fs-note: 46px;  --lh-note: 0.95;  --rot-note: -10deg;
+
+  /* Hero pill and section pills. PICK: Barlow Semi Condensed SemiBold. IoU 0.243.
+     Runners-up: IBM Plex Sans Condensed Medium 0.235; Roboto Condensed 500 0.229. */
+  --font-pill: "Barlow Semi Condensed", "Arial Narrow", sans-serif;
+  --fw-pill: 600;  --fs-pill: 30px;  /* hero pill; section "Shop set" pills ~17px */
+
+  /* Header "the talks". PICK: Caveat 600 (thin slanted pen once sized to 30px). IoU 0.362.
+     Runners-up: Caveat 500 0.356; Nanum Pen Script 0.302 (too heavy).
+     Board ink is black #0d0b10; shop boards render it red #b92542, but the owner keeps the landing header everywhere. */
+  --font-talks: "Caveat", cursive;
+  --fw-talks: 600;  --fs-talks: 34px;  --ls-talks: -0.02em;
+
+  /* Shop, PDP, bag and guide headings. PICK: Source Serif 4 Bold, opsz 60. IoU 0.548.
+     Runners-up: Abril Fatface 0.528 (closest contrast, but its fat-face 'y' and 'f' read wrong); DM Serif Display 0.458. */
+  --font-shop-heading: "Source Serif 4", Georgia, serif;
+  --fv-shop-heading: "wght" 700, "opsz" 60;
+  --fs-shop-h1: 52px; --ls-shop-h1: -0.02em; --lh-shop-h1: 0.95;  /* "Pick your plot twist." two lines; ~40px on the guide */
+  --fs-shop-h2: 34px;                                            /* PDP title "On Me", "Your bag", "Subtotal" 18px */
+
+  /* Blue annotations. PICK: Kalam Light (neat thin print hand).
+     Runners-up: Patrick Hand (upright); Caveat 400 (too cursive). Rotate -4deg; open tracking +0.1em. */
+  --font-annotation: "Kalam", "Segoe Print", cursive;
+  --fw-annotation: 300;  --fs-annotation: 19px;  --ls-annotation: 0.08em;
+
+  /* UI subheads (red) and body. PICK: DM Sans 600 / 400. Subhead IoU 0.557.
+     Runners-up: IBM Plex Sans Condensed SemiBold 0.460; Barlow Semi Condensed SemiBold 0.365. */
+  --font-ui: "DM Sans", system-ui, sans-serif;
+  --fs-ui-sub: 20px;  --fw-ui-sub: 600;
+  --fs-ui-body: 16px; --fw-ui-body: 400;  --lh-ui-body: 1.35;
+
+  /* ---------- shared geometry ---------- */
+  --st-radius-pill: 999px;
+  --st-touch-min: 44px;           /* accessibility minimum; overrides the board where smaller */
+  --st-hero-pill-h: 62px;   --st-hero-pill-inset: 35px;   /* board 2: x 9%-93%, 62 px tall */
+  --st-ctrl-d: 52px;              /* pause + tone circles, white fill, 4 px white ring on the tone swatch */
+}
+
+
+
+/* Landing additions (landing.md), orchestrator round 2. Contrast on cream #fdf6e9: */
+:root {
+  --st-cream: #fdf6e9;          /* landing cream ground; --st-muted-text 4.72, --st-body 4.48 FAILS 4.5 on cream: use --st-muted-text */
+  --st-landing-red: #bc0a1e;    /* 6.10:1 on cream */
+  --st-navy: #14168f;           /* 12.68:1 on cream */
+  --st-bubble: #e3e0fe;         /* bubble text #3b3ba8 = 6.88:1 */
+  --st-beeline-red: #c23a2c;    /* non-text */
+}
+
+
+/* Stacked logo "small / talk" (orchestrator round 3). Sheet: spec/type/compare-logo.png
+   Fitted to the board 2 header crop at 390 (word "small" matched to the board width, "talk" centred under it, baselines from the board).
+   IoU vs board, with scaleY 1.16 / without:
+     Source Serif 4 Black opsz60   0.684 / 0.632   <- PICK (the same family as the shop headings, already a spec font)
+     Abril Fatface                 0.644 / 0.600
+     Fraunces 900 opsz144 SOFT0    0.629 / 0.571   (shipped static instance)
+     DM Serif Display (current)    0.601 / 0.537   (too light and too wide-bowled)
+     Young Serif                   0.494
+   The board letters are ~16% taller than any OFL heavy serif at the matching width (an AI-drawn condensed wordmark).
+   Optional: transform: scaleY(1.16) on the logo text (still real text, accessible). Without it, use the unscaled values. */
+:root {
+  --font-logo: "Source Serif 4", Georgia, serif;
+  --fv-logo: "wght" 900, "opsz" 60;
+  --fs-logo: 38.5px;          /* at 390; header logo box 81 x 59 px, top y 6, centred at x 136 */
+  --ls-logo: -0.04em;
+  --lh-logo: 0.67;            /* baseline-to-baseline 25.8 px */
+  --logo-talk-indent: 9.5px;  /* "talk" starts 9.5 px right of "small"'s left edge (= both lines centred, centre shift -1.6 px) */
+  --logo-scale-y: 1.16;       /* optional board-match stretch; set to 1 to disable */
+  --logo-color: var(--st-logo-blue);
+}
+
+/* Chapter headlines (landing chapters, round 4: st-fable fit). The hero stays --fv-headline (900 / SOFT 100). */
+:root {
+  --fv-chapter-headline: "wght" 700, "SOFT" 50, "WONK" 1, "opsz" 144;
+  --ls-chapter-headline: -0.03em;
+  --ws-chapter-headline: 0.18em;
+  --fs-chapter-headline: 60px;  /* 58-64 at 390 */
+}
+
+/* Shop product tiles (board 5), round 5. Median of the tile-ground ring (4-10 px inside each tile edge),
+   tools: inline sampler, data spec/shop-tiles.json. These are brighter than the hero mid-tones; use these on shop/bag/PDP tiles only. */
+:root {
+  --st-tile-on-me:         #fcb939;
+  --st-tile-brainwave:     #0165f8;
+  --st-tile-green-flag:    #068a43;
+  --st-tile-shaadi-shift:  #fc2f94;
+  --st-tile-diet-cherry:   #fd1e36;
+  --st-tile-wild-card:     #d9e326;
+  --st-tile-pinky-promise: #045af1;  /* board shows a cobalt ground (the box art's blue bleeds to the tile edge). Flagged: campaign Pinky is violet #6620f2 */
+}
+
+/* Card names + PDP title (round 6). Sheets: spec/type/compare-card-name.png, compare-card-name-onme.png, compare-pdp-title.png
+   Card name (shop/bag cards) is a bold condensed SANS, not serif. IoU Brainwave / On Me:
+     IBM Plex Sans Condensed Bold  0.782 / 0.580  <- PICK (best average 0.68)
+     DM Sans 800 (shipped)         0.657 / 0.656  runner-up (0.66); acceptable if we don't want another family
+     Barlow Semi Condensed Bold    0.787 / 0.414  (wins the long word, fails short words: too narrow and open)
+     Source Serif 4 Black          0.530 / 0.628  (serif: wrong)
+   PDP title stays a heavy SERIF (bracketed serifs visible on "M" at 2x). IoU: DM Sans 800 0.749, Fraunces 900 0.658,
+   Source Serif 4 Black 0.626, Abril 0.616. Picked Source Serif 4 Black visually: the sans scores higher only because the
+   board crop is blurred and blob-like; its letterforms (no serifs, geometric O) are wrong. */
+:root {
+  --font-card-name: "IBM Plex Sans Condensed", "Barlow Semi Condensed", system-ui, sans-serif;
+  --fw-card-name: 700; --fs-card-name: 21px; --ls-card-name: 0;
+  --font-pdp-title: "Source Serif 4", Georgia, serif;
+  --fv-pdp-title: "wght" 900, "opsz" 60; --fs-pdp-title: 50px; --ls-pdp-title: 0;
+}
+
+/* Prices (round 7, st-fable PDP acceptance): shop, PDP, bag. Board PDP "599" is 41x18 px; Plex Condensed 700 at 25 px gives 40.5x18. */
+:root {
+  --font-price: "IBM Plex Sans Condensed", system-ui, sans-serif;
+  --fw-price: 700;
+  --fs-price-pdp: 25px;
+  --fs-price-card: 17px;   /* shop cards, as built */
+  --fs-price-bag: 17px;
+  --fs-bag-subtotal: 24px;  /* label + amount, navy #14163b, Plex Condensed 700 */
+  --color-price: var(--st-price);
+}
+
+/* Journal card image grounds (board 4, round 9). Sampled by st-foundation, independently re-checked by st-boardspec (within +/-4 per channel).
+   Median of each card image's ground ring, 4-10 px inside the image edge (crop journal@390.png, x 18-188). The shop keeps --st-tile-*. */
+:root {
+  --st-journal-on-me:         #fcc92a;
+  --st-journal-brainwave:     #0452e5;
+  --st-journal-green-flag:    #105908;  /* ring is mostly leaves on this card */
+  --st-journal-shaadi-shift:  #fa5987;
+  --st-journal-diet-cherry:   #cb0419;
+  --st-journal-wild-card:     #d6d306;
+  --st-journal-pinky-promise: #ca89f4;  /* lilac (not the shop cobalt) */
+  --st-journal-featured-tint: 22%;      /* featured card bg = color-mix(in srgb, var(--st-journal-<set>) 22%, #fff); On Me ~ #fff3cf */
+}
+
+/* the talks hub tagline "a little less filtered." (round 10). Sheet: spec/type/compare-talks-tagline.png.
+   File: spec/fonts/sourceserif4/SourceSerif4-Italic[opsz,wght].ttf (OFL, same OFL.txt). IoU: 400/opsz20 0.330 (pick),
+   600/opsz32 0.318, 600/opsz20 0.316, 500/opsz20 0.315. Board stroke is regular weight, not bold. */
+:root {
+  --font-talks-tagline: "Source Serif 4", Georgia, serif;   /* font-style: italic; the true italic file, not a slanted roman */
+  --fv-talks-tagline: "wght" 400, "opsz" 20;
+  --fs-talks-tagline: 28px;
+  --ls-talks-tagline: -0.01em;
+  --color-talks-tagline: #c0142f;
+}
+
+/* Landing chapter product name highlight (spec/name-highlight.md). Ink on stroke >= 6.96:1 measured on every glyph pixel.
+   Ink on bare dark grounds fails (1.4-2.3) - the name must always render with its ::before stroke. */
+:root {
+  --name-hl-on-me:#ffe59a;        --name-ink-on-me:#470100;
+  --name-hl-brainwave:#dfe7ff;    --name-ink-brainwave:#0a2a9e;
+  --name-hl-diet-cherry:#ffd6d0;  --name-ink-diet-cherry:#7a0010;
+  --name-hl-green-flag:#cdeedb;   --name-ink-green-flag:#013a1d;
+  --name-hl-shaadi-shift:#ffd3e3; --name-ink-shaadi-shift:#8e0016;
+  --name-hl-wild-card:#f2ffbf;    --name-ink-wild-card:#0f0b5c;
+  --name-hl-pinky-promise:#e4d6ff;--name-ink-pinky-promise:#5e0412;
+  --fs-chapter-name: 26px; --fw-chapter-name: 700;
+}

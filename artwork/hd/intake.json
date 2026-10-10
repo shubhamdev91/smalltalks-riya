@@ -1,0 +1,2255 @@
+{
+ "finger-tone-1": {
+  "source": "chatgpt/named/_shared/finger-tone-1.png",
+  "kind": "finger",
+  "tone": 1,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.606,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6406,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8410
+  },
+  "trim_box": [
+   0,
+   15,
+   933,
+   1672
+  ],
+  "fit": {
+   "scale": 0.991,
+   "cuticle_src_px": [
+    457,
+    441
+   ],
+   "plate_width_px": 209,
+   "would_upscale": false,
+   "bottom_reaches_edge": true,
+   "anchor_needs_visual_confirm": true
+  },
+  "file": "hd/fingers/tone-1.webp",
+  "px": [
+   558,
+   1512
+  ],
+  "bytes": 731976,
+  "web": "hd/fingers/tone-1.web.webp",
+  "web_px": [
+   558,
+   1512
+  ],
+  "web_bytes": 167002,
+  "max_sharp_css_width_at_3x": 186,
+  "canvas": [
+   558,
+   1512
+  ],
+  "nail_bed_anchor": [
+   0.5,
+   0.2649
+  ],
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/finger-tone-1.png"
+ },
+ "finger-tone-2": {
+  "source": "chatgpt/named/_shared/finger-tone-2.png",
+  "kind": "finger",
+  "tone": 2,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.597,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6418,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7489
+  },
+  "trim_box": [
+   0,
+   89,
+   927,
+   1672
+  ],
+  "fit": {
+   "scale": 0.968,
+   "cuticle_src_px": [
+    447,
+    358
+   ],
+   "plate_width_px": 206,
+   "would_upscale": false,
+   "bottom_reaches_edge": true,
+   "anchor_needs_visual_confirm": true
+  },
+  "file": "hd/fingers/tone-2.webp",
+  "px": [
+   558,
+   1512
+  ],
+  "bytes": 707026,
+  "web": "hd/fingers/tone-2.web.webp",
+  "web_px": [
+   558,
+   1512
+  ],
+  "web_bytes": 162250,
+  "max_sharp_css_width_at_3x": 186,
+  "canvas": [
+   558,
+   1512
+  ],
+  "nail_bed_anchor": [
+   0.5,
+   0.2649
+  ],
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/finger-tone-2.png"
+ },
+ "finger-tone-3": {
+  "source": "chatgpt/named/_shared/finger-tone-3.png",
+  "kind": "finger",
+  "tone": 3,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.598,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6396,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7491
+  },
+  "trim_box": [
+   0,
+   75,
+   931,
+   1672
+  ],
+  "fit": {
+   "scale": 0.968,
+   "cuticle_src_px": [
+    448,
+    372
+   ],
+   "plate_width_px": 207,
+   "would_upscale": false,
+   "bottom_reaches_edge": true,
+   "anchor_needs_visual_confirm": true
+  },
+  "file": "hd/fingers/tone-3.webp",
+  "px": [
+   558,
+   1512
+  ],
+  "bytes": 708486,
+  "web": "hd/fingers/tone-3.web.webp",
+  "web_px": [
+   558,
+   1512
+  ],
+  "web_bytes": 163038,
+  "max_sharp_css_width_at_3x": 186,
+  "canvas": [
+   558,
+   1512
+  ],
+  "nail_bed_anchor": [
+   0.5,
+   0.2649
+  ],
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/finger-tone-3.png"
+ },
+ "finger-tone-4": {
+  "source": "chatgpt/named/_shared/finger-tone-4.png",
+  "kind": "finger",
+  "tone": 4,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.598,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6416,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7746
+  },
+  "trim_box": [
+   19,
+   65,
+   917,
+   1672
+  ],
+  "fit": {
+   "scale": 0.97,
+   "cuticle_src_px": [
+    425,
+    383
+   ],
+   "plate_width_px": 208,
+   "would_upscale": false,
+   "bottom_reaches_edge": true,
+   "anchor_needs_visual_confirm": true
+  },
+  "file": "hd/fingers/tone-4.webp",
+  "px": [
+   558,
+   1512
+  ],
+  "bytes": 705782,
+  "web": "hd/fingers/tone-4.web.webp",
+  "web_px": [
+   558,
+   1512
+  ],
+  "web_bytes": 162046,
+  "max_sharp_css_width_at_3x": 186,
+  "canvas": [
+   558,
+   1512
+  ],
+  "nail_bed_anchor": [
+   0.5,
+   0.2649
+  ],
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/finger-tone-4.png"
+ },
+ "our-vision-woman": {
+  "source": "chatgpt/named/_shared/our-vision-woman.png",
+  "kind": "photo",
+  "set": null,
+  "role": "our-vision",
+  "ground": {
+   "requested": "#f6e7d2",
+   "border_median": "#1e1d17",
+   "de00": 81.3
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 1531.9,
+  "file": "hd/photos/our-vision-woman.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 479984,
+  "web": "hd/photos/our-vision-woman.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 374510,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [
+   "ground ΔE00 81.3 from requested #f6e7d2 (flag, not recoloured)"
+  ],
+  "status_auto": "auto-flag",
+  "contact_sheet": "tests/hd/our-vision-woman.png"
+ },
+ "brainwave-chapter": {
+  "source": "chatgpt/named/brainwave/brainwave-chapter.png",
+  "kind": "unknown",
+  "source_px": [
+   1536,
+   1024
+  ],
+  "source_mode": "RGBA",
+  "status_auto": "unrecognised-name"
+ },
+ "brainwave-nail-1": {
+  "source": "chatgpt/named/brainwave/brainwave-nail-1.png",
+  "kind": "nail",
+  "set": "brainwave",
+  "col": 0,
+  "source_px": [
+   941,
+   1671
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.424,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6866,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7838
+  },
+  "trim_box": [
+   0,
+   31,
+   941,
+   1583
+  ],
+  "shape": {
+   "h": 1470,
+   "w": 805,
+   "aspect": 1.83,
+   "top15_w": 250.0,
+   "bottom30_w": 695.3,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 2.8,
+   "cluster_de00": [
+    2.8,
+    1.7,
+    5.5
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.474,
+   "nail_px": [
+    383,
+    698
+   ],
+   "p1_nail_px": [
+    184,
+    317
+   ],
+   "width_ratio_vs_p1": 0.94,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/brainwave-nail-1.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/brainwave-nail-1.png"
+ },
+ "brainwave-nail-2": {
+  "source": "chatgpt/named/brainwave/brainwave-nail-2.png",
+  "kind": "nail",
+  "set": "brainwave",
+  "col": 1,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.424,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6850,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8581
+  },
+  "trim_box": [
+   0,
+   93,
+   885,
+   1597
+  ],
+  "shape": {
+   "h": 1473,
+   "w": 805,
+   "aspect": 1.83,
+   "top15_w": 250.2,
+   "bottom30_w": 688.8,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 4.4,
+   "cluster_de00": [
+    2.3,
+    4.3,
+    9.0
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.475,
+   "nail_px": [
+    383,
+    701
+   ],
+   "p1_nail_px": [
+    186,
+    318
+   ],
+   "width_ratio_vs_p1": 0.93,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/brainwave-nail-2.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/brainwave-nail-2.png"
+ },
+ "brainwave-nail-3": {
+  "source": "chatgpt/named/brainwave/brainwave-nail-3.png",
+  "kind": "nail",
+  "set": "brainwave",
+  "col": 2,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.426,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6852,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8223
+  },
+  "trim_box": [
+   57,
+   93,
+   884,
+   1639
+  ],
+  "shape": {
+   "h": 1472,
+   "w": 804,
+   "aspect": 1.83,
+   "top15_w": 247.3,
+   "bottom30_w": 689.4,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 2.1,
+   "cluster_de00": [
+    1.3,
+    0.5,
+    5.1
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.474,
+   "nail_px": [
+    382,
+    698
+   ],
+   "p1_nail_px": [
+    174,
+    317
+   ],
+   "width_ratio_vs_p1": 1.0,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/brainwave-nail-3.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/brainwave-nail-3.png"
+ },
+ "diet-cherry-chapter": {
+  "source": "chatgpt/named/diet-cherry/diet-cherry-chapter.png",
+  "kind": "unknown",
+  "source_px": [
+   1536,
+   1024
+  ],
+  "source_mode": "RGBA",
+  "status_auto": "unrecognised-name"
+ },
+ "diet-cherry-nail-1": {
+  "source": "chatgpt/named/diet-cherry/diet-cherry-nail-1.png",
+  "kind": "nail",
+  "set": "diet-cherry",
+  "col": 0,
+  "source_px": [
+   941,
+   1671
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.428,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6826,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 9718
+  },
+  "trim_box": [
+   0,
+   96,
+   941,
+   1613
+  ],
+  "shape": {
+   "h": 1466,
+   "w": 799,
+   "aspect": 1.83,
+   "top15_w": 247.1,
+   "bottom30_w": 688.7,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 1.4,
+   "cluster_de00": [
+    1.3,
+    2.3,
+    0.5
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.475,
+   "nail_px": [
+    381,
+    698
+   ],
+   "p1_nail_px": [
+    183,
+    317
+   ],
+   "width_ratio_vs_p1": 0.94,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/diet-cherry-nail-1.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/diet-cherry-nail-1.png"
+ },
+ "diet-cherry-nail-2": {
+  "source": "chatgpt/named/diet-cherry/diet-cherry-nail-2.png",
+  "kind": "nail",
+  "set": "diet-cherry",
+  "col": 1,
+  "source_px": [
+   941,
+   1671
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.428,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6834,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7891
+  },
+  "trim_box": [
+   0,
+   95,
+   919,
+   1671
+  ],
+  "shape": {
+   "h": 1470,
+   "w": 800,
+   "aspect": 1.84,
+   "top15_w": 247.5,
+   "bottom30_w": 686.2,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 3.4,
+   "cluster_de00": [
+    3.6,
+    1.5,
+    4.0
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.474,
+   "nail_px": [
+    380,
+    698
+   ],
+   "p1_nail_px": [
+    186,
+    317
+   ],
+   "width_ratio_vs_p1": 0.93,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/diet-cherry-nail-2.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/diet-cherry-nail-2.png"
+ },
+ "diet-cherry-nail-3": {
+  "source": "chatgpt/named/diet-cherry/diet-cherry-nail-3.png",
+  "kind": "nail",
+  "set": "diet-cherry",
+  "col": 2,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.428,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6848,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0001,
+   "semi_alpha_px": 8216
+  },
+  "trim_box": [
+   0,
+   90,
+   911,
+   1638
+  ],
+  "shape": {
+   "h": 1476,
+   "w": 799,
+   "aspect": 1.85,
+   "top15_w": 248.2,
+   "bottom30_w": 682.3,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 0.8,
+   "cluster_de00": [
+    0.5,
+    3.3,
+    1.9
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.473,
+   "nail_px": [
+    378,
+    698
+   ],
+   "p1_nail_px": [
+    172,
+    317
+   ],
+   "width_ratio_vs_p1": 1.0,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/diet-cherry-nail-3.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/diet-cherry-nail-3.png"
+ },
+ "green-flag-nail-1": {
+  "source": "chatgpt/named/green-flag/green-flag-nail-1.png",
+  "kind": "nail",
+  "set": "green-flag",
+  "col": 0,
+  "source_px": [
+   941,
+   1671
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.431,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6816,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0078,
+   "semi_alpha_px": 8116
+  },
+  "trim_box": [
+   19,
+   98,
+   923,
+   1587
+  ],
+  "shape": {
+   "h": 1468,
+   "w": 798,
+   "aspect": 1.84,
+   "top15_w": 243.5,
+   "bottom30_w": 684.8,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 1.4,
+   "cluster_de00": [
+    0.9,
+    3.0,
+    2.1
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.475,
+   "nail_px": [
+    379,
+    698
+   ],
+   "p1_nail_px": [
+    184,
+    317
+   ],
+   "width_ratio_vs_p1": 0.93,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/green-flag-nail-1.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/green-flag-nail-1.png"
+ },
+ "green-flag-nail-2": {
+  "source": "chatgpt/named/green-flag/green-flag-nail-2.png",
+  "kind": "nail",
+  "set": "green-flag",
+  "col": 1,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.429,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6826,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8500
+  },
+  "trim_box": [
+   35,
+   33,
+   931,
+   1656
+  ],
+  "shape": {
+   "h": 1471,
+   "w": 802,
+   "aspect": 1.83,
+   "top15_w": 247.4,
+   "bottom30_w": 684.8,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 4.1,
+   "cluster_de00": [
+    3.2,
+    4.3,
+    11.9
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.476,
+   "nail_px": [
+    382,
+    701
+   ],
+   "p1_nail_px": [
+    186,
+    318
+   ],
+   "width_ratio_vs_p1": 0.93,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/green-flag-nail-2.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/green-flag-nail-2.png"
+ },
+ "on-me-nail-1": {
+  "source": "chatgpt/named/on-me/on-me-nail-1.png",
+  "kind": "nail",
+  "set": "on-me",
+  "col": 0,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.434,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6828,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7738
+  },
+  "trim_box": [
+   0,
+   96,
+   941,
+   1652
+  ],
+  "shape": {
+   "h": 1468,
+   "w": 793,
+   "aspect": 1.85,
+   "top15_w": 245.8,
+   "bottom30_w": 682.6,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 7.3,
+   "cluster_de00": [
+    0.9,
+    16.6,
+    77.4
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.475,
+   "nail_px": [
+    377,
+    698
+   ],
+   "p1_nail_px": [
+    182,
+    317
+   ],
+   "width_ratio_vs_p1": 0.94,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/on-me-nail-1.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/on-me-nail-1.png"
+ },
+ "on-me-nail-2": {
+  "source": "chatgpt/named/on-me/on-me-nail-2.png",
+  "kind": "nail",
+  "set": "on-me",
+  "col": 1,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.428,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6842,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8825
+  },
+  "trim_box": [
+   0,
+   61,
+   933,
+   1606
+  ],
+  "shape": {
+   "h": 1472,
+   "w": 801,
+   "aspect": 1.84,
+   "top15_w": 248.5,
+   "bottom30_w": 685.4,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 3.1,
+   "cluster_de00": [
+    2.5,
+    4.9,
+    1.2
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.476,
+   "nail_px": [
+    381,
+    701
+   ],
+   "p1_nail_px": [
+    185,
+    318
+   ],
+   "width_ratio_vs_p1": 0.93,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/on-me-nail-2.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/on-me-nail-2.png"
+ },
+ "on-me-nail-3": {
+  "source": "chatgpt/named/on-me/on-me-nail-3.png",
+  "kind": "nail",
+  "set": "on-me",
+  "col": 2,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.424,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6847,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8947
+  },
+  "trim_box": [
+   58,
+   77,
+   907,
+   1640
+  ],
+  "shape": {
+   "h": 1473,
+   "w": 807,
+   "aspect": 1.83,
+   "top15_w": 249.0,
+   "bottom30_w": 689.8,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 3.0,
+   "cluster_de00": [
+    2.4,
+    3.6,
+    2.9
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.473,
+   "nail_px": [
+    382,
+    698
+   ],
+   "p1_nail_px": [
+    170,
+    317
+   ],
+   "width_ratio_vs_p1": 1.02,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/on-me-nail-3.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/on-me-nail-3.png"
+ },
+ "pinky-promise-nail-1": {
+  "source": "chatgpt/named/pinky-promise/pinky-promise-nail-1.png",
+  "kind": "nail",
+  "set": "pinky-promise",
+  "col": 0,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.425,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6836,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0016,
+   "semi_alpha_px": 7908
+  },
+  "trim_box": [
+   0,
+   57,
+   907,
+   1644
+  ],
+  "shape": {
+   "h": 1468,
+   "w": 808,
+   "aspect": 1.82,
+   "top15_w": 250.8,
+   "bottom30_w": 690.2,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 3.2,
+   "cluster_de00": [
+    2.5,
+    2.6,
+    21.6
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.475,
+   "nail_px": [
+    384,
+    698
+   ],
+   "p1_nail_px": [
+    183,
+    317
+   ],
+   "width_ratio_vs_p1": 0.95,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/pinky-promise-nail-1.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/pinky-promise-nail-1.png"
+ },
+ "shaadi-shift-nail-1": {
+  "source": "chatgpt/named/shaadi-shift/shaadi-shift-nail-1.png",
+  "kind": "nail",
+  "set": "shaadi-shift",
+  "col": 0,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.425,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6844,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8416
+  },
+  "trim_box": [
+   0,
+   59,
+   915,
+   1653
+  ],
+  "shape": {
+   "h": 1471,
+   "w": 803,
+   "aspect": 1.83,
+   "top15_w": 247.5,
+   "bottom30_w": 689.2,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 1.0,
+   "cluster_de00": [
+    0.6,
+    0.6,
+    4.0
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.474,
+   "nail_px": [
+    381,
+    698
+   ],
+   "p1_nail_px": [
+    185,
+    317
+   ],
+   "width_ratio_vs_p1": 0.93,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/shaadi-shift-nail-1.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/shaadi-shift-nail-1.png"
+ },
+ "shaadi-shift-nail-2": {
+  "source": "chatgpt/named/shaadi-shift/shaadi-shift-nail-2.png",
+  "kind": "nail",
+  "set": "shaadi-shift",
+  "col": 1,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.427,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6838,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7472
+  },
+  "trim_box": [
+   0,
+   0,
+   927,
+   1584
+  ],
+  "shape": {
+   "h": 1471,
+   "w": 804,
+   "aspect": 1.83,
+   "top15_w": 248.2,
+   "bottom30_w": 686.9,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 1.3,
+   "cluster_de00": [
+    0.9,
+    1.1,
+    8.1
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.476,
+   "nail_px": [
+    383,
+    701
+   ],
+   "p1_nail_px": [
+    186,
+    318
+   ],
+   "width_ratio_vs_p1": 0.93,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/shaadi-shift-nail-2.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/shaadi-shift-nail-2.png"
+ },
+ "shaadi-shift-nail-3": {
+  "source": "chatgpt/named/shaadi-shift/shaadi-shift-nail-3.png",
+  "kind": "nail",
+  "set": "shaadi-shift",
+  "col": 2,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.428,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6850,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7436
+  },
+  "trim_box": [
+   0,
+   63,
+   923,
+   1640
+  ],
+  "shape": {
+   "h": 1473,
+   "w": 799,
+   "aspect": 1.84,
+   "top15_w": 248.1,
+   "bottom30_w": 686.0,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 2.6,
+   "cluster_de00": [
+    2.9,
+    1.6,
+    1.7
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.474,
+   "nail_px": [
+    379,
+    698
+   ],
+   "p1_nail_px": [
+    170,
+    317
+   ],
+   "width_ratio_vs_p1": 1.01,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/shaadi-shift-nail-3.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/shaadi-shift-nail-3.png"
+ },
+ "wild-card-chapter-v2": {
+  "source": "chatgpt/named/wild-card/wild-card-chapter-v2.png",
+  "kind": "unknown",
+  "source_px": [
+   1536,
+   1024
+  ],
+  "source_mode": "RGBA",
+  "status_auto": "unrecognised-name"
+ },
+ "wild-card-nail-1": {
+  "source": "chatgpt/named/wild-card/wild-card-nail-1.png",
+  "kind": "nail",
+  "set": "wild-card",
+  "col": 0,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.427,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6852,
+   "light_halo_frac": 0.0007,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8783
+  },
+  "trim_box": [
+   19,
+   2,
+   898,
+   1646
+  ],
+  "shape": {
+   "h": 1474,
+   "w": 799,
+   "aspect": 1.84,
+   "top15_w": 246.8,
+   "bottom30_w": 685.9,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 2.0,
+   "cluster_de00": [
+    2.7,
+    1.2,
+    45.6
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.474,
+   "nail_px": [
+    379,
+    698
+   ],
+   "p1_nail_px": [
+    185,
+    317
+   ],
+   "width_ratio_vs_p1": 0.93,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/wild-card-nail-1.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/wild-card-nail-1.png"
+ },
+ "wild-card-nail-2": {
+  "source": "chatgpt/named/wild-card/wild-card-nail-2.png",
+  "kind": "nail",
+  "set": "wild-card",
+  "col": 1,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.424,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6856,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 8560
+  },
+  "trim_box": [
+   56,
+   91,
+   917,
+   1652
+  ],
+  "shape": {
+   "h": 1473,
+   "w": 806,
+   "aspect": 1.83,
+   "top15_w": 248.5,
+   "bottom30_w": 690.0,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 1.4,
+   "cluster_de00": [
+    1.1,
+    1.3,
+    6.4
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.476,
+   "nail_px": [
+    384,
+    701
+   ],
+   "p1_nail_px": [
+    185,
+    318
+   ],
+   "width_ratio_vs_p1": 0.94,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/wild-card-nail-2.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/wild-card-nail-2.png"
+ },
+ "wild-card-nail-3": {
+  "source": "chatgpt/named/wild-card/wild-card-nail-3.png",
+  "kind": "nail",
+  "set": "wild-card",
+  "col": 2,
+  "source_px": [
+   941,
+   1672
+  ],
+  "source_mode": "RGBA",
+  "background": {
+   "has_alpha": true,
+   "transparent_frac": 0.428,
+   "type": "alpha"
+  },
+  "fringe": {
+   "rim_px": 6848,
+   "light_halo_frac": 0.0,
+   "dark_halo_frac": 0.0,
+   "semi_alpha_px": 7932
+  },
+  "trim_box": [
+   0,
+   19,
+   915,
+   1585
+  ],
+  "shape": {
+   "h": 1474,
+   "w": 801,
+   "aspect": 1.84,
+   "top15_w": 246.9,
+   "bottom30_w": 686.1,
+   "tip_up": true,
+   "aspect_ok": true
+  },
+  "colour": {
+   "weighted_de00": 1.2,
+   "cluster_de00": [
+    1.1,
+    1.2,
+    2.2
+   ],
+   "pass": true
+  },
+  "fit": {
+   "scale": 0.473,
+   "nail_px": [
+    380,
+    698
+   ],
+   "p1_nail_px": [
+    175,
+    317
+   ],
+   "width_ratio_vs_p1": 0.99,
+   "note": null
+  },
+  "cell_file": "hd/nails/cells/wild-card-nail-3.png",
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/wild-card-nail-3.png"
+ },
+ "guide-apply": {
+  "source": "chatgpt/named/_shared/guide-apply.png",
+  "kind": "photo",
+  "set": null,
+  "role": "guide-apply",
+  "ground": {
+   "requested": "#f4eff0",
+   "border_median": "#f2e5e6",
+   "de00": 3.9
+  },
+  "source_px": [
+   1672,
+   940
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 80.0,
+  "file": "hd/photos/guide-apply.webp",
+  "px": [
+   1672,
+   940
+  ],
+  "bytes": 210728,
+  "web": "hd/photos/guide-apply.web.webp",
+  "web_px": [
+   1200,
+   675
+  ],
+  "web_bytes": 93274,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/guide-apply.png"
+ },
+ "guide-measure": {
+  "source": "chatgpt/named/_shared/guide-measure.png",
+  "kind": "photo",
+  "set": null,
+  "role": "guide-measure",
+  "ground": {
+   "requested": "#f4eff0",
+   "border_median": "#ede8ea",
+   "de00": 1.6
+  },
+  "source_px": [
+   1672,
+   941
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 78.1,
+  "file": "hd/photos/guide-measure.webp",
+  "px": [
+   1672,
+   941
+  ],
+  "bytes": 148062,
+  "web": "hd/photos/guide-measure.web.webp",
+  "web_px": [
+   1200,
+   675
+  ],
+  "web_bytes": 62110,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/guide-measure.png"
+ },
+ "guide-remove": {
+  "source": "chatgpt/named/_shared/guide-remove.png",
+  "kind": "photo",
+  "set": null,
+  "role": "guide-remove",
+  "ground": {
+   "requested": "#f4eff0",
+   "border_median": "#ede3e5",
+   "de00": 3.3
+  },
+  "source_px": [
+   1672,
+   941
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 75.0,
+  "file": "hd/photos/guide-remove.webp",
+  "px": [
+   1672,
+   941
+  ],
+  "bytes": 208238,
+  "web": "hd/photos/guide-remove.web.webp",
+  "web_px": [
+   1200,
+   675
+  ],
+  "web_bytes": 92158,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/guide-remove.png"
+ },
+ "brainwave-pdp-flatlay": {
+  "source": "chatgpt/named/brainwave/brainwave-pdp-flatlay.png",
+  "kind": "photo",
+  "set": "brainwave",
+  "role": "flatlay",
+  "ground": {
+   "requested": "#073df1",
+   "border_median": "#0145f2",
+   "de00": 2.0
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 61.8,
+  "file": "hd/photos/brainwave-pdp-flatlay.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 163782,
+  "web": "hd/photos/brainwave-pdp-flatlay.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 99602,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/brainwave-pdp-flatlay.png"
+ },
+ "brainwave-pdp-hand": {
+  "source": "chatgpt/named/brainwave/brainwave-pdp-hand.png",
+  "kind": "photo",
+  "set": "brainwave",
+  "role": "hand",
+  "ground": {
+   "requested": "#073df1",
+   "border_median": "#003eed",
+   "de00": 0.6
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 139.6,
+  "file": "hd/photos/brainwave-pdp-hand.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 283088,
+  "web": "hd/photos/brainwave-pdp-hand.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 171692,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/brainwave-pdp-hand.png"
+ },
+ "brainwave-pdp-moment": {
+  "source": "chatgpt/named/brainwave/brainwave-pdp-moment.png",
+  "kind": "photo",
+  "set": "brainwave",
+  "role": "moment",
+  "ground": {
+   "requested": "#073df1",
+   "border_median": "#d2cfd0",
+   "de00": 51.0
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 392.2,
+  "file": "hd/photos/brainwave-pdp-moment.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 295836,
+  "web": "hd/photos/brainwave-pdp-moment.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 190354,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [
+   "ground ΔE00 51.0 from requested #073df1 (flag, not recoloured)"
+  ],
+  "status_auto": "auto-flag",
+  "contact_sheet": "tests/hd/brainwave-pdp-moment.png"
+ },
+ "diet-cherry-pdp-flatlay": {
+  "source": "chatgpt/named/diet-cherry/diet-cherry-pdp-flatlay.png",
+  "kind": "photo",
+  "set": "diet-cherry",
+  "role": "flatlay",
+  "ground": {
+   "requested": "#e10019",
+   "border_median": "#e20413",
+   "de00": 1.2
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 123.9,
+  "file": "hd/photos/diet-cherry-pdp-flatlay.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 127954,
+  "web": "hd/photos/diet-cherry-pdp-flatlay.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 82542,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/diet-cherry-pdp-flatlay.png"
+ },
+ "diet-cherry-pdp-hand": {
+  "source": "chatgpt/named/diet-cherry/diet-cherry-pdp-hand.png",
+  "kind": "photo",
+  "set": "diet-cherry",
+  "role": "hand",
+  "ground": {
+   "requested": "#e10019",
+   "border_median": "#dd0318",
+   "de00": 0.8
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 116.8,
+  "file": "hd/photos/diet-cherry-pdp-hand.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 231086,
+  "web": "hd/photos/diet-cherry-pdp-hand.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 146382,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/diet-cherry-pdp-hand.png"
+ },
+ "diet-cherry-pdp-moment": {
+  "source": "chatgpt/named/diet-cherry/diet-cherry-pdp-moment.png",
+  "kind": "photo",
+  "set": "diet-cherry",
+  "role": "moment",
+  "ground": {
+   "requested": "#e10019",
+   "border_median": "#bb9772",
+   "de00": 30.8
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 247.4,
+  "file": "hd/photos/diet-cherry-pdp-moment.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 345528,
+  "web": "hd/photos/diet-cherry-pdp-moment.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 234088,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [
+   "ground ΔE00 30.8 from requested #e10019 (flag, not recoloured)"
+  ],
+  "status_auto": "auto-flag",
+  "contact_sheet": "tests/hd/diet-cherry-pdp-moment.png"
+ },
+ "green-flag-pdp-flatlay": {
+  "source": "chatgpt/named/green-flag/green-flag-pdp-flatlay.png",
+  "kind": "photo",
+  "set": "green-flag",
+  "role": "flatlay",
+  "ground": {
+   "requested": "#007948",
+   "border_median": "#087447",
+   "de00": 1.8
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 178.0,
+  "file": "hd/photos/green-flag-pdp-flatlay.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 288204,
+  "web": "hd/photos/green-flag-pdp-flatlay.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 184206,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/green-flag-pdp-flatlay.png"
+ },
+ "green-flag-pdp-hand": {
+  "source": "chatgpt/named/green-flag/green-flag-pdp-hand.png",
+  "kind": "photo",
+  "set": "green-flag",
+  "role": "hand",
+  "ground": {
+   "requested": "#007948",
+   "border_median": "#026641",
+   "de00": 6.7
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 181.7,
+  "file": "hd/photos/green-flag-pdp-hand.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 320692,
+  "web": "hd/photos/green-flag-pdp-hand.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 200156,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/green-flag-pdp-hand.png"
+ },
+ "green-flag-pdp-moment": {
+  "source": "chatgpt/named/green-flag/green-flag-pdp-moment.png",
+  "kind": "photo",
+  "set": "green-flag",
+  "role": "moment",
+  "ground": {
+   "requested": "#007948",
+   "border_median": "#eba5aa",
+   "de00": 57.7
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 116.0,
+  "file": "hd/photos/green-flag-pdp-moment.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 175832,
+  "web": "hd/photos/green-flag-pdp-moment.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 117866,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [
+   "ground ΔE00 57.7 from requested #007948 (flag, not recoloured)"
+  ],
+  "status_auto": "auto-flag",
+  "contact_sheet": "tests/hd/green-flag-pdp-moment.png"
+ },
+ "on-me-pdp-flatlay": {
+  "source": "chatgpt/named/on-me/on-me-pdp-flatlay.png",
+  "kind": "photo",
+  "set": "on-me",
+  "role": "flatlay",
+  "ground": {
+   "requested": "#ffb900",
+   "border_median": "#fdc201",
+   "de00": 3.5
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 186.1,
+  "file": "hd/photos/on-me-pdp-flatlay.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 191606,
+  "web": "hd/photos/on-me-pdp-flatlay.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 126902,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/on-me-pdp-flatlay.png"
+ },
+ "on-me-pdp-hand": {
+  "source": "chatgpt/named/on-me/on-me-pdp-hand.png",
+  "kind": "photo",
+  "set": "on-me",
+  "role": "hand",
+  "ground": {
+   "requested": "#ffb900",
+   "border_median": "#fbb40e",
+   "de00": 1.5
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 93.1,
+  "file": "hd/photos/on-me-pdp-hand.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 203504,
+  "web": "hd/photos/on-me-pdp-hand.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 138028,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/on-me-pdp-hand.png"
+ },
+ "on-me-pdp-moment": {
+  "source": "chatgpt/named/on-me/on-me-pdp-moment.png",
+  "kind": "photo",
+  "set": "on-me",
+  "role": "moment",
+  "ground": {
+   "requested": "#ffb900",
+   "border_median": "#622707",
+   "de00": 59.4
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 226.0,
+  "file": "hd/photos/on-me-pdp-moment.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 433502,
+  "web": "hd/photos/on-me-pdp-moment.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 290882,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [
+   "ground ΔE00 59.4 from requested #ffb900 (flag, not recoloured)"
+  ],
+  "status_auto": "auto-flag",
+  "contact_sheet": "tests/hd/on-me-pdp-moment.png"
+ },
+ "pinky-promise-pdp-flatlay": {
+  "source": "chatgpt/named/pinky-promise/pinky-promise-pdp-flatlay.png",
+  "kind": "photo",
+  "set": "pinky-promise",
+  "role": "flatlay",
+  "ground": {
+   "requested": "#6620f2",
+   "border_median": "#7329f4",
+   "de00": 2.3
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 118.9,
+  "file": "hd/photos/pinky-promise-pdp-flatlay.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 217932,
+  "web": "hd/photos/pinky-promise-pdp-flatlay.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 138322,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/pinky-promise-pdp-flatlay.png"
+ },
+ "pinky-promise-pdp-hand": {
+  "source": "chatgpt/named/pinky-promise/pinky-promise-pdp-hand.png",
+  "kind": "photo",
+  "set": "pinky-promise",
+  "role": "hand",
+  "ground": {
+   "requested": "#6620f2",
+   "border_median": "#581efb",
+   "de00": 1.6
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 125.0,
+  "file": "hd/photos/pinky-promise-pdp-hand.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 265886,
+  "web": "hd/photos/pinky-promise-pdp-hand.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 171442,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/pinky-promise-pdp-hand.png"
+ },
+ "pinky-promise-pdp-moment": {
+  "source": "chatgpt/named/pinky-promise/pinky-promise-pdp-moment.png",
+  "kind": "photo",
+  "set": "pinky-promise",
+  "role": "moment",
+  "ground": {
+   "requested": "#6620f2",
+   "border_median": "#af8de2",
+   "de00": 29.8
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 150.9,
+  "file": "hd/photos/pinky-promise-pdp-moment.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 244028,
+  "web": "hd/photos/pinky-promise-pdp-moment.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 160962,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [
+   "ground ΔE00 29.8 from requested #6620f2 (flag, not recoloured)"
+  ],
+  "status_auto": "auto-flag",
+  "contact_sheet": "tests/hd/pinky-promise-pdp-moment.png"
+ },
+ "shaadi-shift-pdp-flatlay": {
+  "source": "chatgpt/named/shaadi-shift/shaadi-shift-pdp-flatlay.png",
+  "kind": "photo",
+  "set": "shaadi-shift",
+  "role": "flatlay",
+  "ground": {
+   "requested": "#ff0078",
+   "border_median": "#f80472",
+   "de00": 1.6
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 62.1,
+  "file": "hd/photos/shaadi-shift-pdp-flatlay.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 102600,
+  "web": "hd/photos/shaadi-shift-pdp-flatlay.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 60384,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/shaadi-shift-pdp-flatlay.png"
+ },
+ "shaadi-shift-pdp-hand": {
+  "source": "chatgpt/named/shaadi-shift/shaadi-shift-pdp-hand.png",
+  "kind": "photo",
+  "set": "shaadi-shift",
+  "role": "hand",
+  "ground": {
+   "requested": "#ff0078",
+   "border_median": "#fa0c74",
+   "de00": 1.0
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 131.4,
+  "file": "hd/photos/shaadi-shift-pdp-hand.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 255506,
+  "web": "hd/photos/shaadi-shift-pdp-hand.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 164768,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/shaadi-shift-pdp-hand.png"
+ },
+ "shaadi-shift-pdp-moment": {
+  "source": "chatgpt/named/shaadi-shift/shaadi-shift-pdp-moment.png",
+  "kind": "photo",
+  "set": "shaadi-shift",
+  "role": "moment",
+  "ground": {
+   "requested": "#ff0078",
+   "border_median": "#9e1219",
+   "de00": 26.6
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 523.2,
+  "file": "hd/photos/shaadi-shift-pdp-moment.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 467534,
+  "web": "hd/photos/shaadi-shift-pdp-moment.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 350086,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [
+   "ground ΔE00 26.6 from requested #ff0078 (flag, not recoloured)"
+  ],
+  "status_auto": "auto-flag",
+  "contact_sheet": "tests/hd/shaadi-shift-pdp-moment.png"
+ },
+ "wild-card-pdp-flatlay": {
+  "source": "chatgpt/named/wild-card/wild-card-pdp-flatlay.png",
+  "kind": "photo",
+  "set": "wild-card",
+  "role": "flatlay",
+  "ground": {
+   "requested": "#b7ef00",
+   "border_median": "#c0f202",
+   "de00": 1.3
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 52.0,
+  "file": "hd/photos/wild-card-pdp-flatlay.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 93020,
+  "web": "hd/photos/wild-card-pdp-flatlay.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 61718,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/wild-card-pdp-flatlay.png"
+ },
+ "wild-card-pdp-hand": {
+  "source": "chatgpt/named/wild-card/wild-card-pdp-hand.png",
+  "kind": "photo",
+  "set": "wild-card",
+  "role": "hand",
+  "ground": {
+   "requested": "#b7ef00",
+   "border_median": "#bdf003",
+   "de00": 0.9
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 156.9,
+  "file": "hd/photos/wild-card-pdp-hand.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 274324,
+  "web": "hd/photos/wild-card-pdp-hand.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 175008,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [],
+  "status_auto": "auto-pass",
+  "contact_sheet": "tests/hd/wild-card-pdp-hand.png"
+ },
+ "wild-card-pdp-moment": {
+  "source": "chatgpt/named/wild-card/wild-card-pdp-moment.png",
+  "kind": "photo",
+  "set": "wild-card",
+  "role": "moment",
+  "ground": {
+   "requested": "#b7ef00",
+   "border_median": "#075621",
+   "de00": 53.3
+  },
+  "source_px": [
+   1254,
+   1254
+  ],
+  "source_mode": "RGB",
+  "sharpness_lapvar": 1033.2,
+  "file": "hd/photos/wild-card-pdp-moment.webp",
+  "px": [
+   1254,
+   1254
+  ],
+  "bytes": 473436,
+  "web": "hd/photos/wild-card-pdp-moment.web.webp",
+  "web_px": [
+   1200,
+   1200
+  ],
+  "web_bytes": 363654,
+  "max_sharp_css_width_at_3x": 400,
+  "issues": [
+   "ground ΔE00 53.3 from requested #b7ef00 (flag, not recoloured)"
+  ],
+  "status_auto": "auto-flag",
+  "contact_sheet": "tests/hd/wild-card-pdp-moment.png"
+ }
+}

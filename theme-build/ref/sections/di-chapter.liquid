@@ -1,0 +1,39 @@
+{% assign c = section.settings.campaign %}{% if c != blank %}
+<section class="di-chapter di-chapter--{{ c.system.handle }}" style="--nails:url('{{ c.nail_art.value | image_url: width: 1800 }}');--characters:url('{{ c.character_art.value | image_url: width: 2000 }}');--scene:{{ c.background.value }};--ink:{{ c.foreground.value }};--set:{{ c.motion_index.value }};--cta:{{ c.cta_background.value }};--cta-ink:{{ c.cta_foreground.value }}">
+ <svg class="di-thread" viewBox="0 0 390 700" preserveAspectRatio="none" aria-hidden="true"><path d="M265 0C100 60 360 130 275 180S-80 160 45 340S440 340 360 470S50 490 85 590S245 645 265 700"/></svg>
+ <div class="di-chapter-copy"><p class="di-note">{{ section.settings.caption | escape }}</p><h2>{{ c.headline.value | escape }}</h2>
+ {% capture nail_sequence %}{% render 'di-nail-sequence', key: c.system.handle %}{% endcapture %}{% assign nail_rows = nail_sequence | strip | split: ',' %}
+ <div class="di-nail-line" aria-hidden="true">{% for nail_row in nail_rows %}{% assign row_number = nail_row | plus: 0 %}{% render 'di-nail', index: c.motion_index.value, row: row_number %}{% endfor %}</div>
+ <p class="di-product-name">{{ c.product.value.title | default: c.name.value | escape }}</p><a class="di-button" href="{% render 'di-link',c:c %}">Shop set <span aria-hidden="true">↗</span></a></div>
+ {% if section.settings.art != blank %}{{ section.settings.art | image_url: width: 1200 | image_tag: loading:'lazy', class:'di-chapter-photo', alt:'' }}{% else %}<div class="di-chapter-art" aria-hidden="true"></div>{% endif %}
+ <a class="di-chapter-story di-note" href="{% if settings.di_review_mode %}/?view=desi-preview-story-{{ c.system.handle }}{% else %}{{ c.journal.value.url }}{% endif %}">{% case c.system.handle %}{% when 'on-me' %}Before anyone starts splitting…{% when 'pinky-promise' %}Same people. Different days. Still us.{% else %}Read the story ↗{% endcase %}</a>
+</section>{% endif %}
+{% schema %}
+{
+  "name": "Chapter",
+  "settings": [
+    {
+      "type": "metaobject",
+      "id": "campaign",
+      "label": "Campaign",
+      "metaobject_type": "small_talk_campaign"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Story opening",
+      "default": "Small moment. Big feeling."
+    },
+    {
+      "type": "image_picker",
+      "id": "art",
+      "label": "Override story illustration"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Chapter"
+    }
+  ]
+}
+{% endschema %}

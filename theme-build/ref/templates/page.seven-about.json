@@ -1,0 +1,25 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "st-seven-page",
+      "settings": {
+        "heading": "Small talk. A lot said.",
+        "body": "<p>Some of the things we mean most arrive in the smallest sentences. Bill idhar. Tum aa jao. Haath do. Main hoon. Small Talk begins with those familiar words and the gestures behind them. Our first collection turns seven of these moments into almond press-on nail designs, with expressive colour and illustrated stories drawn from everyday Indian life. A little confidence. A little care. A little play. Different sides of you, told through the details.</p>",
+        "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/haath-do-main-hoon-approved-package.png?v=1791012932",
+        "contact": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

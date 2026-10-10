@@ -1,0 +1,728 @@
+{% comment %}
+  Section contract.
+  A thread on the talks: the talk_thread web page (templates/metaobject/talk_thread.json), board 4 frame 2
+  (spec/conversation.md).
+  - "Back to the talks" (TLK-020), the set-nail avatar, "{alias} · {date}" (TLK-008/021), the title (H1), the
+    body and the real reply count (TLK-022, hidden at 0), plus "Report" on shoppers' talks (TLK-139a).
+  - Replies come from the thread's `replies` list, already in display order (a nested reply follows its parent's
+    block). They render through st-talk-reply. Draft replies (held, hidden or reported) never render.
+  - The reply box is the board's pill field with the round ↗ submit, plus "Replying as {alias} · change". There is no
+    name, email or login; st-talks.js posts it to the talks backend and shows it at once.
+  - On an old the-talks article URL, the page forwards to the thread with the same handle (TLK "moved"). Any other
+    article on this template gets a plain title + body.
+  The Start-a-talk panel and the house rules are their own sections below.
+  @example
+  <!-- templates/metaobject/talk_thread.json and templates/article.json -->
+{% endcomment %}
+
+{%- capture live_flag -%}{%- render 'st-talk-live' -%}{%- endcapture -%}
+{%- liquid
+  assign live = false
+  if live_flag == 'on'
+    assign live = true
+  endif
+-%}
+{%- liquid
+  assign thread = nil
+  assign moved = nil
+  if metaobject and metaobject.system.type == 'talk_thread'
+    assign thread = metaobject
+  elsif article
+    assign article_handle = article.handle | split: '/' | last
+    assign moved = metaobjects.talk_thread[article_handle]
+  endif
+
+  assign hub_url = section.settings.hub_url | default: '/blogs/the-talks'
+  if blog
+    assign hub_url = blog.url
+  endif
+-%}
+
+{%- if moved -%}
+  <section class="st-thread st-thread--moved">
+    <p>
+      {{ 'small_talk.talks.live.moved' | t }}
+      <a href="{{ moved.system.url }}">{{ moved.title.value | escape }}</a>
+    </p>
+    <script>
+      location.replace({{ moved.system.url | json }});
+    </script>
+  </section>
+{%- elsif thread -%}
+  {%- liquid
+    assign handle = thread.system.handle
+    assign t_alias = thread.alias.value | default: 'small talk'
+    assign count = thread.reply_count.value | default: 0 | plus: 0
+    assign form_id = 'StReply-' | append: section.id
+    assign grievance = ''
+    if shop.email != blank
+      assign email_link = '<a href="mailto:' | append: shop.email | append: '">' | append: shop.email | append: '</a>'
+      assign grievance = 'small_talk.talks.live.grievance' | t: email: '@@E@@' | escape | replace: '@@E@@', email_link
+    endif
+  -%}
+  <section
+    class="st-thread"
+    aria-labelledby="StThread-{{ section.id }}"
+    data-st-thread-page="{{ handle | escape }}"
+    data-st-ago-strings
+    data-ago-now="{{ 'small_talk.talks.time.just_now' | t | escape }}"
+    data-ago-minutes="{{ 'small_talk.talks.time.minutes' | t: count: '__n__' | escape }}"
+    data-ago-hours="{{ 'small_talk.talks.time.hours' | t: count: '__n__' | escape }}"
+    data-ago-days="{{ 'small_talk.talks.time.days' | t: count: '__n__' | escape }}"
+  >
+    <a class="st-thread__back" href="{{ hub_url }}">
+      <svg viewBox="0 0 18 14" aria-hidden="true" focusable="false"><path d="M17 7 H1.5 M7 1.5 L1.5 7 L7 12.5"/></svg>
+      {{- 'small_talk.talks.thread.back' | t -}}
+    </a>
+
+    <header class="st-thread__header" data-st-item="thread:{{ handle | escape }}">
+      {%- render 'st-talk-avatar', set: thread.avatar.value, alias: t_alias -%}
+      <p class="st-thread__meta">
+        {{- t_alias | escape -}}
+        {%- if thread.posted_at.value != blank -%}
+          {{ ' · ' }}
+          {%- render 'st-talk-time', at: thread.posted_at.value -%}
+        {%- endif -%}
+      </p>
+      <h1 class="st-thread__title" id="StThread-{{ section.id }}">{{ thread.title.value | escape }}</h1>
+      {%- if thread.body.value != blank -%}
+        <div class="st-thread__body"><p>{{ thread.body.value | escape | newline_to_br }}</p></div>
+      {%- endif -%}
+      <div class="st-thread__foot">
+        {%- unless thread.by_brand.value == true or live == false -%}
+          <button
+            type="button"
+            class="st-act"
+            data-st-report="thread:{{ handle | escape }}"
+            aria-label="{{ 'small_talk.talks.live.report_thread_label' | t | escape }}"
+          >
+            {{- 'small_talk.talks.thread.report' | t -}}
+          </button>
+        {%- endunless -%}
+        <p class="st-thread__count" data-st-count{% if count == 0 %} hidden{% endif %}>
+          {{- 'small_talk.talks.replies' | t: count: count -}}
+        </p>
+      </div>
+    </header>
+
+    <div class="st-thread__replies" id="comments">
+      <h2 class="visually-hidden">{{ 'small_talk.talks.thread.replies_heading' | t }}</h2>
+      {%- assign shown = 0 -%}
+      {%- assign pages_nav = '' -%}
+      <ol class="st-thread__list" role="list" data-st-replies>
+        {%- if thread.replies.value != blank -%}
+          {%- paginate thread.replies.value by 50 -%}
+            {%- for reply in thread.replies.value -%}
+              {%- if reply == blank or reply.body.value == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign shown = shown | plus: 1 -%}
+              {%- render 'st-talk-reply', reply: reply, live: live -%}
+            {%- endfor -%}
+            {%- if paginate.pages > 1 -%}
+              {%- capture pages_nav -%}
+                <nav class="st-thread__pages" aria-label="{{ 'content.pagination.nav_label' | t | escape }}">
+                  {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}#comments">{{ 'content.pagination.previous' | t }}</a>{%- endif -%}
+                  <span>{{ paginate.current_page }} / {{ paginate.pages }}</span>
+                  {%- if paginate.next -%}<a href="{{ paginate.next.url }}#comments">{{ 'content.pagination.next' | t }}</a>{%- endif -%}
+                </nav>
+              {%- endcapture -%}
+            {%- endif -%}
+          {%- endpaginate -%}
+        {%- endif -%}
+      </ol>
+      {{ pages_nav }}
+      {%- if shown == 0 and live -%}
+        <p class="st-thread__none" data-st-empty>{{ 'small_talk.talks.thread.no_replies' | t }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- unless live -%}
+      <p class="st-reply__soon">{{ 'small_talk.talks.live.prelaunch' | t }}</p>
+    {%- else -%}
+    <form class="st-reply" id="{{ form_id }}" data-st-reply-form data-thread="{{ handle | escape }}" novalidate>
+      <div class="st-reply__to" data-st-reply-to-bar hidden>
+        <span data-st-reply-to-text></span>
+        <button type="button" class="st-act" data-st-reply-cancel>{{ 'small_talk.talks.live.cancel' | t }}</button>
+      </div>
+      <div class="st-reply__grid">
+        <span class="st-reply__avatar" data-st-me-avatar>{%- render 'st-talk-avatar', set: thread.avatar.value, alias: t_alias -%}</span>
+        <div class="st-reply__body">
+          <label class="visually-hidden" for="{{ form_id }}-text">{{ 'small_talk.talks.thread.reply_placeholder' | t }}</label>
+          <textarea
+            id="{{ form_id }}-text"
+            class="st-reply__input"
+            name="text"
+            rows="1"
+            maxlength="800"
+            placeholder="{{ 'small_talk.talks.thread.reply_placeholder' | t | escape }}"
+            aria-describedby="{{ form_id }}-status"
+          ></textarea>
+        </div>
+        <button type="submit" class="st-reply__submit">
+          <span class="visually-hidden">{{ 'small_talk.talks.thread.submit' | t }}</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 12 L12 4 M5.5 4 H12 V10.5"/></svg>
+        </button>
+      </div>
+      <div class="st-reply__who">
+        {%- render 'st-talk-alias', id: form_id -%}
+      </div>
+      <div class="st-hp" aria-hidden="true">
+        <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <p class="st-reply__status" id="{{ form_id }}-status" role="status" data-st-status></p>
+      <p class="st-reply__rule">
+        {{ 'small_talk.talks.live.rules_short' | t }}
+        <a href="#house-rules">{{ 'small_talk.talks.live.rules_link' | t }}</a>
+        {%- if grievance != blank %} · {{ grievance }}{% endif %}
+      </p>
+      <noscript><p class="st-reply__rule">{{ 'small_talk.talks.live.noscript' | t }}</p></noscript>
+    </form>
+    {%- endunless -%}
+  </section>
+  {%- if live -%}
+    {%- render 'st-talk-config', endpoint: section.settings.endpoint -%}
+  {%- endif -%}
+{%- elsif article -%}
+  <section class="st-thread" aria-labelledby="StThread-{{ section.id }}">
+    <a class="st-thread__back" href="{{ blog.url }}">
+      <svg viewBox="0 0 18 14" aria-hidden="true" focusable="false"><path d="M17 7 H1.5 M7 1.5 L1.5 7 L7 12.5"/></svg>
+      {{- blog.title | escape -}}
+    </a>
+    <header class="st-thread__header">
+      <p class="st-thread__meta">{{ article.author | escape }} · {% render 'st-talk-time', at: article.published_at %}</p>
+      <h1 class="st-thread__title" id="StThread-{{ section.id }}">{{ article.title | escape }}</h1>
+      <div class="st-thread__body">{{ article.content }}</div>
+    </header>
+  </section>
+{%- endif -%}
+
+<script type="module" src="{{ 'st-talks.js' | asset_url }}" fetchpriority="low"></script>
+
+{% stylesheet %}
+  /* Board 4 frame 2 at 390 (spec/conversation.md). */
+  .st-thread {
+    display: grid;
+    max-width: 40rem;
+    margin-inline: auto;
+    padding: 18px 0 28px;
+    color: #1a1a2e;
+    font-family: var(--font-ui);
+  }
+
+  .st-thread > * {
+    min-width: 0;
+  }
+
+  .st-thread--moved {
+    padding: 80px 22px;
+    font-size: 17px;
+  }
+
+  .st-thread--moved a {
+    color: var(--st-burgundy);
+  }
+
+  /* Back x 28–190, y 100–120, 44 px hit: DM Sans 500, 15 px, #1a1a2e, ← 1.5 px. */
+  .st-thread__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    justify-self: start;
+    min-block-size: 44px;
+    margin-inline-start: 28px;
+    color: #1a1a2e;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+  }
+
+  .st-thread__back svg {
+    inline-size: 17px;
+    block-size: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-thread__back:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .st-thread__header {
+    display: grid;
+    padding: 26px 25px 0 22px;
+    --st-tavatar-size: 88px;
+  }
+
+  /* Author line y 262–282: DM Sans 400, 16 px, muted. */
+  .st-thread__meta {
+    margin: 14px 0 0 3px;
+    color: var(--st-muted-text);
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .st-thread__meta a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+
+  /* Title x 25–350, y 297–365: board ink is DM Sans 800 at 30 px, #111, lh 1.1. */
+  .st-thread__title {
+    margin: 12px 0 0 3px;
+    color: #111;
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: min(30px, 7.7vw);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+  }
+
+  /* Body x 25–295, y 372–420: DM Sans 400, muted, 21 px (board ink), breaking at x 295. */
+  .st-thread__body {
+    max-inline-size: 276px;
+    margin: 6px 0 0 3px;
+    color: var(--st-muted-text);
+    font-size: 21px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .st-thread__body > * {
+    margin: 0;
+  }
+
+  .st-thread__body > * + * {
+    margin-block-start: 0.6em;
+  }
+
+  .st-thread__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-block-start: 4px;
+  }
+
+  /* Reply count, right, y 425–445: 16 px, muted. Hidden at 0. */
+  .st-thread__count {
+    margin: 0 0 0 auto;
+    color: var(--st-muted-text);
+    font-size: 16px;
+  }
+
+  .st-thread__count[hidden] {
+    display: none;
+  }
+
+  /* Reply / Report: quiet text buttons with 44 px hit areas. */
+  .st-act {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    padding: 0 6px;
+    margin-inline-start: -6px;
+    border: 0;
+    background: none;
+    color: var(--st-muted-text);
+    font: inherit;
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .st-act--strong {
+    color: var(--st-burgundy);
+    font-weight: 700;
+  }
+
+  .st-act:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 2px;
+  }
+
+  .st-confirm {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 10px;
+    margin: 0;
+    color: #1a1a2e;
+    font-size: 14px;
+  }
+
+  .st-thread__replies {
+    margin-block-start: 26px;
+    border-block-start: 1px solid #efe9ea;
+    scroll-margin-block-start: 80px;
+  }
+
+  .st-thread__list {
+    display: grid;
+    gap: 30px;
+    margin: 0;
+    padding: 26px 10px 30px 30px;
+    list-style: none;
+  }
+
+  .st-thread__list:empty {
+    display: none;
+  }
+
+  /* Reply: 3 px rule #d0204a at x 30, avatar Ø 72 at x 55–127, text x 145–365. */
+  .st-reply-item {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 18px;
+    padding-inline-start: 22px;
+    border-inline-start: 3px solid #d0204a;
+    scroll-margin-block-start: 90px;
+  }
+
+  /* Reddit-style nesting: one level, indented under its parent with a lighter rule and a smaller disc. */
+  .st-reply-item--nested {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 14px;
+    margin-block-start: -14px;
+    margin-inline-start: 34px;
+    padding-inline-start: 16px;
+    border-inline-start: 2px solid #f0a8b6;
+  }
+
+  .st-reply-item__avatar {
+    display: grid;
+    place-items: center;
+    inline-size: 72px;
+    block-size: 72px;
+    border-radius: 50%;
+    background: var(--st-reply-bg, #fbe3e6);
+    color: #180e0b;
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  .st-reply-item--nested .st-reply-item__avatar {
+    inline-size: 48px;
+    block-size: 48px;
+    font-size: 22px;
+  }
+
+  .st-reply-item__avatar--light {
+    color: #fff;
+  }
+
+  .st-reply-item__text {
+    min-width: 0;
+    padding-inline-end: 15px;
+  }
+
+  .st-reply-item__meta {
+    margin: 4px 0 0;
+    color: var(--st-muted-text);
+    font-size: 15px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .st-reply-item__to {
+    display: block;
+    font-size: 13px;
+  }
+
+  .st-reply-item__state {
+    font-style: italic;
+  }
+
+  .st-reply-item__body {
+    margin-block-start: 8px;
+    color: #1a1a2e;
+    font-size: 17px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .st-reply-item__body > * {
+    margin: 0;
+  }
+
+  .st-reply-item__acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 18px;
+    margin-block-start: 2px;
+  }
+
+  .st-reply-item.is-pending .st-reply-item__body {
+    opacity: 0.65;
+  }
+
+  .st-reply-item.is-held .st-reply-item__state {
+    font-style: normal;
+    font-weight: 600;
+    color: #8a0619;
+  }
+
+  .st-reply-item.is-failed .st-reply-item__acts {
+    color: #b00818;
+    font-size: 14px;
+    align-items: center;
+  }
+
+  .st-reply-item.is-mine {
+    animation: st-reply-in 420ms ease-out;
+  }
+
+  @keyframes st-reply-in {
+    from { background: #fdecec; }
+    to { background: transparent; }
+  }
+
+  /* Reported by her: folded away on her device, with a way to look again. */
+  .is-reported > :not(.st-folded) {
+    display: none !important;
+  }
+
+  .st-folded {
+    display: none;
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--st-muted-text);
+    font-size: 14px;
+  }
+
+  .is-reported > .st-folded {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 8px;
+  }
+
+  .st-thread__pages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    padding-block-end: 20px;
+  }
+
+  .st-thread__pages a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    color: var(--st-burgundy);
+  }
+
+  .st-thread__none {
+    margin: 0;
+    padding: 22px 25px 6px;
+    color: var(--st-muted-text);
+    font-size: 16px;
+  }
+
+  /* Reply box x 22–375, y 920–990: avatar Ø 66 + white pill field 60 px, 1 px #ebe6e6, radius 30, ↗ Ø 52 #a80f2a. */
+  .st-reply {
+    display: grid;
+    gap: 6px;
+    padding: 18px 15px 0 22px;
+    scroll-margin-block-start: 90px;
+  }
+
+  .st-reply__to {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-inline-start: 83px;
+    padding: 0 10px 0 14px;
+    border-radius: var(--st-radius-pill);
+    background: #fdf0f0;
+    color: #8a0619;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .st-reply__to[hidden] {
+    display: none;
+  }
+
+  .st-reply__grid {
+    display: grid;
+    grid-template-columns: 66px minmax(0, 1fr);
+    column-gap: 17px;
+    align-items: start;
+  }
+
+  /* Board: a set-nail avatar beside the reply box; st-talks.js shows hers (her device's set). Decorative. */
+  .st-reply__avatar {
+    display: block;
+    inline-size: 66px;
+    block-size: 66px;
+    margin-block-start: -3px;
+    --st-tavatar-size: 66px;
+  }
+
+  .st-reply__body {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+  }
+
+  .st-reply__input {
+    display: block;
+    inline-size: 100%;
+    min-block-size: 60px;
+    padding: 17px 66px 17px 20px;
+    border: 1px solid #ebe6e6;
+    border-radius: 30px;
+    background: #fff;
+    color: #1a1a2e;
+    font: inherit;
+    font-size: 17px;
+    line-height: 1.5;
+    resize: none;
+    field-sizing: content;
+    max-block-size: 50vh;
+    box-shadow: 0 2px 10px rgb(26 26 46 / 0.06);
+  }
+
+  .st-reply__input::placeholder {
+    color: var(--st-placeholder);
+    opacity: 1;
+  }
+
+  .st-reply__input:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 2px;
+  }
+
+  .st-reply__submit {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: end;
+    display: grid;
+    place-items: center;
+    inline-size: 52px;
+    block-size: 52px;
+    margin: 0 4px 4px 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #a80f2a;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .st-reply__submit svg {
+    inline-size: 18px;
+    block-size: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-reply__submit:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 3px;
+  }
+
+  .st-reply__submit[aria-disabled='true'] {
+    opacity: 0.7;
+  }
+
+  .st-reply__who {
+    display: grid;
+    gap: 6px;
+    margin-inline-start: 83px;
+  }
+
+  .st-reply__status {
+    margin: 0 0 0 83px;
+    color: #1a1a2e;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .st-reply__status[data-tone='error'] {
+    color: #b00818;
+  }
+
+  .st-reply__status:empty {
+    display: none;
+  }
+
+  .st-reply__soon {
+    margin: 18px 22px 0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #fdf1f0;
+    color: var(--st-muted-text);
+    font-size: 16px;
+  }
+
+  .st-reply__rule {
+    margin: 6px 15px 0 83px;
+    color: var(--st-muted-text);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .st-reply__rule a {
+    color: var(--st-burgundy);
+    font-weight: 600;
+    text-underline-offset: 2px;
+    overflow-wrap: anywhere;
+  }
+
+  @media screen and (max-width: 359px) {
+    .st-reply__grid {
+      grid-template-columns: 52px minmax(0, 1fr);
+      column-gap: 12px;
+    }
+
+    .st-reply__avatar {
+      inline-size: 52px;
+      block-size: 52px;
+      margin-block-start: 4px;
+      --st-tavatar-size: 52px;
+    }
+
+    .st-reply__to,
+    .st-reply__who,
+    .st-reply__status,
+    .st-reply__rule {
+      margin-inline-start: 64px;
+    }
+
+    .st-reply-item--nested {
+      margin-inline-start: 18px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .st-reply-item.is-mine {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk thread",
+  "tag": "div",
+  "class": "st-thread-section",
+  "settings": [
+    { "type": "text", "id": "hub_url", "label": "Hub link", "default": "/blogs/the-talks" },
+    { "type": "text", "id": "endpoint", "label": "Posting endpoint", "default": "/apps/talks", "info": "The App Proxy path of the talks backend. Change only if the backend moves." }
+  ]
+}
+{% endschema %}

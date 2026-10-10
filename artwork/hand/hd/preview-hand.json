@@ -1,0 +1,84 @@
+{
+  "file": "hand/hd/preview-hand.webp",
+  "web": "hand/hd/preview-hand.web.webp",
+  "master_px": [
+    1255,
+    1226
+  ],
+  "web_px": [
+    510,
+    498
+  ],
+  "bytes": 770972,
+  "web_bytes": 42608,
+  "source": "chatgpt/_from-board-corrections/preview-four-hand.png (photoreal, bare natural nails, thumb concealed), trimmed box [94, 0, 1349, 1130]",
+  "enters_from": "top-right (wrist touches top and right edges)",
+  "display": {
+    "recommended_css_width_px_at_390": 170,
+    "rule": "keeps the rendered press-on width equal to the accepted Phase-1 hand (~12.75 css px); web file is 3x of that"
+  },
+  "slot_convention": {
+    "sprite_cell": [
+      204,
+      354
+    ],
+    "sprite_anchor": [
+      0.5,
+      0.925
+    ],
+    "how_to_place": "unchanged from Phase 1: nail element width = cell_width_frac_of_hand x rendered hand width (aspect = cell); transform-origin 50% 92.5% on `cuticle`; rotate(rotation_deg)",
+    "scale": "cell px -> web file px (scale_master: -> master px)",
+    "order": "index, middle, ring, little",
+    "columns": "manifest.preview_slots"
+  },
+  "slots": [
+    {
+      "finger": "index",
+      "cuticle": {
+        "x": 0.1104,
+        "y": 0.7119
+      },
+      "rotation_deg": -151.9,
+      "scale_master": 0.5094,
+      "scale": 0.207,
+      "cell_width_frac_of_hand": 0.0828,
+      "plate_width_src": 76.0
+    },
+    {
+      "finger": "middle",
+      "cuticle": {
+        "x": 0.1784,
+        "y": 0.7836
+      },
+      "rotation_deg": -156.8,
+      "scale_master": 0.7038,
+      "scale": 0.286,
+      "cell_width_frac_of_hand": 0.1144,
+      "plate_width_src": 105.0
+    },
+    {
+      "finger": "ring",
+      "cuticle": {
+        "x": 0.3019,
+        "y": 0.8128
+      },
+      "rotation_deg": -154.0,
+      "scale_master": 0.6368,
+      "scale": 0.2588,
+      "cell_width_frac_of_hand": 0.1035,
+      "plate_width_src": 95.0
+    },
+    {
+      "finger": "little",
+      "cuticle": {
+        "x": 0.4607,
+        "y": 0.7894
+      },
+      "rotation_deg": -154.7,
+      "scale_master": 0.4994,
+      "scale": 0.2029,
+      "cell_width_frac_of_hand": 0.0812,
+      "plate_width_src": 74.5
+    }
+  ]
+}

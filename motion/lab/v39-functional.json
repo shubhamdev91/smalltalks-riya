@@ -1,0 +1,488 @@
+[
+ {
+  "boot": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 462,
+   "nodes": 76
+  },
+  "points": {
+   "scene": [
+    195,
+    162
+   ],
+   "copy": [
+    203.906494140625,
+    280.6742401123047
+   ],
+   "cta": [
+    193.5,
+    783
+   ],
+   "preview": [
+    392.5,
+    93.5546875
+   ],
+   "tone": [
+    345,
+    716
+   ],
+   "pause": [
+    345,
+    660
+   ],
+   "main": [
+    204.984375,
+    521.84375
+   ]
+  },
+  "tap_scene": {
+   "mode": "auto",
+   "reasons": [
+    "user"
+   ],
+   "anims": 1,
+   "running": 0,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "true",
+   "label": "Play",
+   "state": "paused",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 486,
+   "nodes": 76
+  },
+  "tap_scene_again": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 508,
+   "nodes": 76
+  },
+  "tap_headline": {
+   "mode": "auto",
+   "reasons": [
+    "user"
+   ],
+   "anims": 1,
+   "running": 0,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "true",
+   "label": "Play",
+   "state": "paused",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 530,
+   "nodes": 76
+  },
+  "after_offscreen_cycle": {
+   "mode": "auto",
+   "reasons": [
+    "user"
+   ],
+   "anims": 1,
+   "running": 0,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "true",
+   "label": "Play",
+   "state": "paused",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 603,
+   "nodes": 76
+  },
+  "tap_resume": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 625,
+   "nodes": 76
+  },
+  "tap_tone": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 1,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 649,
+   "nodes": 76
+  },
+  "tone_changed": true,
+  "tap_cta": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 674,
+   "nodes": 76
+  },
+  "cta_clicks": 1,
+  "tap_pause_button": {
+   "mode": "auto",
+   "reasons": [
+    "user"
+   ],
+   "anims": 1,
+   "running": 0,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "true",
+   "label": "Play",
+   "state": "paused",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 697,
+   "nodes": 76
+  },
+  "tap_pause_button_again": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 8,
+   "running": 8,
+   "allAnims": 8,
+   "flyers": 1,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 89,
+   "gaps": 3,
+   "frames": 718,
+   "nodes": 77
+  },
+  "pause_focusable": true,
+  "reduced": {
+   "mode": "manual",
+   "reasons": [
+    "reduced"
+   ],
+   "anims": 0,
+   "running": 0,
+   "allAnims": 0,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": null,
+   "order": 1,
+   "long": 2,
+   "longMax": 114,
+   "gaps": 4,
+   "frames": 359,
+   "nodes": 70
+  }
+ },
+ {
+  "boot": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 462,
+   "nodes": 76
+  },
+  "points": {
+   "scene": [
+    768,
+    145.07999999999998
+   ],
+   "copy": [
+    931.9708251953125,
+    363.04278564453125
+   ],
+   "cta": [
+    945.46875,
+    590.3203125
+   ],
+   "preview": [
+    1538.8203125,
+    96.8046875
+   ],
+   "tone": [
+    1485.0703125,
+    558.1015625
+   ],
+   "pause": [
+    1485.0703125,
+    494.7265625
+   ],
+   "main": [
+    473.6171875,
+    381.296875
+   ]
+  },
+  "tap_scene": {
+   "mode": "auto",
+   "reasons": [
+    "user"
+   ],
+   "anims": 1,
+   "running": 0,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "true",
+   "label": "Play",
+   "state": "paused",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 484,
+   "nodes": 76
+  },
+  "tap_scene_again": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 506,
+   "nodes": 76
+  },
+  "tap_headline": {
+   "mode": "auto",
+   "reasons": [
+    "user"
+   ],
+   "anims": 1,
+   "running": 0,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "true",
+   "label": "Play",
+   "state": "paused",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 528,
+   "nodes": 76
+  },
+  "after_offscreen_cycle": {
+   "mode": "auto",
+   "reasons": [
+    "user"
+   ],
+   "anims": 1,
+   "running": 0,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "true",
+   "label": "Play",
+   "state": "paused",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 601,
+   "nodes": 76
+  },
+  "tap_resume": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 624,
+   "nodes": 76
+  },
+  "tap_tone": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 1,
+   "timers": 1,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 648,
+   "nodes": 77
+  },
+  "tone_changed": true,
+  "tap_cta": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 1,
+   "running": 1,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 672,
+   "nodes": 76
+  },
+  "cta_clicks": 1,
+  "tap_pause_button": {
+   "mode": "auto",
+   "reasons": [
+    "user"
+   ],
+   "anims": 1,
+   "running": 0,
+   "allAnims": 1,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "true",
+   "label": "Play",
+   "state": "paused",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 695,
+   "nodes": 76
+  },
+  "tap_pause_button_again": {
+   "mode": "auto",
+   "reasons": [],
+   "anims": 8,
+   "running": 8,
+   "allAnims": 8,
+   "flyers": 1,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": "playing",
+   "order": 3,
+   "long": 1,
+   "longMax": 102,
+   "gaps": 3,
+   "frames": 717,
+   "nodes": 77
+  },
+  "pause_focusable": true,
+  "reduced": {
+   "mode": "manual",
+   "reasons": [
+    "reduced"
+   ],
+   "anims": 0,
+   "running": 0,
+   "allAnims": 0,
+   "flyers": 0,
+   "timers": 0,
+   "pressed": "false",
+   "label": "Pause",
+   "state": null,
+   "order": 1,
+   "long": 1,
+   "longMax": 114,
+   "gaps": 4,
+   "frames": 353,
+   "nodes": 70
+  }
+ }
+]

@@ -1,0 +1,73 @@
+{% doc %}
+  Avatar for the talks (talks.md, conversation.md): no photos. One genuine sprite nail (column 0) of a set, on a blush
+  disc, rotated −20°. The set comes from `set` (talk_thread / talk_reply field `avatar`) or, for a blog article, its
+  `set:<handle>` tag. Without a set it falls back to the alias initial (Fraunces 900, burgundy on blush). Decorative:
+  the row or header text names the thread (TLK-012, alt="").
+
+  @param {object} [article] - A blog article (legacy threads).
+  @param {string} [set] - A set key: on-me, brainwave, diet-cherry, green-flag, shaadi-shift, wild-card, pinky-promise.
+  @param {string} [alias] - Name the fallback initial comes from (defaults to the article author).
+
+  @example
+  {% render 'st-talk-avatar', set: thread.avatar.value, alias: thread.alias.value %}
+{% enddoc %}
+
+{%- liquid
+  assign sets = 'on-me,brainwave,diet-cherry,green-flag,shaadi-shift,wild-card,pinky-promise' | split: ','
+  assign set_key = ''
+  assign wanted = set | strip | downcase
+  if wanted != blank and sets contains wanted
+    assign set_key = wanted
+  elsif article
+    for tag in article.tags
+      assign t = tag | strip | downcase
+      assign head = t | slice: 0, 4
+      if head == 'set:'
+        assign candidate = t | remove_first: 'set:' | strip
+        if sets contains candidate
+          assign set_key = candidate
+          break
+        endif
+      endif
+    endfor
+  endif
+  assign who = alias | default: article.author | strip
+  assign initial = who | remove_first: '@' | strip | slice: 0 | upcase
+-%}
+{%- if set_key != blank -%}
+  <span class="st-tavatar" style="--st-nails: url('{{ 'st-nails-' | append: set_key | append: '.webp' | asset_url }}')" aria-hidden="true"><span class="st-tavatar__nail"></span></span>
+{%- else -%}
+  <span class="st-tavatar st-tavatar--initial" aria-hidden="true">{{ initial | escape }}</span>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Ø 90 on the hub (Ø 88 on the thread page): blush #fbe3e6 disc, one set nail (sprite col 0, 204/354), −20°. */
+  .st-tavatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: var(--st-tavatar-size, 90px);
+    block-size: var(--st-tavatar-size, 90px);
+    border-radius: 50%;
+    background: #fbe3e6;
+    overflow: hidden;
+  }
+
+  /* Board avatars are close-ups: the nail fills the disc and the circle crops its base. */
+  .st-tavatar__nail {
+    block-size: 116%;
+    aspect-ratio: 204 / 354;
+    background: var(--st-nails) 0 0 / 300% 100% no-repeat;
+    rotate: -20deg;
+    translate: 4% 16%;
+  }
+
+  .st-tavatar--initial {
+    color: var(--st-burgundy);
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    font-size: calc(var(--st-tavatar-size, 90px) * 0.44);
+    line-height: 1;
+  }
+{% endstylesheet %}

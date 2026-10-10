@@ -1,0 +1,541 @@
+{% comment %}
+  Section contract.
+  Under the bag (board 5 frame 3, spec/bag.md): "← Continue shopping" (MC-042), a "Need a hand?" panel (MC-043…045,
+  SEO-068/069) with the campaign's character peeking in at the bottom right, and the promo panel (MC-026: heading,
+  handwritten sub, four upright nails from the set's sprite). Every help link is gated on its destination being real
+  (Help page live, G6/G7 policies, G8 a staffed contact channel); the panel renders only when at least one link shows.
+  This section also carries the board styling for Horizon's bag page (title, line items, summary, checkout), scoped
+  to .cart-page so the cart drawer keeps Horizon's look.
+  @example
+  <!-- templates/cart.json, after main-cart. -->
+{% endcomment %}
+
+{%- assign c = section.settings.campaign -%}
+{%- capture links -%}
+  {%- if section.settings.help_live and section.settings.help_label != blank -%}
+    <a href="{{ section.settings.help_url }}">{{ section.settings.help_label | escape }} <span class="st-arrow" aria-hidden="true">→</span></a>
+  {%- endif -%}
+  {%- if section.settings.policies_label != blank and shop.shipping_policy.body != blank and shop.refund_policy.body != blank and settings.st_refund_verified -%}
+    <a href="{{ section.settings.policies_url }}">{{ section.settings.policies_label | escape }} <span class="st-arrow" aria-hidden="true">→</span></a>
+  {%- endif -%}
+  {%- if section.settings.contact_live and section.settings.contact_label != blank -%}
+    <a href="{{ section.settings.contact_url }}">{{ section.settings.contact_label | escape }} <span class="st-arrow" aria-hidden="true">→</span></a>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- liquid
+  assign key = c.system.handle
+  # Face peek (snippets/st-peek-map, generated): the HD character's eye near (108, 122) in the 145 x 160 crop.
+  capture peek
+    render 'st-peek-map', key: key, part: 'bag'
+  endcapture
+  assign peek = peek | strip | split: ','
+  # Promo: four upright sprite nails (genuine cells; board On Me: burgundy, tortoise, gold, small tortoise).
+  case key
+    when 'on-me'
+      assign promo_cols = '0,2,1,2'
+    when 'brainwave'
+      assign promo_cols = '0,1,0,1'
+    when 'green-flag'
+      assign promo_cols = '1,0,1,0'
+    when 'shaadi-shift'
+      assign promo_cols = '1,2,0,2'
+    when 'diet-cherry'
+      assign promo_cols = '1,0,2,1'
+    when 'wild-card'
+      assign promo_cols = '1,0,2,1'
+    else
+      assign promo_cols = '0,0,0,0'
+  endcase
+  assign promo_cols = promo_cols | split: ','
+-%}
+
+<div class="st-bag-extras">
+  {%- if cart.item_count > 0 and section.settings.continue_url != blank -%}
+    <p class="st-bag-extras__continue">
+      <a href="{{ section.settings.continue_url }}"><span class="st-arrow" aria-hidden="true">←</span> {{ 'small_talk.cart.continue' | t }}</a>
+    </p>
+  {%- endif -%}
+
+  {%- if links contains '<a' -%}
+    <aside class="st-bag-extras__help" aria-labelledby="StBagHelp-{{ section.id }}">
+      <h2 class="st-bag-extras__heading" id="StBagHelp-{{ section.id }}">{{ section.settings.help_heading | escape }}</h2>
+      {%- if section.settings.g8_confirmed and section.settings.help_text != blank -%}
+        <p class="st-bag-extras__text">{{ section.settings.help_text | escape }}</p>
+      {%- endif -%}
+      <p class="st-bag-extras__links">{{ links }}</p>
+      {%- if peek.size == 6 -%}
+        <span class="st-bag-extras__peek" aria-hidden="true">
+          <img
+            src="{{ peek[0] | asset_url }}"
+            alt=""
+            width="{{ peek[1] }}"
+            height="{{ peek[2] }}"
+            style="left: {{ peek[3] }}px; top: {{ peek[4] }}px; width: {{ peek[5] }}px"
+            loading="lazy"
+            decoding="async"
+          >
+        </span>
+      {%- endif -%}
+    </aside>
+  {%- endif -%}
+
+  {%- if section.settings.promo_heading != blank -%}
+    <aside class="st-bag-extras__promo" aria-labelledby="StBagPromo-{{ section.id }}">
+      <h2 class="st-bag-extras__promo-heading" id="StBagPromo-{{ section.id }}">{{ section.settings.promo_heading | escape }}</h2>
+      {%- if section.settings.promo_sub != blank -%}
+        <p class="st-bag-extras__promo-sub">{{ section.settings.promo_sub | escape }}</p>
+      {%- endif -%}
+      {%- if key != blank -%}
+        <div class="st-bag-extras__nails" style="--st-nails: url('{{ 'st-hd-nails-' | append: key | append: '.webp' | asset_url }}')" aria-hidden="true">
+          {%- for col in promo_cols -%}
+            <span class="st-bag-extras__nail" style="--col: {{ col }}"></span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </aside>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  /* ---- Bag page board styling (board 5 frame 3 at 390, spec/bag.md) for Horizon's main-cart; page only ---- */
+  .cart-page .cart-title h1 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0;
+    padding-block-end: 14px;
+    border-block-end: 1px solid #e8e9eb;
+    color: var(--st-burgundy);
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: 46px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .cart-page .cart-title__count {
+    position: static;
+    color: #1a1a2e;
+    font-family: var(--font-ui);
+    font-weight: 400;
+    font-size: 17px;
+    letter-spacing: 0;
+  }
+
+  /* Line item: tile 135 × 145 | name, price, stepper, Remove stacked to its right; rows divided by 1 px rules. */
+  .cart-page .cart-items__table-row {
+    display: grid;
+    grid-template-columns: 135px minmax(0, 1fr);
+    grid-template-areas: 'media details' 'media quantity';
+    grid-template-rows: auto 1fr;
+    column-gap: 15px;
+    row-gap: 8px;
+    padding-block: 12px;
+    border-block-end: 1px solid #e8e9eb;
+  }
+
+  .cart-page .cart-items--dividers .cart-items__table-row:not(:last-child)::after {
+    display: none;
+  }
+
+  .cart-page .cart-items__media {
+    grid-area: media;
+    width: 135px;
+  }
+
+  .cart-page .cart-items__details {
+    grid-area: details;
+  }
+
+  .cart-page .cart-items__quantity {
+    grid-area: quantity;
+  }
+
+  .cart-page .cart-items__price {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .cart-page .st-bag-tile {
+    display: block;
+    width: 135px;
+    --st-tile-aspect: 135 / 145;
+  }
+
+  .cart-page .cart-items__title {
+    color: var(--st-red);
+    font-family: var(--font-card-name);
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.15;
+    text-decoration: none;
+  }
+
+  .cart-page .cart-items__unit-price-wrapper,
+  .cart-page .cart-items__unit-price-wrapper * {
+    color: var(--color-price, var(--st-price));
+    font-family: var(--font-price);
+    font-weight: var(--fw-price, 700);
+    font-size: var(--fs-price-bag, 17px);
+  }
+
+  .cart-page .cart-items__unit-price-wrapper {
+    margin-block-start: 6px;
+  }
+
+  .cart-page .cart-items__quantity-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .cart-page .quantity-selector {
+    width: 115px;
+    height: 44px;
+    min-height: 44px;
+    border: 1px solid #e2e3e3;
+    border-radius: 6px;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 18px;
+  }
+
+  .cart-page .quantity-selector .button {
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .cart-page .quantity-selector input {
+    width: 25px;
+    min-width: 0;
+    flex: none;
+    font: inherit;
+  }
+
+  .cart-page .st-bag-remove {
+    width: auto;
+    min-height: 44px;
+    padding: 0;
+    color: #1a1a2e;
+    font-family: var(--font-ui);
+    font-weight: 400;
+    font-size: 15px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Summary: no tinted card on the board; "Subtotal" serif, amount in the price face, the note, a burgundy button. */
+  .cart-page .cart-page__summary .section-background {
+    display: none;
+  }
+
+  .cart-page .cart-summary {
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  /* Bag acceptance 1: label and amount are both the price face, 24 px navy (board ink width). */
+  .cart-page .cart-totals__total-label,
+  .cart-page .cart-totals__total-value {
+    color: #14163b;
+    font-family: var(--font-price);
+    font-weight: var(--fw-price, 700);
+    font-size: 24px;
+  }
+
+  .cart-totals__st-note {
+    margin: 6px 0 0;
+    color: var(--st-muted-text, #5c5f6b);
+    font-family: var(--font-ui);
+    font-size: 15px;
+  }
+
+  .cart-page .cart__checkout-button {
+    min-height: 53px;
+    border: 0;
+    border-radius: 6px;
+    background: #8d0223;
+    color: #fff;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .cart-page .cart__checkout-button:hover:not([disabled]) {
+    background: color-mix(in srgb, #8d0223 86%, #000);
+  }
+
+  /* Empty bag (no board frame): the same burgundy button as Checkout; the blue pill is retired. */
+  .cart-page .cart-items__empty-button {
+    min-height: 48px;
+    padding-inline: 1.75rem;
+    border: 0;
+    border-radius: 6px;
+    background: #8d0223;
+    color: #fff;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* ---- Extras ---- */
+  .st-bag-extras {
+    display: grid;
+    gap: 15px;
+    max-width: 44rem;
+    margin-inline: auto;
+    padding: 0 15px var(--st-section-space);
+  }
+
+  .st-bag-extras__continue {
+    margin: 0 0 30px;
+    text-align: center;
+  }
+
+  .st-bag-extras__continue a,
+  .st-bag-extras__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 44px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-bag-extras__continue a {
+    color: var(--st-hand-blue);
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  /* Help panel: x 15–380, radius 12, #f8f7f7; the character peeks in at the bottom right. */
+  .st-bag-extras__help {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    min-height: 290px;
+    padding: 22px 10px 20px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #f8f7f7;
+  }
+
+  .st-bag-extras__heading {
+    margin: 0;
+    color: #111;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  .st-bag-extras__text {
+    margin: 0;
+    color: #373f8b;
+    font-family: var(--font-ui);
+    font-size: 16px;
+  }
+
+  .st-bag-extras__links {
+    display: grid;
+    justify-items: start;
+    margin: 8px 0 0;
+  }
+
+  .st-bag-extras__links a {
+    min-height: 40px;
+    color: #1b1d91;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 17px;
+  }
+
+  .st-bag-extras__peek {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    width: 145px;
+    height: 160px;
+    overflow: hidden;
+  }
+
+  .st-bag-extras__peek img {
+    position: absolute;
+    max-width: none;
+    height: auto;
+  }
+
+  /* Promo panel: #fee2ed, radius 12; serif heading, Kalam sub, four upright sprite nails at an 88 px pitch. */
+  .st-bag-extras__promo {
+    display: grid;
+    justify-items: center;
+    padding: 28px 10px 25px;
+    border-radius: 12px;
+    background: #fee2ed;
+    text-align: center;
+  }
+
+  .st-bag-extras__promo-heading {
+    margin: 0;
+    color: #b0122a;
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: 30px; /* bag acceptance 1: board ink x 44–358 */
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .st-bag-extras__promo-sub {
+    margin: 2px 0 0;
+    color: #2f4ac8;
+    font-family: var(--font-annotation);
+    font-weight: var(--fw-annotation, 300);
+    font-size: 22px;
+    rotate: -3deg;
+  }
+
+  .st-bag-extras__nails {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 14px;
+    margin-block-start: 22px;
+  }
+
+  /* HD nail sheets (st-hd-nails-<set>, plates 0.846 of the cell vs P1 0.895): the cell is drawn x1.058 about its cuticle
+     (50%, 92.5%) on ::before (insets -5.365% / -2.9% / -0.435%), so plates keep their accepted width and bases stay put. */
+  .st-bag-extras__nail {
+    position: relative;
+    width: 74px;
+    aspect-ratio: 204 / 354;
+    filter: drop-shadow(0 4px 6px rgb(31 26 46 / 0.2));
+  }
+
+  .st-bag-extras__nail::before {
+    content: '';
+    position: absolute;
+    inset: -5.365% -2.9% -0.435%;
+    background: var(--st-nails) calc(var(--col, 0) * 50%) 0 / 300% 100% no-repeat;
+  }
+
+  .st-bag-extras__nail:last-child {
+    width: 60px;
+  }
+
+  @media screen and (max-width: 360px) {
+    .st-bag-extras__nails {
+      gap: 8px;
+    }
+
+    .st-bag-extras__nail {
+      width: 62px;
+    }
+
+    .st-bag-extras__nail:last-child {
+      width: 50px;
+    }
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2) */
+  /* >= 1024: the bag extras under the items as a row of two cards (6fr | 6fr) in the cart's page width (120rem, 40 px
+     margins); the promo's nail row grows with its card. Bag targets at 44 px (quantity, item title). */
+  @media screen and (min-width: 1024px) {
+    .st-bag-extras {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 24px clamp(24px, 3vw, 40px);
+      max-width: none;
+      width: min(var(--normal-page-width, 1200px), 100% - 80px);
+      padding: 0 0 var(--st-section-space);
+    }
+
+    .st-bag-extras__continue {
+      grid-column: 1 / -1;
+    }
+
+    .st-bag-extras__help,
+    .st-bag-extras__promo {
+      min-height: 320px;
+      padding: 32px 28px;
+    }
+
+    .st-bag-extras__promo {
+      align-content: center;
+    }
+
+    .st-bag-extras__nails {
+      inline-size: 100%;
+    }
+
+    .st-bag-extras__nail {
+      width: min(120px, (100% - 3 * 14px) / 4);
+    }
+
+    .cart-page .quantity-selector {
+      width: 132px;
+      height: 44px;
+    }
+
+    .cart-page .quantity-selector .button {
+      height: 44px;
+    }
+
+    /* outranks Horizon's later .cart-items .quantity-selector input[type='number'] (same weight, later in the bundle) */
+    .cart-page .cart-items .quantity-selector input[type='number'] {
+      width: 44px;
+      height: 44px;
+    }
+
+    .cart-page .cart-items__title {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+  /* END store desktop */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk bag extras",
+  "class": "st-bag-extras-section",
+  "settings": [
+    { "type": "url", "id": "continue_url", "label": "Continue shopping link (MC-042)" },
+    { "type": "header", "content": "Need a hand?" },
+    { "type": "text", "id": "help_heading", "label": "Heading" },
+    { "type": "checkbox", "id": "g8_confirmed", "label": "G8 confirmed (staffed contact channel)", "default": false },
+    { "type": "text", "id": "help_text", "label": "Text (MC-044, gated G8)" },
+    { "type": "text", "id": "help_label", "label": "Help link label" },
+    { "type": "url", "id": "help_url", "label": "Help link" },
+    { "type": "checkbox", "id": "help_live", "label": "Help page is live", "default": false },
+    { "type": "text", "id": "policies_label", "label": "Delivery & returns label" },
+    { "type": "url", "id": "policies_url", "label": "Delivery & returns link" },
+    { "type": "text", "id": "contact_label", "label": "Contact label" },
+    { "type": "url", "id": "contact_url", "label": "Contact link" },
+    { "type": "checkbox", "id": "contact_live", "label": "Contact channel is staffed (G8)", "default": false },
+    { "type": "header", "content": "Promo" },
+    { "type": "text", "id": "promo_heading", "label": "Promo heading" },
+    { "type": "text", "id": "promo_sub", "label": "Promo handwritten line" },
+    {
+      "type": "metaobject",
+      "id": "campaign",
+      "label": "Campaign for the nails and the face peek",
+      "metaobject_type": "small_talk_campaign"
+    }
+  ],
+  "presets": [{ "name": "Small Talk bag extras" }]
+}
+{% endschema %}

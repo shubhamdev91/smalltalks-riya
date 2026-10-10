@@ -1,0 +1,53 @@
+{% doc %}
+  Gated group. Holds copy or a form whose register row depends on an unconfirmed fact gate (G1–G16, D1–D9).
+  On the storefront its children render only once "Confirmed" is on; until then nothing is output, so no
+  filler or placeholder ever reaches shoppers. In the theme editor the children stay visible inside a dashed
+  frame labelled with the gate, so they can still be edited.
+{% enddoc %}
+
+{%- liquid
+  assign held = true
+  if block.settings.confirmed
+    assign held = false
+  endif
+-%}
+
+{%- if held == false or request.design_mode -%}
+  <div class="st-gate{% if held %} st-gate--held{% endif %}" {{ block.shopify_attributes }}>
+    {%- if held -%}
+      <p class="st-gate__label">Hidden on the storefront until {{ block.settings.gate | default: 'its gate' | escape }} is confirmed.</p>
+    {%- endif -%}
+    {% content_for 'blocks' %}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .st-gate {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .st-gate--held {
+    padding: 1rem;
+    border: 1px dashed var(--st-divider);
+    border-radius: var(--st-radius-card);
+  }
+
+  .st-gate__label {
+    margin: 0;
+    color: var(--st-muted);
+    font-size: 0.8125rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk gated group",
+  "settings": [
+    { "type": "text", "id": "gate", "label": "Gate", "info": "Register gate ID, e.g. G8 or G10." },
+    { "type": "checkbox", "id": "confirmed", "label": "Gate confirmed", "default": false }
+  ],
+  "blocks": [{ "type": "@theme" }],
+  "presets": [{ "name": "Small Talk gated group" }]
+}
+{% endschema %}

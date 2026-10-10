@@ -1,0 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "di-review-copy",
+      "settings": {
+        "heading": "Our Story",
+        "body": "<h2>Small talk.<br>A lot said.</h2><p>Seven nail sets, inspired by the little things we say for each other.</p><p>A hand reaching for the bill. An idea you put your name to. A friend making room when the plan falls apart. Small Talk turns those familiar moments into colour, character and a little attitude.</p><h2>Small moments. A kind heart.</h2><p>For the friends who show up, hype you up and make it all a little more fun. Same people. New stories.</p><p><a href=\"/collections/all\">Shop all sets \u2192</a> &nbsp; <a href=\"/blogs/journal\">Read the Journal \u2192</a></p>"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

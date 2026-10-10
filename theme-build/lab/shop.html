@@ -1,0 +1,1194 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Shop lab</title>
+<style>/* Small Talk board tokens
+   Sampled from the boards: 2.jpg (hero states), 5.jpg (shop/PDP/bag/guide), 9-14 (owner close-ups).
+   All sizes are CSS px at a 390 px-wide viewport. Scale with clamp(), e.g. size * (100vw / 390), and cap at the desktop max.
+   Board images are low resolution (a hero frame is ~271 board px wide), so hex values are medians and accurate to about ±6 per channel.
+   Retired: the blue/ink/plum chrome system. Don't reintroduce it. */
+
+:root {
+  /* ---------- chrome (landing and hero boards) ---------- */
+  --st-paper: #fdfdfc;            /* header and page paper (board 2 header #fdfdfc, board 5 page #fefdfd) */
+  --st-logo-blue: #1412d5;        /* 9.93:1 */        /* stacked "small talk" logo, board 2 (median of 7 frames: #1412d5) */
+  --st-talks-ink: #0d0b10;        /* thin black handwritten "the talks" in the header */
+  --st-header-h: 69px;            /* board 2: 48 board px -> 69 px at 390. Logo ~84x56, centred at x 35% */
+  --st-icon-ink: var(--st-logo-blue); /* hamburger and bag outline */
+
+  /* ---------- shop / PDP / bag / journal / help boards (board 5) ---------- */
+  --st-burgundy: #820622;         /* 10.32:1 on paper */
+  /* burgundy samples, serif headings: "Pick your plot twist.", "Find your fit.", "On Me" (#830623 / #800621 / #7f0521) */
+  --st-red: #a31a33;              /* 7.49:1 on paper */              /* sans subheads, product names in the grid, step numbers (#a31a33 / #a91232) */
+  --st-pill: #920324;             /* filled pills and buttons: All sets, Add to bag, Checkout (#920324 / #940326 / #8d0223) */
+  --st-pill-ink: #ffffff;         /* 9.29:1 on --st-pill */
+  --st-chip-bg: #fcfcfd;          /* unselected chip: white with a 1 px #d9d9de outline */
+  --st-chip-line: #d9d9de;
+  --st-hand-blue: #3653c7;        /* 6.41:1 paper, 5.38:1 on --st-panel-pink */        /* blue handwriting: annotations, PDP quote, guide sub, bag sub (#3655c7 / #2e4ac7 / #3a55c8 / #3f58cb) */
+  --st-price: #0b0b2e;            /* prices: near-black navy (#050642 sampled on JPEG text, rendered darker). 18.7:1 on paper */
+  --st-body: #6e7184;             /* body grey (#86899b sampled, darkened toward the stroke core). 4.73:1 on paper: passes 4.5 on paper only; on cream or panels use --st-muted-text */
+  --st-muted: #9698ab;            /* NON-TEXT ONLY (dividers, icons, disabled outlines): 2.80:1 on paper fails text contrast */
+  --st-muted-text: #6a6d85;       /* accessibility override for footer links, helper text, captions: 4.98 paper / 4.72 cream / 4.74 panel */
+  --st-placeholder: #6a6d85;      /* the board placeholder #b0b0bd is 2.14:1; placeholders are text, so use the passing grey */
+  --st-outline-red: #c22e38;      /* board outline-pill text #ce3e46 is 4.44:1 on cream; nudged to 5.22 cream / 5.61 white */
+  --st-panel: #f8f7f7;            /* "Need a hand?" panel */
+  --st-panel-pink: #fee2ed;       /* bag "Nails for every plot twist." panel */
+  --st-shopify-blue: #0164fd;     /* checkout only (Shopify, reference) */
+
+  /* ---------- hero scenes (board 2): radial glow per set ----------
+     background: radial-gradient(circle at X Y, inner 0, mid R*0.55, outer R*1.25)
+     Centre is % of the scene below the header; R is px at 390. Sampled with spec/tools/herocolors.py. */
+  --hero-on-me:         radial-gradient(circle at 46% 34%, #fcc01d 0, #f5a908 99px, #e18e05 225px);
+  --hero-brainwave:     radial-gradient(circle at 52% 28%, #0958f4 0, #0444d9 132px, #032cb8 300px);
+  --hero-diet-cherry:   radial-gradient(circle at 35% 33%, #d41614 0, #b70a09 132px, #780303 300px);
+  --hero-green-flag:    radial-gradient(circle at 43% 38%, #0d7b4e 0, #04673c 176px, #034727 400px);
+  --hero-shaadi-shift:  radial-gradient(circle at 49% 40%, #fa357f 0, #f61d6d 176px, #df0a4d 400px);
+  --hero-wild-card:     radial-gradient(circle at 51% 34%, #d2fb23 0, #b4f50a 88px, #94e004 200px);
+  --hero-pinky-promise: radial-gradient(circle at 38% 32%, #792ffb 0, #621dec 132px, #4812c8 300px);
+  /* Flat fallbacks are the metaobject backgrounds: #ffb900 #073df1 #e10019 #007948 #ff0078 #b7ef00 #6620f2.
+     Board mid-tones are darker than the metaobjects (e.g. diet-cherry #b70a09 vs #e10019); the boards win per owner directive. */
+
+  /* hero ink per set: headline + note colour, pill style.
+     Contrast (text on ground): on-me ink 9.54, brainwave white 7.41, diet-cherry white 6.86, green white 6.98,
+     shaadi ink 4.80, wild navy 13.09, pinky white 7.23. Pill ink on white: brainwave 10.77, diet-cherry 5.25,
+     green 5.97, wild 10.69, pinky 5.24; white on on-me pill 8.62, shaadi pill 8.69. Chapter pill red #cc2f36 on white 5.21.
+     Landing: white on shaadi #f30b5e = 4.18, so only large text there (notes, headlines >= 24px; product name at 24px, not 22). */
+  --ink-on-me: #180e0b;          --pill-on-me: #9c0219;          --pill-ink-on-me: #ffffff;  /* filled burgundy pill */
+  --ink-brainwave: #ffffff;      --pill-brainwave: #ffffff;      --pill-ink-brainwave: #0f0bcd;
+  --ink-diet-cherry: #ffffff;    --pill-diet-cherry: #ffffff;    --pill-ink-diet-cherry: #d6171a;
+  --ink-green-flag: #ffffff;     --pill-green-flag: #ffffff;     --pill-ink-green-flag: #107247;
+  --ink-shaadi-shift: #180e0b;   --pill-shaadi-shift: #9b021a;   --pill-ink-shaadi-shift: #ffffff;
+  --ink-wild-card: #0f0b5c;      --pill-wild-card: #ffffff;      --pill-ink-wild-card: #0f0cce;
+  --ink-pinky-promise: #ffffff;  --pill-pinky-promise: #ffffff;  --pill-ink-pinky-promise: #d6181b;
+
+  /* ---------- type ----------
+     Fonts are OFL. Files and licences are in spec/fonts/<family>/; comparison sheets are in spec/type/compare-<role>.png.
+     IoU = text-mask overlap with the board crop after fitting height and width (single-line roles only).
+     Scores are low across the board because the board text is AI-rendered and JPEG-soft; the visual check decided where scores were close. */
+
+  /* Hero headline. PICK: Fraunces 900, SOFT 100, WONK 1, opsz 144. Arc IoU 0.412.
+     Runners-up: Corben Bold 0.358; Caprasimo 0.349 (rounder, less contrast); Fraunces SOFT50 0.354.
+     Set on an arc (radius ~380 px at 390, convex up) and rotated -3deg. Arc-set with SVG textPath, or per-line
+     transform:rotate as a fallback. Must stay real text (accessibility minimum). */
+  --font-headline: "Fraunces", Georgia, serif;
+  --fv-headline: "wght" 900, "SOFT" 100, "WONK" 1, "opsz" 144;
+  --fs-headline: 86px;  --ls-headline: -0.06em;  --lh-headline: 0.92;
+
+  /* Hero note. PICK: Caveat 700 (slanted felt-tip, same letter shapes as the board's "I've got this.").
+     Runners-up: Kalam Regular (upright, too wide); Caveat Brush (too heavy).
+     Rotated -10deg; two lines when long. */
+  --font-note: "Caveat", "Segoe Print", cursive;
+  --fw-note: 700;  --fs-note: 46px;  --lh-note: 0.95;  --rot-note: -10deg;
+
+  /* Hero pill and section pills. PICK: Barlow Semi Condensed SemiBold. IoU 0.243.
+     Runners-up: IBM Plex Sans Condensed Medium 0.235; Roboto Condensed 500 0.229. */
+  --font-pill: "Barlow Semi Condensed", "Arial Narrow", sans-serif;
+  --fw-pill: 600;  --fs-pill: 30px;  /* hero pill; section "Shop set" pills ~17px */
+
+  /* Header "the talks". PICK: Caveat 600 (thin slanted pen once sized to 30px). IoU 0.362.
+     Runners-up: Caveat 500 0.356; Nanum Pen Script 0.302 (too heavy).
+     Board ink is black #0d0b10; shop boards render it red #b92542, but the owner keeps the landing header everywhere. */
+  --font-talks: "Caveat", cursive;
+  --fw-talks: 600;  --fs-talks: 34px;  --ls-talks: -0.02em;
+
+  /* Shop, PDP, bag and guide headings. PICK: Source Serif 4 Bold, opsz 60. IoU 0.548.
+     Runners-up: Abril Fatface 0.528 (closest contrast, but its fat-face 'y' and 'f' read wrong); DM Serif Display 0.458. */
+  --font-shop-heading: "Source Serif 4", Georgia, serif;
+  --fv-shop-heading: "wght" 700, "opsz" 60;
+  --fs-shop-h1: 52px; --ls-shop-h1: -0.02em; --lh-shop-h1: 0.95;  /* "Pick your plot twist." two lines; ~40px on the guide */
+  --fs-shop-h2: 34px;                                            /* PDP title "On Me", "Your bag", "Subtotal" 18px */
+
+  /* Blue annotations. PICK: Kalam Light (neat thin print hand).
+     Runners-up: Patrick Hand (upright); Caveat 400 (too cursive). Rotate -4deg; open tracking +0.1em. */
+  --font-annotation: "Kalam", "Segoe Print", cursive;
+  --fw-annotation: 300;  --fs-annotation: 19px;  --ls-annotation: 0.08em;
+
+  /* UI subheads (red) and body. PICK: DM Sans 600 / 400. Subhead IoU 0.557.
+     Runners-up: IBM Plex Sans Condensed SemiBold 0.460; Barlow Semi Condensed SemiBold 0.365. */
+  --font-ui: "DM Sans", system-ui, sans-serif;
+  --fs-ui-sub: 20px;  --fw-ui-sub: 600;
+  --fs-ui-body: 16px; --fw-ui-body: 400;  --lh-ui-body: 1.35;
+
+  /* ---------- shared geometry ---------- */
+  --st-radius-pill: 999px;
+  --st-touch-min: 44px;           /* accessibility minimum; overrides the board where smaller */
+  --st-hero-pill-h: 62px;   --st-hero-pill-inset: 35px;   /* board 2: x 9%-93%, 62 px tall */
+  --st-ctrl-d: 52px;              /* pause + tone circles, white fill, 4 px white ring on the tone swatch */
+}
+
+
+
+/* Landing additions (landing.md), orchestrator round 2. Contrast on cream #fdf6e9: */
+:root {
+  --st-cream: #fdf6e9;          /* landing cream ground; --st-muted-text 4.72, --st-body 4.48 FAILS 4.5 on cream: use --st-muted-text */
+  --st-landing-red: #bc0a1e;    /* 6.10:1 on cream */
+  --st-navy: #14168f;           /* 12.68:1 on cream */
+  --st-bubble: #e3e0fe;         /* bubble text #3b3ba8 = 6.88:1 */
+  --st-beeline-red: #c23a2c;    /* non-text */
+}
+
+
+/* Stacked logo "small / talk" (orchestrator round 3). Sheet: spec/type/compare-logo.png
+   Fitted to the board 2 header crop at 390 (word "small" matched to the board width, "talk" centred under it, baselines from the board).
+   IoU vs board, with scaleY 1.16 / without:
+     Source Serif 4 Black opsz60   0.684 / 0.632   <- PICK (the same family as the shop headings, already a spec font)
+     Abril Fatface                 0.644 / 0.600
+     Fraunces 900 opsz144 SOFT0    0.629 / 0.571   (shipped static instance)
+     DM Serif Display (current)    0.601 / 0.537   (too light and too wide-bowled)
+     Young Serif                   0.494
+   The board letters are ~16% taller than any OFL heavy serif at the matching width (an AI-drawn condensed wordmark).
+   Optional: transform: scaleY(1.16) on the logo text (still real text, accessible). Without it, use the unscaled values. */
+:root {
+  --font-logo: "Source Serif 4", Georgia, serif;
+  --fv-logo: "wght" 900, "opsz" 60;
+  --fs-logo: 38.5px;          /* at 390; header logo box 81 x 59 px, top y 6, centred at x 136 */
+  --ls-logo: -0.04em;
+  --lh-logo: 0.67;            /* baseline-to-baseline 25.8 px */
+  --logo-talk-indent: 9.5px;  /* "talk" starts 9.5 px right of "small"'s left edge (= both lines centred, centre shift -1.6 px) */
+  --logo-scale-y: 1.16;       /* optional board-match stretch; set to 1 to disable */
+  --logo-color: var(--st-logo-blue);
+}
+
+/* Chapter headlines (landing chapters, round 4: st-fable fit). The hero stays --fv-headline (900 / SOFT 100). */
+:root {
+  --fv-chapter-headline: "wght" 700, "SOFT" 50, "WONK" 1, "opsz" 144;
+  --ls-chapter-headline: -0.03em;
+  --ws-chapter-headline: 0.18em;
+  --fs-chapter-headline: 60px;  /* 58-64 at 390 */
+}
+
+/* Shop product tiles (board 5), round 5. Median of the tile-ground ring (4-10 px inside each tile edge),
+   tools: inline sampler, data spec/shop-tiles.json. These are brighter than the hero mid-tones; use these on shop/bag/PDP tiles only. */
+:root {
+  --st-tile-on-me:         #fcb939;
+  --st-tile-brainwave:     #0165f8;
+  --st-tile-green-flag:    #068a43;
+  --st-tile-shaadi-shift:  #fc2f94;
+  --st-tile-diet-cherry:   #fd1e36;
+  --st-tile-wild-card:     #d9e326;
+  --st-tile-pinky-promise: #045af1;  /* board shows a cobalt ground (the box art's blue bleeds to the tile edge). Flagged: campaign Pinky is violet #6620f2 */
+}
+
+/* Card names + PDP title (round 6). Sheets: spec/type/compare-card-name.png, compare-card-name-onme.png, compare-pdp-title.png
+   Card name (shop/bag cards) is a bold condensed SANS, not serif. IoU Brainwave / On Me:
+     IBM Plex Sans Condensed Bold  0.782 / 0.580  <- PICK (best average 0.68)
+     DM Sans 800 (shipped)         0.657 / 0.656  runner-up (0.66); acceptable if we don't want another family
+     Barlow Semi Condensed Bold    0.787 / 0.414  (wins the long word, fails short words: too narrow and open)
+     Source Serif 4 Black          0.530 / 0.628  (serif: wrong)
+   PDP title stays a heavy SERIF (bracketed serifs visible on "M" at 2x). IoU: DM Sans 800 0.749, Fraunces 900 0.658,
+   Source Serif 4 Black 0.626, Abril 0.616. Picked Source Serif 4 Black visually: the sans scores higher only because the
+   board crop is blurred and blob-like; its letterforms (no serifs, geometric O) are wrong. */
+:root {
+  --font-card-name: "IBM Plex Sans Condensed", "Barlow Semi Condensed", system-ui, sans-serif;
+  --fw-card-name: 700; --fs-card-name: 21px; --ls-card-name: 0;
+  --font-pdp-title: "Source Serif 4", Georgia, serif;
+  --fv-pdp-title: "wght" 900, "opsz" 60; --fs-pdp-title: 50px; --ls-pdp-title: 0;
+}
+
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-fraunces-900.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* Chapter headlines (board 3 is lighter than the hero): static wght 700 / SOFT 50 / WONK 1 / opsz 144. */
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-fraunces-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Caveat';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-caveat.woff2') format('woff2');
+    font-weight: 500 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Barlow Semi Condensed';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-barlow-sc-600.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-source-serif-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* Wordmark only (tokens --font-logo: Source Serif 4 Black, opsz 60): glyphs of "small talk". */
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-source-serif-logo-900.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+20, U+41, U+4B-4D, U+53-54, U+61, U+6B-6D, U+73-74;
+  }
+  /* Card names and card prices (shop, bag): IBM Plex Sans Condensed Bold, round 6 (OFL; 206-glyph Latin subset). */
+  @font-face {
+    font-family: 'IBM Plex Sans Condensed';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-plex-cond-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* Board-5 page headings ("Pick your plot twist."): the board ink is Black opsz 60, not the spec's 700. Its own family
+     so the wordmark subset above stays the only 900 file on other pages. */
+  @font-face {
+    font-family: 'Source Serif 4 Black';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-source-serif-900.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kalam';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-kalam-300.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'DM Sans';
+    src: url('file:///C:/Users/SSTS/Desktop/Riya/theme-build/fonts/out/st-dm-sans.woff2') format('woff2');
+    font-weight: 400 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Metric-matched fallbacks (hhea metrics; width matched on each role's register strings). */
+  @font-face {
+    font-family: 'Fraunces Fallback';
+    src: local('Georgia Bold'), local('Georgia-Bold');
+    size-adjust: 84.24%;
+    ascent-override: 116.09%;
+    descent-override: 30.27%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Caveat Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 71.86%;
+    ascent-override: 133.6%;
+    descent-override: 41.75%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Barlow Semi Condensed Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 79.63%;
+    ascent-override: 125.58%;
+    descent-override: 25.12%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Source Serif 4 Fallback';
+    src: local('Georgia Bold'), local('Georgia-Bold');
+    size-adjust: 81.8%;
+    ascent-override: 126.65%;
+    descent-override: 40.95%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'IBM Plex Sans Condensed Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 89.91%;
+    ascent-override: 114.0%;
+    descent-override: 30.59%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Kalam Fallback';
+    src: local('Arial'), local('ArialMT');
+    size-adjust: 95%;
+    ascent-override: 111.89%;
+    descent-override: 55.89%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'DM Sans Fallback';
+    src: local('Arial'), local('ArialMT');
+    size-adjust: 103.72%;
+    ascent-override: 95.64%;
+    descent-override: 29.89%;
+    line-gap-override: 0%;
+  }
+
+  :root {
+    --font-headline: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
+    --font-note: 'Caveat', 'Caveat Fallback', 'DM Sans', 'Segoe Print', cursive;
+    --font-pill: 'Barlow Semi Condensed', 'Barlow Semi Condensed Fallback', 'DM Sans', 'Arial Narrow', sans-serif;
+    --font-talks: 'Caveat', 'Caveat Fallback', 'DM Sans', cursive;
+    --font-shop-heading: 'Source Serif 4', 'Source Serif 4 Fallback', Georgia, serif;
+    --font-shop-display: 'Source Serif 4 Black', 'Source Serif 4 Fallback', Georgia, serif;
+    /* tokens.css --font-pdp-title is Source Serif 4 at wght 900; here that weight is the full 'Source Serif 4 Black' face. */
+    --font-pdp-title: 'Source Serif 4 Black', 'Source Serif 4 Fallback', Georgia, serif;
+    --font-card-name: 'IBM Plex Sans Condensed', 'IBM Plex Sans Condensed Fallback', 'Barlow Semi Condensed', system-ui, sans-serif;
+    --font-annotation: 'Kalam', 'Kalam Fallback', 'DM Sans', 'Segoe Print', cursive;
+    --font-ui: 'DM Sans', 'DM Sans Fallback', system-ui, sans-serif;
+  }
+
+@font-face { font-family: 'ST Display'; src: url('file:///C:/Users/SSTS/AppData/Local/Temp/claude/C--Users-SSTS-Desktop-Riya/84af96b7-cadf-4ec1-a2eb-81c8910c84b9/scratchpad/dl_font/st-font-4.woff2') format('woff2'); }
+:root { --st-font-display: 'ST Display', Georgia, serif; --minimum-touch-target: 44px; --safe-area-inset-left: 0px; --safe-area-inset-right: 0px; --normal-page-width: 100%; --st-gutter: 1rem; }
+* { box-sizing: border-box; } body { margin: 0; background: var(--st-paper); } ul { margin: 0; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  :root {
+    --st-header-h: 69px;
+  }
+
+  @media screen and (min-width: 990px) {
+    :root {
+      --st-header-h: 76px;
+    }
+  }
+
+  .st-header {
+    background: var(--st-paper);
+    color: var(--st-talks-ink);
+  }
+
+  /* Same pattern as Horizon's header: flatten the group so the section can stick to the page. */
+  #header-group:has(.st-header--sticky) {
+    display: contents;
+  }
+
+  .st-header-section:has(.st-header--sticky) {
+    position: sticky;
+    top: 0;
+    z-index: var(--layer-header-menu);
+  }
+
+  .st-header__bar {
+    display: grid;
+    grid-template-columns: 14.4% 40% 28.2% 1fr;
+    align-items: center;
+    height: var(--st-header-h);
+    padding-inline: var(--safe-area-inset-left) var(--safe-area-inset-right);
+    max-width: var(--normal-page-width);
+    margin-inline: auto;
+  }
+
+  .st-header__menu {
+    justify-self: center;
+  }
+
+  .st-header__icon-button {
+    display: inline-grid;
+    place-items: center;
+    min-width: var(--minimum-touch-target);
+    min-height: var(--minimum-touch-target);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--st-icon-ink);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .st-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-self: center;
+    color: var(--st-logo-blue);
+    text-decoration: none;
+    min-height: var(--minimum-touch-target);
+  }
+
+  /* Wordmark per tokens.css --font-logo (Source Serif 4 Black, opsz 60): "talk" indented under "small", stretched
+     vertically by --logo-scale-y like the board (still real text). Box at 390: 81 x 59, top 6, centred at x 136. */
+  .st-logo__words {
+    display: inline-grid;
+    justify-items: start;
+    font-family: var(--font-logo);
+    font-variation-settings: var(--fv-logo);
+    font-weight: 900;
+    font-size: var(--fs-logo);
+    line-height: var(--lh-logo);
+    letter-spacing: var(--ls-logo);
+    color: var(--logo-color);
+    padding-block: 0.32em 0.22em;
+    transform: scaleY(var(--logo-scale-y, 1));
+  }
+
+  .st-logo__words > span:nth-child(2) {
+    margin-inline-start: var(--logo-talk-indent);
+  }
+
+  .st-logo--small .st-logo__words {
+    font-size: calc(var(--fs-logo) * 0.8);
+  }
+
+  .st-logo__image {
+    display: block;
+    height: auto;
+    width: auto;
+    max-height: 3.5rem;
+  }
+
+  .st-header__nav {
+    display: none;
+  }
+
+  /* On phones the talks link and the bag are grid columns 3 and 4. */
+  .st-header__actions {
+    display: contents;
+  }
+
+  .st-header__talks {
+    grid-column: 3;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+    font-family: var(--font-talks);
+    font-weight: var(--fw-talks);
+    font-size: min(var(--fs-talks), 8.7vw);
+    letter-spacing: var(--ls-talks);
+    line-height: 1;
+    color: var(--st-talks-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .st-header__talks:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+
+  .st-header__bag {
+    grid-column: 4;
+    justify-self: center;
+  }
+
+  .st-header__cart-icon {
+    --cart-bubble-background: var(--st-logo-blue);
+    --cart-bubble-text: var(--st-paper);
+
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .st-header__cart-icon .cart-bubble {
+    position: absolute;
+    inset-block-start: -2px;
+    inset-inline-end: -8px;
+    width: 18px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .st-header__bar {
+      grid-template-columns: auto 1fr auto;
+      gap: 1.5rem;
+      padding-inline: var(--st-gutter);
+    }
+
+    .st-header__menu {
+      display: none;
+    }
+
+    .st-logo {
+      justify-self: start;
+    }
+
+    .st-header__nav {
+      display: block;
+      justify-self: center;
+    }
+
+    .st-header__nav ul {
+      display: flex;
+      gap: 0.25rem 1.75rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .st-header__nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--minimum-touch-target);
+      color: var(--st-talks-ink);
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      text-underline-offset: 0.35em;
+    }
+
+    .st-header__nav-link:hover,
+    .st-header__nav-link[aria-current='page'] {
+      color: var(--st-logo-blue);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+    }
+
+    .st-header__actions {
+      display: flex;
+      grid-column: 3;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+  }
+
+  /* Drawer */
+  .st-drawer {
+    width: min(24rem, 88vw);
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    margin-inline-end: auto;
+    padding: 0;
+    border: 0;
+    background: var(--st-paper);
+    color: var(--st-talks-ink);
+    box-shadow: 0 0 2rem rgb(13 11 16 / 0.18);
+  }
+
+  .st-drawer::backdrop {
+    background: rgb(13 11 16 / 0.35);
+  }
+
+  .st-drawer[open] {
+    animation: st-drawer-in 0.22s var(--ease-out-cubic) both;
+  }
+
+  .st-drawer.dialog-closing {
+    animation: st-drawer-out 0.16s ease-in both;
+  }
+
+  @keyframes st-drawer-in {
+    from {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes st-drawer-out {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  .st-drawer__inner {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    min-height: 100%;
+    padding: max(0.5rem, var(--safe-area-inset-top)) 1.25rem max(1.5rem, var(--safe-area-inset-bottom));
+  }
+
+  .st-drawer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: 1.5rem;
+  }
+
+  .st-drawer__nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-drawer__link {
+    display: flex;
+    align-items: center;
+    min-height: 3.25rem;
+    border-block-end: 1px solid var(--st-chip-line);
+    color: var(--st-talks-ink);
+    font-family: var(--font-shop-heading);
+    font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .st-drawer__link:hover,
+  .st-drawer__link[aria-current='page'] {
+    color: var(--st-logo-blue);
+  }
+
+  .st-drawer__talks {
+    font-family: var(--font-talks);
+    font-weight: var(--fw-talks);
+    font-size: 2.1rem;
+  }
+
+  .st-drawer__footer {
+    display: flex;
+    gap: 1.25rem;
+    margin-block-start: auto;
+    padding-block-start: 2rem;
+  }
+
+  .st-drawer__footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+  }
+
+  /* Board 5 at 390 (spec/shop.md); px values are the board's, the grid widens to 3 / 4 columns on larger screens. */
+  .st-shop {
+    max-width: var(--normal-page-width);
+    margin-inline: auto;
+    padding: 1px 15px 1rem; /* board: the footer rows follow the last card closely */
+    background: var(--st-paper);
+  }
+
+  .st-shop__header {
+    display: grid;
+    padding-inline-start: 3px;
+  }
+
+  /* Fitted to the board-5 ink (x 19–277, baselines 117 / 166): Black opsz 60 at 63 px on a 49 px line, heavier and
+     larger than the spec's 700 / 54 px. */
+  .st-shop__heading {
+    margin: 0;
+    color: var(--st-burgundy);
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: 63px;
+    line-height: 49px;
+    letter-spacing: var(--ls-shop-h1);
+    max-width: 300px; /* board: "Pick your / plot twist." */
+  }
+
+  .st-shop__note {
+    position: relative;
+    justify-self: start;
+    margin: 6px 0 0 67px;
+    color: var(--st-hand-blue);
+    font-family: var(--font-annotation);
+    font-weight: var(--fw-annotation);
+    font-size: 23px; /* board ink reads larger than the spec's 19 px */
+    letter-spacing: var(--ls-annotation);
+    line-height: 1.02;
+    rotate: -4deg;
+  }
+
+  .st-shop__note-2 {
+    margin-inline-start: 45px; /* board: second line indented */
+  }
+
+  .st-shop__arrow {
+    position: absolute;
+    right: -2.1rem;
+    bottom: -0.35rem;
+    width: 1.6rem;
+    height: 2rem;
+    overflow: visible;
+  }
+
+  .st-shop__arrow path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-shop__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-block: 10px 16px;
+  }
+
+  .st-shop__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 108px;
+    min-height: var(--st-touch-min, 44px);
+    padding: 0 1.1rem; /* three chips fit one row at 390 with the selected one bold (board: 108 / 110 / 120 px) */
+    box-sizing: border-box;
+    border: 1px solid var(--st-chip-line);
+    border-radius: var(--st-radius-pill);
+    background: var(--st-chip-bg);
+    color: #1a1a2e;
+    font-family: var(--font-ui);
+    font-weight: 400;
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  .st-shop__chip[aria-current] {
+    border-color: var(--st-pill);
+    background: var(--st-pill);
+    color: var(--st-pill-ink);
+    font-weight: 600;
+  }
+
+  .st-shop__chip:focus-visible {
+    outline: 2px solid var(--st-pill);
+    outline-offset: 2px;
+  }
+
+  .st-shop__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 13px;
+    row-gap: 15px; /* board rows every 236 px */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Phones: an odd last card sits alone, left, wider and shorter (board: x 14–237, image 155 px). */
+  @media screen and (max-width: 749px) {
+    .st-shop__grid > li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      width: 62%;
+      --st-tile-aspect: 223 / 155;
+    }
+
+    /* The board's last box is drawn wide; the approved box is portrait, so box + nails sit centred as one group. */
+    .st-shop__grid > li:last-child:nth-child(odd) .st-card__art {
+      left: 50%;
+      translate: -50% 0;
+      gap: 8px;
+    }
+  }
+
+  .st-shop__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    margin-block-start: 1.5rem;
+    font-family: var(--font-ui);
+  }
+
+  .st-shop__page-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--st-touch-min, 44px);
+    color: var(--st-hand-blue);
+  }
+
+  .st-shop__empty {
+    padding-block: 2rem;
+    font-family: var(--font-ui);
+    color: var(--st-body);
+  }
+
+  .st-shop__empty a {
+    color: var(--st-hand-blue);
+  }
+
+  @media screen and (min-width: 750px) {
+    .st-shop {
+      padding-inline: var(--st-gutter);
+    }
+
+    .st-shop__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 20px;
+      row-gap: 28px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .st-shop__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .st-card {
+    --st-tile: var(--st-cream);
+  }
+
+  .st-card__link {
+    display: grid;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .st-card__link:hover .st-card__pack {
+    transform: translateY(-2px);
+  }
+
+  .st-card__badge {
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--st-radius-pill);
+    background: var(--st-paper);
+    color: var(--st-price);
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+
+  .st-card__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem;
+    margin-block-start: 6px; /* board: name baseline ~191 px below the tile top */
+  }
+
+  /* Names and prices: bold condensed sans (tokens round 6, --font-card-name; prices match per shop acceptance 2). */
+  .st-card__title {
+    margin: 0;
+    color: var(--st-red);
+    font-family: var(--font-card-name);
+    font-weight: var(--fw-card-name, 700);
+    font-size: var(--fs-card-name, 21px);
+    line-height: 1.1;
+    letter-spacing: var(--ls-card-name, 0);
+  }
+
+  .st-card__price {
+    flex: none;
+    color: var(--st-price);
+    font-family: var(--font-card-name);
+    font-weight: 700;
+    font-size: 17px;
+  }
+
+  .st-card__price .price,
+  .st-card__price * {
+    color: inherit;
+    font: inherit;
+  }
+
+  .st-card__cta {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-block-start: 4px; /* the whole card is the link, so this line needs no own hit area */
+    color: #4e6dcd;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  .st-card__cta-text {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-card__link:focus-visible {
+    outline: 2px solid var(--st-pill);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Tile + art (shop card, bag line item). Lives here so it loads wherever the art renders. */
+
+  /* Tile grounds: board-5 medians (tokens --st-tile-<set>). */
+  .st-card[data-set='on-me'] { --st-tile: var(--st-tile-on-me); }
+  .st-card[data-set='brainwave'] { --st-tile: var(--st-tile-brainwave); }
+  .st-card[data-set='diet-cherry'] { --st-tile: var(--st-tile-diet-cherry); }
+  .st-card[data-set='green-flag'] { --st-tile: var(--st-tile-green-flag); }
+  .st-card[data-set='shaadi-shift'] { --st-tile: var(--st-tile-shaadi-shift); }
+  .st-card[data-set='wild-card'] { --st-tile: var(--st-tile-wild-card); }
+  .st-card[data-set='pinky-promise'] { --st-tile: var(--st-tile-pinky-promise); }
+
+  .st-card__tile {
+    position: relative;
+    display: block;
+    width: 100%;
+    container-type: size; /* cqw / cqh place the box and nails as % of the tile */
+    aspect-ratio: var(--st-tile-aspect, 176 / 172);
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--st-tile);
+  }
+
+  /* Box 8% in from the left, 90% of the tile height (≈ 64–66% of its width); the nail column starts at 76% of the
+     tile, or 4 px after the box if the box reaches further. */
+  .st-card__art {
+    position: absolute;
+    top: 5%;
+    top: 5cqh;
+    left: 8%;
+    left: 8cqw;
+    height: 90%;
+    height: 90cqh;
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    gap: max(4px, calc(68cqw - 90cqh * var(--box-ar, 0.75)));
+  }
+
+  .st-card__pack {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: none;
+    aspect-ratio: var(--box-aspect);
+    filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.18));
+    transition: transform var(--animation-speed, 0.2s) var(--animation-easing, ease);
+  }
+
+  .st-card__pack--media {
+    position: absolute;
+    inset: 8%;
+    width: 84%;
+    height: 84%;
+    object-fit: contain;
+  }
+
+  /* Loose nails: sprite cells (204 × 354, three designs side by side) stacked down the column, tips leaning right.
+     A cell is 32% of the column height; the nails step 25.3% (≈ 21.5% of the tile), starting level with the box top. */
+  .st-card__nails {
+    position: relative;
+    height: 100%;
+    aspect-ratio: 0.1844; /* 0.32 × 204 / 354 */
+  }
+
+  .st-card__nail {
+    position: absolute;
+    inset-inline-start: 0;
+    top: calc(var(--i) * 25.3%);
+    width: 100%;
+    aspect-ratio: 204 / 354;
+    background: var(--st-nails) calc(var(--col, 0) * 50%) 0 / 300% 100% no-repeat;
+    rotate: 12deg;
+  }
+
+  /* Board: loose nails tilt alternately; Brainwave's lie near horizontal. */
+  .st-card__nail:nth-child(even) { rotate: -12deg; }
+  .st-card[data-set='brainwave'] .st-card__nail { rotate: 84deg; }
+  .st-card[data-set='brainwave'] .st-card__nail:nth-child(even) { rotate: 96deg; }
+
+  .st-card[data-set='wild-card'] .st-card__nail {
+    top: calc(var(--i) * 34%);
+  }
+
+  .st-footer {
+    --st-footer-ink: var(--st-muted-text);
+
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    padding: 2.5rem var(--st-gutter) calc(2rem + var(--safe-area-inset-bottom, 0px));
+    background: var(--st-paper);
+    color: var(--st-footer-ink);
+    font-family: var(--font-ui);
+    text-align: center;
+  }
+
+  .st-footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .st-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-footer__logo {
+    color: var(--st-logo-blue);
+  }
+
+  .st-footer__social {
+    gap: 0.5rem;
+  }
+
+  .st-footer__copyright {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .st-footer--inner .st-footer__copyright {
+    grid-column: 1 / -1;
+    justify-self: center;
+    font-size: 0.75rem;
+  }
+
+  .st-footer__social-link {
+    display: inline-grid;
+    place-items: center;
+    min-width: var(--minimum-touch-target);
+    min-height: var(--minimum-touch-target);
+  }
+
+  .st-footer__social-placeholder {
+    opacity: 0.4;
+  }
+
+  /* Landing (board 3): continues the FAQ's cream, navy-blue type. */
+  /* Board 3 footer type: condensed, heavier, dark navy. #1f1f80 on cream #fdf6e9 = 12.3:1. */
+  .st-footer--landing {
+    --st-footer-ink: #1f1f80;
+
+    gap: 0.2rem;
+    padding-block-start: 0;
+    background: var(--st-cream);
+    font-family: var(--font-pill);
+    font-weight: var(--fw-pill);
+  }
+
+  /* Board 3 footer logo: ~100 x 72 at 390, the header wordmark scaled up. */
+  .st-footer--landing .st-logo__words {
+    font-size: calc(var(--fs-logo) * 1.23);
+  }
+
+  .st-footer--landing .st-footer__nav a,
+  .st-footer--landing .st-footer__legal a {
+    font-size: 1rem;
+  }
+
+  .st-footer__tagline {
+    margin: 0 0 0.25rem;
+    font-size: 1.25rem;
+  }
+
+  .st-footer--landing .st-footer__tagline {
+    font-size: 1.3125rem;
+  }
+
+  .st-footer--landing .st-footer__copyright {
+    font-size: 1rem;
+  }
+
+  .st-footer--landing .st-footer__nav ul,
+  .st-footer--landing .st-footer__legal {
+    gap: 0 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .st-footer--landing .st-footer__social {
+    gap: 1.5rem;
+    color: var(--st-navy);
+  }
+
+  .st-footer--landing .st-footer__social svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* Shop / product / bag / guide (board 5): two centred rows joined by a middle dot. */
+  /* Board rows sit 22 px apart; each row here is one 44 px hit area tall (accessibility minimum beats the board). */
+  .st-footer--rows {
+    gap: 0;
+    padding-block: 0.5rem calc(1rem + var(--safe-area-inset-bottom, 0px));
+    font-size: 0.8125rem;
+  }
+
+  .st-footer--rows li + li::before {
+    content: '·';
+    padding-inline: 0.4em;
+  }
+
+  /* Inner pages (board 4): logo left, two link columns, small socials, legal line. */
+  .st-footer--inner {
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    align-items: start;
+    column-gap: 2.5rem;
+    row-gap: 0.25rem;
+    text-align: start;
+    font-size: 0.875rem;
+  }
+
+  .st-footer--inner .st-footer__logo {
+    grid-row: span 2;
+  }
+
+  .st-footer--inner .st-logo__words {
+    font-size: 1.75rem;
+  }
+
+  .st-footer--inner .st-footer__nav ul {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(3, auto);
+    justify-content: start;
+    column-gap: 2.5rem;
+  }
+
+  .st-footer--inner .st-footer__nav a {
+    min-height: 2rem;
+  }
+
+  .st-footer--inner .st-footer__social {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  .st-footer--inner .st-footer__social svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .st-footer--inner .st-footer__legal {
+    grid-column: 1 / -1;
+    justify-self: center;
+    gap: 0 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .st-footer--inner {
+      grid-template-columns: auto auto 1fr;
+    }
+  }
+</style>
+<div class="st-header"><div class="st-header__bar">
+<div class="st-header__menu"><button class="st-header__icon-button"><svg class="st-header__burger" width="28" height="24" viewBox="0 0 28 24" fill="none"><path d="M1 1.75h26M1 12h26M1 22.25h26" stroke="currentColor" stroke-width="2.5"/></svg></button></div>
+<a class="st-logo" href="#"><span class="st-logo__words"><span>small</span><span>talk</span></span></a><nav class="st-header__nav"></nav>
+<div class="st-header__actions"><a href="#" class="st-header__talks">the talks</a><a href="#" class="st-header__icon-button st-header__bag"><span class="st-header__cart-icon"><svg class="st-header__bag-icon" width="36" height="39" viewBox="0 0 26 28" fill="none"><path d="M4.5 9h17l2 16.5h-21L4.5 9Z" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/><path d="M9 11V6.5a4 4 0 0 1 8 0V11" stroke="currentColor" stroke-width="1.45" stroke-linecap="round"/></svg></span></a></div>
+</div></div>
+<section class="st-shop"><header class="st-shop__header"><h1 class="st-shop__heading">Pick your plot twist.</h1>
+<p class="st-shop__note">Same nails.<br><span class="st-shop__note-2">Different moods.</span><svg class="st-shop__arrow" viewBox="0 0 40 48" aria-hidden="true"><path d="M6 3 C 18 6, 26 16, 24 30 C 23 37, 22 41, 21 45 M14 37 L21 45 L29 38"/></svg></p></header>
+<nav class="st-shop__chips"><a class="st-shop__chip" href="#" aria-current="page">All sets</a><a class="st-shop__chip" href="#">Everyday</a><a class="st-shop__chip" href="#">Statement</a></nav>
+<ul class="st-shop__grid" role="list"><li><article class="st-card" data-set="on-me"><a class="st-card__link" href="#">
+<span class="st-card__tile"><span class="st-card__art" style="--box-aspect: 362 / 494; --box-ar: 0.7328"><img class="st-card__pack" src="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/on-me.webp" srcset="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/on-me.webp 362w, file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/on-me%401.3x.webp 470w" sizes="28vw" width="362" height="494" alt="" loading="eager"><span class="st-card__nails" style="--st-nails: url('file:///C:/Users/SSTS/Desktop/Riya/artwork/nails/web/on-me.webp')" aria-hidden="true"><span class="st-card__nail" style="--col: 0; --i: 0"></span><span class="st-card__nail" style="--col: 2; --i: 1"></span><span class="st-card__nail" style="--col: 1; --i: 2"></span><span class="st-card__nail" style="--col: 0; --i: 3"></span></span></span></span>
+<div class="st-card__row"><h3 class="st-card__title">On Me</h3><span class="st-card__price"><span class="price">Rs. 599</span></span></div>
+<span class="st-card__cta"><span class="st-card__cta-text">View set</span> <span class="st-arrow" aria-hidden="true">→</span></span>
+</a></article></li><li><article class="st-card" data-set="brainwave"><a class="st-card__link" href="#">
+<span class="st-card__tile"><span class="st-card__art" style="--box-aspect: 358 / 494; --box-ar: 0.7247"><img class="st-card__pack" src="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/brainwave.webp" srcset="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/brainwave.webp 358w, file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/brainwave%401.3x.webp 465w" sizes="28vw" width="358" height="494" alt="" loading="eager"><span class="st-card__nails" style="--st-nails: url('file:///C:/Users/SSTS/Desktop/Riya/artwork/nails/web/brainwave.webp')" aria-hidden="true"><span class="st-card__nail" style="--col: 0; --i: 0"></span><span class="st-card__nail" style="--col: 1; --i: 1"></span><span class="st-card__nail" style="--col: 0; --i: 2"></span><span class="st-card__nail" style="--col: 1; --i: 3"></span></span></span></span>
+<div class="st-card__row"><h3 class="st-card__title">Brainwave</h3><span class="st-card__price"><span class="price">Rs. 599</span></span></div>
+<span class="st-card__cta"><span class="st-card__cta-text">View set</span> <span class="st-arrow" aria-hidden="true">→</span></span>
+</a></article></li><li><article class="st-card" data-set="green-flag"><a class="st-card__link" href="#">
+<span class="st-card__tile"><span class="st-card__art" style="--box-aspect: 355 / 494; --box-ar: 0.7186"><img class="st-card__pack" src="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/green-flag.webp" srcset="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/green-flag.webp 355w, file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/green-flag%401.3x.webp 461w" sizes="28vw" width="355" height="494" alt="" loading="eager"><span class="st-card__nails" style="--st-nails: url('file:///C:/Users/SSTS/Desktop/Riya/artwork/nails/web/green-flag.webp')" aria-hidden="true"><span class="st-card__nail" style="--col: 1; --i: 0"></span><span class="st-card__nail" style="--col: 0; --i: 1"></span><span class="st-card__nail" style="--col: 1; --i: 2"></span><span class="st-card__nail" style="--col: 0; --i: 3"></span></span></span></span>
+<div class="st-card__row"><h3 class="st-card__title">Green Flag</h3><span class="st-card__price"><span class="price">Rs. 499</span></span></div>
+<span class="st-card__cta"><span class="st-card__cta-text">View set</span> <span class="st-arrow" aria-hidden="true">→</span></span>
+</a></article></li><li><article class="st-card" data-set="shaadi-shift"><a class="st-card__link" href="#">
+<span class="st-card__tile"><span class="st-card__art" style="--box-aspect: 364 / 494; --box-ar: 0.7368"><img class="st-card__pack" src="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/shaadi-shift.webp" srcset="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/shaadi-shift.webp 364w, file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/shaadi-shift%401.3x.webp 473w" sizes="28vw" width="364" height="494" alt="" loading="eager"><span class="st-card__nails" style="--st-nails: url('file:///C:/Users/SSTS/Desktop/Riya/artwork/nails/web/shaadi-shift.webp')" aria-hidden="true"><span class="st-card__nail" style="--col: 1; --i: 0"></span><span class="st-card__nail" style="--col: 2; --i: 1"></span><span class="st-card__nail" style="--col: 0; --i: 2"></span><span class="st-card__nail" style="--col: 2; --i: 3"></span></span></span></span>
+<div class="st-card__row"><h3 class="st-card__title">Shaadi Shift</h3><span class="st-card__price"><span class="price">Rs. 699</span></span></div>
+<span class="st-card__cta"><span class="st-card__cta-text">View set</span> <span class="st-arrow" aria-hidden="true">→</span></span>
+</a></article></li><li><article class="st-card" data-set="diet-cherry"><a class="st-card__link" href="#">
+<span class="st-card__tile"><span class="st-card__art" style="--box-aspect: 377 / 481; --box-ar: 0.7838"><img class="st-card__pack" src="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/diet-cherry.webp" srcset="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/diet-cherry.webp 377w, file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/diet-cherry%401.3x.webp 490w" sizes="28vw" width="377" height="481" alt="" loading="eager"><span class="st-card__nails" style="--st-nails: url('file:///C:/Users/SSTS/Desktop/Riya/artwork/nails/web/diet-cherry.webp')" aria-hidden="true"><span class="st-card__nail" style="--col: 1; --i: 0"></span><span class="st-card__nail" style="--col: 0; --i: 1"></span><span class="st-card__nail" style="--col: 2; --i: 2"></span><span class="st-card__nail" style="--col: 1; --i: 3"></span></span></span></span>
+<div class="st-card__row"><h3 class="st-card__title">Diet Cherry</h3><span class="st-card__price"><span class="price">Rs. 599</span></span></div>
+<span class="st-card__cta"><span class="st-card__cta-text">View set</span> <span class="st-arrow" aria-hidden="true">→</span></span>
+</a></article></li><li><article class="st-card" data-set="wild-card"><a class="st-card__link" href="#">
+<span class="st-card__tile"><span class="st-card__art" style="--box-aspect: 372 / 481; --box-ar: 0.7734"><img class="st-card__pack" src="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/wild-card.webp" srcset="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/wild-card.webp 372w, file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/wild-card%401.3x.webp 483w" sizes="28vw" width="372" height="481" alt="" loading="eager"><span class="st-card__nails" style="--st-nails: url('file:///C:/Users/SSTS/Desktop/Riya/artwork/nails/web/wild-card.webp')" aria-hidden="true"><span class="st-card__nail" style="--col: 1; --i: 0"></span><span class="st-card__nail" style="--col: 0; --i: 1"></span><span class="st-card__nail" style="--col: 2; --i: 2"></span></span></span></span>
+<div class="st-card__row"><h3 class="st-card__title">Wild Card</h3><span class="st-card__price"><span class="price">Rs. 699</span></span></div>
+<span class="st-card__cta"><span class="st-card__cta-text">View set</span> <span class="st-arrow" aria-hidden="true">→</span></span>
+</a></article></li><li><article class="st-card" data-set="pinky-promise"><a class="st-card__link" href="#">
+<span class="st-card__tile"><span class="st-card__art" style="--box-aspect: 372 / 481; --box-ar: 0.7734"><img class="st-card__pack" src="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/pinky-promise.webp" srcset="file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/pinky-promise.webp 372w, file:///C:/Users/SSTS/Desktop/Riya/artwork/packaging/web/pinky-promise%401.3x.webp 483w" sizes="28vw" width="372" height="481" alt="" loading="eager"><span class="st-card__nails" style="--st-nails: url('file:///C:/Users/SSTS/Desktop/Riya/artwork/nails/web/pinky-promise.webp')" aria-hidden="true"><span class="st-card__nail" style="--col: 0; --i: 0"></span><span class="st-card__nail" style="--col: 0; --i: 1"></span><span class="st-card__nail" style="--col: 0; --i: 2"></span><span class="st-card__nail" style="--col: 0; --i: 3"></span></span></span></span>
+<div class="st-card__row"><h3 class="st-card__title">Pinky Promise</h3><span class="st-card__price"><span class="price">Rs. 499</span></span></div>
+<span class="st-card__cta"><span class="st-card__cta-text">View set</span> <span class="st-arrow" aria-hidden="true">→</span></span>
+</a></article></li></ul></section>
+<div class="st-footer st-footer--rows"><nav class="st-footer__nav"><ul role="list"><li><a href="#">Shop</a></li><li><a href="#">Our Story</a></li><li><a href="#">the talks</a></li><li><a href="#">Journal</a></li><li><a href="#">Nail Guide</a></li></ul></nav><ul class="st-footer__legal" role="list"><li><a href="#">Contact us</a></li><li><a href="#">Shipping policy</a></li><li><a href="#">Privacy policy</a></li></ul></div>
+</html>

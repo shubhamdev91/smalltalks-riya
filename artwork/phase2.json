@@ -1,0 +1,958 @@
+{
+  "characters": {
+    "on-me": {
+      "file": "characters/on-me.webp",
+      "web": "characters/web/on-me.webp",
+      "width": 308,
+      "height": 629,
+      "bytes": 234360,
+      "web_bytes": 95620,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 76,
+        "mean": 2.308
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "bleed_edges": [
+        "left",
+        "bottom"
+      ],
+      "feather_px": 36,
+      "anchor": {
+        "x": 0.0,
+        "y": 1.0
+      },
+      "anchor_meaning": "pin this point of the image to the matching hero edge/corner; bleed edges sit at or past the canvas edge",
+      "css_width_at_390": 150,
+      "css_width_note": "native 308px => 2x density at ~154 css px; do not exceed 308 css px",
+      "source": "desi-ink-characters-v2.png x17-323"
+    },
+    "brainwave": {
+      "file": "characters/brainwave.webp",
+      "web": "characters/web/brainwave.webp",
+      "width": 303,
+      "height": 631,
+      "bytes": 269034,
+      "web_bytes": 119278,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 86,
+        "mean": 2.91
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "bleed_edges": [
+        "left",
+        "top"
+      ],
+      "feather_px": 36,
+      "anchor": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "anchor_meaning": "pin this point of the image to the matching hero edge/corner; bleed edges sit at or past the canvas edge",
+      "css_width_at_390": 150,
+      "css_width_note": "native 303px => 2x density at ~151 css px; do not exceed 303 css px",
+      "source": "desi-ink-characters-v2.png x338-639"
+    },
+    "diet-cherry": {
+      "file": "characters/diet-cherry.webp",
+      "web": "characters/web/diet-cherry.webp",
+      "width": 281,
+      "height": 625,
+      "bytes": 224014,
+      "web_bytes": 93564,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 85,
+        "mean": 2.496
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "bleed_edges": [
+        "left"
+      ],
+      "feather_px": 36,
+      "anchor": {
+        "x": 0.0,
+        "y": 0.5
+      },
+      "anchor_meaning": "pin this point of the image to the matching hero edge/corner; bleed edges sit at or past the canvas edge",
+      "css_width_at_390": 150,
+      "css_width_note": "native 281px => 2x density at ~140 css px; do not exceed 281 css px",
+      "source": "desi-ink-characters-v2.png x650-929"
+    },
+    "green-flag": {
+      "file": "characters/green-flag.webp",
+      "web": "characters/web/green-flag.webp",
+      "width": 290,
+      "height": 620,
+      "bytes": 224868,
+      "web_bytes": 94654,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 73,
+        "mean": 2.353
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "bleed_edges": [
+        "right"
+      ],
+      "feather_px": 36,
+      "anchor": {
+        "x": 1.0,
+        "y": 0.5
+      },
+      "anchor_meaning": "pin this point of the image to the matching hero edge/corner; bleed edges sit at or past the canvas edge",
+      "css_width_at_390": 150,
+      "css_width_note": "native 290px => 2x density at ~145 css px; do not exceed 290 css px",
+      "source": "desi-ink-characters-v2.png x944-1232"
+    },
+    "shaadi-shift": {
+      "file": "characters/shaadi-shift.webp",
+      "web": "characters/web/shaadi-shift.webp",
+      "width": 281,
+      "height": 622,
+      "bytes": 299214,
+      "web_bytes": 127742,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 104,
+        "mean": 6.734
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "bleed_edges": [
+        "left",
+        "bottom"
+      ],
+      "feather_px": 36,
+      "anchor": {
+        "x": 0.0,
+        "y": 1.0
+      },
+      "anchor_meaning": "pin this point of the image to the matching hero edge/corner; bleed edges sit at or past the canvas edge",
+      "css_width_at_390": 150,
+      "css_width_note": "native 281px => 2x density at ~140 css px; do not exceed 281 css px",
+      "source": "desi-ink-characters-v2.png x1248-1528"
+    },
+    "wild-card": {
+      "file": "characters/wild-card.webp",
+      "web": "characters/web/wild-card.webp",
+      "width": 294,
+      "height": 628,
+      "bytes": 256170,
+      "web_bytes": 115374,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 116,
+        "mean": 3.387
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "bleed_edges": [
+        "left"
+      ],
+      "feather_px": 36,
+      "anchor": {
+        "x": 0.0,
+        "y": 0.5
+      },
+      "anchor_meaning": "pin this point of the image to the matching hero edge/corner; bleed edges sit at or past the canvas edge",
+      "css_width_at_390": 150,
+      "css_width_note": "native 294px => 2x density at ~147 css px; do not exceed 294 css px",
+      "source": "desi-ink-characters-v2.png x1542-1834"
+    },
+    "pinky-promise": {
+      "file": "characters/pinky-promise.webp",
+      "web": "characters/web/pinky-promise.webp",
+      "width": 311,
+      "height": 630,
+      "bytes": 259768,
+      "web_bytes": 107002,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 91,
+        "mean": 2.463
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "bleed_edges": [
+        "left",
+        "top"
+      ],
+      "feather_px": 36,
+      "anchor": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "anchor_meaning": "pin this point of the image to the matching hero edge/corner; bleed edges sit at or past the canvas edge",
+      "css_width_at_390": 150,
+      "css_width_note": "native 311px => 2x density at ~155 css px; do not exceed 311 css px",
+      "source": "desi-ink-characters-v2.png x1845-2155"
+    }
+  },
+  "chapters": {
+    "on-me": {
+      "file": "chapters/on-me.webp",
+      "web": "chapters/web/on-me.webp",
+      "width": 270,
+      "height": 821,
+      "bytes": 279010,
+      "web_bytes": 120090,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 92,
+        "mean": 2.01
+      },
+      "fade_variant": {
+        "file": "chapters/on-me-fade.webp",
+        "web": "chapters/web/on-me-fade.webp",
+        "width": 270,
+        "height": 821,
+        "bytes": 284744,
+        "web_bytes": 118454,
+        "web_quality": 100,
+        "web_within_budget": true,
+        "web_rgb_delta_on_opaque": {
+          "max": 84,
+          "mean": 2.397
+        }
+      },
+      "ground_sampled": "#f4a702",
+      "ground_target": "#ffb900",
+      "ground_delta_rgb": [
+        -11,
+        -18,
+        2
+      ],
+      "ground_match": false,
+      "source": "desi-ink-characters.png x2-272",
+      "resolution_note": "270px wide: 1x at 270 css px, 2x only at <= 135 css px"
+    },
+    "brainwave": {
+      "file": "chapters/brainwave.webp",
+      "web": "chapters/web/brainwave.webp",
+      "width": 269,
+      "height": 821,
+      "bytes": 292068,
+      "web_bytes": 117854,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 73,
+        "mean": 1.904
+      },
+      "fade_variant": {
+        "file": "chapters/brainwave-fade.webp",
+        "web": "chapters/web/brainwave-fade.webp",
+        "width": 269,
+        "height": 821,
+        "bytes": 298496,
+        "web_bytes": 117752,
+        "web_quality": 100,
+        "web_within_budget": true,
+        "web_rgb_delta_on_opaque": {
+          "max": 72,
+          "mean": 2.07
+        }
+      },
+      "ground_sampled": "#003cb4",
+      "ground_target": "#073df1",
+      "ground_delta_rgb": [
+        -7,
+        -1,
+        -61
+      ],
+      "ground_match": false,
+      "source": "desi-ink-characters.png x276-545",
+      "resolution_note": "269px wide: 1x at 269 css px, 2x only at <= 134 css px"
+    },
+    "diet-cherry": {
+      "file": "chapters/diet-cherry.webp",
+      "web": "chapters/web/diet-cherry.webp",
+      "width": 270,
+      "height": 821,
+      "bytes": 268246,
+      "web_bytes": 102790,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 74,
+        "mean": 1.908
+      },
+      "fade_variant": {
+        "file": "chapters/diet-cherry-fade.webp",
+        "web": "chapters/web/diet-cherry-fade.webp",
+        "width": 270,
+        "height": 821,
+        "bytes": 274114,
+        "web_bytes": 102660,
+        "web_quality": 100,
+        "web_within_budget": true,
+        "web_rgb_delta_on_opaque": {
+          "max": 76,
+          "mean": 2.292
+        }
+      },
+      "ground_sampled": "#9b020f",
+      "ground_target": "#e10019",
+      "ground_delta_rgb": [
+        -70,
+        2,
+        -10
+      ],
+      "ground_match": false,
+      "source": "desi-ink-characters.png x549-819",
+      "resolution_note": "270px wide: 1x at 270 css px, 2x only at <= 135 css px"
+    },
+    "green-flag": {
+      "file": "chapters/green-flag.webp",
+      "web": "chapters/web/green-flag.webp",
+      "width": 270,
+      "height": 821,
+      "bytes": 287392,
+      "web_bytes": 117432,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 64,
+        "mean": 1.948
+      },
+      "fade_variant": {
+        "file": "chapters/green-flag-fade.webp",
+        "web": "chapters/web/green-flag-fade.webp",
+        "width": 270,
+        "height": 821,
+        "bytes": 291506,
+        "web_bytes": 117172,
+        "web_quality": 100,
+        "web_within_budget": true,
+        "web_rgb_delta_on_opaque": {
+          "max": 64,
+          "mean": 2.47
+        }
+      },
+      "ground_sampled": "#025132",
+      "ground_target": "#007948",
+      "ground_delta_rgb": [
+        2,
+        -40,
+        -22
+      ],
+      "ground_match": false,
+      "source": "desi-ink-characters.png x823-1093",
+      "resolution_note": "270px wide: 1x at 270 css px, 2x only at <= 135 css px"
+    },
+    "shaadi-shift": {
+      "file": "chapters/shaadi-shift.webp",
+      "web": "chapters/web/shaadi-shift.webp",
+      "width": 270,
+      "height": 821,
+      "bytes": 289724,
+      "web_bytes": 107504,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 80,
+        "mean": 2.652
+      },
+      "fade_variant": {
+        "file": "chapters/shaadi-shift-fade.webp",
+        "web": "chapters/web/shaadi-shift-fade.webp",
+        "width": 270,
+        "height": 821,
+        "bytes": 292642,
+        "web_bytes": 107586,
+        "web_quality": 100,
+        "web_within_budget": true,
+        "web_rgb_delta_on_opaque": {
+          "max": 80,
+          "mean": 3.625
+        }
+      },
+      "ground_sampled": "#ed1368",
+      "ground_target": "#ff0078",
+      "ground_delta_rgb": [
+        -18,
+        19,
+        -16
+      ],
+      "ground_match": false,
+      "source": "desi-ink-characters.png x1097-1367",
+      "resolution_note": "270px wide: 1x at 270 css px, 2x only at <= 135 css px"
+    },
+    "wild-card": {
+      "file": "chapters/wild-card.webp",
+      "web": "chapters/web/wild-card.webp",
+      "width": 269,
+      "height": 821,
+      "bytes": 284404,
+      "web_bytes": 118824,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 105,
+        "mean": 2.067
+      },
+      "fade_variant": {
+        "file": "chapters/wild-card-fade.webp",
+        "web": "chapters/web/wild-card-fade.webp",
+        "width": 269,
+        "height": 821,
+        "bytes": 288882,
+        "web_bytes": 117592,
+        "web_quality": 100,
+        "web_within_budget": true,
+        "web_rgb_delta_on_opaque": {
+          "max": 101,
+          "mean": 2.497
+        }
+      },
+      "ground_sampled": "#b8db02",
+      "ground_target": "#b7ef00",
+      "ground_delta_rgb": [
+        1,
+        -20,
+        2
+      ],
+      "ground_match": false,
+      "source": "desi-ink-characters.png x1371-1640",
+      "resolution_note": "269px wide: 1x at 269 css px, 2x only at <= 134 css px"
+    },
+    "pinky-promise": {
+      "file": "chapters/pinky-promise.webp",
+      "web": "chapters/web/pinky-promise.webp",
+      "width": 270,
+      "height": 821,
+      "bytes": 282296,
+      "web_bytes": 110392,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 56,
+        "mean": 1.747
+      },
+      "fade_variant": {
+        "file": "chapters/pinky-promise-fade.webp",
+        "web": "chapters/web/pinky-promise-fade.webp",
+        "width": 270,
+        "height": 821,
+        "bytes": 287188,
+        "web_bytes": 110128,
+        "web_quality": 100,
+        "web_within_budget": true,
+        "web_rgb_delta_on_opaque": {
+          "max": 57,
+          "mean": 2.049
+        }
+      },
+      "ground_sampled": "#3b1b90",
+      "ground_target": "#6620f2",
+      "ground_delta_rgb": [
+        -43,
+        -5,
+        -98
+      ],
+      "ground_match": false,
+      "source": "desi-ink-characters.png x1644-1914",
+      "resolution_note": "270px wide: 1x at 270 css px, 2x only at <= 135 css px"
+    }
+  },
+  "guide": {
+    "cleaned": {
+      "file": "guide/nail-guide.webp",
+      "web": "guide/web/nail-guide.webp",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 579112,
+      "web_bytes": 184100,
+      "web_quality": 96,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 43,
+        "mean": 1.95
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "note": "alpha cleanup only (despeckle stray red specks, snap 252/253 to 255); as-is copy is nail-guide-asis.webp"
+    },
+    "as_is": {
+      "file": "guide/nail-guide-asis.webp",
+      "web": "guide/web/nail-guide-asis.webp",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 657958,
+      "web_bytes": 187798,
+      "web_quality": 92,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 11,
+        "mean": 2.21
+      }
+    }
+  },
+  "shop_finger_states": {
+    "pinky-promise": {
+      "file": "shop/finger-state-pinky-promise.webp",
+      "web": "shop/web/finger-state-pinky-promise.webp",
+      "width": 248,
+      "height": 658,
+      "bytes": 149074,
+      "web_bytes": 61726,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 28,
+        "mean": 1.489
+      },
+      "tip_anchor": {
+        "x": 0.5,
+        "y": 0.0091,
+        "meaning": "nail tip, same in all seven"
+      }
+    },
+    "on-me": {
+      "file": "shop/finger-state-on-me.webp",
+      "web": "shop/web/finger-state-on-me.webp",
+      "width": 248,
+      "height": 658,
+      "bytes": 149210,
+      "web_bytes": 61340,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 17,
+        "mean": 1.417
+      },
+      "tip_anchor": {
+        "x": 0.5,
+        "y": 0.0091,
+        "meaning": "nail tip, same in all seven"
+      }
+    },
+    "brainwave": {
+      "file": "shop/finger-state-brainwave.webp",
+      "web": "shop/web/finger-state-brainwave.webp",
+      "width": 248,
+      "height": 658,
+      "bytes": 148856,
+      "web_bytes": 62082,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 28,
+        "mean": 1.532
+      },
+      "tip_anchor": {
+        "x": 0.5,
+        "y": 0.0091,
+        "meaning": "nail tip, same in all seven"
+      }
+    },
+    "green-flag": {
+      "file": "shop/finger-state-green-flag.webp",
+      "web": "shop/web/finger-state-green-flag.webp",
+      "width": 248,
+      "height": 658,
+      "bytes": 148364,
+      "web_bytes": 61110,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 21,
+        "mean": 1.423
+      },
+      "tip_anchor": {
+        "x": 0.5,
+        "y": 0.0091,
+        "meaning": "nail tip, same in all seven"
+      }
+    },
+    "shaadi-shift": {
+      "file": "shop/finger-state-shaadi-shift.webp",
+      "web": "shop/web/finger-state-shaadi-shift.webp",
+      "width": 248,
+      "height": 658,
+      "bytes": 151218,
+      "web_bytes": 61964,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 43,
+        "mean": 1.489
+      },
+      "tip_anchor": {
+        "x": 0.5,
+        "y": 0.0091,
+        "meaning": "nail tip, same in all seven"
+      }
+    },
+    "diet-cherry": {
+      "file": "shop/finger-state-diet-cherry.webp",
+      "web": "shop/web/finger-state-diet-cherry.webp",
+      "width": 248,
+      "height": 658,
+      "bytes": 153050,
+      "web_bytes": 65522,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 19,
+        "mean": 1.43
+      },
+      "tip_anchor": {
+        "x": 0.5,
+        "y": 0.0091,
+        "meaning": "nail tip, same in all seven"
+      }
+    },
+    "wild-card": {
+      "file": "shop/finger-state-wild-card.webp",
+      "web": "shop/web/finger-state-wild-card.webp",
+      "width": 248,
+      "height": 658,
+      "bytes": 153634,
+      "web_bytes": 64684,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 37,
+        "mean": 1.699
+      },
+      "tip_anchor": {
+        "x": 0.5,
+        "y": 0.0091,
+        "meaning": "nail tip, same in all seven"
+      }
+    }
+  },
+  "shop_lifestyle": {
+    "on-me": {
+      "file": "shop/lifestyle-on-me.webp",
+      "web": "shop/web/lifestyle-on-me.webp",
+      "width": 571,
+      "height": 679,
+      "bytes": 193966,
+      "web_bytes": 85000,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 90,
+        "mean": 0.79
+      },
+      "columns": [
+        0,
+        2,
+        1,
+        0
+      ]
+    },
+    "brainwave": {
+      "file": "shop/lifestyle-brainwave.webp",
+      "web": "shop/web/lifestyle-brainwave.webp",
+      "width": 571,
+      "height": 679,
+      "bytes": 193814,
+      "web_bytes": 83310,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 137,
+        "mean": 1.179
+      },
+      "columns": [
+        0,
+        1,
+        2,
+        0
+      ]
+    },
+    "diet-cherry": {
+      "file": "shop/lifestyle-diet-cherry.webp",
+      "web": "shop/web/lifestyle-diet-cherry.webp",
+      "width": 571,
+      "height": 679,
+      "bytes": 190884,
+      "web_bytes": 79248,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 66,
+        "mean": 0.773
+      },
+      "columns": [
+        1,
+        0,
+        2,
+        1
+      ]
+    },
+    "green-flag": {
+      "file": "shop/lifestyle-green-flag.webp",
+      "web": "shop/web/lifestyle-green-flag.webp",
+      "width": 571,
+      "height": 679,
+      "bytes": 190826,
+      "web_bytes": 80692,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 78,
+        "mean": 1.028
+      },
+      "columns": [
+        1,
+        0,
+        1,
+        0
+      ]
+    },
+    "shaadi-shift": {
+      "file": "shop/lifestyle-shaadi-shift.webp",
+      "web": "shop/web/lifestyle-shaadi-shift.webp",
+      "width": 571,
+      "height": 679,
+      "bytes": 191514,
+      "web_bytes": 80782,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 74,
+        "mean": 1.092
+      },
+      "columns": [
+        2,
+        1,
+        0,
+        2
+      ]
+    },
+    "wild-card": {
+      "file": "shop/lifestyle-wild-card.webp",
+      "web": "shop/web/lifestyle-wild-card.webp",
+      "width": 571,
+      "height": 679,
+      "bytes": 194240,
+      "web_bytes": 85312,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 101,
+        "mean": 1.131
+      },
+      "columns": [
+        1,
+        2,
+        0,
+        1
+      ]
+    },
+    "pinky-promise": {
+      "file": "shop/lifestyle-pinky-promise.webp",
+      "web": "shop/web/lifestyle-pinky-promise.webp",
+      "width": 571,
+      "height": 679,
+      "bytes": 190866,
+      "web_bytes": 80562,
+      "web_quality": 100,
+      "web_within_budget": true,
+      "web_rgb_delta_on_opaque": {
+        "max": 133,
+        "mean": 0.893
+      },
+      "columns": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "diet_can": {
+    "source": "theme asset assets/desi-diet-can-v1.webp (theme 186649313493), 1189x1323",
+    "brand_check": "FAIL: large legible 'Diet Coke' wordmark (black 'Diet' + red 'Coke' script) across the can",
+    "wordmark_rows": [
+      240,
+      685
+    ],
+    "crop_proposal": {
+      "y_from": 709,
+      "file": "rejected/can-crop-proposal-below-wordmark.webp",
+      "result": "lower can body + hand + 4 nails; no lettering. Loses the can top and the thumb nail."
+    },
+    "status": "not shipped; needs orchestrator/owner decision"
+  },
+  "packaging": {
+    "on-me": {
+      "file": "packaging/on-me.webp",
+      "source": "bill-idhar-approved-package.png",
+      "width": 362,
+      "height": 494,
+      "bytes": 167194,
+      "web": "packaging/web/on-me.webp",
+      "web_bytes": 60342,
+      "web_1_3x": "packaging/web/on-me@1.3x.webp",
+      "web_1_3x_size": [
+        470,
+        642
+      ],
+      "web_1_3x_bytes": 82858,
+      "rim_cleared_px": {
+        "top": 4,
+        "bottom": 1,
+        "left": 1,
+        "right": 0
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "upscale": "1.3x Lanczos (premultiplied) only",
+      "content": "locked; not cropped or retouched (incl. Brainwave 'tha', Diet Cherry box can)"
+    },
+    "brainwave": {
+      "file": "packaging/brainwave.webp",
+      "source": "haan-mera-idea-tha-approved-package.png",
+      "width": 358,
+      "height": 494,
+      "bytes": 186202,
+      "web": "packaging/web/brainwave.webp",
+      "web_bytes": 69770,
+      "web_1_3x": "packaging/web/brainwave@1.3x.webp",
+      "web_1_3x_size": [
+        465,
+        642
+      ],
+      "web_1_3x_bytes": 95656,
+      "rim_cleared_px": {
+        "top": 3,
+        "bottom": 2,
+        "left": 1,
+        "right": 1
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "upscale": "1.3x Lanczos (premultiplied) only",
+      "content": "locked; not cropped or retouched (incl. Brainwave 'tha', Diet Cherry box can)"
+    },
+    "diet-cherry": {
+      "file": "packaging/diet-cherry.webp",
+      "source": "haan-wohi-wali-approved-package.png",
+      "width": 377,
+      "height": 481,
+      "bytes": 179260,
+      "web": "packaging/web/diet-cherry.webp",
+      "web_bytes": 67472,
+      "web_1_3x": "packaging/web/diet-cherry@1.3x.webp",
+      "web_1_3x_size": [
+        490,
+        625
+      ],
+      "web_1_3x_bytes": 91644,
+      "rim_cleared_px": {
+        "top": 3,
+        "bottom": 0,
+        "left": 0,
+        "right": 2
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "upscale": "1.3x Lanczos (premultiplied) only",
+      "content": "locked; not cropped or retouched (incl. Brainwave 'tha', Diet Cherry box can)"
+    },
+    "green-flag": {
+      "file": "packaging/green-flag.webp",
+      "source": "tum-aa-jao-main-dekh-lungi-approved-package.png",
+      "width": 355,
+      "height": 494,
+      "bytes": 162884,
+      "web": "packaging/web/green-flag.webp",
+      "web_bytes": 56076,
+      "web_1_3x": "packaging/web/green-flag@1.3x.webp",
+      "web_1_3x_size": [
+        461,
+        642
+      ],
+      "web_1_3x_bytes": 78300,
+      "rim_cleared_px": {
+        "top": 3,
+        "bottom": 2,
+        "left": 2,
+        "right": 2
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "upscale": "1.3x Lanczos (premultiplied) only",
+      "content": "locked; not cropped or retouched (incl. Brainwave 'tha', Diet Cherry box can)"
+    },
+    "shaadi-shift": {
+      "file": "packaging/shaadi-shift.webp",
+      "source": "dulhan-tu-duty-meri-approved-package.png",
+      "width": 364,
+      "height": 494,
+      "bytes": 180062,
+      "web": "packaging/web/shaadi-shift.webp",
+      "web_bytes": 68740,
+      "web_1_3x": "packaging/web/shaadi-shift@1.3x.webp",
+      "web_1_3x_size": [
+        473,
+        642
+      ],
+      "web_1_3x_bytes": 95368,
+      "rim_cleared_px": {
+        "top": 3,
+        "bottom": 1,
+        "left": 3,
+        "right": 2
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "upscale": "1.3x Lanczos (premultiplied) only",
+      "content": "locked; not cropped or retouched (incl. Brainwave 'tha', Diet Cherry box can)"
+    },
+    "wild-card": {
+      "file": "packaging/wild-card.webp",
+      "source": "achha-tum-pehle-approved-package.png",
+      "width": 372,
+      "height": 481,
+      "bytes": 187600,
+      "web": "packaging/web/wild-card.webp",
+      "web_bytes": 72346,
+      "web_1_3x": "packaging/web/wild-card@1.3x.webp",
+      "web_1_3x_size": [
+        483,
+        625
+      ],
+      "web_1_3x_bytes": 98832,
+      "rim_cleared_px": {
+        "top": 2,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "upscale": "1.3x Lanczos (premultiplied) only",
+      "content": "locked; not cropped or retouched (incl. Brainwave 'tha', Diet Cherry box can)"
+    },
+    "pinky-promise": {
+      "file": "packaging/pinky-promise.webp",
+      "source": "haath-do-main-hoon-approved-package.png",
+      "width": 372,
+      "height": 481,
+      "bytes": 163024,
+      "web": "packaging/web/pinky-promise.webp",
+      "web_bytes": 56618,
+      "web_1_3x": "packaging/web/pinky-promise@1.3x.webp",
+      "web_1_3x_size": [
+        483,
+        625
+      ],
+      "web_1_3x_bytes": 78834,
+      "rim_cleared_px": {
+        "top": 2,
+        "bottom": 0,
+        "left": 2,
+        "right": 4
+      },
+      "rgb_delta_vs_source_on_opaque": 0,
+      "upscale": "1.3x Lanczos (premultiplied) only",
+      "content": "locked; not cropped or retouched (incl. Brainwave 'tha', Diet Cherry box can)"
+    }
+  }
+}

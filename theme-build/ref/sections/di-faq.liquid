@@ -1,0 +1,39 @@
+<section class="di-faq di-wrap"><a class="di-button" href="/collections/all">Shop all sets <span aria-hidden="true">↗</span></a><h2>{{ section.settings.heading | escape }}</h2>{% for block in section.blocks %}<details {{ block.shopify_attributes }}><summary>{{ block.settings.question | escape }}</summary><div>{{ block.settings.answer }}</div></details>{% endfor %}<a href="/pages/help">Need a hand? <span aria-hidden="true">↗</span></a></section>
+{% schema %}
+{
+  "name": "Faq",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FAQs"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Faq"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How do I choose a set?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Explore the colour stories, then open a product to see its design and available options.</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

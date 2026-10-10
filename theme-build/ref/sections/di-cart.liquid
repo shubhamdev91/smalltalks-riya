@@ -1,0 +1,12 @@
+<section class="di-wrap di-cart"><h1>Your bag</h1>{% if cart.empty? %}<p>A little room for your next favourite.</p><a class="di-button" href="/collections/all">Explore the sets <span aria-hidden="true">↗</span></a>{% else %}<p>{{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}</p><form action="{{ routes.cart_url }}" method="post" id="DesiCartForm">{% for item in cart.items %}<div class="di-cart-row"><a href="{{ item.url }}">{{ item.image | image_url: width: 260 | image_tag: loading:'lazy', alt:item.image.alt }}</a><div><h2><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h2>{% unless item.product.has_only_default_variant %}<p>{{ item.variant.title | escape }}</p>{% endunless %}<p>{{ item.final_line_price | money }}</p><label for="Quantity-{{ item.index | plus: 1 }}">Quantity</label><div class="di-quantity" data-quantity><button type="button" data-step="-1" aria-label="{{ 'desi.quantity.decrease' | t }}">−</button><input id="Quantity-{{ item.index | plus: 1 }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0" step="{{ item.variant.quantity_rule.increment | default: 1 }}" inputmode="numeric"><button type="button" data-step="1" aria-label="{{ 'desi.quantity.increase' | t }}">+</button></div><a href="{{ item.url_to_remove }}">Remove</a>{% for allocation in item.line_level_discount_allocations %}<p>{{ allocation.discount_application.title | escape }} (−{{ allocation.amount | money }})</p>{% endfor %}</div></div>{% endfor %}<button type="submit" name="update" class="di-button di-outline">Update bag</button><div class="di-total"><strong>Subtotal</strong><strong>{{ cart.total_price | money }}</strong></div>{% for discount in cart.cart_level_discount_applications %}<p>{{ discount.title | escape }} (−{{ discount.total_allocated_amount | money }})</p>{% endfor %}<p>Shipping and any applicable taxes are calculated at checkout.</p><button type="submit" name="checkout" class="di-button">Checkout <span aria-hidden="true">↗</span></button></form><a href="/collections/all">← Continue shopping</a>{% endif %}<aside><h2>Need a hand?</h2><p>From choosing a set to an order question, we’re here.</p><a href="/pages/help">Help centre <span aria-hidden="true">↗</span></a></aside></section>
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Cart"
+    }
+  ]
+}
+{% endschema %}

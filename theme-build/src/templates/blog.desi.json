@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-journal",
+      "settings": {
+        "note": "The little moments, and the hands in them.",
+        "subheading": "Seven sets. So many stories.",
+        "eyebrow": "04 /"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,48 @@
+@font-face {
+  font-family: 'Fraunces Fallback';
+  src: local('Georgia Bold'), local('Georgia-Bold');
+  size-adjust: 84.24%;
+  ascent-override: 116.09%;
+  descent-override: 30.27%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: 'Caveat Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  size-adjust: 71.86%;
+  ascent-override: 133.60%;
+  descent-override: 41.75%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: 'Barlow Semi Condensed Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  size-adjust: 79.63%;
+  ascent-override: 125.58%;
+  descent-override: 25.12%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: 'Source Serif 4 Fallback';
+  src: local('Georgia Bold'), local('Georgia-Bold');
+  size-adjust: 81.80%;
+  ascent-override: 126.65%;
+  descent-override: 40.95%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: 'Kalam Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 95.00%;
+  ascent-override: 111.89%;
+  descent-override: 55.89%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: 'DM Sans Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 103.72%;
+  ascent-override: 95.64%;
+  descent-override: 29.89%;
+  line-gap-override: 0.00%;
+}

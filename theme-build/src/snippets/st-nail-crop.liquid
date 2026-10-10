@@ -1,0 +1,29 @@
+{% doc %}
+  Single source of truth for where each campaign's artwork sits in the placeholder atlases
+  (Shopify Files: desi-nail-overlays.png 7×2, desi-nail-accents-v2.png 7×1, desi-ink-characters-v2.png 7×1).
+  Prints "x,y,w,h,row,cols,rows": crop box in px relative to the atlas cell, the row, and the grid.
+  Each nail crop ends exactly at the cuticle, so the bottom edge of a nail box is its anchor.
+  Replace the tables when WP1 delivers per-product sprites.
+
+  @param {string} role - 'signature' (nails row 0), 'accent' (nails row 1), 'extra' (accent atlas) or 'character'.
+  @param {number} index - Campaign motion_index, 0–6.
+
+  @example
+  {% capture crop %}{% render 'st-nail-crop', role: 'signature', index: 0 %}{% endcapture %}
+{% enddoc %}
+{%- liquid
+  assign i = index | default: 0 | plus: 0 | at_least: 0 | at_most: 6
+  case role
+    when 'extra'
+      assign xs = '23,14,12,15,12,8,9' | split: ','
+      echo xs[i] | append: ',126,280,496,0,7,1'
+    when 'accent'
+      assign xs = '80,74,69,64,56,51,44' | split: ','
+      echo xs[i] | append: ',13,184,319,1,7,2'
+    when 'character'
+      echo '8,56,294,631,0,7,1'
+    else
+      assign xs = '80,74,69,64,56,51,44' | split: ','
+      echo xs[i] | append: ',28,184,319,0,7,2'
+  endcase
+-%}

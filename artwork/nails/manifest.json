@@ -1,0 +1,207 @@
+{
+  "cell": {
+    "width": 204,
+    "height": 354
+  },
+  "columns": [
+    "signature",
+    "accent",
+    "extra_accent"
+  ],
+  "anchor": {
+    "x": 0.5,
+    "y": 0.925,
+    "meaning": "cuticle point (lowest opaque pixel, horizontal centre of nail bbox) in each cell, normalised to the cell"
+  },
+  "background_size_css": "300% 100%; background-position: 0% / 50% / 100% for columns 0/1/2",
+  "sources": {
+    "signature": "desi-nail-overlays.png row 0",
+    "accent": "desi-nail-overlays.png row 1",
+    "extra_accent": "desi-nail-accents-v2.png, downscaled ~0.6404 (Lanczos, premultiplied) to match signature height"
+  },
+  "note": "All three columns share one scale: nail height 317 px in a 354 px tall cell.",
+  "sets": {
+    "on-me": {
+      "motion_index": 0,
+      "file": "nails/on-me.webp",
+      "bytes": 155642,
+      "encoding": "lossless",
+      "nail_boxes_px": [
+        {
+          "x": 11,
+          "y": 10,
+          "w": 182,
+          "h": 317
+        },
+        {
+          "x": 10,
+          "y": 9,
+          "w": 185,
+          "h": 318
+        },
+        {
+          "x": 17,
+          "y": 10,
+          "w": 170,
+          "h": 317
+        }
+      ]
+    },
+    "brainwave": {
+      "motion_index": 1,
+      "file": "nails/brainwave.webp",
+      "bytes": 136058,
+      "encoding": "lossless",
+      "nail_boxes_px": [
+        {
+          "x": 10,
+          "y": 10,
+          "w": 184,
+          "h": 317
+        },
+        {
+          "x": 9,
+          "y": 9,
+          "w": 186,
+          "h": 318
+        },
+        {
+          "x": 15,
+          "y": 10,
+          "w": 174,
+          "h": 317
+        }
+      ]
+    },
+    "diet-cherry": {
+      "motion_index": 2,
+      "file": "nails/diet-cherry.webp",
+      "bytes": 126518,
+      "encoding": "lossless",
+      "nail_boxes_px": [
+        {
+          "x": 11,
+          "y": 10,
+          "w": 183,
+          "h": 317
+        },
+        {
+          "x": 9,
+          "y": 10,
+          "w": 186,
+          "h": 317
+        },
+        {
+          "x": 16,
+          "y": 10,
+          "w": 172,
+          "h": 317
+        }
+      ]
+    },
+    "green-flag": {
+      "motion_index": 3,
+      "file": "nails/green-flag.webp",
+      "bytes": 125802,
+      "encoding": "lossless",
+      "nail_boxes_px": [
+        {
+          "x": 10,
+          "y": 10,
+          "w": 184,
+          "h": 317
+        },
+        {
+          "x": 9,
+          "y": 9,
+          "w": 186,
+          "h": 318
+        },
+        {
+          "x": 15,
+          "y": 10,
+          "w": 174,
+          "h": 317
+        }
+      ]
+    },
+    "shaadi-shift": {
+      "motion_index": 4,
+      "file": "nails/shaadi-shift.webp",
+      "bytes": 117928,
+      "encoding": "lossless",
+      "nail_boxes_px": [
+        {
+          "x": 10,
+          "y": 10,
+          "w": 185,
+          "h": 317
+        },
+        {
+          "x": 9,
+          "y": 9,
+          "w": 186,
+          "h": 318
+        },
+        {
+          "x": 17,
+          "y": 10,
+          "w": 170,
+          "h": 317
+        }
+      ]
+    },
+    "wild-card": {
+      "motion_index": 5,
+      "file": "nails/wild-card.webp",
+      "bytes": 123558,
+      "encoding": "lossless",
+      "nail_boxes_px": [
+        {
+          "x": 10,
+          "y": 10,
+          "w": 185,
+          "h": 317
+        },
+        {
+          "x": 10,
+          "y": 9,
+          "w": 185,
+          "h": 318
+        },
+        {
+          "x": 15,
+          "y": 10,
+          "w": 175,
+          "h": 317
+        }
+      ]
+    },
+    "pinky-promise": {
+      "motion_index": 6,
+      "file": "nails/pinky-promise.webp",
+      "bytes": 121632,
+      "encoding": "lossless",
+      "nail_boxes_px": [
+        {
+          "x": 11,
+          "y": 10,
+          "w": 183,
+          "h": 317
+        },
+        {
+          "x": 9,
+          "y": 9,
+          "w": 187,
+          "h": 318
+        },
+        {
+          "x": 16,
+          "y": 10,
+          "w": 172,
+          "h": 317
+        }
+      ]
+    }
+  }
+}

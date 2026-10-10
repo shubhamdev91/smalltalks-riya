@@ -1,0 +1,27 @@
+{% assign c = product.metafields.small_talk.campaign.value %}{% assign v = product.selected_or_first_available_variant %}
+<section class="di-wrap di-pdp" data-di-product><div class="di-gallery-column" data-product-gallery><div class="di-product-gallery" data-gallery-track>{% for media in product.media %}{% assign image_loading = 'lazy' %}{% if forloop.first %}{% assign image_loading = 'eager' %}{% endif %}<div id="Media-{{ media.id }}"{% if forloop.first and c != blank and media.media_type == 'image' %} class="di-native-composite" style="--scene:{{ c.background.value }};--nails:url('{{ c.nail_art.value | image_url: width: 1800 }}')"{% endif %}>{% if media.media_type == 'image' %}{{ media | image_url: width: 1200 | image_tag: loading: image_loading, widths:'360,540,720,960,1200', alt: media.alt }}{% if forloop.first and c != blank %}<span class="di-native-nails" aria-hidden="true">{% render 'di-nail',index:c.motion_index.value,row:0 %}{% render 'di-nail',index:c.motion_index.value,row:2 %}{% render 'di-nail',index:c.motion_index.value,row:1 %}</span>{% endif %}{% else %}{{ media | media_tag: controls: true, preload: 'none' }}{% endif %}</div>{% endfor %}</div>
+<nav class="di-media-thumbnails" aria-label="Product media">{% for media in product.media %}<a href="#Media-{{ media.id }}" aria-label="View media {{ forloop.index }}">{{ media.preview_image | image_url: width:120 | image_tag: loading:'lazy', alt:'' }}</a>{% endfor %}</nav></div><div class="di-pdp-info"><div class="di-title-price"><h1>{{ product.title | escape }}</h1><strong data-product-price{% if v.price <= 0 %} hidden{% endif %}>{{ v.price | money }}</strong></div><p>{{ c.short_description.value | escape }}</p><a href="/pages/nail-guide">Find your fit <span aria-hidden="true">↗</span></a>
+{% form 'product',product,id:'DesiProductForm' %}{{ form.errors | default_errors }}
+{% if product.has_only_default_variant %}<input type="hidden" name="id" value="{{ v.id }}">{% else %}<label for="DesiVariant">Choose your option</label><select id="DesiVariant" name="id" data-product-variant>{% for variant in product.variants %}{% capture variant_button_label %}{% if variant.price <= 0 %}Coming soon{% elsif variant.available %}Add to bag · {{ variant.price | money }}{% else %}Sold out{% endif %}{% endcapture %}<option value="{{ variant.id }}" data-price="{{ variant.price | money | escape }}" data-show-price="{% if variant.price > 0 %}true{% else %}false{% endif %}" data-enabled="{% if variant.available and variant.price > 0 %}true{% else %}false{% endif %}" data-label="{{ variant_button_label | strip | escape }}" data-min="{{ variant.quantity_rule.min | default: 1 }}" data-step="{{ variant.quantity_rule.increment | default: 1 }}"{% if variant.quantity_rule.max %} data-max="{{ variant.quantity_rule.max }}"{% endif %} {% if variant.id == v.id %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>{{ variant.title | escape }} — {{ variant.price | money }}{% unless variant.available %} — Sold out{% endunless %}</option>{% endfor %}</select>{% endif %}
+<div class="di-buy"><label for="DesiQuantity" class="visually-hidden">Quantity</label><div class="di-quantity" data-quantity><button type="button" data-step="-1" aria-label="{{ 'desi.quantity.decrease' | t }}">−</button><input id="DesiQuantity" type="number" name="quantity" min="{{ v.quantity_rule.min | default: 1 }}" step="{{ v.quantity_rule.increment | default: 1 }}" value="{{ v.quantity_rule.min | default: 1 }}"{% if v.quantity_rule.max %} max="{{ v.quantity_rule.max }}"{% endif %} inputmode="numeric"><button type="button" data-step="1" aria-label="{{ 'desi.quantity.increase' | t }}">+</button></div><button type="submit" class="di-button" name="add" data-product-submit {% unless v.available %}disabled{% endunless %} {% if v.price <= 0 %}disabled{% endif %}>{% if v.price <= 0 %}Coming soon{% elsif v.available %}Add to bag · {{ v.price | money }}{% else %}Sold out{% endif %}</button></div><p class="di-form-status" role="status"></p>{% endform %}
+<p><a href="/pages/help">Delivery & returns</a> <span aria-hidden="true"> · </span> <a href="/pages/help">Need a hand?</a></p>
+{% assign fields = 'kit_contents,fit_guide,application,removal,care,material' | split: ',' %}{% assign labels = 'What’s in the kit,Fit & sizing,Application,Removal,Care & reuse,Material' | split: ',' %}{% for key in fields %}{% if product.metafields.small_talk[key] != blank %}<details><summary>{{ labels[forloop.index0] }}</summary><div>{{ product.metafields.small_talk[key] | metafield_tag }}</div></details>{% endif %}{% endfor %}
+{% if c.story.value != blank %}<details open><summary>The story: {{ c.headline.value | escape }}</summary><p>{{ c.story.value | escape }}</p>{% if c.journal.value != blank %}<a href="{{ c.journal.value.url }}">Read the story <span aria-hidden="true">↗</span></a>{% endif %}</details>{% endif %}
+{% for block in section.blocks %}{% case block.type %}{% when '@app' %}{% render block %}{% endcase %}{% endfor %}</div></section>
+<script type="application/ld+json">{{ product | structured_data }}</script>
+{% schema %}
+{
+  "name": "Product",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Product"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

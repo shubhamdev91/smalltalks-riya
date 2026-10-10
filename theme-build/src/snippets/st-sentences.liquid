@@ -1,0 +1,21 @@
+{% doc %}
+  Prints short copy so lines break between sentences ("Tum aa jao. / Main dekh lungi.") rather than mid-sentence:
+  each sentence is an inline-block span (whole when it fits, wrapping inside itself only when it can't), joined by
+  ordinary spaces. Escapes the text.
+
+  @param {string} text - One or more sentences ending in ". ".
+
+  @example
+  <span class="st-jcard__headline">{% render 'st-sentences', text: 'Tum aa jao. Main dekh lungi.' %}</span>
+{% enddoc %}
+{%- assign parts = text | escape | split: '. ' -%}
+{%- for part in parts -%}
+  <span class="st-sent">{{ part }}{% unless forloop.last %}.{% endunless %}</span>{% unless forloop.last %} {% endunless %}
+{%- endfor -%}
+{% stylesheet %}
+  /* A sentence stays whole when it fits and wraps inside its own box when it doesn't (narrow phones). */
+  .st-sent {
+    display: inline-block;
+    max-width: 100%;
+  }
+{% endstylesheet %}

@@ -1,0 +1,3443 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Landing lab</title>
+<style>/* Small Talk board tokens
+   Sampled from the boards: 2.jpg (hero states), 5.jpg (shop/PDP/bag/guide), 9-14 (owner close-ups).
+   All sizes are CSS px at a 390 px-wide viewport. Scale with clamp(), e.g. size * (100vw / 390), and cap at the desktop max.
+   Board images are low resolution (a hero frame is ~271 board px wide), so hex values are medians and accurate to about ±6 per channel.
+   Retired: the blue/ink/plum chrome system. Don't reintroduce it. */
+
+:root {
+  /* ---------- chrome (landing and hero boards) ---------- */
+  --st-paper: #fdfdfc;            /* header and page paper (board 2 header #fdfdfc, board 5 page #fefdfd) */
+  --st-logo-blue: #1412d5;        /* 9.93:1 */        /* stacked "small talk" logo, board 2 (median of 7 frames: #1412d5) */
+  --st-talks-ink: #0d0b10;        /* thin black handwritten "the talks" in the header */
+  --st-header-h: 69px;            /* board 2: 48 board px -> 69 px at 390. Logo ~84x56, centred at x 35% */
+  --st-icon-ink: var(--st-logo-blue); /* hamburger and bag outline */
+
+  /* ---------- shop / PDP / bag / journal / help boards (board 5) ---------- */
+  --st-burgundy: #820622;         /* 10.32:1 on paper */
+  /* burgundy samples, serif headings: "Pick your plot twist.", "Find your fit.", "On Me" (#830623 / #800621 / #7f0521) */
+  --st-red: #a31a33;              /* 7.49:1 on paper */              /* sans subheads, product names in the grid, step numbers (#a31a33 / #a91232) */
+  --st-pill: #920324;             /* filled pills and buttons: All sets, Add to bag, Checkout (#920324 / #940326 / #8d0223) */
+  --st-pill-ink: #ffffff;         /* 9.29:1 on --st-pill */
+  --st-chip-bg: #fcfcfd;          /* unselected chip: white with a 1 px #d9d9de outline */
+  --st-chip-line: #d9d9de;
+  --st-hand-blue: #3653c7;        /* 6.41:1 paper, 5.38:1 on --st-panel-pink */        /* blue handwriting: annotations, PDP quote, guide sub, bag sub (#3655c7 / #2e4ac7 / #3a55c8 / #3f58cb) */
+  --st-price: #0b0b2e;            /* prices: near-black navy (#050642 sampled on JPEG text, rendered darker). 18.7:1 on paper */
+  --st-body: #6e7184;             /* body grey (#86899b sampled, darkened toward the stroke core). 4.73:1 on paper: passes 4.5 on paper only; on cream or panels use --st-muted-text */
+  --st-muted: #9698ab;            /* NON-TEXT ONLY (dividers, icons, disabled outlines): 2.80:1 on paper fails text contrast */
+  --st-muted-text: #6a6d85;       /* accessibility override for footer links, helper text, captions: 4.98 paper / 4.72 cream / 4.74 panel */
+  --st-placeholder: #6a6d85;      /* the board placeholder #b0b0bd is 2.14:1; placeholders are text, so use the passing grey */
+  --st-outline-red: #c22e38;      /* board outline-pill text #ce3e46 is 4.44:1 on cream; nudged to 5.22 cream / 5.61 white */
+  --st-panel: #f8f7f7;            /* "Need a hand?" panel */
+  --st-panel-pink: #fee2ed;       /* bag "Nails for every plot twist." panel */
+  --st-shopify-blue: #0164fd;     /* checkout only (Shopify, reference) */
+
+  /* ---------- hero scenes (board 2): radial glow per set ----------
+     background: radial-gradient(circle at X Y, inner 0, mid R*0.55, outer R*1.25)
+     Centre is % of the scene below the header; R is px at 390. Sampled with spec/tools/herocolors.py. */
+  --hero-on-me:         radial-gradient(circle at 46% 34%, #fcc01d 0, #f5a908 99px, #e18e05 225px);
+  --hero-brainwave:     radial-gradient(circle at 52% 28%, #0958f4 0, #0444d9 132px, #032cb8 300px);
+  --hero-diet-cherry:   radial-gradient(circle at 35% 33%, #d41614 0, #b70a09 132px, #780303 300px);
+  --hero-green-flag:    radial-gradient(circle at 43% 38%, #0d7b4e 0, #04673c 176px, #034727 400px);
+  --hero-shaadi-shift:  radial-gradient(circle at 49% 40%, #fa357f 0, #f61d6d 176px, #df0a4d 400px);
+  --hero-wild-card:     radial-gradient(circle at 51% 34%, #d2fb23 0, #b4f50a 88px, #94e004 200px);
+  --hero-pinky-promise: radial-gradient(circle at 38% 32%, #792ffb 0, #621dec 132px, #4812c8 300px);
+  /* Flat fallbacks are the metaobject backgrounds: #ffb900 #073df1 #e10019 #007948 #ff0078 #b7ef00 #6620f2.
+     Board mid-tones are darker than the metaobjects (e.g. diet-cherry #b70a09 vs #e10019); the boards win per owner directive. */
+
+  /* hero ink per set: headline + note colour, pill style.
+     Contrast (text on ground): on-me ink 9.54, brainwave white 7.41, diet-cherry white 6.86, green white 6.98,
+     shaadi ink 4.80, wild navy 13.09, pinky white 7.23. Pill ink on white: brainwave 10.77, diet-cherry 5.25,
+     green 5.97, wild 10.69, pinky 5.24; white on on-me pill 8.62, shaadi pill 8.69. Chapter pill red #cc2f36 on white 5.21.
+     Landing: white on shaadi #f30b5e = 4.18, so only large text there (notes, headlines >= 24px; product name at 24px, not 22). */
+  --ink-on-me: #180e0b;          --pill-on-me: #9c0219;          --pill-ink-on-me: #ffffff;  /* filled burgundy pill */
+  --ink-brainwave: #ffffff;      --pill-brainwave: #ffffff;      --pill-ink-brainwave: #0f0bcd;
+  --ink-diet-cherry: #ffffff;    --pill-diet-cherry: #ffffff;    --pill-ink-diet-cherry: #d6171a;
+  --ink-green-flag: #ffffff;     --pill-green-flag: #ffffff;     --pill-ink-green-flag: #107247;
+  --ink-shaadi-shift: #180e0b;   --pill-shaadi-shift: #9b021a;   --pill-ink-shaadi-shift: #ffffff;
+  --ink-wild-card: #0f0b5c;      --pill-wild-card: #ffffff;      --pill-ink-wild-card: #0f0cce;
+  --ink-pinky-promise: #ffffff;  --pill-pinky-promise: #ffffff;  --pill-ink-pinky-promise: #d6181b;
+
+  /* ---------- type ----------
+     Fonts are OFL. Files and licences are in spec/fonts/<family>/; comparison sheets are in spec/type/compare-<role>.png.
+     IoU = text-mask overlap with the board crop after fitting height and width (single-line roles only).
+     Scores are low across the board because the board text is AI-rendered and JPEG-soft; the visual check decided where scores were close. */
+
+  /* Hero headline. PICK: Fraunces 900, SOFT 100, WONK 1, opsz 144. Arc IoU 0.412.
+     Runners-up: Corben Bold 0.358; Caprasimo 0.349 (rounder, less contrast); Fraunces SOFT50 0.354.
+     Set on an arc (radius ~380 px at 390, convex up) and rotated -3deg. Arc-set with SVG textPath, or per-line
+     transform:rotate as a fallback. Must stay real text (accessibility minimum). */
+  --font-headline: "Fraunces", Georgia, serif;
+  --fv-headline: "wght" 900, "SOFT" 100, "WONK" 1, "opsz" 144;
+  --fs-headline: 86px;  --ls-headline: -0.06em;  --lh-headline: 0.92;
+
+  /* Hero note. PICK: Caveat 700 (slanted felt-tip, same letter shapes as the board's "I've got this.").
+     Runners-up: Kalam Regular (upright, too wide); Caveat Brush (too heavy).
+     Rotated -10deg; two lines when long. */
+  --font-note: "Caveat", "Segoe Print", cursive;
+  --fw-note: 700;  --fs-note: 46px;  --lh-note: 0.95;  --rot-note: -10deg;
+
+  /* Hero pill and section pills. PICK: Barlow Semi Condensed SemiBold. IoU 0.243.
+     Runners-up: IBM Plex Sans Condensed Medium 0.235; Roboto Condensed 500 0.229. */
+  --font-pill: "Barlow Semi Condensed", "Arial Narrow", sans-serif;
+  --fw-pill: 600;  --fs-pill: 30px;  /* hero pill; section "Shop set" pills ~17px */
+
+  /* Header "the talks". PICK: Caveat 600 (thin slanted pen once sized to 30px). IoU 0.362.
+     Runners-up: Caveat 500 0.356; Nanum Pen Script 0.302 (too heavy).
+     Board ink is black #0d0b10; shop boards render it red #b92542, but the owner keeps the landing header everywhere. */
+  --font-talks: "Caveat", cursive;
+  --fw-talks: 600;  --fs-talks: 34px;  --ls-talks: -0.02em;
+
+  /* Shop, PDP, bag and guide headings. PICK: Source Serif 4 Bold, opsz 60. IoU 0.548.
+     Runners-up: Abril Fatface 0.528 (closest contrast, but its fat-face 'y' and 'f' read wrong); DM Serif Display 0.458. */
+  --font-shop-heading: "Source Serif 4", Georgia, serif;
+  --fv-shop-heading: "wght" 700, "opsz" 60;
+  --fs-shop-h1: 52px; --ls-shop-h1: -0.02em; --lh-shop-h1: 0.95;  /* "Pick your plot twist." two lines; ~40px on the guide */
+  --fs-shop-h2: 34px;                                            /* PDP title "On Me", "Your bag", "Subtotal" 18px */
+
+  /* Blue annotations. PICK: Kalam Light (neat thin print hand).
+     Runners-up: Patrick Hand (upright); Caveat 400 (too cursive). Rotate -4deg; open tracking +0.1em. */
+  --font-annotation: "Kalam", "Segoe Print", cursive;
+  --fw-annotation: 300;  --fs-annotation: 19px;  --ls-annotation: 0.08em;
+
+  /* UI subheads (red) and body. PICK: DM Sans 600 / 400. Subhead IoU 0.557.
+     Runners-up: IBM Plex Sans Condensed SemiBold 0.460; Barlow Semi Condensed SemiBold 0.365. */
+  --font-ui: "DM Sans", system-ui, sans-serif;
+  --fs-ui-sub: 20px;  --fw-ui-sub: 600;
+  --fs-ui-body: 16px; --fw-ui-body: 400;  --lh-ui-body: 1.35;
+
+  /* ---------- shared geometry ---------- */
+  --st-radius-pill: 999px;
+  --st-touch-min: 44px;           /* accessibility minimum; overrides the board where smaller */
+  --st-hero-pill-h: 62px;   --st-hero-pill-inset: 35px;   /* board 2: x 9%-93%, 62 px tall */
+  --st-ctrl-d: 52px;              /* pause + tone circles, white fill, 4 px white ring on the tone swatch */
+}
+
+
+
+/* Landing additions (landing.md), orchestrator round 2. Contrast on cream #fdf6e9: */
+:root {
+  --st-cream: #fdf6e9;          /* landing cream ground; --st-muted-text 4.72, --st-body 4.48 FAILS 4.5 on cream: use --st-muted-text */
+  --st-landing-red: #bc0a1e;    /* 6.10:1 on cream */
+  --st-navy: #14168f;           /* 12.68:1 on cream */
+  --st-bubble: #e3e0fe;         /* bubble text #3b3ba8 = 6.88:1 */
+  --st-beeline-red: #c23a2c;    /* non-text */
+}
+
+
+/* Stacked logo "small / talk" (orchestrator round 3). Sheet: spec/type/compare-logo.png
+   Fitted to the board 2 header crop at 390 (word "small" matched to the board width, "talk" centred under it, baselines from the board).
+   IoU vs board, with scaleY 1.16 / without:
+     Source Serif 4 Black opsz60   0.684 / 0.632   <- PICK (the same family as the shop headings, already a spec font)
+     Abril Fatface                 0.644 / 0.600
+     Fraunces 900 opsz144 SOFT0    0.629 / 0.571   (shipped static instance)
+     DM Serif Display (current)    0.601 / 0.537   (too light and too wide-bowled)
+     Young Serif                   0.494
+   The board letters are ~16% taller than any OFL heavy serif at the matching width (an AI-drawn condensed wordmark).
+   Optional: transform: scaleY(1.16) on the logo text (still real text, accessible). Without it, use the unscaled values. */
+:root {
+  --font-logo: "Source Serif 4", Georgia, serif;
+  --fv-logo: "wght" 900, "opsz" 60;
+  --fs-logo: 38.5px;          /* at 390; header logo box 81 x 59 px, top y 6, centred at x 136 */
+  --ls-logo: -0.04em;
+  --lh-logo: 0.67;            /* baseline-to-baseline 25.8 px */
+  --logo-talk-indent: 9.5px;  /* "talk" starts 9.5 px right of "small"'s left edge (= both lines centred, centre shift -1.6 px) */
+  --logo-scale-y: 1.16;       /* optional board-match stretch; set to 1 to disable */
+  --logo-color: var(--st-logo-blue);
+}
+
+/* Chapter headlines (landing chapters, round 4: st-fable fit). The hero stays --fv-headline (900 / SOFT 100). */
+:root {
+  --fv-chapter-headline: "wght" 700, "SOFT" 50, "WONK" 1, "opsz" 144;
+  --ls-chapter-headline: -0.03em;
+  --ws-chapter-headline: 0.18em;
+  --fs-chapter-headline: 60px;  /* 58-64 at 390 */
+}
+
+/* Shop product tiles (board 5), round 5. Median of the tile-ground ring (4-10 px inside each tile edge),
+   tools: inline sampler, data spec/shop-tiles.json. These are brighter than the hero mid-tones; use these on shop/bag/PDP tiles only. */
+:root {
+  --st-tile-on-me:         #fcb939;
+  --st-tile-brainwave:     #0165f8;
+  --st-tile-green-flag:    #068a43;
+  --st-tile-shaadi-shift:  #fc2f94;
+  --st-tile-diet-cherry:   #fd1e36;
+  --st-tile-wild-card:     #d9e326;
+  --st-tile-pinky-promise: #045af1;  /* board shows a cobalt ground (the box art's blue bleeds to the tile edge). Flagged: campaign Pinky is violet #6620f2 */
+}
+
+/* Card names + PDP title (round 6). Sheets: spec/type/compare-card-name.png, compare-card-name-onme.png, compare-pdp-title.png
+   Card name (shop/bag cards) is a bold condensed SANS, not serif. IoU Brainwave / On Me:
+     IBM Plex Sans Condensed Bold  0.782 / 0.580  <- PICK (best average 0.68)
+     DM Sans 800 (shipped)         0.657 / 0.656  runner-up (0.66); acceptable if we don't want another family
+     Barlow Semi Condensed Bold    0.787 / 0.414  (wins the long word, fails short words: too narrow and open)
+     Source Serif 4 Black          0.530 / 0.628  (serif: wrong)
+   PDP title stays a heavy SERIF (bracketed serifs visible on "M" at 2x). IoU: DM Sans 800 0.749, Fraunces 900 0.658,
+   Source Serif 4 Black 0.626, Abril 0.616. Picked Source Serif 4 Black visually: the sans scores higher only because the
+   board crop is blurred and blob-like; its letterforms (no serifs, geometric O) are wrong. */
+:root {
+  --font-card-name: "IBM Plex Sans Condensed", "Barlow Semi Condensed", system-ui, sans-serif;
+  --fw-card-name: 700; --fs-card-name: 21px; --ls-card-name: 0;
+  --font-pdp-title: "Source Serif 4", Georgia, serif;
+  --fv-pdp-title: "wght" 900, "opsz" 60; --fs-pdp-title: 50px; --ls-pdp-title: 0;
+}
+
+/* Prices (round 7, st-fable PDP acceptance): shop, PDP, bag. Board PDP "599" is 41x18 px; Plex Condensed 700 at 25 px gives 40.5x18. */
+:root {
+  --font-price: "IBM Plex Sans Condensed", system-ui, sans-serif;
+  --fw-price: 700;
+  --fs-price-pdp: 25px;
+  --fs-price-card: 17px;   /* shop cards, as built */
+  --fs-price-bag: 17px;
+  --fs-bag-subtotal: 24px;  /* label + amount, navy #14163b, Plex Condensed 700 */
+  --color-price: var(--st-price);
+}
+
+/* Journal card image grounds (board 4, round 9). Sampled by st-foundation, independently re-checked by st-boardspec (within +/-4 per channel).
+   Median of each card image's ground ring, 4-10 px inside the image edge (crop journal@390.png, x 18-188). The shop keeps --st-tile-*. */
+:root {
+  --st-journal-on-me:         #fcc92a;
+  --st-journal-brainwave:     #0452e5;
+  --st-journal-green-flag:    #105908;  /* ring is mostly leaves on this card */
+  --st-journal-shaadi-shift:  #fa5987;
+  --st-journal-diet-cherry:   #cb0419;
+  --st-journal-wild-card:     #d6d306;
+  --st-journal-pinky-promise: #ca89f4;  /* lilac (not the shop cobalt) */
+  --st-journal-featured-tint: 22%;      /* featured card bg = color-mix(in srgb, var(--st-journal-<set>) 22%, #fff); On Me ~ #fff3cf */
+}
+
+/* the talks hub tagline "a little less filtered." (round 10). Sheet: spec/type/compare-talks-tagline.png.
+   File: spec/fonts/sourceserif4/SourceSerif4-Italic[opsz,wght].ttf (OFL, same OFL.txt). IoU: 400/opsz20 0.330 (pick),
+   600/opsz32 0.318, 600/opsz20 0.316, 500/opsz20 0.315. Board stroke is regular weight, not bold. */
+:root {
+  --font-talks-tagline: "Source Serif 4", Georgia, serif;   /* font-style: italic; the true italic file, not a slanted roman */
+  --fv-talks-tagline: "wght" 400, "opsz" 20;
+  --fs-talks-tagline: 28px;
+  --ls-talks-tagline: -0.01em;
+  --color-talks-tagline: #c0142f;
+}
+
+/* Landing chapter product name highlight (spec/name-highlight.md). Ink on stroke >= 6.96:1 measured on every glyph pixel.
+   Ink on bare dark grounds fails (1.4-2.3) - the name must always render with its ::before stroke. */
+:root {
+  --name-hl-on-me:#ffe59a;        --name-ink-on-me:#470100;
+  --name-hl-brainwave:#dfe7ff;    --name-ink-brainwave:#0a2a9e;
+  --name-hl-diet-cherry:#ffd6d0;  --name-ink-diet-cherry:#7a0010;
+  --name-hl-green-flag:#cdeedb;   --name-ink-green-flag:#013a1d;
+  --name-hl-shaadi-shift:#ffd3e3; --name-ink-shaadi-shift:#8e0016;
+  --name-hl-wild-card:#f2ffbf;    --name-ink-wild-card:#0f0b5c;
+  --name-hl-pinky-promise:#e4d6ff;--name-ink-pinky-promise:#5e0412;
+  --fs-chapter-name: 26px; --fw-chapter-name: 700;
+}
+
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('/theme-build/fonts/out/st-fraunces-900.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* Chapter headlines (board 3 is lighter than the hero): static wght 700 / SOFT 50 / WONK 1 / opsz 144. */
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('/theme-build/fonts/out/st-fraunces-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Caveat';
+    src: url('/theme-build/fonts/out/st-caveat.woff2') format('woff2');
+    font-weight: 500 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Barlow Semi Condensed';
+    src: url('/theme-build/fonts/out/st-barlow-sc-600.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* the landing chapter set name (spec/name-highlight.md, --fw-chapter-name): the true Bold (OFL, same family files;
+     112-glyph Latin subset incl. the curly quotes). Loads only where it is used. */
+  @font-face {
+    font-family: 'Barlow Semi Condensed';
+    src: url('/theme-build/fonts/out/st-barlow-sc-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('/theme-build/fonts/out/st-source-serif-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* the talks hub sub (board serif): Source Serif 4 roman 500 at opsz 24 (OFL; 206-glyph Latin subset). */
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('/theme-build/fonts/out/st-source-serif-500.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* the talks tagline (tokens round 10, --font-talks-tagline): the true italic, static wght 400 / opsz 20 (OFL; 206-glyph
+     Latin subset). Loads only where it is used. */
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('/theme-build/fonts/out/st-source-serif-italic-400.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+  /* Wordmark only (tokens --font-logo: Source Serif 4 Black, opsz 60): glyphs of "small talk". */
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('/theme-build/fonts/out/st-source-serif-logo-900.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+20, U+41, U+4B-4D, U+53-54, U+61, U+6B-6D, U+73-74;
+  }
+  /* Card names and card prices (shop, bag): IBM Plex Sans Condensed Bold, round 6 (OFL; 206-glyph Latin subset). */
+  @font-face {
+    font-family: 'IBM Plex Sans Condensed';
+    src: url('/theme-build/fonts/out/st-plex-cond-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* Board-5 page headings ("Pick your plot twist."): the board ink is Black opsz 60, not the spec's 700. Its own family
+     so the wordmark subset above stays the only 900 file on other pages. */
+  @font-face {
+    font-family: 'Source Serif 4 Black';
+    src: url('/theme-build/fonts/out/st-source-serif-900.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kalam';
+    src: url('/theme-build/fonts/out/st-kalam-300.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'DM Sans';
+    src: url('/theme-build/fonts/out/st-dm-sans.woff2') format('woff2');
+    font-weight: 400 800; /* 700/800 for the Journal names and labels (board 4) */
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Metric-matched fallbacks (hhea metrics; width matched on each role's register strings). */
+  @font-face {
+    font-family: 'Fraunces Fallback';
+    src: local('Georgia Bold'), local('Georgia-Bold');
+    size-adjust: 84.24%;
+    ascent-override: 116.09%;
+    descent-override: 30.27%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Caveat Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 71.86%;
+    ascent-override: 133.6%;
+    descent-override: 41.75%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Barlow Semi Condensed Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 79.63%;
+    ascent-override: 125.58%;
+    descent-override: 25.12%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Source Serif 4 Fallback';
+    src: local('Georgia Bold'), local('Georgia-Bold');
+    size-adjust: 81.8%;
+    ascent-override: 126.65%;
+    descent-override: 40.95%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'IBM Plex Sans Condensed Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT');
+    size-adjust: 89.91%;
+    ascent-override: 114.0%;
+    descent-override: 30.59%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'Kalam Fallback';
+    src: local('Arial'), local('ArialMT');
+    size-adjust: 95%;
+    ascent-override: 111.89%;
+    descent-override: 55.89%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: 'DM Sans Fallback';
+    src: local('Arial'), local('ArialMT');
+    size-adjust: 103.72%;
+    ascent-override: 95.64%;
+    descent-override: 29.89%;
+    line-gap-override: 0%;
+  }
+
+  :root {
+    --font-headline: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
+    --font-note: 'Caveat', 'Caveat Fallback', 'DM Sans', 'Segoe Print', cursive;
+    --font-pill: 'Barlow Semi Condensed', 'Barlow Semi Condensed Fallback', 'DM Sans', 'Arial Narrow', sans-serif;
+    --font-talks: 'Caveat', 'Caveat Fallback', 'DM Sans', cursive;
+    --font-shop-heading: 'Source Serif 4', 'Source Serif 4 Fallback', Georgia, serif;
+    --font-shop-display: 'Source Serif 4 Black', 'Source Serif 4 Fallback', Georgia, serif;
+    /* tokens.css --font-pdp-title is Source Serif 4 at wght 900; here that weight is the full 'Source Serif 4 Black' face. */
+    --font-pdp-title: 'Source Serif 4 Black', 'Source Serif 4 Fallback', Georgia, serif;
+    --font-card-name: 'IBM Plex Sans Condensed', 'IBM Plex Sans Condensed Fallback', 'Barlow Semi Condensed', system-ui, sans-serif;
+    --font-price: 'IBM Plex Sans Condensed', 'IBM Plex Sans Condensed Fallback', system-ui, sans-serif;
+    --font-annotation: 'Kalam', 'Kalam Fallback', 'DM Sans', 'Segoe Print', cursive;
+    --font-ui: 'DM Sans', 'DM Sans Fallback', system-ui, sans-serif;
+  }
+
+* { box-sizing: border-box; } body { margin: 0; background: var(--st-paper); }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style><style>/* Small Talk landing (board 3), st-foundation. Spec: spec/landing.md, spec/joins.json, spec/tokens.css.
+   Every landing section scales uniformly with width: 1 board px = var(--k) = 100cqw / 390 (capped on wide screens,
+   where the composition centres on a full-width ground). Each section clips its own top edge with the spec curve
+   (mask) and overlaps the section above by that curve's height; the lower section paints on top. The dashed beeline
+   is one SVG per section, entering at (x_in, 0) and leaving at (x_out, h), with the dash phase carried across joins.
+   Section custom properties (set inline from snippets/st-landing-join): --h (height at 390, own cap included),
+   --c (own curve height), --nc (next section's curve height), --edge (mask image of the cap). */
+
+.st-land-section {
+  container-type: inline-size;
+}
+
+.st-land {
+  --k: min(calc(100cqw / 390), 1.4px);
+  --c: 0;
+  --nc: 0;
+
+  position: relative;
+  height: calc((var(--h) + var(--nc)) * var(--k));
+  margin-block-start: calc(var(--c) * var(--k) * -1);
+  overflow: hidden;
+  background: var(--st-land-ground, var(--st-cream));
+  color: var(--st-land-ink, var(--st-talks-ink));
+}
+
+/* Hero load plan (CONTRACT v3.7.1): sections after the tiles skip rendering until near the viewport, so their art and
+   nail sheets don't compete with the hero. Each section already clips to its own box (overflow: hidden + the edge mask)
+   and has an explicit height, so paint/size containment change nothing visible; flow sections (auto height) are left out. */
+.st-land:not([data-land='tiles']):not(.st-land--flow) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto calc((var(--h) + var(--nc)) * var(--k));
+}
+
+.st-land[style*='--edge'] {
+  -webkit-mask:
+    var(--edge) top / 100% calc(var(--c) * var(--k)) no-repeat,
+    linear-gradient(#000 0 0) bottom / 100% calc(100% - var(--c) * var(--k) + 1px) no-repeat;
+  mask:
+    var(--edge) top / 100% calc(var(--c) * var(--k)) no-repeat,
+    linear-gradient(#000 0 0) bottom / 100% calc(100% - var(--c) * var(--k) + 1px) no-repeat;
+}
+
+.st-land__inner {
+  position: relative;
+  width: calc(390 * var(--k));
+  height: 100%;
+  margin-inline: auto;
+}
+
+/* Board coordinates: x/y/w in board px, relative to the section origin (top of its own cap). */
+.st-land__at {
+  position: absolute;
+  left: calc(var(--x, 0) * var(--k));
+  top: calc(var(--y, 0) * var(--k));
+  width: calc(var(--w, 390) * var(--k));
+}
+
+/* Beeline: above the ground, below art and text. */
+.st-land__beeline {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--h) * var(--k));
+  overflow: visible;
+  pointer-events: none;
+}
+
+.st-land__beeline path {
+  fill: none;
+  stroke-dasharray: 9 5.5;
+  stroke-linecap: butt;
+}
+
+.st-land__beeline--colour path {
+  stroke: #fff;
+  stroke-opacity: 0.9;
+  stroke-width: 2.5;
+}
+
+.st-land__beeline--cream path {
+  stroke: var(--st-beeline-red);
+  stroke-width: 2;
+}
+
+.st-land__art {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.st-land__art img {
+  display: block;
+  width: 100%;
+  max-width: none; /* Horizon base.css caps img at 100%, which shrank art wider than its clip box */
+  height: auto;
+}
+
+.st-land__text {
+  position: relative;
+  z-index: 3;
+}
+
+/* Sparkle ticks: 2–3 strokes, 2.5 px, round caps, set ink. */
+.st-land__ticks {
+  position: absolute;
+  z-index: 3;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.st-land__ticks path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* ---------- chapter (board 3 chapter pattern) ---------- */
+/* One screen per chapter (owner, 10 Oct; st-fable's rules, qa/fidelity/OWNER-LANDING-CHANGE-1.md): the chapter's own
+   height is one screen below the sticky header, or its content minimum where that is taller (small screens run
+   taller, nothing is cut): --cmin = the pill's bottom (board px) + 20 px, --cmin2 = room for the bottom art below the
+   nail row and the beeline's fixed parts (both from snippets/st-landing-join). The text stack hangs from the top, the
+   art from the bottom (it may sit behind the nails, name and pill); the next section's cap still overlaps by --nc.
+   On wide screens (desktop layout, k up to 1.4 px) the screen is capped at 900 px and the text stack is centred in it
+   (--dy). svh only: it already allows for Safari's toolbars. */
+.st-land.st-ch {
+  --fit: calc(100svh - var(--st-header-h, 69px));
+  --dy: 0px;
+  --hmin: max(
+    calc(var(--cmin, 0) * var(--k) + 20px + 2 * var(--dy)),
+    calc(var(--cmin2, 0) * var(--k) + max(0px, 44px - 46 * var(--k)) + var(--dy))
+  ); /* the pill term: where its 44 px minimum makes it taller than its board 46 (below ~373 px wide) */
+  /* Tall screens (st-fable): the chapter stops at its composed maximum (--cmax: the art's top 24 px under the pill),
+     so no empty band opens between pill and art; it is then shorter than the screen, and the next join starts sooner. */
+  --hc: clamp(var(--hmin), var(--fit), max(var(--hmin), calc(var(--cmax, 9999) * var(--k))));
+
+  height: calc(var(--hc) + var(--nc) * var(--k));
+}
+
+.st-land.st-ch:not(.st-land--flow) {
+  contain-intrinsic-size: auto calc(var(--hc) + var(--nc) * var(--k));
+}
+
+@supports not (height: 100svh) {
+  .st-land.st-ch {
+    --fit: calc(var(--h) * var(--k));
+  }
+}
+
+/* >= 990 (st-fable's fix 2): one section unit for every landing section, from the width and the height (--kt), so a
+   chapter fits under the 76 px header the way it does on a phone and every join stays seamless. 990-1023 uses it for
+   the whole chapter; from 1024 the chapters keep it for their joins only (below). */
+@media screen and (min-width: 990px) {
+  .st-land {
+    --kt: min(calc(100cqw / 390), 1.4px, calc((100svh - var(--st-header-h, 76px)) / var(--st-comp, 623)));
+    --k: var(--kt);
+  }
+
+  .st-land.st-ch {
+    --fit: min(100svh - var(--st-header-h, 76px), 900px);
+  }
+}
+
+/* The beeline spans the chapter's live height; sections/st-chapter.liquid's script re-assembles its path for it. */
+.st-ch .st-land__beeline {
+  height: var(--hc);
+}
+
+.st-ch {
+  --st-land-ground: radial-gradient(
+    circle calc(var(--r, 900) * var(--k)) at var(--gx) var(--gy),
+    var(--g1) 0,
+    var(--g2) 45%,
+    var(--g3) 100%
+  );
+  --st-land-ink: var(--ink, #fff);
+}
+
+/* Campaign body (owner, 10 Oct): half its board size with a 16 px floor, centred over the slogan (--note-cx = the
+   slogan's centre), its board tilt kept, 12 px of ink above the slogan. It hangs from its bottom (--note-b), so where
+   the floor applies it grows upward and the gap holds. Values: the generated block (tools/build_landing.py). */
+.st-ch__note {
+  position: absolute;
+  z-index: 3;
+  margin: 0;
+  left: calc(var(--note-cx, 195) * var(--k));
+  top: calc(var(--note-b) * var(--k) + var(--dy, 0px));
+  width: max-content;
+  translate: -50% -100%;
+  font-family: var(--font-note);
+  font-weight: 500; /* board 3 notes read lighter than the hero's 700 */
+  font-size: max(16px, calc(var(--note-fs, 16) * var(--k)));
+  line-height: var(--note-lh, 1); /* board-measured baseline pitch (landing.md ink geometry), as a ratio */
+  color: var(--ink);
+  text-align: center;
+  rotate: var(--note-rot, -8deg);
+  white-space: nowrap; /* lines break where the note has explicit breaks */
+}
+
+.st-ch__note--one {
+  width: auto;
+  white-space: nowrap;
+}
+
+.st-ch__headline {
+  position: absolute;
+  z-index: 3;
+  margin: 0;
+  left: calc(var(--head-dx, 0) * var(--k));
+  top: calc(var(--head-y) * var(--k) + var(--dy, 0px));
+  width: 100%;
+  color: var(--ink);
+  line-height: 0;
+}
+
+.st-ch__headline svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.st-arc {
+  font-family: var(--font-headline);
+  font-weight: 700; /* chapter face: static Fraunces 700 / SOFT 50 / WONK 1 / opsz 144 (st-fonts); the hero keeps 900 */
+  font-variation-settings: var(--fv-chapter-headline);
+  letter-spacing: var(--ls-chapter-headline, -0.03em);
+  word-spacing: var(--ws-chapter-headline, 0.18em);
+  fill: currentColor;
+}
+
+.st-ch__nails {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--nails-x, 12.5) * var(--k)); /* the row stays centred at its scale */
+  top: calc(var(--nails-y) * var(--k) + var(--dy, 0px));
+  display: flex;
+  gap: calc((3 - 8 * var(--nail-s, 1)) * var(--k)); /* cells overlap in their transparent margins; visible plates 3 px apart */
+}
+
+/* HD nail sheets (st-hd-nails-<set>, plates 0.846 of the cell vs P1 0.895): the cell is drawn x1.058 about its cuticle
+   (50%, 92.5%) on ::before (insets -5.365% / -2.9% / -0.435%), so plates keep their accepted width and bases stay put. */
+.st-ch__nail {
+  position: relative;
+  display: block;
+  width: calc(77 * var(--nail-s, 1) * var(--k));
+  aspect-ratio: 204 / 354;
+}
+
+.st-ch__nail::before {
+  content: '';
+  position: absolute;
+  inset: -5.365% -2.9% -0.435%;
+  background: var(--st-nails) calc(var(--col, 0) * 50%) 0 / 300% 100% no-repeat;
+}
+
+/* The set name is the chapter's focal point (owner, 10 Oct; spec/name-highlight.md, st-fable's changes): between the
+   nail row and the pill, Barlow Semi Condensed 700 at clamp(22px, 6.7vw, 29px) (26 at 390), on one line, in curly
+   quotes (aria-hidden spans: the name reads "Diet Cherry"). The <p> itself is the highlighter's box (ink + 0.20 em /
+   0.38 em), centred; >= 10 px of ink to the nail row above and the pill below. */
+.st-ch__name {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: calc(var(--name-y) * var(--k) + var(--dy, 0px));
+  width: max-content;
+  margin: 0;
+  padding: 0.2em 0.38em;
+  translate: -50% 0;
+  isolation: isolate;
+  font-family: var(--font-pill);
+  font-weight: var(--fw-chapter-name, 700);
+  font-size: clamp(22px, 6.7vw, 29px);
+  line-height: 1.1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+/* Highlighter swipe (approved, all seven): ground < soft flash (::after, dark grounds only) < marker stroke (::before)
+   < text, in the set's light hue (--name-hl) with its deep ink (--name-ink, >= 6.96:1 on every glyph pixel). The deep
+   ink fails on the bare dark grounds, so it is only ever set together with the stroke. */
+.st-ch--name-hl .st-ch__name {
+  color: var(--name-ink);
+}
+
+.st-ch--name-hl .st-ch__name::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: var(--name-hl);
+  clip-path: polygon(3% 10%, 99% 0%, 97% 92%, 0% 100%); /* uneven, angled marker ends: not a box */
+  transform: rotate(-1.5deg);
+  filter: blur(0.4px);
+}
+
+.st-ch--name-hl .st-ch__name::after {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  inset: -60% -20%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--name-hl) 55%, transparent) 0%,
+    color-mix(in srgb, var(--name-hl) 28%, transparent) 40%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* The two caption chapters close on one row (st-fable): the pill on the left, the caption to its right on the pill's
+   centre line (--cap-y is that line). On Me's right ink edge mirrors the pill's 18 px margin whatever size the clamp
+   gives, so it is right-aligned (its box ends at 369: the script's ink overhangs by ~3). */
+.st-ch:is([data-land='on-me'], [data-land='pinky-promise']) .st-ch__caption {
+  translate: 0 -50%;
+}
+
+.st-ch[data-land='on-me'] .st-ch__caption {
+  font-size: clamp(22px, 6.4vw, 28px);
+  text-align: right;
+}
+
+/* Light grounds: the marker alone (st-fable: the flash adds nothing there and hazes the art). */
+.st-ch--name-hl:is([data-land='wild-card'], [data-land='on-me']) .st-ch__name::after {
+  content: none;
+}
+
+@media (forced-colors: active) {
+  .st-ch__name {
+    color: CanvasText;
+  }
+}
+
+.st-ch__pill {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--pill-x) * var(--k));
+  top: calc(var(--pill-y) * var(--k) + var(--dy, 0px));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--k));
+  min-width: calc(var(--pill-w, 180) * var(--k));
+  height: max(44px, calc(46 * var(--k)));
+  padding-inline: calc(22 * var(--k));
+  box-sizing: border-box;
+  border-radius: var(--st-radius-pill);
+  background: #fff;
+  color: var(--pill-ink, #cc2f36);
+  font-family: var(--font-pill);
+  font-weight: var(--fw-pill);
+  font-size: calc(20 * var(--k));
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.st-ch__pill .st-arrow {
+  font-family: var(--font-ui);
+  font-size: 1.05em;
+}
+
+.st-ch__pill:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.st-ch__caption {
+  position: absolute;
+  z-index: 3;
+  margin: 0;
+  left: calc(var(--cap-x) * var(--k));
+  top: calc(var(--cap-y) * var(--k) + var(--dy, 0px)); /* unset where the caption hangs from the bottom */
+  bottom: calc(var(--cap-b) * var(--k)); /* with the art (Pinky Promise) */
+  width: calc(var(--cap-w) * var(--k));
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: calc(var(--cap-fs, 26) * var(--k));
+  line-height: 1;
+  color: var(--ink);
+  rotate: var(--cap-rot, -4deg);
+  text-wrap: balance;
+}
+
+/* Per set colours (spec/landing.md section table; inks and pill inks per tokens.css notes). */
+.st-ch[data-land='diet-cherry'] {
+  --g1: #ea071e; --g2: #d40319; --g3: #bb030f; --gx: 49%; --gy: 40%;
+  --ink: #fff; --pill-ink: #cc2f36;
+  --name-hl: var(--name-hl-diet-cherry); --name-ink: var(--name-ink-diet-cherry);
+}
+
+.st-ch[data-land='brainwave'] {
+  --g1: #044ff5; --g2: #033bd6; --g3: #032ebd; --gx: 55%; --gy: 37%;
+  --ink: #fff; --pill-ink: #0f0bcd;
+  --name-hl: var(--name-hl-brainwave); --name-ink: var(--name-ink-brainwave);
+}
+
+.st-ch[data-land='green-flag'] {
+  --g1: #097d4e; --g2: #046f41; --g3: #035b35; --gx: 53%; --gy: 27%;
+  --ink: #fff; --pill-ink: #0f0bcd;
+  --name-hl: var(--name-hl-green-flag); --name-ink: var(--name-ink-green-flag);
+}
+
+.st-ch[data-land='shaadi-shift'] {
+  --g1: #f91366; --g2: #f30b5e; --g3: #df0747; --gx: 54%; --gy: 37%;
+  --ink: #fff; --pill-ink: #cc2f36;
+  --name-hl: var(--name-hl-shaadi-shift); --name-ink: var(--name-ink-shaadi-shift);
+}
+
+.st-ch[data-land='on-me'] {
+  --g1: #fbc526; --g2: #fbbe10; --g3: #f5ac06; --gx: 48%; --gy: 26%;
+  --ink: #180e0b; --pill-ink: #cc2f36;
+  --name-hl: var(--name-hl-on-me); --name-ink: var(--name-ink-on-me);
+}
+
+.st-ch[data-land='wild-card'] {
+  --g1: #bff02b; --g2: #aee60d; --g3: #a2de04; --gx: 62%; --gy: 47%;
+  --ink: #000602; --pill-ink: #cc2f36;
+  --name-hl: var(--name-hl-wild-card); --name-ink: var(--name-ink-wild-card);
+}
+
+.st-ch[data-land='pinky-promise'] {
+  --g1: #701ffc; --g2: #6919f9; --g3: #5a10e9; --gx: 46%; --gy: 15%;
+  --ink: #fff; --pill-ink: #cc2f36;
+  --name-hl: var(--name-hl-pinky-promise); --name-ink: var(--name-ink-pinky-promise);
+}
+
+/* BEGIN generated chapter positions (tools/build_landing.py from lab/params.json; fitted to spec/landing.md boxes) */
+/* >= 990: the shared section unit (--kt) also follows the height, sized by the tallest chapter minimum. */
+.st-land {
+  --st-comp: 623;
+}
+
+.st-ch[data-land='diet-cherry'] {
+  --note-cx: 207.5; --note-b: 66; --note-rot: -5deg; --note-fs: 20.7; --note-lh: 0.9681;
+  --head-y: 71.7; --head-dx: 12.5; --nails-x: 33.7; --nails-y: 209.2; --nail-s: 0.88;
+  --name-y: 329.8; --pill-x: 118; --pill-y: 381; --pill-w: 154;
+  --ctop: 29; --cspan: 398;
+  --gw: 478;
+}
+
+.st-ch[data-land='brainwave'] {
+  --note-cx: 224.5; --note-b: 181; --note-rot: -5.5deg; --note-fs: 16.6; --note-lh: 1.3881;
+  --head-y: 172; --head-dx: 17.5; --nails-x: 33.7; --nails-y: 310; --nail-s: 0.88;
+  --name-y: 429.6; --pill-x: 105; --pill-y: 480.7; --pill-w: 190;
+  --ctop: 136; --cspan: 390.7;
+  --gw: 708;
+}
+
+.st-ch[data-land='green-flag'] {
+  --note-cx: 210.5; --note-b: 68; --note-rot: -1deg; --note-fs: 20.3; --note-lh: 1.0322;
+  --head-y: 70.2; --head-dx: 15.5; --nails-x: 33.7; --nails-y: 194.2; --nail-s: 0.88;
+  --name-y: 314.8; --pill-x: 105; --pill-y: 366; --pill-w: 180;
+  --ctop: 26; --cspan: 386;
+}
+
+.st-ch[data-land='shaadi-shift'] {
+  --note-cx: 210.5; --note-b: 45; --note-rot: -2.5deg; --note-fs: 18.3; --note-lh: 1.0391;
+  --head-y: 49; --head-dx: 15.5; --nails-x: 33.7; --nails-y: 185; --nail-s: 0.88;
+  --name-y: 305.6; --pill-x: 140; --pill-y: 355.6; --pill-w: 182;
+  --ctop: 29; --cspan: 372.6;
+  --gw: 470;
+}
+
+.st-ch[data-land='on-me'] {
+  --note-cx: 207; --note-b: 67; --note-rot: -5.5deg; --note-fs: 18.3; --note-lh: 1.0653;
+  --head-y: 71.1; --head-dx: 12; --nails-x: 33.7; --nails-y: 177.6; --nail-s: 0.88;
+  --name-y: 295.2; --pill-x: 18; --pill-y: 351.3; --pill-w: 160;
+  --ctop: 34; --cspan: 365;
+  --gw: 494;
+  --cap-x: 209; --cap-y: 374.3; --cap-w: 160; --cap-rot: -3deg; --cap-fs: 25;
+}
+
+.st-ch[data-land='wild-card'] {
+  --note-cx: 224.5; --note-b: 59; --note-rot: -4.5deg; --note-fs: 16.6; --note-lh: 1.1425;
+  --head-y: 66.1; --head-dx: 29.5; --nails-x: 33.7; --nails-y: 193.1; --nail-s: 0.88;
+  --name-y: 312.7; --pill-x: 145; --pill-y: 362.8; --pill-w: 175;
+  --ctop: 35; --cspan: 373.8;
+  --gw: 672;
+}
+
+.st-ch[data-land='pinky-promise'] {
+  --note-cx: 213.5; --note-b: 43; --note-rot: -1deg; --note-fs: 17.6; --note-lh: 1.0823;
+  --head-y: 48.4; --head-dx: 18.5; --nails-x: 33.7; --nails-y: 174.9; --nail-s: 0.88;
+  --name-y: 295.5; --pill-x: 18; --pill-y: 365.6; --pill-w: 160;
+  --ctop: 26; --cspan: 417;
+  --gw: 700;
+  --cap-x: 207; --cap-y: 388.6; --cap-w: 150; --cap-rot: -12deg; --cap-fs: 28;
+}
+/* END generated chapter positions */
+
+@media (prefers-reduced-motion: reduce) {
+  .st-ch__pill {
+    transition: none;
+  }
+}
+
+/* ---------- cream sections: tiles, teasers, shop all + FAQ (board 3, spec/landing.md) ---------- */
+.st-land--cream {
+  --st-land-ground: var(--st-cream);
+}
+
+.st-land__box {
+  position: absolute;
+  z-index: 3;
+  margin: 0;
+  left: calc(var(--x) * var(--k));
+  top: calc(var(--y) * var(--k));
+  width: calc(var(--w) * var(--k));
+}
+
+.st-land__hand {
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: calc(var(--fs, 30) * var(--k));
+  line-height: 1.05;
+  color: var(--st-talks-ink);
+  text-align: center;
+  rotate: var(--rot, 0deg);
+}
+
+.st-land__card {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  left: calc(var(--x) * var(--k));
+  top: calc(var(--y) * var(--k));
+  width: calc(var(--w) * var(--k));
+  height: calc(var(--hh) * var(--k));
+  border-radius: calc(10 * var(--k));
+  background: var(--card-bg, #f3e5d3);
+}
+
+.st-land__card img {
+  position: absolute;
+  left: calc(var(--ix, 0) * var(--k));
+  top: calc(var(--iy, 0) * var(--k));
+  width: calc(var(--iw, 180) * var(--k));
+  max-width: none;
+  height: auto;
+}
+
+.st-land__tile-link {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--x) * var(--k));
+  top: calc(var(--y) * var(--k));
+  display: inline-flex;
+  align-items: center;
+  gap: calc(8 * var(--k));
+  min-height: 44px;
+  font-family: var(--font-pill);
+  font-weight: var(--fw-pill);
+  font-size: calc(24 * var(--k)); /* spec 21 px; the board's labels measure 24 */
+  color: #c6292d;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Cards are links too (whole card), with the label as their visible name. */
+.st-land__card-link {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+}
+
+.st-land__pill {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--x) * var(--k));
+  top: calc(var(--y) * var(--k));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--k));
+  width: calc(var(--w) * var(--k));
+  height: max(44px, calc(var(--ph, 52) * var(--k)));
+  box-sizing: border-box;
+  border-radius: var(--st-radius-pill);
+  font-family: var(--font-pill);
+  font-weight: var(--fw-pill);
+  font-size: calc(var(--fs, 22) * var(--k));
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.st-land__pill--outline {
+  border: calc(2 * var(--k)) solid var(--st-outline-red);
+  color: var(--st-outline-red);
+  background: transparent;
+}
+
+.st-land__pill--filled {
+  background: var(--pill-bg, var(--st-landing-red));
+  color: #fff;
+}
+
+.st-land__pill .st-arrow,
+.st-land__tile-link .st-arrow {
+  font-family: var(--font-ui);
+  font-size: 1.05em;
+}
+
+/* the talks teaser */
+.st-talks__heading {
+  font-family: var(--font-talks);
+  font-weight: 600;
+  font-size: calc(66 * var(--k));
+  line-height: 1;
+  color: #0b0603;
+  text-align: center;
+}
+
+.st-talks__sub {
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: calc(30 * var(--k));
+  line-height: 1;
+  text-align: center;
+  color: #0b0603;
+}
+
+.st-talks__label {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: calc(17 * var(--k));
+  color: #1b1d91;
+}
+
+.st-talks__avatar {
+  position: absolute;
+  z-index: 3;
+  left: calc(20 * var(--k));
+  top: calc(var(--y) * var(--k));
+  width: calc(80 * var(--k));
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #f3e5d3;
+}
+
+.st-talks__avatar img {
+  position: absolute;
+  left: calc(var(--ix) * var(--k));
+  top: calc(var(--iy) * var(--k));
+  width: calc(var(--iw) * var(--k));
+  max-width: none;
+  height: auto;
+}
+
+.st-talks__bubble {
+  padding: calc(12 * var(--k)) calc(16 * var(--k));
+  box-sizing: border-box;
+  border-radius: calc(16 * var(--k));
+  background: var(--st-bubble);
+  font-family: var(--font-ui);
+  font-size: calc(18 * var(--k));
+  line-height: 1.3;
+  color: #3b3ba8;
+}
+
+.st-talks__alias {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: calc(15 * var(--k));
+  color: #000;
+}
+
+/* Nail Guide teaser */
+.st-guide__eyebrow {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: calc(19 * var(--k));
+  color: #b0121f;
+}
+
+.st-guide__heading {
+  font-family: var(--font-shop-heading);
+  font-variation-settings: var(--fv-shop-heading);
+  font-weight: 700;
+  font-size: calc(50 * var(--k));
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: #b00818;
+  white-space: nowrap;
+}
+
+/* Shop all + FAQ */
+.st-faq2__heading {
+  font-family: var(--font-shop-heading);
+  font-weight: 700;
+  font-size: calc(30 * var(--k));
+  line-height: 1.1;
+  color: #0d0e87;
+}
+
+.st-faq2__list {
+  border-block-end: 1px solid #c9c9d6;
+  padding-block-end: calc(18 * var(--k));
+}
+
+/* Divider as an inset shadow so it takes no space: rows pitch at the 44 px touch minimum (board ~41). */
+.st-faq2__item {
+  box-shadow: inset 0 -1px #e4e2ec;
+}
+
+.st-faq2__item:last-child {
+  box-shadow: none;
+}
+
+.st-faq2__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(12 * var(--k));
+  min-height: max(44px, calc(40 * var(--k)));
+  padding-block: 0; /* Horizon's summary adds 0.7rem */
+  font-family: var(--font-ui);
+  font-size: calc(19 * var(--k));
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--st-navy);
+  list-style: none;
+  cursor: pointer;
+}
+
+.st-faq2__q::-webkit-details-marker {
+  display: none;
+}
+
+.st-faq2__plus {
+  position: relative;
+  flex: none;
+  width: calc(16 * var(--k));
+  height: calc(16 * var(--k));
+}
+
+.st-faq2__plus::before,
+.st-faq2__plus::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto;
+  height: 2px;
+  background: var(--st-navy);
+  translate: 0 -50%;
+}
+
+.st-faq2__plus::after {
+  rotate: 90deg;
+}
+
+.st-faq2__item[open] .st-faq2__plus::after {
+  rotate: 0deg;
+}
+
+.st-faq2__a {
+  padding-block-end: calc(12 * var(--k));
+  font-family: var(--font-ui);
+  font-size: calc(16 * var(--k));
+  line-height: 1.4;
+  color: var(--st-muted-text);
+}
+
+.st-faq2__a > :first-child {
+  margin-block-start: 0;
+}
+
+.st-faq2__a > :last-child {
+  margin-block-end: 0;
+}
+
+.st-tiles__nail {
+  position: absolute;
+  width: calc(58 * var(--k));
+  aspect-ratio: 204 / 354;
+  transform-origin: 50% 50%;
+}
+
+/* Hero load plan (v3.7.1): the collage's 7 sheets wait until the hero tone (LCP) has loaded; st-gallery adds
+   .is-ready (fallback: window load or 4 s; <noscript> resolves it at once). Backgrounds only, so nothing shifts. */
+/* v3.7.2: the Our Vision tile is held the same way (src set by st-gallery's script) and fades in once loaded. */
+.st-tiles__held {
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+}
+
+.st-tiles__held.is-shown {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-tiles__held {
+    transition: none;
+  }
+}
+
+.st-tiles__collage.is-ready .st-tiles__nail {
+  --st-nails: var(--st-nails-src);
+}
+
+.st-tiles__collage .st-tiles__nail::before {
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+}
+
+.st-tiles__collage.is-ready .st-tiles__nail::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-tiles__collage .st-tiles__nail::before {
+    transition: none;
+  }
+}
+
+.st-tiles__nail::before {
+  content: '';
+  position: absolute;
+  inset: -5.365% -2.9% -0.435%;
+  background: var(--st-nails) calc(var(--col, 0) * 50%) 0 / 300% 100% no-repeat;
+}
+
+
+/* Shop all + FAQ flows (answers expand), so this section grows with its content instead of a fixed height. */
+.st-land--flow {
+  /* The board's last section also holds the footer, which is its own Shopify section here: this one ends at the rule. */
+  height: auto;
+  min-height: 0;
+}
+
+.st-land--flow .st-land__inner {
+  height: auto;
+}
+
+.st-faq2 {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 0;
+  padding: calc((var(--c) + 19) * var(--k)) calc(30 * var(--k)) calc(8 * var(--k));
+}
+
+.st-faq2 .st-faq2__shop {
+  position: static;
+  justify-self: center;
+  margin-block-end: calc(28 * var(--k)); /* review 2: pill -> "FAQs" ~28 px */
+}
+
+.st-faq2 .st-faq2__heading {
+  margin: 0 0 calc(4 * var(--k)); /* "FAQs" top -> first row ~42 px */
+  line-height: 1;
+}
+
+/* Tiles: each tile is one link (card + label). */
+.st-tiles__tile {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--x) * var(--k));
+  top: calc(var(--y) * var(--k));
+  width: calc(var(--w) * var(--k));
+  height: calc(305 * var(--k));
+  text-decoration: none;
+}
+
+.st-tiles__tile .st-land__card {
+  --x: 0;
+  --y: 0;
+}
+
+.st-tiles__label {
+  position: absolute;
+  left: calc(var(--lx, 20) * var(--k));
+  top: calc(265 * var(--k));
+  display: inline-flex;
+  align-items: center;
+  gap: calc(8 * var(--k));
+  min-height: 44px;
+  font-family: var(--font-pill);
+  font-weight: var(--fw-pill);
+  font-size: calc(24 * var(--k)); /* spec 21 px; the board's labels measure 24 */
+  color: #c6292d;
+  white-space: nowrap;
+}
+
+.st-tiles__label .st-arrow {
+  font-family: var(--font-ui);
+  font-size: 1.05em;
+}
+
+.st-tiles__tile:focus-visible {
+  outline: 2px solid #c6292d;
+  outline-offset: 4px;
+  border-radius: calc(10 * var(--k));
+}
+
+.st-talks__more {
+  position: absolute;
+  z-index: 3;
+  left: calc(300 * var(--k));
+  top: calc(343 * var(--k));
+  display: grid;
+  place-items: center;
+  width: calc(50 * var(--k));
+  height: calc(24 * var(--k));
+  border-radius: var(--st-radius-pill);
+  background: var(--st-bubble);
+  font-family: var(--font-ui);
+  font-size: calc(14 * var(--k));
+  letter-spacing: 0.08em;
+  color: #000;
+}
+
+.st-faq2__help {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-ui);
+  font-size: calc(16 * var(--k));
+  color: var(--st-navy);
+}
+
+/* Sparkle ticks after a note's last word (board 3: On Me, Wild Card), radiating up-right; they rotate with the note. */
+.st-ch__note-ticks {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-inline-start: 0.12em;
+  vertical-align: 0.15em;
+  overflow: visible;
+}
+
+.st-ch__note-ticks path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---------- the talks teaser: a slice of the real board (STORE-DESKTOP-SPEC v1.1 §1a, owner 10 Oct) ----------
+   Flow layout in board px x --k (the section's own unit, as every landing section), inside its fixed board height
+   (--h from snippets/st-landing-join). Every type rule is scoped to this section with its own family, size and colour,
+   so no base heading or paragraph style can take over. Desktop: the >= 1024 block further down. */
+.st-land[data-land='talks-teaser'] .st-tt {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc((var(--c) + 14) * var(--k)) calc(20 * var(--k)) 0;
+  text-align: center;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__h {
+  margin: 0;
+  color: #0b0603;
+  font-family: var(--font-talks);
+  font-weight: 600;
+  font-size: calc(66 * var(--k));
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__hl {
+  margin: calc(6 * var(--k)) 0 0;
+  color: #0b0603;
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: calc(30 * var(--k));
+  line-height: 1.05;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__sup {
+  max-width: calc(310 * var(--k));
+  margin: calc(10 * var(--k)) 0 0;
+  color: #5d5562; /* 6.6 : 1 on the cream */
+  font-family: var(--font-ui);
+  font-weight: 400;
+  font-size: calc(15 * var(--k));
+  line-height: 1.45;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__board {
+  align-self: stretch;
+  margin: calc(22 * var(--k)) calc(2 * var(--k)) 0;
+  padding: calc(16 * var(--k)) calc(14 * var(--k)) calc(6 * var(--k));
+  border-radius: calc(22 * var(--k));
+  background: #fff;
+  box-shadow: 0 1px 0 #efe6d8, 0 14px 30px -18px rgb(60 30 10 / 0.35);
+  rotate: -1.2deg;
+  text-align: start;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__chips ul {
+  display: flex;
+  gap: calc(8 * var(--k));
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 calc(14 * var(--k));
+  border-radius: var(--st-radius-pill, 999px);
+  background: #fdf0f0;
+  color: #a31a33; /* 6.9 : 1 */
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: calc(14 * var(--k));
+  line-height: 1;
+  text-decoration: none;
+  text-transform: lowercase; /* LND-064: lowercase here only; the topic data stays as written */
+  white-space: nowrap;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__label {
+  margin: calc(14 * var(--k)) 0 calc(2 * var(--k));
+  color: #5d5562;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: calc(13 * var(--k));
+  line-height: 1;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__row + .st-tt__row {
+  border-block-start: 1px solid #f1ebe2;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__row--desk {
+  display: none;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__link {
+  --st-tavatar-size: calc(44 * var(--k));
+
+  display: grid;
+  grid-template-columns: var(--st-tavatar-size) minmax(0, 1fr);
+  column-gap: calc(12 * var(--k));
+  padding: calc(12 * var(--k)) 0 calc(10 * var(--k));
+  color: #0b0603;
+  text-decoration: none;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__link .st-tavatar {
+  grid-row: 1 / span 2;
+  align-self: start;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__text {
+  display: grid;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__meta {
+  color: #5d5562;
+  font-family: var(--font-ui);
+  font-weight: 400;
+  font-size: calc(13 * var(--k));
+  line-height: 1.2;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__meta b {
+  color: #0b0603;
+  font-weight: 600;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__meta .st-ago {
+  text-transform: lowercase; /* "9 oct" */
+}
+
+/* Titles as written; two lines reserved, so the section's board height holds whatever the titles are. */
+.st-land[data-land='talks-teaser'] .st-tt__title {
+  display: -webkit-box;
+  min-height: 2.5em;
+  margin-block-start: calc(3 * var(--k));
+  overflow: hidden;
+  color: #0b0603;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: calc(16 * var(--k));
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__ex {
+  display: none;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__reply {
+  position: relative;
+  grid-column: 2;
+  margin: calc(7 * var(--k)) 0 0 calc(2 * var(--k));
+  padding-inline-start: calc(22 * var(--k));
+  color: #1b1d91;
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: calc(19 * var(--k));
+  line-height: 1;
+  text-transform: lowercase; /* LND-066, the lowercase of TLK-156 */
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__reply::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: calc(-4 * var(--k));
+  width: calc(14 * var(--k));
+  height: calc(13 * var(--k));
+  border: solid #cfc4b5;
+  border-width: 0 0 1.5px 1.5px;
+  border-end-start-radius: calc(9 * var(--k));
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__pre {
+  margin: calc(16 * var(--k)) 0 0;
+  color: #0b0603;
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: calc(23 * var(--k));
+  line-height: 1.1;
+  text-transform: lowercase; /* LND-067, the lowercase of TLK-153 */
+  rotate: -2.5deg;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__pre::before {
+  content: '↑ ' / '';
+  color: #c3021d;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__cta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: calc(10 * var(--k));
+  width: min(100%, calc(320 * var(--k)));
+  height: max(44px, calc(56 * var(--k)));
+  margin-block-start: calc(16 * var(--k));
+  border-radius: var(--st-radius-pill, 999px);
+  background: #c3021d; /* white 6.3 : 1 */
+  color: #fff;
+  font-family: var(--font-pill);
+  font-weight: var(--fw-pill, 600);
+  font-size: calc(23 * var(--k));
+  line-height: 1;
+  text-decoration: none;
+}
+
+.st-land[data-land='talks-teaser'] .st-tt__cta .st-arrow {
+  font-family: var(--font-ui);
+  font-size: 1.05em;
+}
+
+/* ---------- Journal teaser: half a screen (STORE-DESKTOP-SPEC v1.1 §1b) ----------
+   Heading, two landscape cards (168 x 126, rotated, overlapping by 6) and the pill; the closing line from 1024 only. */
+.st-land[data-land='journal-teaser'] .st-jt {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc((var(--c) + 12) * var(--k)) calc(20 * var(--k)) 0;
+  text-align: center;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__h {
+  margin: 0;
+  color: var(--st-talks-ink);
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: calc(46 * var(--k));
+  line-height: 1.05;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__cards {
+  position: relative;
+  width: calc(330 * var(--k));
+  height: calc(140 * var(--k));
+  margin-block-start: calc(16 * var(--k));
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__card {
+  position: absolute;
+  top: calc(4 * var(--k));
+  width: calc(168 * var(--k));
+  height: calc(126 * var(--k));
+  overflow: hidden;
+  border-radius: calc(10 * var(--k));
+  background: #f1e3cf;
+  box-shadow: 0 10px 22px -14px rgb(60 30 10 / 0.45);
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__card img {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__card--1 {
+  left: 0;
+  rotate: -3deg;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__card--1 img {
+  object-position: 50% 28%;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__card--2 {
+  right: 0;
+  top: calc(10 * var(--k));
+  rotate: 2.5deg;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__card--2 img {
+  object-position: 50% 52%;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__pill {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: calc(10 * var(--k));
+  width: calc(275 * var(--k));
+  height: max(44px, calc(55 * var(--k)));
+  margin-block-start: calc(16 * var(--k));
+  box-sizing: border-box;
+  border: calc(2 * var(--k)) solid var(--st-outline-red);
+  border-radius: var(--st-radius-pill, 999px);
+  color: var(--st-outline-red);
+  font-family: var(--font-pill);
+  font-weight: var(--fw-pill, 600);
+  font-size: calc(22 * var(--k));
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__pill .st-arrow {
+  font-family: var(--font-ui);
+  font-size: 1.05em;
+}
+
+.st-land[data-land='journal-teaser'] .st-jt__note {
+  display: none;
+}
+
+/* Desktop-only art (Green Flag's hero-v2 woman) stays out of the phone layout. */
+.st-land__art--desk {
+  display: none;
+}
+
+/* Owner v1.2 split chapters' right-hand pieces exist from 1280 only (below, the chapter is unchanged). */
+.st-land__art--wide {
+  display: none;
+}
+
+/* Owner v12.1: Wild Card's two small cards (st-artwork's ace of spades and king of hearts), tucked half off the corner
+   opposite the girl; decorative, with the art (z 2). Phone: top-right, half off the right edge, beside "Achha.". */
+.st-land__cards {
+  position: absolute;
+  z-index: 2;
+  width: calc(42 * var(--k));
+  height: calc(58 * var(--k));
+  left: calc(358 * var(--k));
+  top: calc(14 * var(--k));
+  pointer-events: none;
+}
+
+.st-land__cards img {
+  position: absolute;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  filter: drop-shadow(0 4px 6px rgb(40 50 0 / 0.28));
+}
+
+.st-land__card-ace {
+  left: 0;
+  top: 0;
+  rotate: -14deg;
+}
+
+.st-land__card-king {
+  left: 42%;
+  top: 9%;
+  rotate: 9deg;
+}
+
+/* Owner v12.1: the laptop beeline (one px line per section, drawn by sections/st-chapter.liquid's script from 1024). */
+.st-beecur {
+  display: none;
+}
+
+/* ---------- desktop chapters (>= 1024; st-fable, qa/desktop/CHAPTERS-DESKTOP-SPEC.md v1) ----------
+   Same reading order as hero v3.8: art left, copy right, one screen per chapter (--fitd). The 390-board copy keeps its
+   layout inside .st-land__inner, which moves to the right half and scales by --kc, centred vertically from the copy's
+   span (--ctop / --cspan, generated). Each art piece scales by --ka and hangs from the section edge its cut edges are
+   on (classes from build_landing.py: --l left, --r right with --rx, --f free with the left group); joins keep the
+   shared unit (--kt); beelines (drawn for the phone frame) are hidden. */
+@media screen and (min-width: 1024px) {
+  .st-land.st-ch {
+    --fitd: min(calc(100svh - var(--st-header-h, 76px)), 900px);
+    --kc: clamp(1px, min(calc((var(--fitd) - 96px) / 410), calc((var(--fitd) - 48px) / var(--cspan, 410)), calc((50cqw - 48px) / 390)), 1.3px);
+    --ka: clamp(1px, min(calc(var(--fitd) / 430), calc((50cqw - 24px) / 390)), 1.6px);
+    --cx0: max(calc(50cqw + 24px), calc(68cqw - 195 * var(--kc)));
+    /* right pieces scale by --kr (generated below: ka, shrunk until they clear the copy by 16 px, not below 1.0);
+       if 1.0 still collides, the copy moves left by --cxs (spec section 3.2) */
+    --kr: var(--ka);
+    --cxs: 0px;
+    --cxe: calc(var(--cx0) - var(--cxs));
+    /* v1.1: the art is one group in reference px of a 600 px screen (--dw / --dl / --db or --dt on each piece, --gw =
+       the group's width, from build_landing.py), scaled by --ua: height-fill, or less where the column (up to the
+       copy ink's left edge - 24 px) is narrower than the group. */
+    --amax: calc(var(--cxe) + 17 * var(--kc) - 24px);
+    --ua: min(calc(var(--fitd) / 600), calc(var(--amax) / var(--gw, 700)));
+    --k: var(--kc);
+    --hc: var(--fitd);
+    --dy: calc((var(--fitd) - var(--cspan, 400) * var(--kc)) / 2 - var(--ctop, 20) * var(--kc));
+    --gx: calc(var(--cxe) + 195 * var(--kc) - 8cqw);
+    --gy: 46%;
+    --r: 520;
+
+    height: calc(var(--fitd) + var(--nc) * var(--kt));
+    margin-block-start: calc(var(--c) * var(--kt) * -1);
+  }
+
+  .st-land.st-ch:not(.st-land--flow) {
+    contain-intrinsic-size: auto calc(var(--fitd) + var(--nc) * var(--kt));
+  }
+
+  .st-land.st-ch[style*='--edge'] {
+    -webkit-mask:
+      var(--edge) top / 100% calc(var(--c) * var(--kt)) no-repeat,
+      linear-gradient(#000 0 0) bottom / 100% calc(100% - var(--c) * var(--kt) + 1px) no-repeat;
+    mask:
+      var(--edge) top / 100% calc(var(--c) * var(--kt)) no-repeat,
+      linear-gradient(#000 0 0) bottom / 100% calc(100% - var(--c) * var(--kt) + 1px) no-repeat;
+  }
+
+  .st-ch .st-land__inner {
+    margin-inline: 0;
+    margin-left: var(--cxe);
+  }
+
+  .st-ch .st-land__art {
+    --k: var(--ka);
+    --dy: 0px;
+  }
+
+  /* left and free pieces: x from the section's left edge */
+  .st-ch .st-land__art:not(.st-land__art--r) {
+    margin-left: calc(-1 * var(--cxe));
+  }
+
+  /* right pieces: (390 - x - w) from the section's right edge */
+  .st-ch .st-land__art--r {
+    --k: var(--kr);
+    left: auto !important;
+    right: calc(var(--rx, 0) * var(--kr) - (100cqw - var(--cxe) - 390 * var(--kc)));
+  }
+
+  .st-ch .st-land__art--dsz {
+    width: calc(var(--dw) * var(--ua)) !important;
+    left: calc(var(--dl, 0) * var(--ua)) !important; /* with margin-left: -cxe, from the section's left edge */
+    top: auto !important;
+    bottom: calc(var(--db, 0) * var(--ua)) !important;
+  }
+
+  .st-ch .st-land__art--dsz.st-land__art--dtop {
+    top: calc(var(--dt, 0) * var(--ua)) !important;
+    bottom: auto !important;
+  }
+
+  .st-ch .st-land__art--dfade {
+    -webkit-mask-image: linear-gradient(to right, #000 78%, transparent);
+    mask-image: linear-gradient(to right, #000 78%, transparent);
+  }
+
+  .st-ch .st-land__art--mob {
+    display: none;
+  }
+
+  .st-ch .st-land__art--desk {
+    display: block;
+  }
+
+  .st-ch .st-land__art--mirror img {
+    scale: -1 1;
+  }
+
+  /* Green Flag's desktop woman: as large as 400 x ka allows while her whole figure (96.5 % of the file's height)
+     stays in the screen, 24 px clear of the top. */
+  .st-ch[data-land='green-flag'] .st-land__art--desk {
+    width: min(calc(400 * var(--ka)), calc((var(--fitd) - 24px) / 0.965 * 729 / 1020)) !important;
+  }
+
+  .st-land .st-land__beeline {
+    display: none;
+  }
+}
+
+/* BEGIN generated desktop clearance (build_landing.py from lab/desk_boxes.json) */
+@media screen and (min-width: 1024px) {
+  .st-ch[data-land='diet-cherry'] {
+    --cxs: max(0px, min(calc(var(--cx0) + (372.5 * var(--kc) + 17px) + 112.7px - 100cqw), calc(var(--dy) + (326.8 * var(--kc) + 17px) + 178.2px - (var(--fitd) + var(--nc) * var(--kt))) * 100), min(calc(var(--cx0) + (195 * var(--kc) + 103.8px) + 112.7px - 100cqw), calc(var(--dy) + (329.8 * var(--kc) + 60.5px) + 178.2px - (var(--fitd) + var(--nc) * var(--kt))) * 100), min(calc(var(--cx0) + (271.9 * var(--kc) + 17.1px) + 112.7px - 100cqw), calc(var(--dy) + (427 * var(--kc) + 17px) + 178.2px - (var(--fitd) + var(--nc) * var(--kt))) * 100));
+    --kr: clamp(1px, min(max(calc((100cqw - var(--cxe) - (372.5 * var(--kc) + 17px)) / 112.7), calc(((var(--fitd) + var(--nc) * var(--kt)) - var(--dy) - (326.8 * var(--kc) + 17px)) / 178.2)), max(calc((100cqw - var(--cxe) - (195 * var(--kc) + 103.8px)) / 112.7), calc(((var(--fitd) + var(--nc) * var(--kt)) - var(--dy) - (329.8 * var(--kc) + 60.5px)) / 178.2)), max(calc((100cqw - var(--cxe) - (271.9 * var(--kc) + 17.1px)) / 112.7), calc(((var(--fitd) + var(--nc) * var(--kt)) - var(--dy) - (427 * var(--kc) + 17px)) / 178.2))), var(--ka));
+  }
+
+  .st-ch[data-land='on-me'] {
+    --cxs: max(0px, min(calc(var(--cx0) + (375.9 * var(--kc) + 17.3px) + 126.7px - 100cqw), calc(var(--dy) + (182.4 * var(--kc) + 20px) + 195px - (var(--fitd) + var(--nc) * var(--kt))) * 100), min(calc(var(--cx0) + (372.5 * var(--kc) + 17px) + 126.7px - 100cqw), calc(var(--dy) + (295.2 * var(--kc) + 17px) + 195px - (var(--fitd) + var(--nc) * var(--kt))) * 100), min(calc(var(--cx0) + (366.4 * var(--kc) + 21.7px) + 126.7px - 100cqw), calc(var(--dy) + (331.9 * var(--kc) + 105.6px) + 195px - (var(--fitd) + var(--nc) * var(--kt))) * 100));
+    --kr: clamp(1px, min(max(calc((100cqw - var(--cxe) - (375.9 * var(--kc) + 17.3px)) / 126.7), calc(((var(--fitd) + var(--nc) * var(--kt)) - var(--dy) - (182.4 * var(--kc) + 20px)) / 195)), max(calc((100cqw - var(--cxe) - (372.5 * var(--kc) + 17px)) / 126.7), calc(((var(--fitd) + var(--nc) * var(--kt)) - var(--dy) - (295.2 * var(--kc) + 17px)) / 195)), max(calc((100cqw - var(--cxe) - (366.4 * var(--kc) + 21.7px)) / 126.7), calc(((var(--fitd) + var(--nc) * var(--kt)) - var(--dy) - (331.9 * var(--kc) + 105.6px)) / 195))), var(--ka));
+  }
+}
+/* END generated desktop clearance */
+
+/* ---------- owner v1.2: chapters "here and there" (>= 1024; owner GO 10 Oct, qa/desktop/owner-v12) ----------
+   Rhythm: Diet Cherry SPLIT · Brainwave RIGHT · Green Flag LEFT · Shaadi Shift RIGHT · On Me SPLIT · Wild Card RIGHT ·
+   Pinky Promise LEFT. RIGHT = the copy frame on the left and the art group mirrored onto the right edge (every cut stays
+   on a section edge; the people face the copy, the free still life is not mirrored). SPLIT (>= 1280: it needs two art
+   columns) = the copy centred, the left group as in v1.1 and a right-hand piece (--v12r) from the right edge; from 1024
+   to 1279 those two keep v1.1. After the generated clearance, so its --cxs reset wins there. */
+@media screen and (min-width: 1024px) {
+  .st-ch:is([data-land='brainwave'], [data-land='shaadi-shift'], [data-land='wild-card']) {
+    --cx0: min(calc(50cqw - 24px - 390 * var(--kc)), calc(32cqw - 195 * var(--kc)));
+    --cxs: 0px;
+    --amax: calc(100cqw - var(--cxe) - 373 * var(--kc) - 24px);
+    --gx: calc(var(--cxe) + 195 * var(--kc) + 8cqw);
+  }
+
+  .st-ch:is([data-land='brainwave'], [data-land='shaadi-shift'], [data-land='wild-card']) .st-land__art--dsz {
+    margin-left: 0 !important;
+    left: auto !important;
+    right: calc(var(--dl, 0) * var(--ua) - (100cqw - var(--cxe) - 390 * var(--kc))) !important;
+  }
+
+  .st-ch[data-land='brainwave'] .st-land__art--dsz.st-land__art--dtop img,
+  .st-ch[data-land='shaadi-shift'] .st-land__art--dsz img,
+  .st-ch[data-land='wild-card'] .st-land__art--dsz img {
+    scale: -1 1;
+  }
+
+  /* v12.1d: Wild Card's cards top-left (the girl is on the right here), a tight fan mostly off the screen's left edge
+     (visible: king 48 / 57 / 60 px, ace 30 / 36 / 38 px at 1280 / 1536 / 1920). */
+  .st-ch[data-land='wild-card'] .st-land__cards {
+    width: clamp(70px, 5.6cqw, 90px);
+    height: auto;
+    aspect-ratio: 46 / 64;
+    margin-left: calc(-1 * var(--cxe));
+    left: calc(clamp(70px, 5.6cqw, 90px) * -0.75);
+    top: calc(var(--fitd) * 0.15);
+  }
+
+  .st-ch[data-land='wild-card'] .st-land__card-ace {
+    rotate: 16deg;
+  }
+
+  .st-ch[data-land='wild-card'] .st-land__card-king {
+    left: 30%;
+    top: 22%;
+    rotate: 10deg;
+  }
+
+  .st-beecur {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .st-beecur path {
+    fill: none;
+    stroke: #fff;
+    stroke-opacity: 0.9;
+    stroke-width: 3;
+    stroke-dasharray: 12 7;
+    stroke-linecap: butt;
+  }
+
+  .st-beecur--cream path {
+    stroke: var(--st-beeline-red);
+    stroke-opacity: 1;
+    stroke-width: 2.5;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .st-ch:is([data-land='diet-cherry'], [data-land='on-me']) {
+    --cx0: calc(50cqw - 195 * var(--kc));
+    --cxs: 0px;
+    --amaxR: calc(100cqw - var(--cxe) - 373 * var(--kc) - 24px);
+    --uar: min(calc(var(--fitd) / 600), calc(var(--amaxR) / var(--gwr, 460)));
+    --gx: 50cqw;
+  }
+
+  .st-ch[data-land='diet-cherry'] {
+    --gwr: 470;
+  }
+
+  .st-ch[data-land='on-me'] {
+    --gwr: 330;
+  }
+
+  .st-ch:is([data-land='diet-cherry'], [data-land='on-me']) .st-land__art--r {
+    display: none !important;
+  }
+
+  .st-ch:is([data-land='diet-cherry'], [data-land='on-me']) .st-land__art--v12r {
+    display: block !important;
+    z-index: 2;
+    margin: 0 !important;
+    top: auto !important;
+    left: auto !important;
+    right: calc(var(--rr, 0) * var(--uar) - (100cqw - var(--cxe) - 390 * var(--kc))) !important;
+    bottom: calc(var(--rb, 0) * var(--uar)) !important;
+    width: calc(var(--rw) * var(--uar)) !important;
+  }
+}
+
+/* ---------- desktop cream sections (>= 1024; st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 1) ----------
+   The board's elements in two groups inside the page frame (--pgw, centred): copy left at the desktop type scale (--kl,
+   1.15 x the phone board), pictures right (tiles follow the width; the talks and Journal per v1.1 §1a/§1b). The
+   section keeps the shared unit (--kt) for its cap, mask and joins (its own --k is untouched: each group sets --k on its
+   elements) and takes its height from its composition: --hd (own cap included) plus the next section's cap. */
+@media screen and (min-width: 1024px) {
+  .st-land--cream {
+    --pgw: min(1240px, 100cqw - 2 * clamp(32px, 4cqw, 64px));
+    --pgl: calc((100cqw - var(--pgw)) / 2);
+    --cg: clamp(32px, 4cqw, 72px);
+    --fitd: min(calc(100svh - var(--st-header-h, 76px)), 900px);
+    --ct: calc(var(--c) * var(--kt));
+    --pad: 56px;
+    --lw: calc((var(--pgw) - var(--cg)) * 5 / 12);
+    --rl: calc(var(--pgl) + var(--lw) + var(--cg));
+    --rwd: calc((var(--pgw) - var(--cg)) * 7 / 12);
+    --kl: 1.15px;
+  }
+
+  .st-land.st-land--cream:not(.st-land--flow) {
+    height: calc(var(--hd) + var(--nc) * var(--kt));
+    contain-intrinsic-size: auto calc(var(--hd) + var(--nc) * var(--kt));
+  }
+
+  .st-land--cream .st-land__inner {
+    width: 100%;
+    margin-inline: 0;
+  }
+
+  /* Tiles: two side by side, clamp(300px, 30vw, 420px) wide at 183 x 263, 4vw apart, centred; narrower where the
+     screen is short, so the pair and labels stay in one screen. Labels under each at the desktop type scale. */
+  .st-land--cream[data-land='tiles'] {
+    --pad: 32px;
+    --wt: min(clamp(300px, 30cqw, 420px), (var(--fitd) - var(--ct) - 2 * var(--pad) - 50px) * 183 / 263);
+    --cardh: calc(var(--wt) * 263 / 183);
+    --tg: 4cqw;
+    --hd: calc(var(--ct) + 2 * var(--pad) + var(--cardh) + 50px);
+  }
+
+  .st-land--cream[data-land='tiles'] .st-tiles__tile {
+    --k: calc(var(--wt) / 183);
+    left: calc((100cqw - 2 * var(--wt) - var(--tg)) / 2);
+    top: calc(var(--ct) + var(--pad));
+    width: var(--wt);
+    height: calc(var(--cardh) + 50px);
+  }
+
+  .st-land--cream[data-land='tiles'] .st-tiles__tile + .st-tiles__tile {
+    --k: calc(var(--wt) / 180);
+    left: calc((100cqw + var(--tg)) / 2);
+  }
+
+  .st-land--cream[data-land='tiles'] .st-land__card {
+    height: var(--cardh);
+  }
+
+  .st-land--cream[data-land='tiles'] .st-tiles__label {
+    left: calc(20 * var(--kl));
+    top: calc(var(--cardh) + 6px);
+    gap: 8px;
+    font-size: calc(24 * var(--kl));
+  }
+
+  /* the talks (v1.1 §1a): 5fr | 7fr over one screen: heading, headline, support line, the CTA (above the fold) and the
+     pre-launch line left; the board right (max 600, centred), three rows with excerpts. */
+  .st-land--cream[data-land='talks-teaser'] {
+    --hd: var(--fitd);
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: 1fr repeat(5, auto) 1fr; /* the left column stays one compact, centred group beside the board */
+    column-gap: var(--cg);
+    align-content: center;
+    align-items: start;
+    justify-items: start;
+    height: calc(var(--hd) + var(--nc) * var(--kt));
+    padding: var(--ct) var(--pgl) calc(var(--nc) * var(--kt));
+    box-sizing: border-box;
+    text-align: start;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt > :not(.st-tt__board) {
+    grid-column: 1;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__h {
+    grid-row: 2;
+    font-size: 92px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__hl {
+    grid-row: 3;
+    margin-block-start: 8px;
+    font-size: 42px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__sup {
+    grid-row: 4;
+    max-width: 34ch;
+    margin-block-start: 14px;
+    font-size: 18px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__cta {
+    grid-row: 5;
+    width: 300px;
+    height: 58px;
+    margin-block-start: 26px;
+    font-size: 25px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__pre {
+    grid-row: 6;
+    margin-block-start: 22px;
+    font-size: 28px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__pre::before {
+    content: '→ ' / '';
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__board {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0;
+    padding: 22px 22px 8px;
+    border-radius: 22px;
+    rotate: -1deg;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__chips ul {
+    gap: 8px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__chip {
+    padding-inline: 16px;
+    font-size: 15px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__label {
+    margin: 18px 0 2px;
+    font-size: 14px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__row--desk {
+    display: list-item;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__link {
+    --st-tavatar-size: 56px;
+
+    column-gap: 16px;
+    padding: 16px 0 14px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__meta {
+    font-size: 14px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__title {
+    display: block;
+    min-height: 0;
+    margin-block-start: 3px;
+    font-size: 19px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__ex {
+    display: block;
+    margin-block-start: 3px;
+    overflow: hidden;
+    color: #3b3ba8;
+    font-family: var(--font-ui);
+    font-size: 15px;
+    line-height: 1.35;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__reply {
+    margin: 7px 0 0 2px;
+    padding-inline-start: 22px;
+    font-size: 22px;
+  }
+
+  .st-land[data-land='talks-teaser'] .st-tt__reply::before {
+    inset-block-start: -4px;
+    width: 14px;
+    height: 13px;
+    border-end-start-radius: 9px;
+  }
+
+  /* Journal (v1.1 §1b): half a screen, max(320px, fitd / 2): heading, pill and closing line left; the two cards side by
+     side right, clamp(220px, 20vw, 300px) at 4 : 3, rotated. */
+  .st-land--cream[data-land='journal-teaser'] {
+    --hd: max(320px, var(--fitd) / 2);
+  }
+
+  .st-land[data-land='journal-teaser'] .st-jt {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: 1fr repeat(3, auto) 1fr;
+    column-gap: var(--cg);
+    align-content: center;
+    align-items: start;
+    justify-items: start;
+    height: calc(var(--hd) + var(--nc) * var(--kt));
+    padding: var(--ct) var(--pgl) calc(var(--nc) * var(--kt));
+    box-sizing: border-box;
+    text-align: start;
+  }
+
+  .st-land[data-land='journal-teaser'] .st-jt > :not(.st-jt__cards) {
+    grid-column: 1;
+  }
+
+  .st-land[data-land='journal-teaser'] .st-jt__h {
+    grid-row: 2;
+    font-size: 64px;
+  }
+
+  .st-land[data-land='journal-teaser'] .st-jt__pill {
+    grid-row: 3;
+    width: 260px;
+    height: 54px;
+    margin-block-start: 18px;
+    border-width: 2px;
+    font-size: 24px;
+  }
+
+  .st-land[data-land='journal-teaser'] .st-jt__note {
+    grid-row: 4;
+    display: block;
+    margin: 14px 0 0;
+    color: var(--st-talks-ink);
+    font-family: var(--font-note);
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.05;
+    rotate: -2deg;
+  }
+
+  .st-land[data-land='journal-teaser'] .st-jt__cards {
+    display: flex;
+    grid-column: 2;
+    grid-row: 1 / -1;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    justify-self: stretch;
+    gap: clamp(16px, 2vw, 32px);
+    width: auto;
+    height: auto;
+    margin: 0;
+  }
+
+  .st-land[data-land='journal-teaser'] .st-jt__card {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    width: clamp(220px, 20vw, 300px);
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+  }
+
+  /* Nail Guide: 6fr | 6fr. Left: eyebrow, heading, handwriting and "Open the guide", centred in the section's height
+     (always above the fold). Right: the finger and tape, height-driven (the figure min(70 % of the section, 520 px);
+     it fills rows 439-1448 of the 1448 px file), hung from the bottom-right corner it is cut on. */
+  .st-land--cream[data-land='nail-guide-teaser'] {
+    --lb: calc(288 * var(--kl));
+    --hd: max(calc(var(--ct) + 2 * var(--pad) + var(--lb)), min(var(--fitd), 680px));
+    --ly: calc(var(--ct) + (var(--hd) - var(--ct) - var(--lb)) / 2);
+    --ah: min(calc(var(--hd) * 0.7), 520px);
+  }
+
+  .st-land--cream[data-land='nail-guide-teaser'] :is(.st-guide__eyebrow, .st-guide__heading, .st-land__hand, .st-land__pill) {
+    --k: var(--kl);
+    left: var(--pgl);
+  }
+
+  .st-land--cream[data-land='nail-guide-teaser'] .st-guide__eyebrow {
+    top: var(--ly);
+  }
+
+  .st-land--cream[data-land='nail-guide-teaser'] .st-guide__heading {
+    top: calc(var(--ly) + 35 * var(--kl));
+  }
+
+  .st-land--cream[data-land='nail-guide-teaser'] .st-land__hand {
+    top: calc(var(--ly) + 127 * var(--kl));
+    text-align: start;
+  }
+
+  .st-land--cream[data-land='nail-guide-teaser'] .st-land__pill {
+    top: calc(var(--ly) + 230 * var(--kl));
+  }
+
+  .st-land--cream[data-land='nail-guide-teaser'] .st-land__art {
+    left: auto !important;
+    top: auto !important;
+    right: 0;
+    bottom: 0;
+    width: calc(var(--ah) * 1086 / 1009) !important;
+  }
+
+  /* Shop all + FAQ: 4fr | 8fr in the page frame. Left: "FAQs" and "Shop all sets"; right: the rows, full column width. */
+  .st-land--cream[data-land='shop-all-faq-footer'] .st-faq2 {
+    --k: var(--kl);
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    grid-template-rows: auto auto 1fr auto;
+    column-gap: var(--cg);
+    align-items: start;
+    width: var(--pgw);
+    margin-inline: auto;
+    padding: calc(var(--ct) + var(--pad)) 0 var(--pad);
+  }
+
+  .st-land--cream[data-land='shop-all-faq-footer'] .st-faq2__heading {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0 0 24px;
+  }
+
+  .st-land--cream[data-land='shop-all-faq-footer'] .st-faq2__shop {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    width: min(calc(320 * var(--k)), 100%);
+    margin: 0;
+  }
+
+  .st-land--cream[data-land='shop-all-faq-footer'] .st-faq2__list {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+
+  .st-land--cream[data-land='shop-all-faq-footer'] .st-faq2__help {
+    grid-column: 2;
+    grid-row: 4;
+  }
+}
+
+/* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+/* Cream sections: every group follows --pgw. Gallery: the two tiles grow to the height that keeps them and their labels
+   in one screen, at most 520 px wide (the Our Vision art is 549 x 789: never above its intrinsic size at DPR 1), each
+   centred in its half of the frame. Chapters are unchanged (they scale with the screen, not the frame). */
+@media screen and (min-width: 1680px) {
+  .st-land--cream {
+    --pgw: min(1440px, 100cqw - 2 * clamp(32px, 4cqw, 64px));
+  }
+
+  .st-land--cream[data-land='tiles'] {
+    --wt: min(520px, (var(--fitd) - var(--ct) - 2 * var(--pad) - 50px) * 183 / 263);
+  }
+
+  .st-land--cream[data-land='tiles'] .st-tiles__tile {
+    left: calc(var(--pgl) + var(--pgw) / 4 - var(--wt) / 2);
+  }
+
+  .st-land--cream[data-land='tiles'] .st-tiles__tile + .st-tiles__tile {
+    left: calc(var(--pgl) + var(--pgw) * 3 / 4 - var(--wt) / 2);
+  }
+}
+/* END wide frame */
+:root { --minimum-touch-target: 44px; }  .st-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    color: var(--st-logo-blue);
+    text-decoration: none;
+    min-height: var(--minimum-touch-target);
+  }
+
+  /* Wordmark per tokens.css --font-logo (Source Serif 4 Black, opsz 60): "talk" indented under "small", stretched
+     vertically by --logo-scale-y like the board (still real text). Box at 390: 81 x 59, top 6, centred at x 136. */
+  .st-logo__words {
+    display: inline-grid;
+    justify-items: start;
+    font-family: var(--font-logo);
+    font-variation-settings: var(--fv-logo);
+    font-weight: 900;
+    font-size: var(--fs-logo);
+    line-height: var(--lh-logo);
+    letter-spacing: var(--ls-logo);
+    color: var(--logo-color);
+    padding-block: 0.32em 0.22em;
+    transform: scaleY(var(--logo-scale-y, 1));
+  }
+
+  .st-logo__words > span:nth-child(2) {
+    margin-inline-start: var(--logo-talk-indent);
+  }
+
+  .st-logo--small .st-logo__words {
+    font-size: calc(var(--fs-logo) * 0.8);
+  }
+
+
+  .st-footer {
+    --st-footer-ink: var(--st-muted-text);
+
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    padding: 2.5rem var(--st-gutter) calc(2rem + var(--safe-area-inset-bottom, 0px));
+    background: var(--st-paper);
+    color: var(--st-footer-ink);
+    font-family: var(--font-ui);
+    text-align: center;
+  }
+
+  .st-footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .st-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-footer__logo {
+    color: var(--st-logo-blue);
+  }
+
+  .st-footer__social {
+    gap: 0.5rem;
+  }
+
+  .st-footer__copyright {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .st-footer--inner .st-footer__copyright {
+    grid-column: 1 / -1;
+    justify-self: center;
+    font-size: 0.75rem;
+  }
+
+  /* Social icons (D5, st-fable): site ink, not the logo blue (Meta allows black, white or its gradient); 44 x 44. */
+  .st-footer__social-link {
+    display: inline-grid;
+    place-items: center;
+    min-width: var(--minimum-touch-target);
+    min-height: var(--minimum-touch-target);
+  }
+
+  .st-footer a.st-footer__social-link {
+    color: var(--st-talks-ink); /* outranks .st-footer a { color: inherit } */
+  }
+
+  .st-footer a.st-footer__social-link:hover {
+    opacity: 0.75;
+    text-decoration: none;
+  }
+
+  .st-footer__social-placeholder {
+    opacity: 0.4;
+  }
+
+  /* Landing (board 3): continues the FAQ's cream, navy-blue type. */
+  /* Board 3 footer type: condensed, heavier, dark navy. #1f1f80 on cream #fdf6e9 = 12.3:1. */
+  .st-footer--landing {
+    --st-footer-ink: #1f1f80;
+
+    gap: 0.2rem;
+    padding-block-start: 0;
+    background: var(--st-cream);
+    font-family: var(--font-pill);
+    font-weight: var(--fw-pill);
+  }
+
+  /* Board 3 footer logo: ~100 x 72 at 390, the header wordmark scaled up. */
+  .st-footer--landing .st-logo__words {
+    font-size: calc(var(--fs-logo) * 1.23);
+  }
+
+  .st-footer--landing .st-footer__nav a,
+  .st-footer--landing .st-footer__legal a {
+    font-size: 1rem;
+  }
+
+  .st-footer__tagline {
+    margin: 0 0 0.25rem;
+    font-size: 1.25rem;
+  }
+
+  .st-footer--landing .st-footer__tagline {
+    font-size: 1.3125rem;
+  }
+
+  .st-footer--landing .st-footer__copyright {
+    font-size: 1rem;
+  }
+
+  .st-footer--landing .st-footer__nav ul,
+  .st-footer--landing .st-footer__legal {
+    gap: 0 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  /* Landing: its own centred row between the nav and legal rows, 4 px from each (the footer's gap is 0.2rem). */
+  .st-footer--landing .st-footer__social {
+    gap: 1.5rem;
+    margin-block: calc(4px - 0.2rem);
+  }
+
+  .st-footer--landing .st-footer__social svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  /* Shop / product / bag / guide (board 5): two centred rows joined by a middle dot. */
+  /* Board rows sit 22 px apart; each row here is one 44 px hit area tall (accessibility minimum beats the board). */
+  .st-footer--rows {
+    gap: 0;
+    padding-block: 0.5rem calc(1rem + var(--safe-area-inset-bottom, 0px));
+    font-size: 0.8125rem;
+  }
+
+  /* The dot trails each item (never leads one) and stays glued to its link, so a wrapped row never starts with "·". */
+  .st-footer--rows li {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .st-footer--rows li:not(:last-child)::after {
+    content: '·';
+    padding-inline: 0.4em;
+  }
+
+  /* D5: the Instagram icon right of "Sign in", 12 px apart, inside the same item (no dot, no extra height). */
+  .st-footer--rows .st-footer__ig {
+    margin-inline-start: 12px;
+  }
+
+  .st-footer--rows .st-footer__ig svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Inner pages (board 4): logo left, two link columns, small socials, legal line. */
+  .st-footer--inner {
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    align-items: start;
+    column-gap: 2.5rem;
+    row-gap: 0.25rem;
+    text-align: start;
+    font-size: 0.875rem;
+  }
+
+  .st-footer--inner .st-footer__logo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .st-footer--inner .st-footer__nav {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .st-footer--inner .st-logo__words {
+    font-size: 1.75rem;
+  }
+
+  .st-footer--inner .st-footer__nav ul {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(3, auto);
+    justify-content: start;
+    column-gap: 2.5rem;
+  }
+
+  .st-footer--inner .st-footer__nav a {
+    min-height: 2rem;
+  }
+
+  /* D5: the icon sits under the logo in its column (left-aligned with it, 2 px below: 8 ran the column 6 px past the
+     link columns), beside them, so the footer gains no height. */
+  .st-footer--inner .st-footer__social {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    margin-block-start: calc(2px - 0.25rem);
+  }
+
+  .st-footer--inner .st-footer__social svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .st-footer--inner .st-footer__legal {
+    grid-column: 1 / -1;
+    justify-self: center;
+    gap: 0 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .st-footer--inner {
+      grid-template-columns: auto auto 1fr;
+    }
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 1: all three layouts) */
+  /* >= 1024: three columns inside the page frame: logo, tagline and socials left; the nav centred; legal links and the
+     copyright right-aligned. Text links are at least 44 px wide as well as tall. */
+  @media screen and (min-width: 1024px) {
+    .st-footer.st-footer--landing,
+    .st-footer.st-footer--inner,
+    .st-footer.st-footer--rows {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      justify-items: stretch;
+      align-items: center;
+      column-gap: clamp(32px, 4vw, 72px);
+      row-gap: 0.25rem;
+      padding-inline: max(clamp(32px, 4vw, 64px), (100% - 1240px) / 2);
+      text-align: start;
+    }
+
+    .st-footer > .st-footer__logo {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+    }
+
+    .st-footer > .st-footer__tagline {
+      grid-column: 1;
+      grid-row: 2;
+      justify-self: start;
+      margin: 0;
+    }
+
+    /* the icon's 44 px target is wider than the glyph: pull it back so the glyph lines up with the tagline */
+    .st-footer > .st-footer__social {
+      grid-column: 1;
+      grid-row: 3;
+      justify-self: start;
+      justify-content: flex-start;
+      margin-block: 0;
+      margin-inline-start: -10px;
+    }
+
+    .st-footer > .st-footer__nav {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      align-self: center;
+    }
+
+    .st-footer > .st-footer__legal {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      align-self: end;
+      justify-self: end;
+      justify-content: flex-end;
+    }
+
+    .st-footer > .st-footer__copyright {
+      grid-column: 3;
+      grid-row: 3;
+      align-self: start;
+      justify-self: end;
+      text-align: end;
+    }
+
+    /* a short link's text sits centred in its 44 px target, so the dotted rows stay evenly spaced */
+    .st-footer a {
+      min-width: var(--minimum-touch-target);
+      justify-content: center;
+    }
+
+    .st-footer.st-footer--inner .st-footer__nav a {
+      justify-content: flex-start;
+      min-height: var(--minimum-touch-target);
+    }
+  }
+  /* END store desktop */
+
+  /* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+  @media screen and (min-width: 1680px) {
+    .st-footer.st-footer--landing,
+    .st-footer.st-footer--inner,
+    .st-footer.st-footer--rows {
+      padding-inline: max(clamp(32px, 4vw, 64px), (100% - 1440px) / 2);
+    }
+  }
+  /* END wide frame */
+
+  /* Ø 90 on the hub (Ø 88 on the thread page): blush #fbe3e6 disc, one set nail (sprite col 0, 204/354), −20°. */
+  .st-tavatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: var(--st-tavatar-size, 90px);
+    block-size: var(--st-tavatar-size, 90px);
+    border-radius: 50%;
+    background: #fbe3e6;
+    overflow: hidden;
+  }
+
+  /* Board avatars are close-ups: the nail fills the disc and the circle crops its base. */
+  .st-tavatar__nail {
+    block-size: 116%;
+    aspect-ratio: 204 / 354;
+    background: var(--st-nails) 0 0 / 300% 100% no-repeat;
+    rotate: -20deg;
+    translate: 4% 16%;
+  }
+
+  .st-tavatar--initial {
+    color: var(--st-burgundy);
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    font-size: calc(var(--st-tavatar-size, 90px) * 0.44);
+    line-height: 1;
+  }
+</style>
+<style>@media screen and (min-width: 990px) { :root { --st-header-h: 76px; } }</style>
+<script>
+  // One screen per chapter (owner, 10 Oct): a chapter's height follows the screen (assets/st-landing.css), so its
+  // beeline is assembled for the live height from the parts in its data attributes (snippets/st-landing-join): the
+  // top part (follows the text stack, moved by the desktop centring offset), a vertical run, and the bottom part
+  // (follows the bottom-anchored art, y relative to the bottom).
+  // Owner v12.1 (qa/desktop/owner-v12/README.md): on phones every landing route is then pulled in from the screen edges
+  // (x -> 20 + x * 350 / 390) and its long straight runs rounded into smooth half-waves (rebuild), and the dash phase is
+  // carried down the page, so the dashes run on across the joins. Without JS the generated (already softened) phone
+  // path stays. From 1024 (v12.1c / v12.1d) the landing gets one flowing line computed from the live layout (laptop).
+  (() => {
+    const DASH = 14.5;
+    const NS = 'http://www.w3.org/2000/svg';
+    const NUM = /-?\d+(?:\.\d+)?/g;
+    const shift = (d, dy) => d.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (m, x, y) => `${x},${+(+y + dy).toFixed(1)}`);
+    const f = (v) => +v.toFixed(1);
+    const parse = (d) => {
+      const segs = [];
+      let cur = null;
+      const re = /([MLC])([^MLC]*)/g;
+      let m;
+      while ((m = re.exec(d))) {
+        const n = (m[2].match(NUM) || []).map(Number);
+        if (m[1] === 'M') {
+          cur = [n[0], n[1]];
+          segs.push({ t: 'M', p: cur });
+        } else if (m[1] === 'L') {
+          for (let i = 0; i + 1 < n.length; i += 2) {
+            const p = [n[i], n[i + 1]];
+            segs.push({ t: 'L', a: cur, p });
+            cur = p;
+          }
+        } else {
+          for (let i = 0; i + 5 < n.length; i += 6) {
+            const c1 = [n[i], n[i + 1]];
+            const c2 = [n[i + 2], n[i + 3]];
+            const p = [n[i + 4], n[i + 5]];
+            segs.push({ t: 'C', a: cur, c1, c2, p });
+            cur = p;
+          }
+        }
+      }
+      return segs;
+    };
+    const chordDist = (q, a, b) => {
+      const dx = b[0] - a[0];
+      const dy = b[1] - a[1];
+      return Math.abs((q[0] - a[0]) * dy - (q[1] - a[1]) * dx) / (Math.hypot(dx, dy) || 1);
+    };
+    // straight runs longer than 70 (x unit) become n smooth half-waves, amplitude min(11, 0.035 len), alternating sides
+    const rebuild = (d, mapX, mapY, unit) => {
+      let out = '';
+      for (const s of parse(d)) {
+        if (s.t === 'M') {
+          out += `M${f(mapX(s.p[0], s.p[1]))},${f(mapY(s.p[1]))}`;
+          continue;
+        }
+        const a = [mapX(s.a[0], s.a[1]), mapY(s.a[1])];
+        const p = [mapX(s.p[0], s.p[1]), mapY(s.p[1])];
+        const len = Math.hypot(p[0] - a[0], p[1] - a[1]);
+        if (s.t === 'C') {
+          const c1 = [mapX(s.c1[0], s.c1[1]), mapY(s.c1[1])];
+          const c2 = [mapX(s.c2[0], s.c2[1]), mapY(s.c2[1])];
+          const straight = len > 70 * unit && chordDist(c1, a, p) < 3 * unit && chordDist(c2, a, p) < 3 * unit;
+          if (!straight) {
+            out += ` C${f(c1[0])},${f(c1[1])} ${f(c2[0])},${f(c2[1])} ${f(p[0])},${f(p[1])}`;
+            continue;
+          }
+        }
+        if (len <= 70 * unit) {
+          out += ` L${f(p[0])},${f(p[1])}`;
+          continue;
+        }
+        const n = Math.max(1, Math.round(len / (280 * unit)));
+        const amp = Math.min(11 * unit, len * 0.035);
+        const ux = (p[0] - a[0]) / len;
+        const uy = (p[1] - a[1]) / len;
+        for (let i = 0; i < n; i++) {
+          const t0 = i / n;
+          const t1 = (i + 1) / n;
+          const side = i % 2 ? -1 : 1;
+          const q0 = [a[0] + (p[0] - a[0]) * t0, a[1] + (p[1] - a[1]) * t0];
+          const q1 = [a[0] + (p[0] - a[0]) * t1, a[1] + (p[1] - a[1]) * t1];
+          const k = (0.36 * len) / n;
+          const o = amp * side * 1.33;
+          const c1 = [q0[0] + ux * k - uy * o, q0[1] + uy * k + ux * o];
+          const c2 = [q1[0] - ux * k - uy * o, q1[1] - uy * k + ux * o];
+          out += ` C${f(c1[0])},${f(c1[1])} ${f(c2[0])},${f(c2[1])} ${f(q1[0])},${f(q1[1])}`;
+        }
+      }
+      return out;
+    };
+    const pullIn = (x) => 20 + (x * 350) / 390;
+    const phone = () => {
+      let run = 0;
+      document.querySelectorAll('.st-land__beeline').forEach((svg) => {
+        const path = svg.querySelector('path');
+        if (!path) return;
+        if (!svg.dataset.vb0) svg.dataset.vb0 = svg.getAttribute('viewBox') || '';
+        let route = path.dataset.raw || null;
+        const top = svg.dataset.top;
+        if (top) {
+          const inner = svg.parentElement;
+          const k = inner.getBoundingClientRect().width / 390;
+          const h = k ? svg.getBoundingClientRect().height / k : 0;
+          route = null;
+          if (h > 0) {
+            const head = inner.querySelector('.st-ch__headline');
+            const dy = head ? Math.max(0, (head.offsetTop - parseFloat(svg.dataset.head) * k) / k) : 0;
+            const bot = svg.dataset.bot ? ` ${shift(svg.dataset.bot, h)}` : '';
+            route = `${shift(top, dy)} L${svg.dataset.x},${(h + parseFloat(svg.dataset.yb)).toFixed(1)}${bot}`;
+            svg.setAttribute('viewBox', `0 0 390 ${h.toFixed(1)}`);
+          }
+        }
+        if (route) path.setAttribute('d', rebuild(route, pullIn, (y) => y, 1));
+        path.style.strokeDashoffset = String(-(run % DASH));
+        run += path.getTotalLength();
+      });
+    };
+    // ---- laptop (>= 1024; owner v12.1c / v12.1d, qa/desktop/owner-v12/README.md §B): ONE flowing line for the whole
+    // landing, computed from the live layout (st-fable's laptop() in beecur.js, ported): 1. every section's route
+    // (data-raw, the untouched 390-frame route) is mapped onto its content frame (chapters: the copy frame ± 64 px; cream
+    // sections: the page frame, --pgw) and concatenated in page coordinates, the first 18 % of each blending from the
+    // previous frame; 2. a Gaussian pre-smooth (sigma 160 px); 3. each crossed cluster of copy boxes is detoured on its
+    // cheaper side; 4. rest shape = re-smooth (sigma 36) + a meander (12 / 560); 5. an elastic band, repelled where the
+    // signed distance to copy boxes, art ink (alpha > 12) or the 8 px screen-edge band is under 18 px; spurs cut, ironed,
+    // settled on a fine meander; 6. one Catmull-Rom spline, shown by every section's SVG through its own slice of the
+    // page, so the dashes run on across the joins.
+    const CELL = 6;
+    const CLR = 18;
+    const STEP = 8;
+    const COPY_SEL =
+      '.st-ch__note, .st-ch__headline text, .st-ch__nail, .st-ch__name, .st-ch__pill, .st-ch__caption, h1, h2, h3, h4, p, li, a, button, [class*="pill"], [class*="card"], [class*="chip"], [class*="board"], [class*="__cta"], [class*="tiles__"], .st-land__box, .st-land__hand, .st-land__cards, .st-land img:not(.st-land__art img)';
+    const ART_SEL = '.st-land__art img, .st-land__card img';
+    const vis = (e) => {
+      const cs = getComputedStyle(e);
+      return cs.display !== 'none' && cs.visibility !== 'hidden';
+    };
+    const smooth = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+    const mapOnly = (d, mapX, mapY) =>
+      d.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (m, x, y) => `${f(mapX(+x, +y))},${f(mapY(+y))}`);
+    const sampleD = (path, step) => {
+      const L = path.getTotalLength();
+      const n = Math.max(2, Math.ceil(L / step));
+      const P = [];
+      for (let i = 0; i <= n; i++) {
+        const q = path.getPointAtLength((L * i) / n);
+        P.push([q.x, q.y]);
+      }
+      return P;
+    };
+    const gauss = (P, sigma, step) => {
+      const r = Math.ceil((2.5 * sigma) / step);
+      const w = [];
+      for (let k = -r; k <= r; k++) w.push(Math.exp(-((k * step) ** 2) / (2 * sigma * sigma)));
+      return P.map((p, i) => {
+        let sx = 0;
+        let sy = 0;
+        let sw = 0;
+        for (let k = -r; k <= r; k++) {
+          const j = Math.min(P.length - 1, Math.max(0, i + k));
+          sx += P[j][0] * w[k + r];
+          sy += P[j][1] * w[k + r];
+          sw += w[k + r];
+        }
+        return [sx / sw, sy / sw];
+      });
+    };
+    const resample = (P, step) => {
+      const out = [P[0]];
+      let acc = 0;
+      for (let i = 1; i < P.length - 1; i++) {
+        acc += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]);
+        if (acc >= step) {
+          out.push(P[i]);
+          acc = 0;
+        }
+      }
+      out.push(P[P.length - 1]);
+      return out;
+    };
+    const splineD = (P) => {
+      let d = `M${f(P[0][0])},${f(P[0][1])}`;
+      for (let i = 0; i < P.length - 1; i++) {
+        const p0 = P[i - 1] || P[i];
+        const p1 = P[i];
+        const p2 = P[i + 1];
+        const p3 = P[i + 2] || p2;
+        d += ` C${f(p1[0] + (p2[0] - p0[0]) / 6)},${f(p1[1] + (p2[1] - p0[1]) / 6)} ${f(p2[0] - (p3[0] - p1[0]) / 6)},${f(p2[1] - (p3[1] - p1[1]) / 6)} ${f(p2[0])},${f(p2[1])}`;
+      }
+      return d;
+    };
+    // a meander of the given amplitude / wavelength along the line's normal, tapered over `taper` px at both ends
+    const meander = (P, amp, wave, phase, taper) => {
+      let s = 0;
+      const Sd = P.map((p, i) => (i ? (s += Math.hypot(p[0] - P[i - 1][0], p[1] - P[i - 1][1])) : 0));
+      const tot = s || 1;
+      return P.map((p, i) => {
+        if (i === 0 || i === P.length - 1) return p;
+        const q0 = P[i - 1];
+        const q1 = P[i + 1];
+        const tx = q1[0] - q0[0];
+        const ty = q1[1] - q0[1];
+        const tl = Math.hypot(tx, ty) || 1;
+        const t = taper ? Math.max(0, Math.min(1, Sd[i] / taper, (tot - Sd[i]) / taper)) : 1;
+        const off = amp * Math.sin((2 * Math.PI * Sd[i]) / wave + phase) * t;
+        return [p[0] - (ty / tl) * off, p[1] + (tx / tl) * off];
+      });
+    };
+    const lap = (R) =>
+      R.map((p, i) => (i === 0 || i === R.length - 1 ? [0, 0] : [(R[i - 1][0] + R[i + 1][0]) / 2 - p[0], (R[i - 1][1] + R[i + 1][1]) / 2 - p[1]]));
+
+    const drawLaptop = () => {
+      const secs = [...document.querySelectorAll('.st-land')];
+      if (!secs.length) return;
+      const top0 = secs[0].getBoundingClientRect().top;
+      const W = secs[0].getBoundingClientRect().width;
+      const PH = secs[secs.length - 1].getBoundingClientRect().bottom - top0;
+      // ---- obstacle field for the whole landing (page coordinates): copy boxes, art ink, screen-edge band ----
+      const gw = Math.ceil(W / CELL);
+      const gh = Math.ceil(PH / CELL);
+      const N = gw * gh;
+      const g = new Uint8Array(N);
+      const ink = new Uint8Array(N);
+      const mark = (l, t, r, b) => {
+        const x0 = Math.max(0, Math.floor(l / CELL));
+        const x1 = Math.min(gw - 1, Math.ceil(r / CELL));
+        const y0 = Math.max(0, Math.floor(t / CELL));
+        const y1 = Math.min(gh - 1, Math.ceil(b / CELL));
+        for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) g[y * gw + x] = 1;
+      };
+      const copy = [];
+      secs.forEach((sec) => {
+        const sr = sec.getBoundingClientRect();
+        sec.querySelectorAll(COPY_SEL).forEach((e) => {
+          if (!vis(e)) return;
+          const b = e.getBoundingClientRect();
+          if (!b.width || !b.height || b.width * b.height > sr.width * sr.height * 0.5) return;
+          const R = { l: b.left, t: b.top - top0, r: b.right, b: b.bottom - top0 };
+          copy.push(R);
+          mark(R.l, R.t, R.r, R.b);
+        });
+      });
+      const cv = document.createElement('canvas');
+      cv.width = gw;
+      cv.height = gh;
+      const cx = cv.getContext('2d', { willReadFrequently: true });
+      secs.forEach((sec) => {
+        const sr = sec.getBoundingClientRect();
+        cx.save();
+        cx.beginPath();
+        cx.rect(0, (sr.top - top0) / CELL, gw, sr.height / CELL);
+        cx.clip();
+        sec.querySelectorAll(ART_SEL).forEach((img) => {
+          if (!img.complete || !img.naturalWidth || !vis(img.closest('.st-land__art') || img)) return;
+          const b = img.getBoundingClientRect();
+          const mir = String(getComputedStyle(img).scale || '').trim().startsWith('-1');
+          const x = b.left / CELL;
+          const y = (b.top - top0) / CELL;
+          const w = b.width / CELL;
+          const h = b.height / CELL;
+          cx.save();
+          if (mir) {
+            cx.translate(x + w, y);
+            cx.scale(-1, 1);
+            cx.drawImage(img, 0, 0, w, h);
+          } else cx.drawImage(img, x, y, w, h);
+          cx.restore();
+        });
+        cx.restore();
+      });
+      try {
+        const A = cx.getImageData(0, 0, gw, gh).data;
+        for (let i = 0; i < N; i++) if (A[i * 4 + 3] > 12) ink[i] = 1;
+      } catch (e) {
+        // art from another origin taints the canvas: the line then keeps clear of copy and edges only
+      }
+      for (let i = 0; i < N; i++) if (ink[i]) g[i] = 1;
+      const E = Math.ceil(8 / CELL);
+      for (let y = 0; y < gh; y++) {
+        for (let x = 0; x < E; x++) {
+          g[y * gw + x] = 1;
+          g[y * gw + gw - 1 - x] = 1;
+        }
+      }
+      const chamfer = (src) => {
+        const d = new Float32Array(N);
+        for (let i = 0; i < N; i++) d[i] = src[i] ? 0 : 1e9;
+        for (let y = 0; y < gh; y++) {
+          for (let x = 0; x < gw; x++) {
+            const i = y * gw + x;
+            let v = d[i];
+            if (x > 0) v = Math.min(v, d[i - 1] + 1);
+            if (y > 0) {
+              v = Math.min(v, d[i - gw] + 1);
+              if (x > 0) v = Math.min(v, d[i - gw - 1] + 1.414);
+              if (x < gw - 1) v = Math.min(v, d[i - gw + 1] + 1.414);
+            }
+            d[i] = v;
+          }
+        }
+        for (let y = gh - 1; y >= 0; y--) {
+          for (let x = gw - 1; x >= 0; x--) {
+            const i = y * gw + x;
+            let v = d[i];
+            if (x < gw - 1) v = Math.min(v, d[i + 1] + 1);
+            if (y < gh - 1) {
+              v = Math.min(v, d[i + gw] + 1);
+              if (x < gw - 1) v = Math.min(v, d[i + gw + 1] + 1.414);
+              if (x > 0) v = Math.min(v, d[i + gw - 1] + 1.414);
+            }
+            d[i] = v;
+          }
+        }
+        return d;
+      };
+      const free = new Uint8Array(N);
+      for (let i = 0; i < N; i++) free[i] = g[i] ? 0 : 1;
+      const dOut = chamfer(g);
+      const dIn = chamfer(free);
+      const sd = new Float32Array(N);
+      for (let i = 0; i < N; i++) sd[i] = (g[i] ? -dIn[i] : dOut[i]) * CELL;
+      // signed distance (px) to the nearest obstacle, bilinear
+      const field = (x, y) => {
+        const fx = Math.min(gw - 1.001, Math.max(0, x / CELL - 0.5));
+        const fy = Math.min(gh - 1.001, Math.max(0, y / CELL - 0.5));
+        const x0 = Math.floor(fx);
+        const y0 = Math.floor(fy);
+        const tx = fx - x0;
+        const ty = fy - y0;
+        const i = y0 * gw + x0;
+        return sd[i] * (1 - tx) * (1 - ty) + sd[i + 1] * tx * (1 - ty) + sd[i + gw] * (1 - tx) * ty + sd[i + gw + 1] * tx * ty;
+      };
+      // one relaxation step of point (x, y): toward the rest shape's bending, pushed out of the clearance zone
+      const repel = (x, y, inside, outside, gain, lift) => {
+        const v = field(x, y);
+        if (v >= CLR) return [x, y];
+        const gx = field(x + 4, y) - field(x - 4, y);
+        const gy = field(x, y + 4) - field(x, y - 4);
+        const gl = Math.hypot(gx, gy) || 1;
+        const stp = Math.min(v < 0 ? inside : outside, (CLR - v) * gain + lift);
+        return [x + (gx / gl) * stp, y + (gy / gl) * stp];
+      };
+      // ---- 1. every section's route on its content frame, concatenated ----
+      const tmp = document.createElementNS(NS, 'svg');
+      tmp.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden');
+      const tp = document.createElementNS(NS, 'path');
+      tmp.appendChild(tp);
+      document.body.appendChild(tmp);
+      const probe = (sec, css) => {
+        const d = document.createElement('div');
+        d.style.cssText = `position:absolute;${css}`;
+        sec.appendChild(d);
+        const b = d.getBoundingClientRect();
+        d.remove();
+        return b;
+      };
+      let P = [];
+      let prev = null;
+      secs.forEach((sec) => {
+        const r = sec.getBoundingClientRect();
+        const oy = r.top - top0;
+        const inner = sec.querySelector('.st-land__inner');
+        let frame;
+        if (sec.classList.contains('st-ch') && inner) {
+          const ib = inner.getBoundingClientRect();
+          frame = { o: ib.left - r.left - 64, w: ib.width + 128 };
+        } else {
+          const gu = Math.min(Math.max(32, W * 0.04), 64);
+          const fw = probe(sec, 'width:var(--pgw)').width || Math.min(1240, W - 2 * gu);
+          frame = { o: (W - fw) / 2, w: fw };
+        }
+        const src = sec.querySelector('.st-land__beeline');
+        const p0 = src && src.querySelector('path');
+        if (!p0) {
+          prev = frame;
+          return;
+        }
+        const vb = (src.dataset.vb0 || src.getAttribute('viewBox') || '0 0 390 620').split(/\s+/).map(Number);
+        const own = r.height - probe(sec, 'height:calc(var(--nc) * var(--kt, var(--k)))').height;
+        const from = prev || frame;
+        const T = 0.18 * vb[3];
+        const mapX = (x, y) => {
+          const t = smooth(y / T);
+          return from.o + (frame.o - from.o) * t + (x / 390) * (from.w + (frame.w - from.w) * t);
+        };
+        const mapY = (y) => oy + (y / vb[3]) * own;
+        tp.setAttribute('d', mapOnly(p0.dataset.raw || p0.getAttribute('d'), mapX, mapY));
+        const S = sampleD(tp, STEP);
+        if (P.length && Math.hypot(S[0][0] - P[P.length - 1][0], S[0][1] - P[P.length - 1][1]) < 3) S.shift();
+        P.push(...S);
+        prev = frame;
+      });
+      tmp.remove();
+      if (P.length < 4) return;
+      const L = P.length;
+      const a0 = P[0];
+      const a1 = P[L - 1];
+      // ---- 2. global pre-smooth ----
+      P = gauss(P, 160, STEP);
+      P[0] = a0;
+      P[L - 1] = a1;
+      // ---- 3. topology: each crossed cluster of copy boxes (18 px zones that touch) is detoured on one side ----
+      const CL = copy.map((R) => ({ l: R.l - CLR, r: R.r + CLR, t: R.t - CLR, b: R.b + CLR }));
+      for (let merged = true; merged; ) {
+        merged = false;
+        outer: for (let u = 0; u < CL.length; u++) {
+          for (let v = u + 1; v < CL.length; v++) {
+            const A = CL[u];
+            const B = CL[v];
+            if (A.l < B.r && B.l < A.r && A.t < B.b && B.t < A.b) {
+              CL[u] = { l: Math.min(A.l, B.l), r: Math.max(A.r, B.r), t: Math.min(A.t, B.t), b: Math.max(A.b, B.b) };
+              CL.splice(v, 1);
+              merged = true;
+              break outer;
+            }
+          }
+        }
+      }
+      CL.forEach((X) => {
+        const inX = (p) => p[0] > X.l && p[0] < X.r && p[1] > X.t && p[1] < X.b;
+        let i = 1;
+        while (i < L - 1) {
+          if (!inX(P[i])) {
+            i++;
+            continue;
+          }
+          let j = i;
+          while (j < L - 1 && inX(P[j])) j++;
+          const A0 = P[i - 1];
+          const B0 = P[Math.min(L - 1, j)];
+          const vert = Math.abs(B0[1] - A0[1]) >= Math.abs(B0[0] - A0[0]);
+          // a vertical run goes round left / right, a horizontal one over / under; the cheaper clear side wins
+          const sides = vert ? [(p) => [X.l, p[1]], (p) => [X.r, p[1]]] : [(p) => [p[0], X.t], (p) => [p[0], X.b]];
+          let best = sides[0];
+          let bc = 1e12;
+          sides.forEach((fn) => {
+            let c = 0;
+            let bad = 0;
+            for (let k = i; k < j; k++) {
+              const q = fn(P[k]);
+              c += Math.hypot(q[0] - P[k][0], q[1] - P[k][1]);
+              if (field(q[0], q[1]) < CLR * 0.6) bad++;
+            }
+            c += bad * 400;
+            if (c < bc) {
+              bc = c;
+              best = fn;
+            }
+          });
+          for (let k = i; k < j; k++) P[k] = best(P[k]);
+          i = j + 1;
+        }
+      });
+      // ---- 4. rest shape: re-smooth + meander ----
+      P = gauss(P, 36, STEP);
+      P[0] = a0;
+      P[L - 1] = a1;
+      P = meander(P, 12, 560, 0, 120);
+      // ---- 5. elastic band ----
+      const lapR = lap(P);
+      for (let it = 0; it < 420; it++) {
+        const Q = P.map((p) => p.slice());
+        for (let i = 1; i < L; i++) {
+          const nx = P[i + 1] || [2 * P[i][0] - P[i - 1][0], 2 * P[i][1] - P[i - 1][1]];
+          const lx = (P[i - 1][0] + nx[0]) / 2 - P[i][0];
+          const ly = (P[i - 1][1] + nx[1]) / 2 - P[i][1];
+          Q[i] = repel(P[i][0] + 0.5 * (lx - lapR[i][0]), P[i][1] + 0.5 * (ly - lapR[i][1]), 12, 5, 0.45, 0.5);
+        }
+        P = Q;
+      }
+      // ---- 5a. spurs: where the line returns within 36 px of itself after 100+ px of arc (or within 90 px after
+      // 300+ px) and the shortcut is clear, take the shortcut ----
+      const cutSpurs = () => {
+        for (let i = 1; i < P.length - 14; i++) {
+          for (let j = Math.min(P.length - 2, i + 160); j >= i + 13; j--) {
+            const dd = Math.hypot(P[j][0] - P[i][0], P[j][1] - P[i][1]);
+            const arc = (j - i) * STEP;
+            if (dd < 36 || (dd < 90 && arc > 300 && arc > dd * 5)) {
+              let clear = true;
+              for (let k = 1; k < 8; k++) {
+                if (field(P[i][0] + ((P[j][0] - P[i][0]) * k) / 8, P[i][1] + ((P[j][1] - P[i][1]) * k) / 8) < CLR * 0.6) {
+                  clear = false;
+                  break;
+                }
+              }
+              if (!clear) continue;
+              const A = P[i];
+              const B = P[j];
+              const seg = [];
+              const m = Math.max(1, Math.round(Math.hypot(B[0] - A[0], B[1] - A[1]) / STEP));
+              for (let k = 1; k < m; k++) seg.push([A[0] + ((B[0] - A[0]) * k) / m, A[1] + ((B[1] - A[1]) * k) / m]);
+              P.splice(i + 1, j - i - 1, ...seg);
+              break;
+            }
+          }
+        }
+      };
+      cutSpurs();
+      // ---- 5b. iron out local kinks: smooth (sigma 28), relax against the smoothed rest, twice ----
+      for (let pass = 0; pass < 2; pass++) {
+        let Sm = gauss(P, 28, STEP);
+        Sm[0] = a0;
+        if (pass === 0) Sm = meander(Sm, 7, 480, 1.1, 0);
+        const lap2 = lap(Sm);
+        P = Sm;
+        for (let it = 0; it < 160; it++) {
+          const Q = P.map((p) => p.slice());
+          for (let i = 1; i < P.length - 1; i++) {
+            const lx = (P[i - 1][0] + P[i + 1][0]) / 2 - P[i][0];
+            const ly = (P[i - 1][1] + P[i + 1][1]) / 2 - P[i][1];
+            Q[i] = repel(P[i][0] + 0.5 * (lx - 0.6 * lap2[i][0]), P[i][1] + 0.5 * (ly - 0.6 * lap2[i][1]), 10, 3, 0.35, 0.3);
+          }
+          P = Q;
+        }
+      }
+      cutSpurs();
+      P = gauss(P, 16, STEP);
+      P[0] = a0;
+      // ---- 5c. settle on a fine meander (6 / 360) with strong repulsion, so no stretch reads ruler-straight ----
+      P = meander(P, 6, 360, 0.4, 80);
+      const lapF = lap(P);
+      for (let it = 0; it < 120; it++) {
+        const Q = P.map((p) => p.slice());
+        for (let i = 1; i < P.length - 1; i++) {
+          const lx = (P[i - 1][0] + P[i + 1][0]) / 2 - P[i][0];
+          const ly = (P[i - 1][1] + P[i + 1][1]) / 2 - P[i][1];
+          Q[i] = repel(P[i][0] + 0.5 * (lx - lapF[i][0]), P[i][1] + 0.5 * (ly - lapF[i][1]), 8, 8, 0.6, 0.5);
+        }
+        P = Q;
+      }
+      // a free end (the route ends mid-Pinky) is trimmed until it is clear
+      while (P.length > 8 && field(P[P.length - 1][0], P[P.length - 1][1]) < CLR - 2) P.pop();
+      // ---- 6. one spline, shown by every section through its own slice of the page ----
+      const d = splineD(resample(P, 32));
+      secs.forEach((sec) => {
+        const r = sec.getBoundingClientRect();
+        let svg = sec.querySelector(':scope > svg.st-beecur');
+        if (!svg) {
+          svg = document.createElementNS(NS, 'svg');
+          svg.setAttribute('class', `st-beecur${sec.classList.contains('st-land--cream') ? ' st-beecur--cream' : ''}`);
+          svg.setAttribute('aria-hidden', 'true');
+          svg.setAttribute('focusable', 'false');
+          svg.appendChild(document.createElementNS(NS, 'path'));
+          sec.prepend(svg);
+        }
+        svg.setAttribute('viewBox', `0 ${f(r.top - top0)} ${f(W)} ${f(r.height)}`);
+        svg.firstChild.setAttribute('d', d);
+      });
+    };
+    // the art's alpha is read from the images themselves, so the lazy ones are fetched first (laptop only)
+    const ART_IMGS = '.st-land .st-land__art img, .st-land .st-land__card img';
+    const artReady = () => {
+      const wait = [];
+      document.querySelectorAll(ART_IMGS).forEach((img) => {
+        if (img.complete || !vis(img.closest('.st-land__art') || img)) return;
+        img.loading = 'eager';
+        wait.push(
+          new Promise((r) => {
+            img.addEventListener('load', r, { once: true });
+            img.addEventListener('error', r, { once: true });
+          })
+        );
+      });
+      return wait.length ? Promise.race([Promise.all(wait), new Promise((r) => setTimeout(r, 6000))]) : Promise.resolve();
+    };
+    let gen = 0;
+    const laptop = async () => {
+      const run = ++gen;
+      await artReady();
+      if (run !== gen || !desk.matches) return;
+      drawLaptop();
+      // any art still loading (slow network) redraws the line once it arrives
+      document.querySelectorAll(ART_IMGS).forEach((img) => {
+        if (!img.complete && vis(img.closest('.st-land__art') || img)) img.addEventListener('load', later, { once: true });
+      });
+    };
+    const desk = matchMedia('(min-width: 1024px)');
+    const layout = () => {
+      if (desk.matches) {
+        if (!document.querySelector('.st-land__beeline[data-vb0]')) {
+          document.querySelectorAll('.st-land__beeline').forEach((svg) => {
+            svg.dataset.vb0 = svg.getAttribute('viewBox') || '';
+          });
+        }
+        laptop();
+      } else {
+        phone();
+      }
+    };
+    let timer;
+    const later = () => {
+      clearTimeout(timer);
+      timer = setTimeout(layout, 150);
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', layout);
+    else layout();
+    addEventListener('resize', later);
+    addEventListener('load', later);
+    if (document.fonts) document.fonts.ready.then(later);
+  })();
+</script>
+<body><div class="lab-header" style="position:sticky;top:0;z-index:20;height:var(--st-header-h);background:var(--st-paper);box-shadow:0 1px #0001"></div><div class="shopify-section"><div style="height:calc(653 * min(100vw / 390, 1.4px));background:radial-gradient(circle at 49% 22%,#fcc90a,#fbb804 45%,#e8a005);display:grid;place-items:center;font:600 18px sans-serif;color:#0006">hero (st-fable)</div></div><div class="shopify-section st-land-section">
+<section class="st-land st-land--cream " data-land="tiles" style="--h: 340; --c: 17; --nc: 13; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 17%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,2.2 C6,4.1 26,12 39,14 C52,16 65,14 78,14 C91,14 104,14 117,14 C130,14 143,14 156,14 C169,14 182,14 195,14 C208,14 221,14 234,14 C247,14 260,14 273,14 C286,14 299,13.9 312,14 C325,14.1 338,14.5 351,14.5 C364,14.6 383,14.2 389,14.1 L390,17 L0,17 Z%27/%3E%3C/svg%3E');"><div class="st-land__inner">
+    <a class="st-tiles__tile" href="#" style="--x: 10; --y: 16; --w: 183;">
+      <span class="st-land__card" style="--w: 183; --hh: 263; --card-bg: #f8e6cb;">
+        <img src="/artwork/hd/tiles/our-vision-woman.web.webp" width="549" height="789" alt="Illustration: a woman with a bindi resting her hand on her cheek, nails burgundy and gold." decoding="async" style="left: 0; top: 0; width: 100%; height: 100%; object-fit: cover;">
+      </span>
+      <span class="st-tiles__label">Our Vision <span class="st-arrow" aria-hidden="true">↗</span></span>
+    </a>
+    <a class="st-tiles__tile" href="#" style="--x: 205; --y: 18; --w: 180;">
+      <span class="st-land__card st-tiles__collage is-ready" style="--w: 180; --hh: 260; --card-bg: #f5e9da;" aria-hidden="true"><span class="st-tiles__nail" style="left:calc(30*var(--k));top:calc(13*var(--k));rotate:-50deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-on-me.webp');--col:0"></span><span class="st-tiles__nail" style="left:calc(94*var(--k));top:calc(6*var(--k));rotate:-40deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-diet-cherry.webp');--col:2"></span><span class="st-tiles__nail" style="left:calc(14*var(--k));top:calc(69*var(--k));rotate:-55deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-on-me.webp');--col:2"></span><span class="st-tiles__nail" style="left:calc(91*var(--k));top:calc(83*var(--k));rotate:-35deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-green-flag.webp');--col:1"></span><span class="st-tiles__nail" style="left:calc(99*var(--k));top:calc(102*var(--k));rotate:-35deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-wild-card.webp');--col:1"></span><span class="st-tiles__nail" style="left:calc(133*var(--k));top:calc(67*var(--k));rotate:25deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-wild-card.webp');--col:0"></span><span class="st-tiles__nail" style="left:calc(1*var(--k));top:calc(141*var(--k));rotate:35deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-brainwave.webp');--col:0"></span><span class="st-tiles__nail" style="left:calc(69*var(--k));top:calc(126*var(--k));rotate:-25deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-pinky-promise.webp');--col:0"></span><span class="st-tiles__nail" style="left:calc(53*var(--k));top:calc(169*var(--k));rotate:-35deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-shaadi-shift.webp');--col:1"></span><span class="st-tiles__nail" style="left:calc(119*var(--k));top:calc(172*var(--k));rotate:-40deg;--st-nails-src:url('/theme-build/src/assets/st-hd-nails-on-me.webp');--col:2"></span></span>
+      <span class="st-tiles__label">Shop all nails <span class="st-arrow" aria-hidden="true">↗</span></span>
+    </a></div></section></div><div class="shopify-section st-land-section">
+<section class="st-land st-ch st-ch--name-hl" data-land="diet-cherry" style="--h: 620; --c: 13; --nc: 31; --cmin: 427; --cmin2: 500; --cmax: 670; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 13%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,2.4 C6,2.8 26,4 39,5 C52,6 65,7.5 78,8.4 C91,9.3 104,10.3 117,10.5 C130,10.8 143,10.5 156,10 C169,9.4 182,7.9 195,7.1 C208,6.2 221,5.5 234,5 C247,4.5 260,4.3 273,4 C286,3.7 299,3.3 312,3 C325,2.7 338,1.6 351,2.4 C364,3.2 383,7.1 389,8 L390,13 L0,13 Z%27/%3E%3C/svg%3E');" aria-labelledby="h-diet-cherry">
+  <div class="st-land__inner">
+    <svg class="st-land__beeline st-land__beeline--colour" viewBox="0 0 390 620" preserveAspectRatio="none" data-top="M388,0 C372,19.5 356,35.3 356,40.3 C356,45.4 380,47.1 383,48.7" data-x="383" data-yb="-118" data-bot="C383,-78 300,-63 200,-53 C110,-43 60,-33 40,0" data-head="71.7" aria-hidden="true" focusable="false"><path d="M368.2,0 C353.8,19.5 339.5,35.3 339.5,40.3 C339.5,45.4 361,47.1 363.7,48.7 C349.1,130.3 349.1,193.8 363.7,275.4 C378.3,356.9 378.3,420.4 363.7,502 C363.7,542 289.2,557 199.5,567 C118.7,577 73.8,587 55.9,620" data-raw="M388,0 C372,19.5 356,35.3 356,40.3 C356,45.4 380,47.1 383,48.7 L383,502 C383,542 300,557 200,567 C110,577 60,587 40,620" stroke-dashoffset="0"/></svg>
+    <div class="st-land__art st-land__art--l st-land__art--dsz" style="--dw:480;--dl:-2;--db:0;left:calc(-2*var(--k));bottom:calc(-68*var(--k));width:calc(194.9*var(--k))"><img src="/artwork/hd/characters/diet-cherry-woman.web.webp" width="557" height="909" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--r" style="--rx:-8.2;left:calc(277.3*var(--k));bottom:calc(-37*var(--k));width:calc(120.9*var(--k))"><img src="/artwork/hd/props/diet-cherry-can-hand.web.webp" width="363" height="646" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--l st-land__art--wide st-land__art--v12r" style="--rw:470;--rr:-6;--rb:-40;left:calc(277.3*var(--k));bottom:calc(-37*var(--k));width:calc(120.9*var(--k))"><img src="/artwork/_source/desi-diet-can-v1.webp" width="1189" height="1323" alt="" loading="lazy" decoding="async" fetchpriority="low"></div>
+    
+    
+    <p class="st-ch__note">New plans.<br>Same favourite.</p>
+    <h2 class="st-ch__headline" id="h-diet-cherry"><span class="visually-hidden">Haan, wohi wali.</span><svg viewBox="0 0 390 142" aria-hidden="true" focusable="false"><defs><path id="diet-cherry-arc0" d="M-40,104.5 A560,560 0 0 1 430,104.5"/><path id="diet-cherry-arc1" d="M-40,163.8 A560,560 0 0 1 430,163.8"/></defs><g transform="rotate(-3 195 71)"><text class="st-arc" font-size="66.0"><textPath href="#diet-cherry-arc0" startOffset="50%" text-anchor="middle">Haan,</textPath></text><text class="st-arc" font-size="66.0"><textPath href="#diet-cherry-arc1" startOffset="50%" text-anchor="middle">wohi wali.</textPath></text></g></svg></h2>
+    <div class="st-ch__nails" aria-hidden="true"><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/diet-cherry.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/diet-cherry.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/diet-cherry.webp');--col:2"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/diet-cherry.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/diet-cherry.webp');--col:1"></span></div>
+    <p class="st-ch__name"><span aria-hidden="true">“</span>Diet Cherry<span aria-hidden="true">”</span></p>
+    <a class="st-ch__pill" href="#">Shop set<span class="st-arrow" aria-hidden="true">↗</span></a>
+    
+  </div>
+</section></div><div class="shopify-section st-land-section">
+<section class="st-land st-land--cream " data-land="talks-teaser" style="--h: 670; --c: 31; --nc: 19; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 31%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,8.4 C6,7.9 26,6.4 39,5.4 C52,4.5 65,3.3 78,2.8 C91,2.2 104,1.9 117,2 C130,2.1 143,2.5 156,3.1 C169,3.7 182,3.8 195,5.4 C208,7.2 221,10.4 234,13.3 C247,16.1 260,19.9 273,22.6 C286,25.3 299,32.2 312,29.4 C325,26.5 338,9.5 351,5.5 C364,1.5 383,5.5 389,5.5 L390,31 L0,31 Z%27/%3E%3C/svg%3E');"><div class="st-land__inner"><svg class="st-land__beeline st-land__beeline--cream" viewBox="0 0 390 670" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M55.9,0 C61.3,20 70.3,40 64.9,60 C55.9,90 30.8,110 28.1,150 C22,189.5 21.2,220.3 25.4,260 C11.4,368 11.4,452 25.4,560 C25.4,615 32.6,642 39.7,670" data-raw="M40,0 C46,20 56,40 50,60 C40,90 12,110 9,150 C7,190 6,220 6,260 L6,560 C6,615 14,642 22,670" stroke-dashoffset="-13.83"/></svg>
+    <div class="st-tt">
+      <h2 class="st-tt__h">the talks</h2>
+      <p class="st-tt__hl">a little less filtered.</p>
+      <p class="st-tt__sup">real talk on friendship, plans, overthinking and everything in between.</p>
+      <div class="st-tt__board">
+        <nav class="st-tt__chips" aria-label="Topics"><ul role="list"><li><a class="st-tt__chip" href="#">Plot twists</a></li><li><a class="st-tt__chip" href="#">Tiny wins</a></li><li><a class="st-tt__chip" href="#">Nail talk</a></li></ul></nav>
+        <p class="st-tt__label">latest talks</p>
+        <ol class="st-tt__rows" role="list"><li class="st-tt__row"><a class="st-tt__link" href="#" aria-label="What is your smallest friendship green flag?, 0 replies"><span class="st-tavatar" style="--st-nails: url('/artwork/nails/web/green-flag.webp')" aria-hidden="true"><span class="st-tavatar__nail"></span></span><span class="st-tt__text"><span class="st-tt__meta"><b>small talk</b> · <time class="st-ago" datetime="2026-10-09T09:40:00+00:00">9 Oct</time></span><span class="st-tt__title">What is your smallest friendship green flag?</span><span class="st-tt__ex">Mine remembers the stories I never finished.</span></span><span class="st-tt__reply">No replies yet</span></a></li><li class="st-tt__row"><a class="st-tt__link" href="#" aria-label="Same outfit, different confidence., 0 replies"><span class="st-tavatar" style="--st-nails: url('/artwork/nails/web/shaadi-shift.webp')" aria-hidden="true"><span class="st-tavatar__nail"></span></span><span class="st-tt__text"><span class="st-tt__meta"><b>small talk</b> · <time class="st-ago" datetime="2026-10-09T09:35:00+00:00">9 Oct</time></span><span class="st-tt__title">Same outfit, different confidence.</span><span class="st-tt__ex">What changed for you?</span></span><span class="st-tt__reply">No replies yet</span></a></li><li class="st-tt__row st-tt__row--desk"><a class="st-tt__link" href="#" aria-label="The compliment that stayed with you., 0 replies"><span class="st-tavatar" style="--st-nails: url('/artwork/nails/web/pinky-promise.webp')" aria-hidden="true"><span class="st-tavatar__nail"></span></span><span class="st-tt__text"><span class="st-tt__meta"><b>small talk</b> · <time class="st-ago" datetime="2026-10-09T09:30:00+00:00">9 Oct</time></span><span class="st-tt__title">The compliment that stayed with you.</span><span class="st-tt__ex">Still thinking about it.</span></span><span class="st-tt__reply">No replies yet</span></a></li></ol>
+      </div>
+      <p class="st-tt__pre">Posting isn’t open yet. Read along for now.</p>
+      <a class="st-tt__cta" href="#" aria-label="spill your tea on the talks">spill your tea <span class="st-arrow" aria-hidden="true">↗</span></a>
+    </div></div></section></div><div class="shopify-section st-land-section">
+<section class="st-land st-ch st-ch--name-hl" data-land="brainwave" style="--h: 620; --c: 19; --nc: 19; --cmin: 526.7; --cmin2: 593; --cmax: 724.1; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 19%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M390,12 C384,11 364,6.7 351,5.4 C338,4.1 325,3.7 312,4.3 C299,4.8 286,6.9 273,8.7 C260,10.4 247,13.2 234,14.6 C221,16.1 208,16.7 195,17.2 C182,17.7 169,17.7 156,17.3 C143,17 130,15.8 117,15.1 C104,14.3 91,13.9 78,12.7 C65,11.4 52,9.2 39,7.4 C26,5.6 7,2.5 1,1.5 L0,19 L390,19 Z%27/%3E%3C/svg%3E');" aria-labelledby="h-brainwave">
+  <div class="st-land__inner">
+    <svg class="st-land__beeline st-land__beeline--colour" viewBox="0 0 390 620" preserveAspectRatio="none" data-top="M22,0 C22,62.7 30,155.2 34,202.6 C38,250 26,289.6 10,313.3 C5,329.1 5,384.4 5,439.8 C5,487.2 40,526.7 90,549.8 C160,561.6 280,554.5 340,566.3 C372,573.3 386,579 386,582.7" data-x="386" data-yb="0" data-bot="" data-head="172" aria-hidden="true" focusable="false"><path d="M39.7,0 C39.7,62.7 46.9,155.2 50.5,202.6 C54.1,250 43.3,289.6 29,313.3 C24.5,329.1 24.5,384.4 24.5,439.8 C24.5,487.2 55.9,526.7 100.8,549.8 C163.6,561.6 271.3,554.5 325.1,566.3 C353.8,573.3 366.4,579 366.4,582.7 L366.4,620" data-raw="M22,0 C22,62.7 30,155.2 34,202.6 C38,250 26,289.6 10,313.3 C5,329.1 5,384.4 5,439.8 C5,487.2 40,526.7 90,549.8 C160,561.6 280,554.5 340,566.3 C372,573.3 386,579 386,582.7 L386,620" stroke-dashoffset="-1.29"/></svg>
+    <div class="st-land__art st-land__art--l st-land__art--dsz st-land__art--dtop" style="--dw:300;--dl:-2;--dt:-2;left:calc(-2*var(--k));top:calc(-2*var(--k) + var(--dy, 0px));width:calc(134.9*var(--k))"><img src="/artwork/hd/characters/brainwave-woman.web.webp" width="299" height="637" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--f st-land__art--dsz" style="--dw:468;--dl:240;--db:-46;left:calc(45.3*var(--k));bottom:calc(-29*var(--k));width:calc(303.4*var(--k))"><img src="/artwork/hd/props/brainwave-sketchbook.web.webp" width="1110" height="810" alt="" loading="lazy" decoding="async" fetchpriority="low"></div>
+    
+    
+    <p class="st-ch__note">You had the thought.<br>You did the work.</p>
+    <h2 class="st-ch__headline" id="h-brainwave"><span class="visually-hidden">Haan, mera idea hai.</span><svg viewBox="0 0 390 138" aria-hidden="true" focusable="false"><defs><path id="brainwave-arc0" d="M-40,97.8 A560,560 0 0 1 430,97.8"/><path id="brainwave-arc1" d="M-40,163.8 A560,560 0 0 1 430,163.8"/></defs><g transform="rotate(-3 195 69)"><text class="st-arc" font-size="57.7"><textPath href="#brainwave-arc0" startOffset="50%" text-anchor="middle">Haan, mera</textPath></text><text class="st-arc" font-size="57.7"><textPath href="#brainwave-arc1" startOffset="50%" text-anchor="middle">idea hai.</textPath></text></g></svg></h2>
+    <div class="st-ch__nails" aria-hidden="true"><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/brainwave.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/brainwave.webp');--col:2"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/brainwave.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/brainwave.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/brainwave.webp');--col:0"></span></div>
+    <p class="st-ch__name"><span aria-hidden="true">“</span>Brainwave<span aria-hidden="true">”</span></p>
+    <a class="st-ch__pill" href="#">Shop set<span class="st-arrow" aria-hidden="true">↗</span></a>
+    
+  </div>
+</section></div><div class="shopify-section st-land-section">
+<section class="st-land st-ch st-ch--name-hl" data-land="green-flag" style="--h: 620; --c: 19; --nc: 20; --cmin: 412; --cmin2: 582; --cmax: 791.5; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 19%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,12 C6,11 26,6.7 39,5.4 C52,4.1 65,3.7 78,4.3 C91,4.8 104,6.9 117,8.7 C130,10.4 143,13.2 156,14.6 C169,16.1 182,16.7 195,17.2 C208,17.7 221,17.7 234,17.3 C247,17 260,15.8 273,15.1 C286,14.3 299,13.9 312,12.7 C325,11.4 338,9.2 351,7.4 C364,5.6 383,2.5 389,1.5 L390,19 L0,19 Z%27/%3E%3C/svg%3E');" aria-labelledby="h-green-flag">
+  <div class="st-land__inner">
+    <svg class="st-land__beeline st-land__beeline--colour" viewBox="0 0 390 620" preserveAspectRatio="none" data-top="M386,0 C300,8.4 120,5.6 60,12.7 C28,20.4 10,48.1 8,87.7 L8,325 C8,356.6 30,372.4 60,381.9 C92,391.4 96,422 62,452 C30,492 30,532 30,572" data-x="30" data-yb="0" data-bot="" data-head="70.2" aria-hidden="true" focusable="false"><path d="M366.4,0 C289.2,8.4 127.7,5.6 73.8,12.7 C45.1,20.4 29,48.1 27.2,87.7 C16.1,173.1 16.1,239.6 27.2,325 C27.2,356.6 46.9,372.4 73.8,381.9 C102.6,391.4 106.2,422 75.6,452 C46.9,492 46.9,532 46.9,572 L46.9,620" data-raw="M386,0 C300,8.4 120,5.6 60,12.7 C28,20.4 10,48.1 8,87.7 L8,325 C8,356.6 30,372.4 60,381.9 C92,391.4 96,422 62,452 C30,492 30,532 30,572 L30,620" stroke-dashoffset="-3.13"/></svg>
+    <div class="st-land__art st-land__art--l st-land__art--mob" style="left:calc(-7*var(--k));bottom:calc(-130*var(--k));width:calc(405*var(--k))"><img src="/artwork/hd/characters/green-flag-woman.web.webp" width="810" height="1011" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--l st-land__art--mob" style="left:calc(-8*var(--k));bottom:calc(0*var(--k));width:calc(200.9*var(--k))"><img src="/artwork/hd/props/green-flag-phone.web.webp" width="558" height="479" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--l st-land__art--mob" style="left:calc(103.5*var(--k));bottom:calc(-130*var(--k));width:calc(255.5*var(--k))"><img src="/artwork/hd/props/green-flag-hand.web.webp" width="511" height="696" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--l st-land__art--desk st-land__art--mirror" style="left:calc(-4*var(--k));bottom:calc(0*var(--k));width:calc(400*var(--k))"><img src="/theme-build/src/assets/st-hd-green-flag-woman-hero-v2.webp" width="729" height="1020" alt="" loading="lazy" decoding="async" fetchpriority="low"></div>
+    
+    <svg class="st-land__ticks" style="left:calc(30*var(--k));top:calc(38.2*var(--k) + var(--dy, 0px));width:calc(48*var(--k));height:calc(56*var(--k))" viewBox="0 0 48 56" aria-hidden="true" focusable="false"><path d="M44,6 L26,20 M42,30 L18,30 M44,52 L26,40"/></svg>
+    <p class="st-ch__note">Plans fell apart?<br>Bring yourself.</p>
+    <h2 class="st-ch__headline" id="h-green-flag"><span class="visually-hidden">Tum aa jao. Main dekh lungi.</span><svg viewBox="0 0 390 101" aria-hidden="true" focusable="false"><defs><path id="green-flag-arc0" d="M-40,89.3 A560,560 0 0 1 430,89.3"/><path id="green-flag-arc1" d="M-40,123.8 A650,650 0 0 1 430,123.8"/></defs><g transform="rotate(-4 195 51)"><text class="st-arc" font-size="47.0"><textPath href="#green-flag-arc0" startOffset="50%" text-anchor="middle">Tum aa jao.</textPath></text><text class="st-arc" font-size="47.0"><textPath href="#green-flag-arc1" startOffset="50%" text-anchor="middle">Main dekh lungi.</textPath></text></g></svg></h2>
+    <div class="st-ch__nails" aria-hidden="true"><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/green-flag.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/green-flag.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/green-flag.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/green-flag.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/green-flag.webp');--col:1"></span></div>
+    <p class="st-ch__name"><span aria-hidden="true">“</span>Green Flag<span aria-hidden="true">”</span></p>
+    <a class="st-ch__pill" href="#">Shop set<span class="st-arrow" aria-hidden="true">↗</span></a>
+    
+  </div>
+</section></div><div class="shopify-section st-land-section">
+<section class="st-land st-land--cream " data-land="journal-teaser" style="--h: 378; --c: 20; --nc: 0; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 20%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,1.7 C6,4.6 26,16.8 39,18.6 C52,20.3 65,14 78,12.1 C91,10.3 104,8.8 117,7.7 C130,6.6 143,5.9 156,5.7 C169,5.5 182,6.6 195,6.8 C208,7.1 221,6.8 234,7.2 C247,7.6 260,8.6 273,9 C286,9.3 299,8.5 312,9.3 C325,10.1 338,12.8 351,13.9 C364,15 383,15.4 389,15.7 L390,20 L0,20 Z%27/%3E%3C/svg%3E');"><div class="st-land__inner"><svg class="st-land__beeline st-land__beeline--cream" viewBox="0 0 390 378" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M46.9,0 C41.5,30 29,50 26.3,90 C14.7,179.3 14.7,248.7 26.3,338 C26.3,368 73.8,370 199.5,372 C254.1,381.3 296.8,382.9 352.1,378" data-raw="M30,0 C24,30 10,50 7,90 L7,338 C7,368 60,370 200,372 C300,374 350,376 370,378" stroke-dashoffset="-14.05"/></svg>
+    <div class="st-jt">
+      <h2 class="st-jt__h">Small stories.<br>Big feelings.</h2>
+      <div class="st-jt__cards">
+        <div class="st-jt__card st-jt__card--1"><img src="/artwork/hd/journal/journal-writing.web.webp" width="526" height="607" alt="" loading="lazy" decoding="async"></div>
+        <div class="st-jt__card st-jt__card--2"><img src="/artwork/hd/journal/journal-bag-notebook.web.webp" width="526" height="607" alt="" loading="lazy" decoding="async"></div>
+      </div>
+      <a class="st-jt__pill" href="#">From the Journal <span class="st-arrow" aria-hidden="true">↗</span></a>
+      <p class="st-jt__note">For the plans still taking shape…</p>
+    </div></div></section></div><div class="shopify-section st-land-section">
+<section class="st-land st-land--cream " data-land="nail-guide-teaser" style="--h: 545; --c: 0; --nc: 20;"><div class="st-land__inner"><svg class="st-land__beeline st-land__beeline--cream" viewBox="0 0 390 545" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M352.1,0 C316.2,12 199.5,10 127.7,14 C64.9,18 32.6,30 29,80 C18.6,155.5 18.1,214.3 27.2,290 C27.2,330 73.8,350 77.4,386 C77.4,420 46.9,445 37.9,470 C30.8,500 32.6,530 46.9,545" data-raw="M370,0 C330,12 200,10 120,14 C50,18 14,30 10,80 L8,290 C8,330 60,350 64,386 C64,420 30,445 20,470 C12,500 14,530 30,545" stroke-dashoffset="-6.31"/></svg>
+    <p class="st-land__box st-guide__eyebrow" style="--x:40;--y:43;--w:200;">Nail Guide</p>
+    <h2 class="st-land__box st-guide__heading" style="--x:40;--y:78;--w:340;">Find your fit.</h2>
+    <p class="st-land__box st-land__hand" style="--x:30;--y:170;--w:210;--fs:30;--rot:-12deg">A little help, at your fingertips.</p>
+    <div class="st-land__art" style="left:calc(67*var(--k));top:calc(10*var(--k));width:calc(400*var(--k))"><img src="/artwork/guide/web/nail-guide.webp" width="1086" height="1448" alt="Illustration: a fingertip with a bare natural nail and a measuring tape wrapped across it." loading="lazy" decoding="async"></div>
+    <a class="st-land__pill st-land__pill--filled" href="#" style="--x:45;--y:460;--w:305;--ph:58;--pill-bg:#c3021d">Open the guide <span class="st-arrow" aria-hidden="true">↗</span></a></div></section></div><div class="shopify-section st-land-section">
+<section class="st-land st-ch st-ch--name-hl" data-land="shaadi-shift" style="--h: 620; --c: 20; --nc: 25; --cmin: 401.6; --cmin2: 567; --cmax: 651.5; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 20%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,12 C6,12 26,12 39,12 C52,12 65,12.4 78,12 C91,11.6 104,11.3 117,9.8 C130,8.3 143,3.2 156,2.9 C169,2.7 182,6.4 195,8.1 C208,9.8 221,12.4 234,13.1 C247,13.8 260,12.6 273,12.4 C286,12.2 299,12 312,12 C325,11.9 338,11.3 351,12.3 C364,13.3 383,17 389,17.9 L390,20 L0,20 Z%27/%3E%3C/svg%3E');" aria-labelledby="h-shaadi-shift">
+  <div class="st-land__inner">
+    <svg class="st-land__beeline st-land__beeline--colour" viewBox="0 0 390 620" preserveAspectRatio="none" data-top="M30,0 C20,25.1 12,114.8 10,195.6 L8,308.7 C8,357.2 30,416.6 120,426.6 C220,431.6 300,446.6 360,486.6 C385,506.6 386,536.6 386,556.6" data-x="386" data-yb="0" data-bot="" data-head="49" aria-hidden="true" focusable="false"><path d="M46.9,0 C37.9,25.1 30.8,114.8 29,195.6 C23.1,236.2 22.6,267.9 27.2,308.7 C27.2,357.2 46.9,416.6 127.7,426.6 C217.4,431.6 289.2,446.6 343.1,486.6 C365.5,506.6 366.4,536.6 366.4,556.6 L366.4,620" data-raw="M30,0 C20,25.1 12,114.8 10,195.6 L8,308.7 C8,357.2 30,416.6 120,426.6 C220,431.6 300,446.6 360,486.6 C385,506.6 386,536.6 386,556.6 L386,620" stroke-dashoffset="-0.51"/></svg>
+    <div class="st-land__art st-land__art--l st-land__art--mob" style="left:calc(0*var(--k));bottom:calc(-4.4*var(--k));width:calc(398.2*var(--k))"><img src="/artwork/hd/props/shaadi-shift-sweep.web.webp" width="1048" height="672" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--l st-land__art--desk st-land__art--dsz" style="--dw:470;--dl:-6;--db:-60;left:calc(0*var(--k));bottom:calc(-4.4*var(--k));width:calc(398.2*var(--k))"><img src="/theme-build/src/assets/st-hd-shaadi-shift-woman.webp" width="780" height="1022" alt="" loading="lazy" decoding="async" fetchpriority="low"></div>
+    
+    
+    <p class="st-ch__note st-ch__note--one">Her big day. Your cue.</p>
+    <h2 class="st-ch__headline" id="h-shaadi-shift"><span class="visually-hidden">Dulhan tu. Duty meri.</span><svg viewBox="0 0 390 134" aria-hidden="true" focusable="false"><defs><path id="shaadi-shift-arc0" d="M-40,101.5 A560,560 0 0 1 430,101.5"/><path id="shaadi-shift-arc1" d="M-40,157.6 A560,560 0 0 1 430,157.6"/></defs><g transform="rotate(-5 195 67)"><text class="st-arc" font-size="62.3"><textPath href="#shaadi-shift-arc0" startOffset="50%" text-anchor="middle">Dulhan tu.</textPath></text><text class="st-arc" font-size="62.3"><textPath href="#shaadi-shift-arc1" startOffset="50%" text-anchor="middle">Duty meri.</textPath></text></g></svg></h2>
+    <div class="st-ch__nails" aria-hidden="true"><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/shaadi-shift.webp');--col:2"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/shaadi-shift.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/shaadi-shift.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/shaadi-shift.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/shaadi-shift.webp');--col:2"></span></div>
+    <p class="st-ch__name"><span aria-hidden="true">“</span>Shaadi Shift<span aria-hidden="true">”</span></p>
+    <a class="st-ch__pill" href="#">Shop set<span class="st-arrow" aria-hidden="true">↗</span></a>
+    
+  </div>
+</section></div><div class="shopify-section st-land-section">
+<section class="st-land st-ch st-ch--name-hl" data-land="on-me" style="--h: 620; --c: 25; --nc: 10; --cmin: 397.3; --cmin2: 592; --cmax: 715.5; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 25%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,13.6 C6,11.7 26,3.5 39,1.7 C52,-0.1 65,1.7 78,2.5 C91,3.3 104,5 117,6.5 C130,8 143,9.5 156,11.5 C169,13.5 182,16.4 195,18.3 C208,20.2 221,22.1 234,22.9 C247,23.8 260,23.5 273,23.5 C286,23.5 299,24.1 312,23 C325,21.9 338,19.3 351,17 C364,14.8 383,10.7 389,9.4 L390,25 L0,25 Z%27/%3E%3C/svg%3E');" aria-labelledby="h-on-me">
+  <div class="st-land__inner">
+    <svg class="st-land__beeline st-land__beeline--colour" viewBox="0 0 390 620" preserveAspectRatio="none" data-top="M386,0 C330,9.7 140,2.8 60,9.7 C22,9.7 12,16.7 10,26.2 C9,66.6 8,114.9 8,155.1 L4,316.1" data-x="4" data-yb="-229.3" data-bot="C4,-182.5 24,-132.1 54,-96.1 C120,-67.3 300,-63.7 336,-60.1 L330,0" data-head="71.1" aria-hidden="true" focusable="false"><path d="M366.4,0 C316.2,9.7 145.6,2.8 73.8,9.7 C39.7,9.7 30.8,16.7 29,26.2 C22.3,72.5 21.8,108.6 27.2,155.1 C18.4,212.9 17.4,258 23.6,316.1 C20.1,343 20.1,363.8 23.6,390.7 C23.6,437.5 41.5,487.9 68.5,523.9 C127.7,552.7 289.2,556.3 321.5,559.9 L316.2,620" data-raw="M386,0 C330,9.7 140,2.8 60,9.7 C22,9.7 12,16.7 10,26.2 C9,66.6 8,114.9 8,155.1 L4,316.1 L4,390.7 C4,437.5 24,487.9 54,523.9 C120,552.7 300,556.3 386,559.9 L386,620" stroke-dashoffset="-13.17"/></svg>
+    <div class="st-land__art st-land__art--l st-land__art--dsz" style="--dw:500;--dl:-6;--db:-40;left:calc(-6*var(--k));bottom:calc(0*var(--k));width:calc(225.7*var(--k))"><img src="/artwork/hd/characters/on-me-woman.web.webp" width="535" height="721" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--r" style="--rx:-8.4;left:calc(263.3*var(--k));bottom:calc(-5.7*var(--k));width:calc(135.1*var(--k))"><img src="/artwork/hd/props/on-me-receipt-hand.web.webp" width="391" height="581" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--l st-land__art--wide st-land__art--v12r" style="--rw:330;--rr:-10;--rb:-8;left:calc(263.3*var(--k));bottom:calc(-5.7*var(--k));width:calc(135.1*var(--k))"><img src="/artwork/hd/props/on-me-receipt-hand.web.webp" width="391" height="581" alt="" loading="lazy" decoding="async" fetchpriority="low"></div>
+    
+    
+    <p class="st-ch__note">Good company.<br>One more round.<svg class="st-ch__note-ticks" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3,15 L8,3 M7,17 L18,8 M8,20 L19,19"/></svg></p>
+    <h2 class="st-ch__headline" id="h-on-me"><span class="visually-hidden">Bill idhar.</span><svg viewBox="0 0 390 92" aria-hidden="true" focusable="false"><defs><path id="on-me-arc0" d="M-40,110.8 A560,560 0 0 1 430,110.8"/></defs><g transform="rotate(-6 195 46)"><text class="st-arc" font-size="73.9"><textPath href="#on-me-arc0" startOffset="50%" text-anchor="middle">Bill idhar.</textPath></text></g></svg></h2>
+    <div class="st-ch__nails" aria-hidden="true"><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/on-me.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/on-me.webp');--col:2"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/on-me.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/on-me.webp');--col:2"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/on-me.webp');--col:0"></span></div>
+    <p class="st-ch__name"><span aria-hidden="true">“</span>On Me<span aria-hidden="true">”</span></p>
+    <a class="st-ch__pill" href="#">Shop set<span class="st-arrow" aria-hidden="true">↗</span></a>
+    <p class="st-ch__caption">Before anyone starts splitting…</p>
+  </div>
+</section></div><div class="shopify-section st-land-section">
+<section class="st-land st-ch st-ch--name-hl" data-land="wild-card" style="--h: 620; --c: 10; --nc: 12; --cmin: 408.8; --cmin2: 543; --cmax: 697.1; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 10%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M390,7.6 C384,7.9 364,9.1 351,9.4 C338,9.7 325,9.6 312,9.5 C299,9.3 286,8.8 273,8.5 C260,8.1 247,7.8 234,7.4 C221,7 208,6.5 195,5.9 C182,5.4 169,4.9 156,4.3 C143,3.7 130,2.9 117,2.3 C104,1.7 91,0.8 78,0.5 C65,0.2 52,0.2 39,0.4 C26,0.6 7,1.6 1,1.8 L0,10 L390,10 Z%27/%3E%3C/svg%3E');" aria-labelledby="h-wild-card">
+  <div class="st-land__inner">
+    <svg class="st-land__beeline st-land__beeline--colour" viewBox="0 0 390 620" preserveAspectRatio="none" data-top="M330,0 C330,34 386,58 386,118" data-x="386" data-yb="-170.5" data-bot="C386,-137.5 300,-115.5 200,-82.5 C100,-49.5 20,-38.5 14,0" data-head="66.1" aria-hidden="true" focusable="false"><path d="M316.2,0 C316.2,34 366.4,58 366.4,118 C351.8,237.3 351.8,330.2 366.4,449.5 C366.4,482.5 289.2,504.5 199.5,537.5 C109.7,570.5 37.9,581.5 32.6,620" data-raw="M386,0 L386,449.5 C386,482.5 300,504.5 200,537.5 C100,570.5 20,581.5 14,620" stroke-dashoffset="-10.02"/></svg>
+    <div class="st-land__art st-land__art--l st-land__art--dsz" style="--dw:588;--dl:-8;--db:-176;left:calc(-8.2*var(--k));bottom:calc(-204*var(--k));width:calc(363.3*var(--k))"><img src="/artwork/hd/characters/wild-card-woman-v2.web.webp" width="773" height="1022" alt="" loading="lazy" decoding="async" fetchpriority="low"></div><div class="st-land__art st-land__art--f st-land__art--dsz" style="--dw:372;--dl:300;--db:-22;left:calc(174.4*var(--k));bottom:calc(-32.8*var(--k));width:calc(217.8*var(--k))"><img src="/artwork/hd/props/wild-card-cards-hand-v2.web.webp" width="484" height="556" alt="" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="st-land__cards" aria-hidden="true"><img class="st-land__card-ace" src="/theme-build/src/assets/st-hd-wild-card-ace.svg" width="46" height="64" alt="" loading="lazy" decoding="async"><img class="st-land__card-king" src="/theme-build/src/assets/st-hd-wild-card-king.svg" width="46" height="64" alt="" loading="lazy" decoding="async"></div>
+    
+    <p class="st-ch__note st-ch__note--one">Cards down. Smile on.<svg class="st-ch__note-ticks" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3,15 L8,3 M7,17 L18,8 M8,20 L19,19"/></svg></p>
+    <h2 class="st-ch__headline" id="h-wild-card"><span class="visually-hidden">Achha. Tum pehle.</span><svg viewBox="0 0 390 138" aria-hidden="true" focusable="false"><defs><path id="wild-card-arc0" d="M-40,49.2 L430,49.2"/><path id="wild-card-arc1" d="M-40,110.8 L430,110.8"/></defs><g transform="rotate(0 195 69)"><text class="st-arc" font-size="61.5"><textPath href="#wild-card-arc0" startOffset="50%" text-anchor="middle">Achha.</textPath></text><text class="st-arc" font-size="61.5"><textPath href="#wild-card-arc1" startOffset="50%" text-anchor="middle">Tum pehle.</textPath></text></g></svg></h2>
+    <div class="st-ch__nails" aria-hidden="true"><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/wild-card.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/wild-card.webp');--col:2"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/wild-card.webp');--col:1"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/wild-card.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/wild-card.webp');--col:1"></span></div>
+    <p class="st-ch__name"><span aria-hidden="true">“</span>Wild Card<span aria-hidden="true">”</span></p>
+    <a class="st-ch__pill" href="#">Shop set<span class="st-arrow" aria-hidden="true">↗</span></a>
+    
+  </div>
+</section></div><div class="shopify-section st-land-section">
+<section class="st-land st-ch st-ch--name-hl" data-land="pinky-promise" style="--h: 623; --c: 12; --nc: 11; --cmin: 411.6; --cmin2: 623; --cmax: 629.2; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 12%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,9.1 C6,9.5 26,10.9 39,11.2 C52,11.6 65,11.5 78,11.4 C91,11.2 104,10.6 117,10.2 C130,9.8 143,9.4 156,8.9 C169,8.4 182,7.8 195,7.1 C208,6.5 221,5.9 234,5.1 C247,4.4 260,3.5 273,2.8 C286,2 299,1 312,0.6 C325,0.2 338,0.2 351,0.5 C364,0.7 383,1.9 389,2.2 L390,12 L0,12 Z%27/%3E%3C/svg%3E');" aria-labelledby="h-pinky-promise">
+  <div class="st-land__inner">
+    <svg class="st-land__beeline st-land__beeline--colour" viewBox="0 0 390 623" preserveAspectRatio="none" data-top="M6,0" data-x="6" data-yb="-173.4" data-bot="C6,-133.4 40,-111.4 100,-103.4 C150,-97.4 185,-95.4 200,-93.4" data-head="48.4" aria-hidden="true" focusable="false"><path d="M25.4,0 C10.8,80.9 10.8,143.9 25.4,224.8 C40,305.7 40,368.7 25.4,449.6 C25.4,489.6 55.9,511.6 109.7,519.6 C141.6,527.4 166.7,530.2 199.5,529.6" data-raw="M6,0 L6,449.6 C6,489.6 40,511.6 100,519.6 C150,525.6 185,527.6 200,529.6" stroke-dashoffset="-11.12"/></svg>
+    <div class="st-land__art st-land__art--l st-land__art--dfade st-land__art--dsz" style="--dw:708;--dl:-8;--db:-50;left:calc(-8.4*var(--k));bottom:calc(-36*var(--k));width:calc(406.8*var(--k))"><img src="/artwork/hd/characters/pinky-promise-scene.web.webp" width="904" height="797" alt="" loading="lazy" decoding="async" fetchpriority="low"></div>
+    
+    
+    <p class="st-ch__note st-ch__note--one">Crowded room. Familiar hand.</p>
+    <h2 class="st-ch__headline" id="h-pinky-promise"><span class="visually-hidden">Haath do. Main hoon.</span><svg viewBox="0 0 390 130" aria-hidden="true" focusable="false"><defs><path id="pinky-promise-arc0" d="M-40,97.9 A560,560 0 0 1 430,97.9"/><path id="pinky-promise-arc1" d="M-40,155.7 A560,560 0 0 1 430,155.7"/></defs><g transform="rotate(-2 195 65)"><text class="st-arc" font-size="57.8"><textPath href="#pinky-promise-arc0" startOffset="50%" text-anchor="middle">Haath do.</textPath></text><text class="st-arc" font-size="57.8"><textPath href="#pinky-promise-arc1" startOffset="50%" text-anchor="middle">Main hoon.</textPath></text></g></svg></h2>
+    <div class="st-ch__nails" aria-hidden="true"><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/pinky-promise.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/pinky-promise.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/pinky-promise.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/pinky-promise.webp');--col:0"></span><span class="st-ch__nail" style="--st-nails:url('/artwork/nails/web/pinky-promise.webp');--col:0"></span></div>
+    <p class="st-ch__name"><span aria-hidden="true">“</span>Pinky Promise<span aria-hidden="true">”</span></p>
+    <a class="st-ch__pill" href="#">Shop set<span class="st-arrow" aria-hidden="true">↗</span></a>
+    <p class="st-ch__caption">Same people. Different days. Still us.</p>
+  </div>
+</section></div><div class="shopify-section st-land-section">
+<section class="st-land st-land--cream st-land--flow" data-land="shop-all-faq-footer" style="--h: 633; --c: 11; --nc: 0; --edge: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 390 11%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0,2 C6,3 26,7 39,8 C52,9 65,8 78,8 C91,8 104,8 117,8 C130,8 143,8 156,8 C169,8 182,8 195,8 C208,8 221,8 234,8 C247,8 260,8 273,8 C286,8 299,8 312,8 C325,8 338,8 351,8 C364,8 383,8.1 389,8.1 L390,11 L0,11 Z%27/%3E%3C/svg%3E');"><div class="st-land__inner">
+    <div class="st-faq2">
+      <a class="st-land__pill st-land__pill--filled st-faq2__shop" href="#" style="--w:320;--ph:60;--fs:26;--pill-bg:#b80219">Shop all sets <span class="st-arrow" aria-hidden="true">↗</span></a>
+      <h2 class="st-faq2__heading">FAQs</h2>
+      <div class="st-faq2__list"><details class="st-faq2__item"><summary class="st-faq2__q">How do I find my size?<span class="st-faq2__plus" aria-hidden="true"></span></summary><div class="st-faq2__a"><p>Every kit has all 12 sizes, so there’s nothing to pick at checkout.</p></div></details><details class="st-faq2__item"><summary class="st-faq2__q">How do I apply and remove?<span class="st-faq2__plus" aria-hidden="true"></span></summary><div class="st-faq2__a"><p>Prep your nails, then press on with glue or tabs.</p></div></details><details class="st-faq2__item"><summary class="st-faq2__q">What comes in the box?<span class="st-faq2__plus" aria-hidden="true"></span></summary><div class="st-faq2__a"><p>24 almond press-ons in 12 sizes, nail glue, adhesive tabs, a mini file and more.</p></div></details></div>
+    </div></div></section></div><div class="shopify-section"><div class="st-footer st-footer--landing">
+  <a class="st-logo st-footer__logo" href="#"><span class="st-logo__words" aria-hidden="true"><span>small</span><span>talk</span></span></a>
+  <p class="st-footer__tagline">Nails for real conversations.</p>
+  <nav class="st-footer__nav"><ul role="list"><li><a href="#">Shop</a></li><li><a href="#">Our Story</a></li><li><a href="#">the talks</a></li><li><a href="#">Journal</a></li><li><a href="#">Nail Guide</a></li></ul></nav>
+  <ul class="st-footer__legal" role="list"><li><a href="#">Contact us</a></li><li><a href="#">Shipping policy</a></li><li><a href="#">Privacy policy</a></li></ul>
+  <p class="st-footer__copyright">© 2026 Small Talk. All rights reserved.</p>
+</div></div></body></html>

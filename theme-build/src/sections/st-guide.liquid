@@ -1,0 +1,687 @@
+{% comment %}
+  Section contract.
+  Nail Guide, board 5 frame 5 (spec/nail-guide.md). "Find your fit." (PG-014) with the handwritten note (PG-015) and a
+  set character peeking in at the top right (eye crop of the approved character art). Three numbered steps
+  (PG-017…026): number + title, body, the step photo (10 Oct: hd/photos guide-measure / -apply / -remove, alts PG-032 /
+  PG-110 / PG-111; the older guide illustration stays selectable as "measure-art"), step 01's numbered list (PG-019) and a card that opens in place (size chart PG-020, kit
+  instructions PG-023 / PG-026). Then "Quick answers" (PG-027…031), each row ≥ 44 px.
+  @example
+  <!-- templates/page.nail-guide.json (nail-guide-desi) -->
+{% endcomment %}
+
+{%- liquid
+  assign note = section.settings.note | strip
+  assign note_line_1 = note
+  assign note_line_2 = ''
+  if section.settings.note_break != blank
+    assign sep = ' ' | append: section.settings.note_break | append: ' '
+    if note contains sep
+      assign note_parts = note | split: sep
+      assign note_line_1 = note_parts.first
+      assign note_line_2 = note_parts | slice: 1, 9 | join: sep | prepend: ' ' | prepend: section.settings.note_break
+    endif
+  endif
+
+  # Character peek (snippets/st-peek-map, generated): the HD character's eye near (70, 54) inside the 90 × 131
+  # corner box, as on Our Story / the bag.
+  capture peek
+    render 'st-peek-map', key: section.settings.peek, part: 'guide'
+  endcapture
+  assign peek = peek | strip | split: ','
+-%}
+
+<section class="st-guide" aria-labelledby="StGuide-{{ section.id }}">
+  {%- if peek.size == 6 -%}
+    <span class="st-guide__peek" aria-hidden="true">
+      <img
+        src="{{ peek[0] | asset_url }}"
+        alt=""
+        width="{{ peek[1] }}"
+        height="{{ peek[2] }}"
+        style="left: {{ peek[3] }}px; top: {{ peek[4] }}px; width: {{ peek[5] }}px"
+        decoding="async"
+      >
+    </span>
+  {%- endif -%}
+
+  <header class="st-guide__header">
+    <h1 class="st-guide__title" id="StGuide-{{ section.id }}">{{ section.settings.heading | default: page.title | escape }}</h1>
+    {%- if note != blank -%}
+      <p class="st-guide__note">
+        {{- note_line_1 | escape -}}
+        {%- if note_line_2 != blank -%}<br><span class="st-guide__note-2">{{ note_line_2 | escape }}</span>{%- endif -%}
+      </p>
+    {%- endif -%}
+  </header>
+
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {%- when 'step' -%}
+        {%- assign items = block.settings.list | newline_to_br | split: '<br />' -%}
+        <section class="st-gstep" aria-labelledby="StGstep-{{ block.id }}" {{ block.shopify_attributes }}>
+          <h2 class="st-gstep__heading" id="StGstep-{{ block.id }}">
+            <span class="st-gstep__num">{{ block.settings.number | escape }}</span>
+            <span class="st-gstep__title">{{ block.settings.heading | escape }}</span>
+          </h2>
+          {%- if block.settings.body != blank -%}
+            <p class="st-gstep__body">{{ block.settings.body | escape }}</p>
+          {%- endif -%}
+
+          {%- case block.settings.image -%}
+            {%- when 'measure', 'apply', 'remove' -%}
+              <img
+                class="st-gstep__photo"
+                src="{{ 'st-hd-guide-' | append: block.settings.image | append: '.webp' | asset_url }}"
+                width="1125"
+                height="633"
+                alt="{{ block.settings.image_alt | escape }}"
+                loading="lazy"
+                decoding="async"
+              >
+            {%- when 'measure-art' -%}
+            <div class="st-gstep__media">
+              <img
+                class="st-gstep__art"
+                src="{{ 'st-nail-guide.webp' | asset_url }}"
+                width="1086"
+                height="1448"
+                alt="{{ block.settings.image_alt | escape }}"
+                loading="lazy"
+                decoding="async"
+              >
+              <svg class="st-gstep__ticks" viewBox="0 0 40 60" aria-hidden="true" focusable="false"><path d="M30 6 L36 18"/><path d="M8 26 L30 30"/><path d="M14 52 L32 40"/></svg>
+            </div>
+          {%- endcase -%}
+
+          {%- assign list_count = 0 -%}
+          {%- for item in items -%}{%- assign item_text = item | strip -%}{%- if item_text != blank -%}{%- assign list_count = list_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+          {%- if list_count > 0 -%}
+            <ol class="st-gstep__list" role="list">
+              {%- assign n = 0 -%}
+              {%- for item in items -%}
+                {%- assign item_text = item | strip -%}
+                {%- if item_text == blank -%}{%- continue -%}{%- endif -%}
+                {%- assign n = n | plus: 1 -%}
+                <li><span class="st-gstep__dot" aria-hidden="true">{{ n }}</span>{{ item_text | escape }}</li>
+              {%- endfor -%}
+            </ol>
+          {%- endif -%}
+
+          {%- if block.settings.card_title != blank and block.settings.card_body != blank -%}
+            <details class="st-gcard">
+              <summary class="st-gcard__summary">
+                <span class="st-gcard__text">
+                  <span class="st-gcard__title">{{ block.settings.card_title | escape }}</span>
+                  {%- if block.settings.card_sub != blank -%}<span class="st-gcard__sub">{{ block.settings.card_sub | escape }}</span>{%- endif -%}
+                </span>
+                <svg class="st-gcard__plus" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 V14.5 M1.5 8 H14.5"/></svg>
+              </summary>
+              <div class="st-gcard__body">{{ block.settings.card_body }}</div>
+            </details>
+          {%- endif -%}
+        </section>
+      {%- when 'question' -%}
+        {%- if block.settings.question != blank and block.settings.answer != blank -%}
+          {%- unless quick_open -%}
+            {%- assign quick_open = true -%}
+            <h2 class="st-guide__quick">{{ section.settings.quick_heading | escape }}</h2>
+          {%- endunless -%}
+          <details class="st-gqa" {{ block.shopify_attributes }}>
+            <summary class="st-gqa__summary">
+              <span>{{ block.settings.question | escape }}</span>
+              <svg class="st-gcard__plus" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 V14.5 M1.5 8 H14.5"/></svg>
+            </summary>
+            <div class="st-gqa__answer">{{ block.settings.answer }}</div>
+          </details>
+        {%- endif -%}
+    {%- endcase -%}
+  {%- endfor -%}
+</section>
+
+{% stylesheet %}
+  /* Board 5 frame 5 at 390 (spec/nail-guide.md). */
+  .st-guide {
+    position: relative;
+    max-width: 40rem;
+    margin-inline: auto;
+    padding: 15px 12px 30px 18px;
+    overflow: hidden;
+    color: #14163b;
+    font-family: var(--font-ui);
+  }
+
+  .st-guide > * {
+    min-width: 0;
+  }
+
+  /* Character peek x 300–390, y 65–200, bleeding off the right edge; the eye near (370, 123). */
+  .st-guide__peek {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    inline-size: clamp(56px, 22vw, 90px);
+    block-size: 131px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .st-guide__peek img {
+    position: absolute;
+    max-width: none;
+    height: auto;
+  }
+
+  @media screen and (max-width: 389px) {
+    .st-guide__peek img {
+      translate: calc(22vw - 90px) 0;
+    }
+  }
+
+  .st-guide__header {
+    position: relative;
+  }
+
+  /* H1 x 18–305, y 85–140 (ink 278 × 51 at x 21): spec says Source Serif 4 Bold 50 px; the board ink is the Black cut at
+     ~54 px, with the burgundy shade the talks heading uses. */
+  .st-guide__title {
+    margin: 0 0 0 1px;
+    color: var(--st-burgundy);
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: min(54px, 13.85vw);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .st-guide__title {
+      background: linear-gradient(180deg, #8a0619 0%, #8a0619 30%, #a8081f 46%, #6a0212 74%, #4f0009 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  }
+
+  /* Note x 22–210, y 150–195: Kalam Light 20 px, #3a55c8, −6°, second line indented. */
+  .st-guide__note {
+    margin: 6px 0 0 5px;
+    color: #3a55c8;
+    font-family: var(--font-annotation);
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 1.2;
+    rotate: -6deg;
+    transform-origin: 0 50%;
+  }
+
+  .st-guide__note-2 {
+    padding-inline-start: 26px;
+  }
+
+  .st-gstep {
+    margin-block-start: 38px;
+  }
+
+  .st-gstep + .st-gstep {
+    margin-block-start: 30px;
+  }
+
+  /* Number DM Sans 700 22 px #9e0a2b at x 18; title DM Sans 700 (board ink = 17 px), --st-red, from x 65. */
+  .st-gstep__heading {
+    display: flex;
+    align-items: baseline;
+    gap: 23px;
+    margin: 0;
+    font-family: var(--font-ui);
+    line-height: 1.2;
+  }
+
+  .st-gstep__num {
+    position: relative;
+    inset-block-start: 2px;
+    color: #9e0a2b;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+
+  .st-gstep__title {
+    color: var(--st-red);
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+
+  /* Body x 65–320, 2 lines: DM Sans 400 (board ink = 14 px), --st-body. */
+  .st-gstep__body {
+    max-inline-size: 262px; /* board line breaks: "…the widest part / of your natural nail, like this." */
+    margin: 4px 0 0 47px;
+    color: #6e7184; /* board body grey (tokens --st-body); 4.73:1 on the page ground */
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
+  /* Image x 18–375, 357 × 116, radius 8, #f4eff0: the accepted fingertip art, turned so the tip points left (no redraw),
+     shown at 0.21× (a downscale), with three blue tick strokes (2.5 px #2547d0) by the tip. */
+  /* Step photos (1125 × 633): the full frame at the column width, radius 8 like the illustration panel. */
+  .st-gstep__photo {
+    display: block;
+    inline-size: calc(100% - 3px);
+    block-size: auto;
+    margin: 8px 3px 0 0;
+    border-radius: 8px;
+  }
+
+  .st-gstep__media {
+    position: relative;
+    block-size: 116px;
+    margin: 8px 3px 0 0;
+    border-radius: 8px;
+    background: #f4eff0;
+    overflow: hidden;
+  }
+
+  .st-gstep__art {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 150px;
+    inline-size: 228px;
+    max-width: none;
+    height: auto;
+    transform-origin: 0 0;
+    translate: -92px 137px; /* tip (0.21 × y 438) at x 150, finger centre (0.21 × x 652) on the panel's middle */
+    rotate: -90deg;
+  }
+
+  .st-gstep__ticks {
+    position: absolute;
+    inset-block-start: 24px;
+    inset-inline-start: 102px;
+    inline-size: 30px;
+    block-size: 45px;
+    fill: none;
+    stroke: #2547d0;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  /* Numbered list, 3 rows of 30 px: dot Ø 20 #a60a2f, white 12 px; text (board ink = 14 px) #373f8b from x 55. */
+  .st-gstep__list {
+    display: grid;
+    gap: 9px;
+    margin: 9px 0 0;
+    padding: 0;
+    list-style: none;
+    color: #373f8b;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .st-gstep__list li {
+    display: grid;
+    grid-template-columns: 21px minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
+    margin-inline-start: 2px;
+  }
+
+  .st-gstep__dot {
+    display: grid;
+    place-items: center;
+    inline-size: 21px;
+    block-size: 21px;
+    border-radius: 50%;
+    background: #a60a2f;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  /* Cards x 18–378: white, 1 px #e2e3e6, radius 8; title DM Sans 600 (board ink = 15 px) navy; "+" #d0204a. */
+  .st-gcard {
+    margin: 18px 0 0;
+    border: 1px solid #e2e3e6;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(20 22 59 / 0.04);
+  }
+
+  .st-gstep__body + .st-gcard {
+    margin-block-start: 14px;
+  }
+
+  .st-gcard__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-block-size: 44px;
+    padding: 8px 14px 8px 15px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .st-gcard__summary::-webkit-details-marker,
+  .st-gqa__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .st-gcard__summary:focus-visible,
+  .st-gqa__summary:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 2px;
+  }
+
+  .st-gcard__text {
+    display: grid;
+    gap: 4px;
+  }
+
+  .st-gcard__title {
+    color: #14163b;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  .st-gcard__sub {
+    color: var(--st-muted-text);
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .st-gcard__plus {
+    flex: none;
+    inline-size: 15px;
+    block-size: 15px;
+    fill: none;
+    stroke: #d0204a;
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: rotate 0.2s ease;
+  }
+
+  .st-gcard[open] > summary .st-gcard__plus,
+  .st-gqa[open] > summary .st-gcard__plus {
+    rotate: 45deg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .st-gcard__plus {
+      transition: none;
+    }
+  }
+
+  .st-gcard__body,
+  .st-gqa__answer {
+    color: #1a1a2e;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .st-gcard__body {
+    padding: 0 15px 14px;
+  }
+
+  .st-gcard__body > * {
+    margin: 0;
+  }
+
+  .st-gcard__body > * + * {
+    margin-block-start: 0.7em;
+  }
+
+  .st-gcard__body ol {
+    padding-inline-start: 1.2em;
+  }
+
+  .st-gcard__body li + li {
+    margin-block-start: 0.35em;
+  }
+
+  /* Size chart: twelve "0 = 18 mm" cells in three columns. */
+  .st-gcard__body ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-gcard__body ul li {
+    margin: 0;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: #f7f4f5;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .st-gcard__body a,
+  .st-gqa__answer a {
+    display: inline-block;
+    padding-block: 12px;
+    margin-block: -12px;
+    color: var(--st-burgundy);
+    text-underline-offset: 3px;
+  }
+
+  /* "Quick answers" y 1098: DM Sans 700 (board ink = 16 px), #111; rows ≥ 44 px (the board's 22 px rows are too tight),
+     question 13 px navy, "+" #d0204a at x 360, 1 px dividers. */
+  .st-guide__quick {
+    margin: 26px 0 4px 2px;
+    color: #111;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .st-gqa {
+    border-block-end: 1px solid #e2e3e6;
+  }
+
+  .st-guide__quick + .st-gqa {
+    border-block-start: 1px solid #e2e3e6;
+  }
+
+  .st-gqa__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-block-size: 44px;
+    padding: 6px 14px 6px 15px;
+    color: #14163b;
+    font-size: 13px;
+    line-height: 1.35;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .st-gqa__answer {
+    padding: 0 15px 14px;
+  }
+
+  .st-gqa__answer > * {
+    margin: 0;
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2 + v1.2: /pages/nail-guide-desi) */
+  /* >= 1024: the page spans the screen with the page frame as padding, so the character peek keeps its cut on the
+     screen's right edge (scaled from its top-right corner to ~160 px). H1 row left; each step two columns 6fr | 6fr,
+     text and photo, the second step mirrored; Quick answers as two columns of accordions. */
+  @media screen and (min-width: 1024px) {
+    .st-guide {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: clamp(32px, 4vw, 72px);
+      align-items: start;
+      max-width: none;
+      padding: 40px max(clamp(32px, 4vw, 64px), (100% - 1240px) / 2) var(--st-section-space, 64px);
+    }
+
+    /* (the absolutely placed peek stays out of the grid lines, so its containing block is the whole section) */
+    .st-guide > :not(.st-gqa, .st-guide__peek) {
+      grid-column: 1 / -1;
+    }
+
+    .st-guide__peek {
+      inline-size: 90px;
+      scale: 1.78;
+      transform-origin: 100% 0;
+    }
+
+    /* the H1 row is as tall as the scaled peek (131 x 1.78 = 233 from the section top), so step 01 starts under it */
+    .st-guide__header {
+      min-block-size: 150px;
+    }
+
+    .st-guide__title {
+      font-size: 62px;
+    }
+
+    .st-guide__note {
+      font-size: 23px;
+    }
+
+    .st-gstep,
+    .st-gstep + .st-gstep {
+      display: grid;
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      column-gap: clamp(32px, 4vw, 72px);
+      align-content: center;
+      margin-block-start: 56px;
+    }
+
+    .st-gstep > * {
+      grid-column: 1;
+    }
+
+    .st-gstep > .st-gstep__photo,
+    .st-gstep > .st-gstep__media {
+      grid-column: 2;
+      grid-row: 1 / span 6;
+      align-self: center;
+      margin: 0;
+    }
+
+    .st-gstep:nth-of-type(2) > * {
+      grid-column: 2;
+    }
+
+    .st-gstep:nth-of-type(2) > .st-gstep__photo,
+    .st-gstep:nth-of-type(2) > .st-gstep__media {
+      grid-column: 1;
+    }
+
+    .st-gstep__num {
+      font-size: 25px;
+    }
+
+    .st-gstep__title {
+      font-size: 20px;
+    }
+
+    .st-gstep__body {
+      max-inline-size: 52ch;
+      font-size: 17px;
+    }
+
+    .st-gstep__photo {
+      inline-size: 100%;
+      border-radius: 12px;
+    }
+
+    .st-guide__quick {
+      margin-block-start: 64px;
+    }
+
+    /* the second column's first row gets the same top rule as the first */
+    .st-guide__quick + .st-gqa + .st-gqa {
+      border-block-start: 1px solid #e2e3e6;
+    }
+
+    .st-gqa__summary {
+      font-size: 16px;
+    }
+  }
+  /* END store desktop */
+
+  /* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+  @media screen and (min-width: 1680px) {
+    .st-guide {
+      padding-inline: max(clamp(32px, 4vw, 64px), (100% - 1440px) / 2);
+    }
+  }
+  /* END wide frame */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk nail guide",
+  "tag": "div",
+  "class": "st-guide-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading (PG-014)", "default": "Find your fit." },
+    { "type": "text", "id": "note", "label": "Handwritten note (PG-015)", "default": "A great fit makes it all click." },
+    { "type": "text", "id": "note_break", "label": "Note: word that starts line 2", "default": "makes" },
+    {
+      "type": "select",
+      "id": "peek",
+      "label": "Character peek (top right)",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "on-me", "label": "On Me" },
+        { "value": "brainwave", "label": "Brainwave" },
+        { "value": "diet-cherry", "label": "Diet Cherry" },
+        { "value": "green-flag", "label": "Green Flag" },
+        { "value": "shaadi-shift", "label": "Shaadi Shift" },
+        { "value": "wild-card", "label": "Wild Card" },
+        { "value": "pinky-promise", "label": "Pinky Promise" }
+      ],
+      "default": "on-me"
+    },
+    { "type": "text", "id": "quick_heading", "label": "Quick answers heading (PG-027)", "default": "Quick answers" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "01" },
+        { "type": "text", "id": "heading", "label": "Title" },
+        { "type": "textarea", "id": "body", "label": "Body" },
+        {
+          "type": "select",
+          "id": "image",
+          "label": "Image",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "measure", "label": "Measure (step photo)" },
+            { "value": "apply", "label": "Apply (step photo)" },
+            { "value": "remove", "label": "Remove (step photo)" },
+            { "value": "measure-art", "label": "Measure (earlier guide illustration)" }
+          ],
+          "default": "none"
+        },
+        { "type": "text", "id": "image_alt", "label": "Image alt (PG-032 / PG-110 / PG-111)" },
+        { "type": "textarea", "id": "list", "label": "Numbered list (one item per line)" },
+        { "type": "text", "id": "card_title", "label": "Card title" },
+        { "type": "text", "id": "card_sub", "label": "Card sub" },
+        { "type": "richtext", "id": "card_body", "label": "Card body (opens in place)" }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ]
+}
+{% endschema %}

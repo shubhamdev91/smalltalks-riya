@@ -1,0 +1,10 @@
+{% doc %}
+  A real date for the talks (TLK-009): "9 Oct" from Shopify's timestamp, turned into "just now · n min ago · nh ago ·
+  nd ago" by st-talks.js when it is under 7 days old. Without JavaScript the date stays as "9 Oct".
+
+  @param {string} at - A Shopify date (article.published_at, comment.created_at).
+
+  @example
+  {% render 'st-talk-time', at: article.published_at %}
+{% enddoc %}
+<time class="st-ago" datetime="{{ at | date: '%Y-%m-%dT%H:%M:%S%:z' }}" data-st-ago="{{ at | date: '%s' }}">{{ at | date: '%-d %b' }}</time>

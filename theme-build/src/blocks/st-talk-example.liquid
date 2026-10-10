@@ -1,0 +1,97 @@
+{% doc %}
+  One written example conversation (alias, title, text, topic, optional campaign nail as avatar).
+  Rendered with an "Example conversation" label.
+{% enddoc %}
+
+<li class="st-talk" {{ block.shopify_attributes }}>
+  <span class="st-talk__avatar" aria-hidden="true">
+    {%- if block.settings.campaign != blank -%}
+      {% render 'st-nail', campaign: block.settings.campaign, role: 'signature', sizes: '700px' %}
+    {%- endif -%}
+  </span>
+  <div class="st-talk__body">
+    <p class="st-talk__meta">
+      <span class="st-talk__label">{{ 'small_talk.talks.example_label' | t }}</span>
+      {%- if block.settings.alias != blank -%}<span class="st-talk__alias">{{ block.settings.alias | escape }}</span>{%- endif -%}
+    </p>
+    {%- if block.settings.title != blank -%}
+      <h3 class="st-talk__title">{{ block.settings.title | escape }}</h3>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <p class="st-talk__text">{{ block.settings.text | escape }}</p>
+    {%- endif -%}
+  </div>
+</li>
+
+{% stylesheet %}
+  .st-talk {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.75rem;
+    padding-block-end: 1rem;
+    border-block-end: 1px solid var(--st-divider);
+  }
+
+  .st-talk__avatar {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--st-tint);
+  }
+
+  .st-talk__avatar .st-nail-img {
+    width: 45%;
+    rotate: 20deg;
+  }
+
+  .st-talk__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.75rem;
+    margin: 0;
+    font-size: 0.8125rem;
+  }
+
+  .st-talk__label {
+    color: var(--st-blue);
+    font-weight: 600;
+  }
+
+  .st-talk__alias {
+    color: var(--st-muted);
+  }
+
+  .st-talk__title {
+    margin: 0.25rem 0;
+    color: var(--st-ink);
+    font-family: var(--st-font-display);
+    font-size: 1.375rem;
+    line-height: 1.1;
+  }
+
+  .st-talk__text {
+    margin: 0;
+    color: var(--st-body);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Example conversation",
+  "settings": [
+    { "type": "text", "id": "alias", "label": "Example alias" },
+    { "type": "text", "id": "title", "label": "Title" },
+    { "type": "textarea", "id": "text", "label": "Example text" },
+    {
+      "type": "metaobject",
+      "id": "campaign",
+      "label": "Campaign nail for the avatar",
+      "metaobject_type": "small_talk_campaign"
+    }
+  ],
+  "presets": [{ "name": "Example conversation" }]
+}
+{% endschema %}

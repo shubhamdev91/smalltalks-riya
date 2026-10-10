@@ -1,0 +1,102 @@
+[
+ {
+  "tone": 1,
+  "canvas": [
+   558,
+   1512
+  ],
+  "plate_bbox": [
+   174,
+   44,
+   383,
+   401
+  ],
+  "cuticle": {
+   "x": 0.5,
+   "y": 0.2652,
+   "px": [
+    279,
+    401
+   ]
+  },
+  "plate_width_px": 209,
+  "plate_width_frac": 0.3746,
+  "plate_widest_y": 256,
+  "finger_width_at_cuticle_px": 367
+ },
+ {
+  "tone": 2,
+  "canvas": [
+   558,
+   1512
+  ],
+  "plate_bbox": [
+   176,
+   53,
+   381,
+   401
+  ],
+  "cuticle": {
+   "x": 0.5,
+   "y": 0.2652,
+   "px": [
+    279,
+    401
+   ]
+  },
+  "plate_width_px": 206,
+  "plate_width_frac": 0.3692,
+  "plate_widest_y": 267,
+  "finger_width_at_cuticle_px": 366
+ },
+ {
+  "tone": 3,
+  "canvas": [
+   558,
+   1512
+  ],
+  "plate_bbox": [
+   175,
+   55,
+   381,
+   401
+  ],
+  "cuticle": {
+   "x": 0.5,
+   "y": 0.2652,
+   "px": [
+    279,
+    401
+   ]
+  },
+  "plate_width_px": 207,
+  "plate_width_frac": 0.371,
+  "plate_widest_y": 273,
+  "finger_width_at_cuticle_px": 365
+ },
+ {
+  "tone": 4,
+  "canvas": [
+   558,
+   1512
+  ],
+  "plate_bbox": [
+   174,
+   51,
+   381,
+   401
+  ],
+  "cuticle": {
+   "x": 0.5,
+   "y": 0.2652,
+   "px": [
+    279,
+    401
+   ]
+  },
+  "plate_width_px": 208,
+  "plate_width_frac": 0.3728,
+  "plate_widest_y": 273,
+  "finger_width_at_cuticle_px": 366
+ }
+]

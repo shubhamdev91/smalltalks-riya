@@ -1,0 +1,20 @@
+{% doc %}
+  Left-to-right nail roles for each campaign's five-nail row (0 signature, 1 accent, 2 extra).
+  The hero preview hand shows the last four (thumb concealed); chapters show all five.
+  Single source of truth for nail mapping; the hero JSON exposes the same values.
+
+  @param {string} key - Campaign handle.
+
+  @example
+  {% capture sequence %}{% render 'st-nail-sequence', key: c.system.handle %}{% endcapture %}
+{% enddoc %}
+{%- case key -%}
+  {%- when 'on-me' -%}0,2,1,2,0
+  {%- when 'brainwave' -%}1,2,0,1,0
+  {%- when 'diet-cherry' -%}1,0,2,1,1
+  {%- when 'green-flag' -%}1,0,1,0,1
+  {%- when 'shaadi-shift' -%}2,1,0,1,2
+  {%- when 'wild-card' -%}1,2,1,0,1
+  {%- when 'pinky-promise' -%}0,0,0,0,0
+  {%- else -%}0,1,0,1,0
+{%- endcase -%}

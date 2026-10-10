@@ -1,0 +1,298 @@
+{% comment %}
+  Section contract.
+  Journal index (blog template), board 4 frame 3 (spec/journal.md): "04 /" eyebrow (JRN-056, decorative), the blog
+  title as H1 (JRN-001), the sub-line (JRN-002) and a small handwritten margin note top right (JRN-003) with a drawn
+  slash and squiggle. Then the stories as rows: a nail close-up on the set colour (st-nail-closeup), the set name and
+  headline (from the article title "Name: Headline"), the excerpt and "Read the story →" (JRN-005). On page 1 the
+  stories follow the board order (`card_order`, campaign handles, matched through each campaign's Journal story);
+  the first is the Featured card (JRN-004) on a tint of its set colour. Honest empty state.
+  @example
+  <!-- templates/blog.desi.json (the Journal blog) -->
+{% endcomment %}
+
+{%- liquid
+  assign campaigns = shop.metaobjects.small_talk_campaign.values
+  assign order = section.settings.card_order | remove: ' ' | split: ','
+  assign blog_prefix = blog.url | append: '/'
+-%}
+
+<section class="st-journal" aria-labelledby="StJournal-{{ section.id }}">
+  <header class="st-journal__header">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="st-journal__eyebrow" aria-hidden="true">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    <h1 class="st-journal__title" id="StJournal-{{ section.id }}">{{ blog.title | escape }}</h1>
+    {%- if section.settings.subheading != blank -%}
+      <p class="st-journal__sub">{{ section.settings.subheading | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.note != blank -%}
+      <p class="st-journal__note">
+        <svg class="st-journal__slash" viewBox="0 0 12 40" aria-hidden="true" focusable="false"><path d="M10 2 L2 38"/></svg>
+        {{- section.settings.note | escape -}}
+        <svg class="st-journal__squiggle" viewBox="0 0 90 10" aria-hidden="true" focusable="false"><path d="M2 6 C 12 1, 18 9, 28 5 S 44 1, 54 6 S 72 9, 88 3"/></svg>
+      </p>
+    {%- endif -%}
+  </header>
+
+  {%- capture rows -%}
+    {%- liquid
+      assign shown = ''
+      if order.size > 0
+        for handle in order
+          for c in campaigns
+            if c.system.handle == handle
+              assign a = c.journal.value
+              if a != blank and a.url contains blog_prefix
+                assign shown = shown | append: ',' | append: a.id | append: ','
+                echo '@@' | append: c.system.handle | append: '|' | append: a.id
+              endif
+              break
+            endif
+          endfor
+        endfor
+      endif
+    -%}
+  {%- endcapture -%}
+
+  {%- paginate blog.articles by 12 -%}
+    {%- if blog.articles.size > 0 -%}
+      <ul class="st-journal__list" role="list">
+        {%- assign is_featured = true -%}
+        {%- comment -%} Page 1: board order first (campaign handles), then any story not tied to a set. {%- endcomment -%}
+        {%- if paginate.current_page == 1 -%}
+          {%- assign keyed = rows | split: '@@' -%}
+          {%- for entry in keyed -%}
+            {%- if entry == blank -%}{%- continue -%}{%- endif -%}
+            {%- assign bits = entry | split: '|' -%}
+            {%- assign want_id = bits[1] | plus: 0 -%}
+            {%- for article in blog.articles -%}
+              {%- if article.id == want_id -%}
+                {%- render 'st-journal-card', article: article, key: bits[0], featured: is_featured -%}
+                {%- assign is_featured = false -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        {%- endif -%}
+        {%- for article in blog.articles -%}
+          {%- assign marker = ',' | append: article.id | append: ',' -%}
+          {%- if paginate.current_page == 1 and shown contains marker -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign key = ''
+            for c in campaigns
+              if c.journal.value.id == article.id
+                assign key = c.system.handle
+                break
+              endif
+            endfor
+          -%}
+          {%- render 'st-journal-card', article: article, key: key, featured: is_featured -%}
+          {%- assign is_featured = false -%}
+        {%- endfor -%}
+      </ul>
+      {%- if paginate.pages > 1 -%}
+        <nav class="st-journal__pagination" aria-label="{{ 'content.pagination.nav_label' | t }}">
+          {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">← {{ 'content.pagination.previous' | t }}</a>{%- endif -%}
+          <span>{{ paginate.current_page }} / {{ paginate.pages }}</span>
+          {%- if paginate.next -%}<a href="{{ paginate.next.url }}">{{ 'content.pagination.next' | t }} →</a>{%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endpaginate -%}
+</section>
+
+{% stylesheet %}
+  /* Board 4 frame 3 at 390 (spec/journal.md). */
+  .st-journal {
+    display: grid;
+    gap: 22px;
+    max-width: 52rem;
+    margin-inline: auto;
+    padding: 18px 10px var(--st-section-space);
+    color: #111;
+  }
+
+  .st-journal > * {
+    min-width: 0;
+  }
+
+  .st-journal__header {
+    position: relative;
+    display: grid;
+    padding-inline: 8px 0;
+  }
+
+  .st-journal__eyebrow {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1;
+  }
+
+  .st-journal__title {
+    margin: 0;
+    color: #0b0b0b;
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: clamp(60px, 20.5vw, 80px); /* 80 at 390 (board ink x 18–250); smaller phones keep clear of the note */
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+
+  .st-journal__sub {
+    margin: 2px 0 0;
+    font-family: var(--font-ui);
+    font-size: 19px;
+  }
+
+  /* Margin note x 262–380, y 90–185: Kalam Light 15 px, −14°, a slash before it and a squiggle under it. */
+  .st-journal__note {
+    position: absolute;
+    inset-block-start: 4px;
+    inset-inline-end: 2px;
+    width: 112px;
+    margin: 0;
+    padding-inline-start: 14px;
+    color: #2b39c4;
+    font-family: var(--font-annotation);
+    font-weight: var(--fw-annotation, 300);
+    font-size: 15px;
+    line-height: 1.15;
+    rotate: -14deg;
+    transform-origin: 100% 100%; /* pivot bottom-right so the rotated note stays inside the page */
+  }
+
+  .st-journal__slash {
+    position: absolute;
+    inset-block-start: 14px;
+    inset-inline-start: 0;
+    width: 9px;
+    height: 32px;
+  }
+
+  .st-journal__squiggle {
+    display: block;
+    width: 84px;
+    height: 9px;
+    margin-block-start: 3px;
+  }
+
+  .st-journal__slash path,
+  .st-journal__squiggle path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+
+  .st-journal__list {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-journal__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    font-family: var(--font-ui);
+  }
+
+  .st-journal__pagination a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: #d0204a;
+  }
+
+  /* Narrow phones: keep the margin note to the right of "Journal" (smaller word, smaller note). */
+  @media screen and (max-width: 379px) {
+    .st-journal__title {
+      font-size: 19vw;
+    }
+
+    .st-journal__note {
+      width: 96px;
+      font-size: 13px;
+    }
+
+    .st-journal__squiggle {
+      width: 70px;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .st-journal {
+      padding-inline: var(--st-gutter);
+    }
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2) */
+  /* >= 1024: the H1 block left-aligned in the page frame (note at the right of its row); stories as a 3-column card grid
+     (owner v12.1 §F), the featured story spanning the row as a horizontal card, then 3 + 3 with no empty slot
+     (snippets/st-journal-card); rows equalise. From 1680 the Journal frame grows to 1440. */
+  @media screen and (min-width: 1024px) {
+    .st-journal {
+      gap: 44px;
+      max-width: none;
+      width: min(var(--st-journal-max, 1240px), 100% - 2 * clamp(32px, 4vw, 64px));
+      padding: 40px 0 var(--st-section-space);
+    }
+
+    .st-journal__header {
+      padding-inline: 0;
+    }
+
+    .st-journal__title {
+      font-size: 92px;
+    }
+
+    .st-journal__sub {
+      font-size: 21px;
+    }
+
+    .st-journal__note {
+      inset-block-start: 12px;
+      width: 150px;
+      font-size: 18px;
+    }
+
+    .st-journal__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(36px, 3.2vw, 56px) clamp(24px, 2.4vw, 40px);
+      align-items: stretch;
+    }
+
+    .st-journal__list > .st-jcard--featured {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media screen and (min-width: 1680px) {
+    .st-journal {
+      --st-journal-max: 1440px;
+    }
+  }
+  /* END store desktop */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk journal",
+  "class": "st-journal-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (decorative board numbering)" },
+    { "type": "text", "id": "subheading", "label": "Sub-line" },
+    { "type": "text", "id": "note", "label": "Handwritten margin note" },
+    {
+      "type": "text",
+      "id": "card_order",
+      "label": "Story order (campaign handles)",
+      "default": "on-me,brainwave,green-flag,shaadi-shift,diet-cherry,wild-card,pinky-promise",
+      "info": "Board order on page 1, matched through each campaign's Journal story. Others follow."
+    }
+  ]
+}
+{% endschema %}

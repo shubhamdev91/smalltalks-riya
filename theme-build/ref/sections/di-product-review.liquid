@@ -1,0 +1,32 @@
+{% assign c = section.settings.campaign %}
+{% if settings.di_review_mode and c != blank %}
+<section class="di-wrap di-pdp">
+ <div class="di-gallery-column" data-product-gallery style="--scene:{{ c.background.value }};--nails:url('{{ c.nail_art.value | image_url: width: 1800 }}')">
+  <div class="di-product-gallery" data-gallery-track>
+   <div id="Package-{{ section.id }}" class="di-review-composite">
+    <img src="{{ c.package_url.value | escape }}&amp;width=900" width="450" height="620" fetchpriority="high" alt="{{ c.name.value | escape }} original illustrated packaging">
+    <div class="di-review-nails" aria-hidden="true">{% render 'di-nail',index:c.motion_index.value,row:0 %}{% render 'di-nail',index:c.motion_index.value,row:2 %}{% render 'di-nail',index:c.motion_index.value,row:1 %}</div>
+   </div>
+   <div id="Nails-{{ section.id }}" class="di-set-detail" role="img" aria-label="{{ c.name.value | escape }}: {{ c.short_description.value | escape }}">
+    {% capture nail_sequence %}{% render 'di-nail-sequence', key: c.system.handle %}{% endcapture %}{% assign nail_rows = nail_sequence | strip | split: ',' %}
+    <div class="di-nail-line" aria-hidden="true">{% for nail_row in nail_rows %}{% assign row_number = nail_row | plus: 0 %}{% render 'di-nail',index:c.motion_index.value,row:row_number %}{% endfor %}</div>
+   </div>
+  </div>
+  <nav class="di-media-thumbnails" aria-label="{{ 'desi.media.label' | t }}">
+   <a href="#Package-{{ section.id }}" aria-label="{{ 'desi.media.packaging' | t }}" aria-current="true"><img src="{{ c.package_url.value | escape }}&amp;width=120" width="60" height="80" alt="" loading="lazy"></a>
+   <a href="#Nails-{{ section.id }}" class="di-nail-thumbnail" aria-label="{{ 'desi.media.nails' | t }}">{% render 'di-nail',index:c.motion_index.value,row:0 %}</a>
+  </nav>
+ </div>
+ <div class="di-pdp-info">
+  <div class="di-title-price"><h1>{{ c.name.value | escape }}</h1></div>
+  <p>{{ c.short_description.value | escape }}</p>
+  <a href="/pages/nail-guide">{{ 'desi.product.fit' | t }} <span aria-hidden="true">↗</span></a>
+  <div class="di-buy"><button class="di-button" type="button" disabled>{{ 'desi.product.coming_soon' | t }}</button></div>
+  <p class="di-review-status">{{ 'desi.product.unavailable_note' | t }}</p>
+  <p><a href="/pages/help">{{ 'desi.product.delivery' | t }}</a> · <a href="/pages/help">{{ 'desi.product.help' | t }}</a></p>
+  <details><summary>{{ 'desi.product.fit_care' | t }}</summary><p>{{ 'desi.product.fit_note' | t }}</p><a href="/pages/nail-guide">{{ 'desi.product.open_guide' | t }} ↗</a></details>
+  <details open><summary>{{ 'desi.product.story' | t }}: {{ c.headline.value | escape }}</summary><p>{{ c.story.value | escape }}</p><a href="/?view=desi-preview-story-{{ c.system.handle }}">{{ 'desi.product.read_story' | t }} ↗</a></details>
+ </div>
+</section>
+{% endif %}
+{% schema %}{"name":"Product draft preview","settings":[{"type":"metaobject","id":"campaign","label":"Campaign","metaobject_type":"small_talk_campaign"}]}{% endschema %}

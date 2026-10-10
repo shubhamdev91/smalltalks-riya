@@ -1,0 +1,318 @@
+{% doc %}
+  PDP media for a campaign set (board 5 frame 2): slide 1 is the board's scene, the set's approved box at the left of a
+  set-colour panel (--st-tile-<set>) with six loose nails packed against its tray edge (sprite cells of the set's
+  genuine designs, rotated −40…+40°). Then every other product image in the product's own media order (10 Oct: flatlay,
+  hand, moment; alt = each media's own alt, SEO-089…109), cover-fit at the panel's aspect with the merchant's focal
+  point, from Shopify's CDN at 375–1000 px (never the 1254 px master on a phone), lazy. Last, the accepted lifestyle
+  composite (st-lifestyle-<key>.webp, labelled as an illustration by its alt, SEO-079…085). A scroll-snap track that
+  swipes without JavaScript; the thumbnails below (70 px, shrinking to fit at 320) jump between slides. The optional
+  caption sits under the gallery (PDP-019).
+
+  @param {metaobject} campaign - small_talk_campaign entry.
+  @param {product} product - The product (box alt = its media's own alt).
+  @param {string} id - Unique id prefix (section id).
+  @param {string} [caption] - Line under the gallery (PDP-019, a section setting).
+{% enddoc %}
+{%- liquid
+  capture life_alt
+    render 'st-art-alt', key: campaign.system.handle, kind: 'lifestyle'
+  endcapture
+  assign life_src = 'st-lifestyle-' | append: campaign.system.handle | append: '.webp' | asset_url
+  assign track_id = 'StPdpMedia-' | append: id
+  assign key = campaign.system.handle
+  capture pack_raw
+    render 'st-motion-map', key: key, field: 'package'
+  endcapture
+  assign pack = pack_raw | strip | split: ','
+  capture ps
+    render 'st-pack-src', key: key
+  endcapture
+  assign ps = ps | strip | split: '|'
+  assign nails_url = 'st-hd-nails-' | append: key | append: '.webp' | asset_url
+  # Board scene: six nails (centre x %, y %, height % of the panel, rotation), packed against the box's tray edge;
+  # sprite columns per set (genuine designs only).
+  assign spots = '75.8,16.8,29.4,35|88,27,29.4,18|67.4,39,29.4,-38|85.1,51.4,29.4,32|64.1,61,29.4,-22|79.2,78.4,36.3,25' | split: '|'
+  case key
+    when 'on-me'
+      assign cols = '0,2,2,1,0,2'
+    when 'brainwave'
+      assign cols = '0,1,1,0,0,1'
+    when 'green-flag'
+      assign cols = '1,0,0,1,1,0'
+    when 'shaadi-shift'
+      assign cols = '1,2,0,2,1,0'
+    when 'diet-cherry', 'wild-card'
+      assign cols = '1,0,2,1,0,2'
+    else
+      assign cols = '0,0,0,0,0,0'
+  endcase
+  assign cols = cols | split: ','
+-%}
+<div class="st-pdp-media" style="--st-pack-bg: var(--st-tile-{{ key }}, {{ campaign.background.value | default: '#EEE8F5' }});">
+  <ul class="st-pdp-media__track" id="{{ track_id }}" role="list" tabindex="0" aria-label="{{ 'accessibility.slideshow' | t }}">
+    <li class="st-pdp-media__slide" id="{{ track_id }}-1">
+      <div class="st-pdp-scene">
+        {%- if pack.size == 4 -%}
+          <img
+            class="st-pdp-scene__box"
+            src="{{ ps[0] }}"
+            srcset="{{ ps[1] }}"
+            sizes="(min-width: 990px) 280px, 48vw"
+            width="{{ ps[2] }}"
+            height="{{ ps[3] }}"
+            alt="{{ product.featured_media.alt | escape }}"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          >
+        {%- endif -%}
+        <span class="st-pdp-scene__nails" style="--st-nails: url('{{ nails_url }}')" aria-hidden="true">
+          {%- for spot in spots -%}
+            {%- assign v = spot | split: ',' -%}
+            <span class="st-pdp-scene__nail" style="--col: {{ cols[forloop.index0] }}; left: {{ v[0] }}%; top: {{ v[1] }}%; height: {{ v[2] }}%; rotate: {{ v[3] }}deg"></span>
+          {%- endfor -%}
+        </span>
+      </div>
+    </li>
+    {%- assign n = 1 -%}
+    {%- for media in product.media offset: 1 -%}
+      {%- if media.media_type != 'image' -%}{%- continue -%}{%- endif -%}
+      {%- liquid
+        assign n = n | plus: 1
+        assign photo_style = ''
+        if media.presentation.focal_point != blank
+          assign photo_style = 'object-position: ' | append: media.presentation.focal_point
+        endif
+      -%}
+      <li class="st-pdp-media__slide" id="{{ track_id }}-{{ n }}">
+        {{
+          media
+          | image_url: width: 750
+          | image_tag:
+            class: 'st-pdp-media__photo',
+            widths: '375, 560, 750, 1000',
+            sizes: '(min-width: 990px) 50vw, calc(100vw - 16px)',
+            loading: 'lazy',
+            alt: media.alt,
+            style: photo_style
+        }}
+      </li>
+    {%- endfor -%}
+    {%- assign n = n | plus: 1 -%}
+    <li class="st-pdp-media__slide st-pdp-media__slide--life" id="{{ track_id }}-{{ n }}" style="background: var(--st-art-{{ key }}, var(--st-pack-bg));">
+      <img
+        class="st-pdp-media__life"
+        src="{{ life_src }}"
+        width="571"
+        height="679"
+        alt="{{ life_alt | strip | escape }}"
+        loading="lazy"
+        decoding="async"
+      >
+    </li>
+  </ul>
+  <div class="st-pdp-media__thumbs" data-st-pdp-thumbs="{{ track_id }}">
+    <button type="button" class="st-pdp-media__thumb" data-slide="1" aria-controls="{{ track_id }}" aria-current="true">
+      <img src="{{ ps[0] }}" srcset="{{ ps[1] }}" sizes="62px" width="72" height="96" alt="{{ product.featured_media.alt | escape }}" loading="lazy" decoding="async">
+    </button>
+    {%- assign n = 1 -%}
+    {%- for media in product.media offset: 1 -%}
+      {%- if media.media_type != 'image' -%}{%- continue -%}{%- endif -%}
+      {%- assign n = n | plus: 1 -%}
+      <button type="button" class="st-pdp-media__thumb st-pdp-media__thumb--photo" data-slide="{{ n }}" aria-controls="{{ track_id }}">
+        <img src="{{ media | image_url: width: 140, height: 140, crop: 'center' }}" width="70" height="70" alt="{{ media.alt | escape }}" loading="lazy" decoding="async">
+      </button>
+    {%- endfor -%}
+    {%- assign n = n | plus: 1 -%}
+    <button type="button" class="st-pdp-media__thumb" data-slide="{{ n }}" aria-controls="{{ track_id }}">
+      <img src="{{ life_src }}" width="72" height="86" alt="{{ life_alt | strip | escape }}" loading="lazy" decoding="async">
+    </button>
+  </div>
+  {%- if caption != blank -%}
+    <p class="st-pdp-media__caption">{{ caption | escape }}</p>
+  {%- endif -%}
+</div>
+<script>
+  (() => {
+    const thumbs = document.querySelector('[data-st-pdp-thumbs="{{ track_id }}"]');
+    const track = document.getElementById('{{ track_id }}');
+    if (!thumbs || !track) return;
+    const buttons = [...thumbs.querySelectorAll('button[data-slide]')];
+    // aria-current needs the value "true": an empty value (toggleAttribute) reads as false to assistive tech.
+    const mark = (n) =>
+      buttons.forEach((b) => (b.dataset.slide === String(n) ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current')));
+    buttons.forEach((b) =>
+      b.addEventListener('click', () => {
+        const slide = document.getElementById('{{ track_id }}-' + b.dataset.slide);
+        track.scrollTo({ left: slide.offsetLeft - track.offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        mark(b.dataset.slide);
+      })
+    );
+    track.addEventListener('scroll', () => mark(Math.round(track.scrollLeft / track.clientWidth) + 1), { passive: true });
+    // Keyboard: the track is a focus stop (QA F3); Left / Right / Home / End move one slide or to the ends.
+    track.addEventListener('keydown', (e) => {
+      const n = buttons.length;
+      const cur = Math.round(track.scrollLeft / track.clientWidth) + 1;
+      const to = { ArrowRight: cur + 1, ArrowLeft: cur - 1, Home: 1, End: n }[e.key];
+      if (!to || to < 1 || to > n) return;
+      e.preventDefault();
+      const slide = document.getElementById('{{ track_id }}-' + to);
+      track.scrollTo({ left: slide.offsetLeft - track.offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      mark(to);
+    });
+  })();
+</script>
+
+{% stylesheet %}
+  /* Board 5 at 390: panel x 8–383, y 60–375 (375 × 315), radius 14; thumbnails 70 × 70, gap 6, from x 8. */
+  .st-pdp-media {
+    display: grid;
+    gap: 10px;
+    padding-inline: 8px;
+  }
+
+  .st-pdp-media__track {
+    display: grid;
+    grid-auto-columns: 100%;
+    grid-auto-flow: column;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    border-radius: 14px;
+    list-style: none;
+  }
+
+  .st-pdp-media__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .st-pdp-media__track:focus-visible {
+    outline: 2px solid var(--st-blue);
+    outline-offset: 2px;
+  }
+
+  .st-pdp-media__slide {
+    position: relative;
+    aspect-ratio: 375 / 315;
+    overflow: hidden;
+    scroll-snap-align: start;
+    background: var(--st-pack-bg, var(--st-tint));
+  }
+
+  .st-pdp-media__slide--life {
+    display: grid;
+    place-items: center;
+  }
+
+  .st-pdp-media__photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Pinned to the slide: a percentage height in the auto grid row resolved to the image's own 445 px and cropped it. */
+  .st-pdp-media__life {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: 100% 0; /* the wrist's straight cut sits on the slide's right edge; the matched ground fills the left */
+  }
+
+  /* Scene: the box from x ≈ 6.7% (x 33 on the page), 85% of the panel height; nails positioned by their centres. */
+  .st-pdp-scene {
+    position: absolute;
+    inset: 0;
+  }
+
+  .st-pdp-scene__box {
+    position: absolute;
+    left: 6.7%;
+    top: 7.5%;
+    height: 85%;
+    width: auto;
+    max-width: none;
+    filter: drop-shadow(0 6px 12px rgb(31 26 46 / 0.28));
+  }
+
+  .st-pdp-scene__nails {
+    position: absolute;
+    inset: 0;
+  }
+
+  .st-pdp-scene__nail {
+    position: absolute;
+    aspect-ratio: 204 / 354;
+    translate: -50% -50%;
+    filter: drop-shadow(0 3px 5px rgb(31 26 46 / 0.25));
+  }
+
+  .st-pdp-scene__nail::before {
+    content: '';
+    position: absolute;
+    inset: -5.365% -2.9% -0.435%;
+    background: var(--st-nails) calc(var(--col, 0) * 50%) 0 / 300% 100% no-repeat;
+  }
+
+  .st-pdp-media__thumbs {
+    display: flex;
+    gap: 6px;
+  }
+
+  .st-pdp-media__caption {
+    margin: 0;
+    color: var(--st-muted);
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .st-pdp-media__thumb {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    flex: 0 1 70px;
+    min-width: 0;
+    aspect-ratio: 1;
+    padding: 4px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    background: var(--st-pack-bg, var(--st-tint));
+    cursor: pointer;
+  }
+
+  /* Selected thumb: a 2 px ring in a deeper tone of the set colour (board: #e0a020 on On Me's yellow). */
+  .st-pdp-media__thumb[aria-current='true'] {
+    border-color: color-mix(in srgb, var(--st-pack-bg) 82%, #000);
+  }
+
+  .st-pdp-media__thumb:focus-visible {
+    outline: 2px solid var(--st-blue);
+    outline-offset: 2px;
+  }
+
+  .st-pdp-media__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .st-pdp-media__thumb--photo {
+    padding: 0;
+  }
+
+  .st-pdp-media__thumb--photo img {
+    object-fit: cover;
+  }
+
+  @media screen and (min-width: 750px) {
+    .st-pdp-media {
+      padding-inline: 0;
+    }
+  }
+{% endstylesheet %}

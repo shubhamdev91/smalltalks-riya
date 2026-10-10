@@ -1,0 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "di-review-copy",
+      "settings": {
+        "heading": "Green Flag: Tum aa jao. Main dekh lungi.",
+        "body": "<p>An original Small Talk brand story</p><img src=\"https://cdn.shopify.com/s/files/1/0830/2339/7077/files/tum-aa-jao-main-dekh-lungi-approved-package.png?v=1791012011&width=700\" width=\"400\" height=\"500\" alt=\"Green Flag original illustrated packaging\"><h2>Plans fell apart? Bring yourself.</h2><p>The plan falls apart. Your phone rings. There\u2019s no perfect itinerary, no carefully set table. You move a chair, make a little room and say the thing your friend needed to hear: come over. We\u2019ll figure out the rest.</p><div class=\"di-story-slides\" role=\"region\" aria-label=\"Story in four moments\"><section class=\"di-story-slide\"><p>1 / 4</p><h3>The plan fell apart.</h3></section><section class=\"di-story-slide\"><p>2 / 4</p><h3>The invitation didn\u2019t.</h3></section><section class=\"di-story-slide\"><p>3 / 4</p><h3>A little room. A familiar face.</h3></section><section class=\"di-story-slide\"><p>4 / 4</p><h3>Tum aa jao. Main dekh lungi.</h3></section></div><p>Emerald green and blush, with pointed green tips.</p><p><a href=\"/products/tum-aa-jao-main-dekh-lungi\">Shop Green Flag \u2192</a></p>"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

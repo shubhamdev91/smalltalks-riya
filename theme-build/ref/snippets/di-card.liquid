@@ -1,0 +1,15 @@
+{% doc %}
+  Renders a campaign product card without changing the shared product.
+  @param {metaobject} c - Campaign.
+  @param {string} [everyday] - Configured everyday campaign handles.
+  @example
+  {% render 'di-card', c: campaign %}
+{% enddoc %}
+{% assign p = c.product.value %}
+<article class="di-card" data-filter-item data-name="{{ c.name.value | escape }} {{ c.short_description.value | escape }}" data-category="{% if everyday contains c.system.handle %}everyday{% else %}statement{% endif %}" style="--scene:{{ c.background.value }};--nails:url('{{ c.nail_art.value | image_url: width: 1800 }}');--set:{{ c.motion_index.value }}">
+ <a href="{% render 'di-link', c: c %}">
+ <div class="di-card-composite">{% if p.featured_image %}{{ p.featured_image | image_url: width: 650 | image_tag: loading: 'lazy', widths: '240,360,480,650' }}{% else %}<img src="{{ c.package_url.value | escape }}&width=650" alt="{{ c.name.value | escape }} original illustrated packaging" width="450" height="620" loading="lazy">{% endif %}
+ <span class="di-card-accents" aria-hidden="true">{% render 'di-nail',index:c.motion_index.value,row:0 %}{% render 'di-nail',index:c.motion_index.value,row:2 %}{% render 'di-nail',index:c.motion_index.value,row:1 %}</span></div>
+ <h3>{{ p.title | default: c.name.value | escape }}</h3><span>View set <span aria-hidden="true">↗</span></span></a>
+ {% if p != blank and p.price > 0 %}<p>{{ p.price | money }}</p>{% endif %}
+</article>

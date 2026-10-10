@@ -1,0 +1,194 @@
+{% comment %}
+  Section contract.
+  404, in the board system (no board frame of its own): the burgundy Source Serif Black heading with the talks/guide
+  shade (MC-068), the body line (MC-069), a filled #920324 pill (MC-070) and an outline pill (MC-071), Barlow Semi
+  Condensed as on the board pills. No handwritten note: the register has none for this page.
+  @example
+  <!-- templates/404.json -->
+{% endcomment %}
+
+<section class="st-404" aria-labelledby="St404-{{ section.id }}">
+  <h1 class="st-404__title" id="St404-{{ section.id }}">{% render 'st-sentences', text: section.settings.heading %}</h1>
+  {%- if section.settings.body != blank -%}
+    <p class="st-404__body">{% render 'st-sentences', text: section.settings.body %}</p>
+  {%- endif -%}
+  <div class="st-404__actions">
+    {%- if section.settings.label_1 != blank -%}
+      <a class="st-404__pill" href="{{ section.settings.link_1 | default: routes.all_products_collection_url }}">{{ section.settings.label_1 | escape }}</a>
+    {%- endif -%}
+    {%- if section.settings.label_2 != blank -%}
+      <a class="st-404__pill st-404__pill--outline" href="{{ section.settings.link_2 | default: routes.root_url }}">{{ section.settings.label_2 | escape }}</a>
+    {%- endif -%}
+  </div>
+  {%- comment -%} Desktop only (STORE-DESKTOP-SPEC v1 section 2): a set character beside the copy, hidden below 1024. {%- endcomment -%}
+  <div class="st-404__art" aria-hidden="true">
+    <img src="{{ 'st-hd-on-me-woman-hero.webp' | asset_url }}" width="535" height="721" alt="" loading="lazy" decoding="async" fetchpriority="low">
+  </div>
+</section>
+
+{% stylesheet %}
+  .st-404 {
+    display: grid;
+    justify-items: center;
+    gap: 0;
+    max-width: 36rem;
+    margin-inline: auto;
+    padding: 72px 20px 64px;
+    text-align: center;
+    font-family: var(--font-ui);
+  }
+
+  /* Board heading system (talks / guide): Source Serif 4 Black, burgundy with the sampled shade (every stop > 7:1). */
+  .st-404__title {
+    margin: 0;
+    color: var(--st-burgundy);
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: min(56px, 14.4vw);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .st-404__title {
+      background: linear-gradient(180deg, #8a0619 0%, #8a0619 30%, #a8081f 46%, #6a0212 74%, #4f0009 100%);
+      background-size: 100% 1lh; /* the shade repeats per line, so both lines match */
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  }
+
+  .st-404__body {
+    max-inline-size: 300px;
+    margin: 18px 0 0;
+    color: #6e7184;
+    font-size: 17px;
+    line-height: 1.45;
+  }
+
+  .st-404__actions {
+    display: grid;
+    gap: 14px;
+    inline-size: min(300px, 100%);
+    margin-block-start: 30px;
+  }
+
+  /* Pills as on the boards: filled #920324 (--st-pill) with white Barlow Semi Condensed 600, and the 2 px outline-red pill. */
+  .st-404__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 52px;
+    padding-inline: 24px;
+    border: 2px solid var(--st-pill);
+    border-radius: var(--st-radius-pill);
+    background: var(--st-pill);
+    color: var(--st-pill-ink);
+    font-family: var(--font-pill);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .st-404__pill--outline {
+    border-color: var(--st-outline-red);
+    background: transparent;
+    color: var(--st-outline-red);
+  }
+
+  .st-404__pill:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .st-404__pill:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 3px;
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2) */
+  /* The character art exists only from 1024 (below, the 404 is unchanged). */
+  .st-404__art {
+    display: none;
+  }
+
+  /* >= 1024: two columns 6fr | 6fr in the page frame, min-height min(100svh - header, 640px): heading, text and the two
+     pills left; the On Me character right (360 px, mirrored so her cut edge sits on the screen's right edge and she faces
+     the copy), bottom-anchored. */
+  @media screen and (min-width: 1024px) {
+    .st-404 {
+      position: relative;
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      column-gap: clamp(32px, 4vw, 72px);
+      align-content: center;
+      justify-items: start;
+      max-width: none;
+      min-height: min(calc(100svh - var(--st-header-h, 76px)), 640px);
+      padding: 48px max(clamp(32px, 4vw, 64px), (100% - 1240px) / 2);
+      overflow: hidden;
+      box-sizing: border-box;
+      text-align: start;
+    }
+
+    .st-404 > :not(.st-404__art) {
+      grid-column: 1;
+    }
+
+    .st-404__title {
+      font-size: 64px;
+    }
+
+    .st-404__body {
+      max-inline-size: 420px;
+      font-size: 18px;
+    }
+
+    .st-404__actions {
+      grid-auto-flow: column;
+      justify-content: start;
+      inline-size: auto;
+    }
+
+    .st-404__art {
+      display: block;
+      position: absolute;
+      inset-inline-end: 0;
+      inset-block-end: 0;
+      width: 360px;
+    }
+
+    .st-404__art img {
+      display: block;
+      width: 100%;
+      height: auto;
+      scale: -1 1;
+    }
+  }
+  /* END store desktop */
+
+  /* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+  @media screen and (min-width: 1680px) {
+    .st-404 {
+      padding-inline: max(clamp(32px, 4vw, 64px), (100% - 1440px) / 2);
+    }
+  }
+  /* END wide frame */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk 404",
+  "tag": "div",
+  "class": "st-404-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading (MC-068)", "default": "This page wandered off." },
+    { "type": "textarea", "id": "body", "label": "Body (MC-069)", "default": "It might have moved, or the link’s a little off. Let’s get you back." },
+    { "type": "text", "id": "label_1", "label": "Button 1 (MC-070)", "default": "Shop all sets" },
+    { "type": "url", "id": "link_1", "label": "Button 1 link" },
+    { "type": "text", "id": "label_2", "label": "Button 2 (MC-071)", "default": "Go home" },
+    { "type": "url", "id": "link_2", "label": "Button 2 link" }
+  ]
+}
+{% endschema %}

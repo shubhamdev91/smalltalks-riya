@@ -1,0 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "di-review-copy",
+      "settings": {
+        "heading": "On Me: Bill idhar.",
+        "body": "<p>An original Small Talk brand story</p><img src=\"https://cdn.shopify.com/s/files/1/0830/2339/7077/files/bill-idhar-approved-package.png?v=1791011866&width=700\" width=\"400\" height=\"500\" alt=\"On Me original illustrated packaging\"><h2>Good company. One more round.</h2><p>The conversation is still going. Someone orders one more round. You catch the server\u2019s eye and reach for the bill. No announcement. Just a small, certain gesture: this one\u2019s on me.</p><div class=\"di-story-slides\" role=\"region\" aria-label=\"Story in four moments\"><section class=\"di-story-slide\"><p>1 / 4</p><h3>Good company.</h3></section><section class=\"di-story-slide\"><p>2 / 4</p><h3>One more round.</h3></section><section class=\"di-story-slide\"><p>3 / 4</p><h3>Before anyone starts splitting\u2026</h3></section><section class=\"di-story-slide\"><p>4 / 4</p><h3>Bill idhar.</h3></section></div><p>Burgundy. Tortoiseshell. A little gold.</p><p><a href=\"/products/bill-idhar\">Shop On Me \u2192</a></p>"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

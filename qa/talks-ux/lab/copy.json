@@ -1,0 +1,116 @@
+{
+ "_status": "st-copy register v1.5.1 (copy/07-talks.md). Two DRAFT lines (title_ph, details_ph) are pending st-copy because DIRECTION.md splits the composer into a title and optional details.",
+ "wordmark": "the talks",
+ "promise": "for the good days, and the other ones.",
+ "cta": "spill your tea",
+ "trigger": "spill your tea…",
+ "all": "all",
+ "topics5": [
+  [
+   "plot-twists",
+   "plot twists",
+   4
+  ],
+  [
+   "tiny-wins",
+   "tiny wins",
+   3
+  ],
+  [
+   "second-opinions",
+   "second opinions",
+   0
+  ],
+  [
+   "just-venting",
+   "just venting",
+   0
+  ],
+  [
+   "nail-talk",
+   "nail talk",
+   2
+  ]
+ ],
+ "topics4": [
+  [
+   "plot-twists",
+   "plot twists",
+   4
+  ],
+  [
+   "tiny-wins",
+   "tiny wins",
+   3
+  ],
+  [
+   "nail-talk",
+   "nail talk",
+   2
+  ],
+  [
+   "something-else",
+   "something else",
+   0
+  ]
+ ],
+ "latest": "latest",
+ "more": "more talks",
+ "sign": "different thoughts. same energy. ♡",
+ "rules_row": "house rules · 30-second read",
+ "prelaunch": "posting isn’t open yet. read along for now.",
+ "no_replies": "no replies yet",
+ "empty_h": "it’s quiet in here…",
+ "empty_p": "no talks in {topic} yet. start it off?",
+ "empty_p_closed": "nothing in {topic} yet.",
+ "back": "← the talks",
+ "replies_label": "replies",
+ "reply": "reply",
+ "report": "report",
+ "reply_field": "add your two cents…",
+ "replying_as": "replying as {alias}",
+ "own_h": "got your own tea?",
+ "own_link": "spill it ›",
+ "what": "what’s it about?",
+ "your_own": "your own",
+ "starters_label": "need a starting line?",
+ "starters": {
+  "plot-twists": [
+   "the plot twist nobody saw coming…",
+   "okay so this just happened…"
+  ],
+  "tiny-wins": [
+   "small win today…",
+   "proud of myself for…"
+  ],
+  "second-opinions": [
+   "need a second opinion on…",
+   "help me decide…"
+  ],
+  "just-venting": [
+   "today i felt…",
+   "can i just say…"
+  ],
+  "nail-talk": [
+   "the set i keep coming back to…",
+   "my nails were in the photo when…"
+  ],
+  "something-else": [
+   "the tea is…",
+   "random thought…"
+  ]
+ },
+ "title_ph": "DRAFT · your headline",
+ "details_ph": "DRAFT · the rest of the tea (optional)",
+ "posting_as": "posting as {alias} · shuffle",
+ "rules_short": "talk about situations, not people. no names, numbers, handles or links.",
+ "post": "post it",
+ "reassure": "no name, no login. just your alias.",
+ "rules_card_h": "house rules",
+ "rules_card": [
+  "talk about situations, not people.",
+  "no real names, numbers, handles or links. nothing that could identify anyone.",
+  "no hate, harassment or bullying. no selling."
+ ],
+ "rules_all": "all rules ›"
+}

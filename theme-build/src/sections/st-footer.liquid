@@ -1,0 +1,611 @@
+{% comment %}
+  Section contract.
+  Small Talk footer in the three board layouts (spec): landing = centred stacked logo, tagline, nav row, socials, legal
+  row on cream (board 3); shop / product / bag / nail guide = two centred rows of links joined by " · " (board 5);
+  other inner pages = logo left, two link columns, small socials, legal line (board 4, talks.md).
+  Links 1–6 are the nav set (LND-060, theme-local); link 7 (Contact) leads the legal row with the policy links.
+  Social icons render only for URLs the merchant has entered; in the theme editor empty slots show as labelled
+  placeholders so nothing ships as a fake link. Instagram (D5) sits per layout: its own row on the landing, under the logo
+  on inner pages, right of "Sign in" in the compact rows. Policy links come from the shop's own policies, each only once its body
+  exists (refund also needs the "Refund policy text verified" theme setting).
+  @example
+  <!-- Lives in sections/footer-group.json as the only footer section. -->
+{% endcomment %}
+
+{%- liquid
+  assign logo_words = shop.name | downcase | split: ' '
+  assign socials = 'instagram,pinterest,youtube,tiktok' | split: ','
+  assign has_social = false
+  for s in socials
+    assign key = 'social_' | append: s
+    if section.settings[key] != blank
+      assign has_social = true
+    endif
+  endfor
+
+  assign layout = 'inner'
+  case template.name
+    when 'index'
+      assign layout = 'landing'
+    when 'product', 'collection', 'cart', 'list-collections', 'search'
+      assign layout = 'rows'
+    when 'page'
+      if page.handle contains 'nail-guide'
+        assign layout = 'rows'
+      endif
+  endcase
+-%}
+
+{%- capture ig_icon -%}
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>
+{%- endcapture -%}
+
+{%- comment -%}
+  D5 (owner, 10 Oct): the compact footer (shop, product, bag, guide) carries the Instagram link on its last row, right
+  of "Sign in" and inside the same item (12 px apart, no dot), so the pair wraps and centres together and the footer
+  gains no height. Its name: MC-098 = social_on + MC-099 new_tab, read as "Small Talk on Instagram (opens in a new tab)".
+{%- endcomment -%}
+{%- capture ig_inline -%}
+  {%- if layout == 'rows' and section.settings.social_instagram != blank -%}
+    <a href="{{ section.settings.social_instagram }}" class="st-footer__social-link st-footer__ig" target="_blank" rel="noopener noreferrer">
+      {{- ig_icon -}}<span class="visually-hidden">{{ 'small_talk.footer.social_on' | t: platform: 'Instagram' }} {{ 'small_talk.footer.new_tab' | t }}</span>
+    </a>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture nav_links -%}
+  {%- for i in (1..6) -%}
+    {%- liquid
+      assign l_key = 'link_' | append: i | append: '_label'
+      assign u_key = 'link_' | append: i | append: '_url'
+    -%}
+    {%- if section.settings[l_key] != blank and section.settings[u_key] != blank -%}
+      <li><a href="{{ section.settings[u_key] }}">{{ section.settings[l_key] | escape }}</a></li>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- capture legal_links -%}
+  {%- if section.settings.link_7_label != blank and section.settings.link_7_url != blank -%}
+    <li><a href="{{ section.settings.link_7_url }}">{{ section.settings.link_7_label | escape }}</a></li>
+  {%- endif -%}
+  {%- if shop.shipping_policy.body != blank -%}<li><a href="{{ shop.shipping_policy.url }}">{{ 'small_talk.footer.shipping' | t }}</a></li>{%- endif -%}
+  {%- if shop.refund_policy.body != blank and settings.st_refund_verified -%}<li><a href="{{ shop.refund_policy.url }}">{{ 'small_talk.footer.refund' | t }}</a></li>{%- endif -%}
+  {%- if shop.privacy_policy.body != blank -%}<li><a href="{{ shop.privacy_policy.url }}">{{ 'small_talk.footer.privacy' | t }}</a></li>{%- endif -%}
+  {%- if shop.terms_of_service.body != blank -%}<li><a href="{{ shop.terms_of_service.url }}">{{ 'small_talk.footer.terms' | t }}</a></li>{%- endif -%}
+  {%- comment -%} Owner 10 Oct: the drawer's account link also sits here, so desktop (no drawer ≥ 990 px) has it (MC-094 / MC-095). {%- endcomment -%}
+  {%- if shop.customer_accounts_enabled -%}
+    {%- if customer -%}
+      <li><a href="{{ routes.account_url }}">{{ 'small_talk.header.my_orders' | t }}</a>{{ ig_inline }}</li>
+    {%- else -%}
+      {%- assign st_login_url = routes.storefront_login_url | default: routes.account_login_url -%}
+      <li><a href="{{ st_login_url }}" aria-label="{{ 'small_talk.header.sign_in_label' | t | escape }}">{{ 'small_talk.header.sign_in' | t }}</a>{{ ig_inline }}</li>
+    {%- endif -%}
+  {%- elsif ig_inline != blank -%}
+    <li>{{ ig_inline }}</li>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture social_list -%}
+  {%- if has_social or request.design_mode -%}
+    <ul class="st-footer__social" role="list">
+      {%- for s in socials -%}
+        {%- liquid
+          assign key = 'social_' | append: s
+          case s
+            when 'youtube'
+              assign platform_name = 'YouTube'
+            when 'tiktok'
+              assign platform_name = 'TikTok'
+            else
+              assign platform_name = s | capitalize
+          endcase
+        -%}
+        {%- capture icon -%}
+          {%- case s -%}
+            {%- when 'instagram' -%}
+              {{- ig_icon -}}
+            {%- when 'pinterest' -%}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/><path d="M10.6 20.2l1.9-8.1m-.7 2.9c.5.9 1.4 1.4 2.4 1.4 2.1 0 3.4-2 3.4-4.3 0-2.5-2-4.3-4.8-4.3-3 0-4.7 2-4.7 4.2 0 1 .4 2 1.2 2.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            {%- when 'youtube' -%}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4" stroke="currentColor" stroke-width="1.8"/><path d="M10.2 9.4v5.2l4.4-2.6-4.4-2.6Z" fill="currentColor"/></svg>
+            {%- when 'tiktok' -%}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 3.5v11.2a3.7 3.7 0 1 1-3.2-3.7M14 3.5c.4 2.6 2.2 4.4 5 4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          {%- endcase -%}
+        {%- endcapture -%}
+        {%- if section.settings[key] != blank -%}
+          <li>
+            <a href="{{ section.settings[key] }}" class="st-footer__social-link" target="_blank" rel="noopener noreferrer">
+              {{ icon }}<span class="visually-hidden">{{ 'small_talk.footer.social_on' | t: platform: platform_name }} {{ 'small_talk.footer.new_tab' | t }}</span>
+            </a>
+          </li>
+        {%- elsif request.design_mode -%}
+          <li class="st-footer__social-link st-footer__social-placeholder" title="{{ s | capitalize }}: add a link in the footer settings">
+            {{ icon }}<span class="visually-hidden">{{ s | capitalize }} (not set)</span>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture logo -%}
+  <a class="st-logo st-footer__logo" href="{{ routes.root_url }}">
+    {%- comment -%} MC-097: the name ("Small Talk home") comes with the mark, as the image alt or visually-hidden text. {%- endcomment -%}
+    {%- if layout == 'inner' -%}
+      {%- render 'st-logo-mark', size: 'footer-inner' -%}
+    {%- else -%}
+      {%- render 'st-logo-mark', size: 'footer' -%}
+    {%- endif -%}
+  </a>
+{%- endcapture -%}
+
+<div class="st-footer st-footer--{{ layout }}">
+  {%- case layout -%}
+    {%- when 'landing' -%}
+      {{ logo }}
+      {%- if section.settings.tagline != blank -%}
+        <p class="st-footer__tagline">{{ section.settings.tagline | escape }}</p>
+      {%- endif -%}
+      {%- if nav_links contains '<li' -%}
+        <nav class="st-footer__nav"><ul role="list">{{ nav_links }}</ul></nav>
+      {%- endif -%}
+      {{ social_list }}
+      {%- if legal_links contains '<li' -%}
+        <ul class="st-footer__legal" role="list">{{ legal_links }}</ul>
+      {%- endif -%}
+
+    {%- when 'rows' -%}
+      {%- if nav_links contains '<li' -%}
+        <nav class="st-footer__nav"><ul role="list">{{ nav_links }}</ul></nav>
+      {%- endif -%}
+      {%- if legal_links contains '<li' -%}
+        <ul class="st-footer__legal" role="list">{{ legal_links }}</ul>
+      {%- endif -%}
+
+    {%- else -%}
+      {{ logo }}
+      {%- if nav_links contains '<li' -%}
+        <nav class="st-footer__nav"><ul role="list">{{ nav_links }}</ul></nav>
+      {%- endif -%}
+      {{ social_list }}
+      {%- if legal_links contains '<li' -%}
+        <ul class="st-footer__legal" role="list">{{ legal_links }}</ul>
+      {%- endif -%}
+  {%- endcase -%}
+  {%- comment -%} LND-062: the year renders from the current date so it never goes stale (board layouts 1 and 3). {%- endcomment -%}
+  {%- unless layout == 'rows' -%}
+    {%- assign this_year = 'now' | date: '%Y' -%}
+    <p class="st-footer__copyright">{{ 'small_talk.footer.copyright' | t: year: this_year }}</p>
+  {%- endunless -%}
+</div>
+
+{% stylesheet %}
+  .st-footer {
+    --st-footer-ink: var(--st-muted-text);
+
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    padding: 2.5rem var(--st-gutter) calc(2rem + var(--safe-area-inset-bottom, 0px));
+    background: var(--st-paper);
+    color: var(--st-footer-ink);
+    font-family: var(--font-ui);
+    text-align: center;
+  }
+
+  .st-footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .st-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-footer__logo {
+    color: var(--st-logo-blue);
+  }
+
+  .st-footer__social {
+    gap: 0.5rem;
+  }
+
+  .st-footer__copyright {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .st-footer--inner .st-footer__copyright {
+    grid-column: 1 / -1;
+    justify-self: center;
+    font-size: 0.75rem;
+  }
+
+  /* Social icons (D5, st-fable): site ink, not the logo blue (Meta allows black, white or its gradient); 44 x 44. */
+  .st-footer__social-link {
+    display: inline-grid;
+    place-items: center;
+    min-width: var(--minimum-touch-target);
+    min-height: var(--minimum-touch-target);
+  }
+
+  .st-footer a.st-footer__social-link {
+    color: var(--st-talks-ink); /* outranks .st-footer a { color: inherit } */
+  }
+
+  .st-footer a.st-footer__social-link:hover {
+    opacity: 0.75;
+    text-decoration: none;
+  }
+
+  .st-footer__social-placeholder {
+    opacity: 0.4;
+  }
+
+  /* Landing (board 3): continues the FAQ's cream, navy-blue type. */
+  /* Board 3 footer type: condensed, heavier, dark navy. #1f1f80 on cream #fdf6e9 = 12.3:1. */
+  .st-footer--landing {
+    --st-footer-ink: #1f1f80;
+
+    gap: 0.2rem;
+    padding-block-start: 0;
+    background: var(--st-cream);
+    font-family: var(--font-pill);
+    font-weight: var(--fw-pill);
+  }
+
+  /* Board 3 footer logo: ~100 x 72 at 390, the header wordmark scaled up. */
+  .st-footer--landing .st-logo__words {
+    font-size: calc(var(--fs-logo) * 1.23);
+  }
+
+  .st-footer--landing .st-footer__nav a,
+  .st-footer--landing .st-footer__legal a {
+    font-size: 1rem;
+  }
+
+  .st-footer__tagline {
+    margin: 0 0 0.25rem;
+    font-size: 1.25rem;
+  }
+
+  .st-footer--landing .st-footer__tagline {
+    font-size: 1.3125rem;
+  }
+
+  .st-footer--landing .st-footer__copyright {
+    font-size: 1rem;
+  }
+
+  .st-footer--landing .st-footer__nav ul,
+  .st-footer--landing .st-footer__legal {
+    gap: 0 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  /* Landing: its own centred row between the nav and legal rows, 4 px from each (the footer's gap is 0.2rem). */
+  .st-footer--landing .st-footer__social {
+    gap: 1.5rem;
+    margin-block: calc(4px - 0.2rem);
+  }
+
+  .st-footer--landing .st-footer__social svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  /* Shop / product / bag / guide (board 5): two centred rows joined by a middle dot. */
+  /* Board rows sit 22 px apart; each row here is one 44 px hit area tall (accessibility minimum beats the board). */
+  .st-footer--rows {
+    gap: 0;
+    padding-block: 0.5rem calc(1rem + var(--safe-area-inset-bottom, 0px));
+    font-size: 0.8125rem;
+  }
+
+  /* The dot trails each item (never leads one) and stays glued to its link, so a wrapped row never starts with "·". */
+  .st-footer--rows li {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .st-footer--rows li:not(:last-child)::after {
+    content: '·';
+    padding-inline: 0.4em;
+  }
+
+  /* D5: the Instagram icon right of "Sign in", 12 px apart, inside the same item (no dot, no extra height). */
+  .st-footer--rows .st-footer__ig {
+    margin-inline-start: 12px;
+  }
+
+  .st-footer--rows .st-footer__ig svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Inner pages (board 4): logo left, two link columns, small socials, legal line. */
+  .st-footer--inner {
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    align-items: start;
+    column-gap: 2.5rem;
+    row-gap: 0.25rem;
+    text-align: start;
+    font-size: 0.875rem;
+  }
+
+  .st-footer--inner .st-footer__logo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .st-footer--inner .st-footer__nav {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .st-footer--inner .st-logo__words {
+    font-size: 1.75rem;
+  }
+
+  .st-footer--inner .st-footer__nav ul {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(3, auto);
+    justify-content: start;
+    column-gap: 2.5rem;
+  }
+
+  .st-footer--inner .st-footer__nav a {
+    min-height: 2rem;
+  }
+
+  /* D5: the icon sits under the logo in its column (left-aligned with it, 2 px below: 8 ran the column 6 px past the
+     link columns), beside them, so the footer gains no height. */
+  .st-footer--inner .st-footer__social {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    margin-block-start: calc(2px - 0.25rem);
+  }
+
+  .st-footer--inner .st-footer__social svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .st-footer--inner .st-footer__legal {
+    grid-column: 1 / -1;
+    justify-self: center;
+    gap: 0 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .st-footer--inner {
+      grid-template-columns: auto auto 1fr;
+    }
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 1: all three layouts) */
+  /* >= 1024: three columns inside the page frame: logo, tagline and socials left; the nav centred; legal links and the
+     copyright right-aligned. Text links are at least 44 px wide as well as tall. */
+  @media screen and (min-width: 1024px) {
+    .st-footer.st-footer--landing,
+    .st-footer.st-footer--inner,
+    .st-footer.st-footer--rows {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      justify-items: stretch;
+      align-items: center;
+      column-gap: clamp(32px, 4vw, 72px);
+      row-gap: 0.25rem;
+      padding-inline: max(clamp(32px, 4vw, 64px), (100% - 1240px) / 2);
+      text-align: start;
+    }
+
+    .st-footer > .st-footer__logo {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+    }
+
+    .st-footer > .st-footer__tagline {
+      grid-column: 1;
+      grid-row: 2;
+      justify-self: start;
+      margin: 0;
+    }
+
+    /* the icon's 44 px target is wider than the glyph: pull it back so the glyph lines up with the tagline */
+    .st-footer > .st-footer__social {
+      grid-column: 1;
+      grid-row: 3;
+      justify-self: start;
+      justify-content: flex-start;
+      margin-block: 0;
+      margin-inline-start: -10px;
+    }
+
+    .st-footer > .st-footer__nav {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      align-self: center;
+    }
+
+    .st-footer > .st-footer__legal {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      align-self: end;
+      justify-self: end;
+      justify-content: flex-end;
+    }
+
+    .st-footer > .st-footer__copyright {
+      grid-column: 3;
+      grid-row: 3;
+      align-self: start;
+      justify-self: end;
+      text-align: end;
+    }
+
+    /* a short link's text sits centred in its 44 px target, so the dotted rows stay evenly spaced */
+    .st-footer a {
+      min-width: var(--minimum-touch-target);
+      justify-content: center;
+    }
+
+    .st-footer.st-footer--inner .st-footer__nav a {
+      justify-content: flex-start;
+      min-height: var(--minimum-touch-target);
+    }
+  }
+  /* END store desktop */
+
+  /* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+  @media screen and (min-width: 1680px) {
+    .st-footer.st-footer--landing,
+    .st-footer.st-footer--inner,
+    .st-footer.st-footer--rows {
+      padding-inline: max(clamp(32px, 4vw, 64px), (100% - 1440px) / 2);
+    }
+  }
+  /* END wide frame */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk footer",
+  "class": "st-footer-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Nails for real conversations."
+    },
+    {
+      "type": "header",
+      "content": "Links (copy register LND-060)"
+    },
+    {
+      "type": "text",
+      "id": "link_1_label",
+      "label": "Link 1 label"
+    },
+    {
+      "type": "url",
+      "id": "link_1_url",
+      "label": "Link 1"
+    },
+    {
+      "type": "text",
+      "id": "link_2_label",
+      "label": "Link 2 label"
+    },
+    {
+      "type": "url",
+      "id": "link_2_url",
+      "label": "Link 2"
+    },
+    {
+      "type": "text",
+      "id": "link_3_label",
+      "label": "Link 3 label"
+    },
+    {
+      "type": "url",
+      "id": "link_3_url",
+      "label": "Link 3"
+    },
+    {
+      "type": "text",
+      "id": "link_4_label",
+      "label": "Link 4 label"
+    },
+    {
+      "type": "url",
+      "id": "link_4_url",
+      "label": "Link 4"
+    },
+    {
+      "type": "text",
+      "id": "link_5_label",
+      "label": "Link 5 label"
+    },
+    {
+      "type": "url",
+      "id": "link_5_url",
+      "label": "Link 5"
+    },
+    {
+      "type": "text",
+      "id": "link_6_label",
+      "label": "Link 6 label"
+    },
+    {
+      "type": "url",
+      "id": "link_6_url",
+      "label": "Link 6"
+    },
+    {
+      "type": "text",
+      "id": "link_7_label",
+      "label": "Link 7 label"
+    },
+    {
+      "type": "url",
+      "id": "link_7_url",
+      "label": "Link 7"
+    },
+    {
+      "type": "header",
+      "content": "Social links"
+    },
+    {
+      "type": "paragraph",
+      "content": "Icons show only for links you add here."
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "social_pinterest",
+      "label": "Pinterest"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube"
+    },
+    {
+      "type": "url",
+      "id": "social_tiktok",
+      "label": "TikTok"
+    }
+  ],
+  "enabled_on": {
+    "groups": [
+      "footer"
+    ]
+  }
+}
+{% endschema %}

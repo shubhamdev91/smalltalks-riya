@@ -1,0 +1,28 @@
+<section class="di-wrap di-shop" data-set-filter><h1>{{ section.settings.heading | escape }}</h1><p class="di-note">{{ section.settings.note | escape }}</p><form action="{{ routes.search_url }}" method="get" role="search" class="di-search"><label class="visually-hidden" for="ShopSearch">Search the store</label><input id="ShopSearch" name="q" type="search" placeholder="Find a set or story"><button type="submit">Search</button></form>{% if settings.di_review_mode %}<div class="di-filter-bar" role="group" aria-label="{{ 'desi.filters.label' | t }}"><button type="button" data-filter="all" aria-pressed="true">{{ 'desi.filters.all' | t }}</button><button type="button" data-filter="everyday" aria-pressed="false">{{ 'desi.filters.everyday' | t }}</button><button type="button" data-filter="statement" aria-pressed="false">{{ 'desi.filters.statement' | t }}</button></div><p data-filter-empty hidden role="status">{{ 'desi.filters.empty' | t }}</p>{% assign everyday = section.settings.everyday_handles | split: ',' %}<div class="di-grid">{% assign campaigns = shop.metaobjects.small_talk_campaign.values | sort: 'motion_index' %}{% for c in campaigns %}{% render 'di-card',c:c,everyday:everyday %}{% endfor %}</div>{% else %}
+<form action="{{ collection.url }}" method="get" class="di-collection-controls"><label for="DesiSort">Sort by</label><select id="DesiSort" name="sort_by">{% assign current_sort = collection.sort_by | default: collection.default_sort_by %}{% for option in collection.sort_options %}<option value="{{ option.value | escape }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name | escape }}</option>{% endfor %}</select><button type="submit" class="di-button">Apply</button></form>
+{% paginate collection.products by 24 %}<div class="di-grid">{% for p in collection.products %}{% assign c = p.metafields.small_talk.campaign.value %}{% if c != blank %}{% render 'di-card',c:c,everyday:everyday %}{% else %}<article class="di-card"><a href="{{ p.url }}">{% if p.featured_image %}{{ p.featured_image | image_url: width:650 | image_tag: loading:'lazy' }}{% endif %}<h3>{{ p.title | escape }}</h3></a>{% if p.price > 0 %}<p>{{ p.price | money }}</p>{% endif %}</article>{% endif %}{% else %}<p>No sets are available in this collection yet.</p>{% endfor %}</div>{% if paginate.pages > 1 %}{{ paginate | default_pagination }}{% endif %}{% endpaginate %}{% endif %}</section>
+{% schema %}
+{
+  "name": "Shop",
+  "settings": [
+    {"type":"text","id":"everyday_handles","label":"Everyday set handles (comma separated)","default":"on-me,brainwave,green-flag,pinky-promise"},
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Shop heading",
+      "default": "Pick your plot twist."
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Handwritten note",
+      "default": "Same nails. Different moods."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-page",
+      "settings": {
+        "title_style": "display",
+        "show_content": true
+      },
+      "blocks": {
+        "form": {
+          "type": "contact-form",
+          "settings": {
+            "width": "custom",
+            "width_mobile": "custom",
+            "input_style": "default",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "custom_width": 100,
+            "custom_width_mobile": 100
+          },
+          "blocks": {
+            "submit-button": {
+              "type": "contact-form-submit-button",
+              "static": true,
+              "settings": {
+                "label": "Send message",
+                "style_class": "button",
+                "width": "custom",
+                "custom_width": 100,
+                "width_mobile": "custom",
+                "custom_width_mobile": 100
+              }
+            }
+          }
+        }
+      },
+      "block_order": [
+        "form"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

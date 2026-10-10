@@ -1,0 +1,12 @@
+<article class="di-wrap di-article"><a href="{{ blog.url }}">← All stories</a><h1>{{ article.title | escape }}</h1>{% if article.image %}{{ article.image | image_url: width: 1100 | image_tag: loading:'eager' }}{% endif %}<div class="rte">{{ article.content }}</div></article><script type="application/ld+json">{{ article | structured_data }}</script>
+{% schema %}
+{
+  "name": "Article",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Article"
+    }
+  ]
+}
+{% endschema %}

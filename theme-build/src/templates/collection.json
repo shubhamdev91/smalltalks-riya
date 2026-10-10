@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-shop",
+      "settings": {
+        "heading": "Pick your plot twist.",
+        "note": "Same nails. Different moods."
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

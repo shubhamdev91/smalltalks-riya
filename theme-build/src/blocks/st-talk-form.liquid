@@ -1,0 +1,200 @@
+{% doc %}
+  Private "Start a talk" form for the talks page. HIDDEN SLOT: its heading (PG-083), alias label (PG-091),
+  submit (PG-095) and moderation note (PG-103) are gated on fact G10 (what happens to submissions, consent,
+  who reads them). Until the owner confirms G10 and turns on "G10 confirmed", nothing renders on the
+  storefront; the theme editor shows a note instead. Ready strings (PG-084…PG-097) live in
+  locale small_talk.talks.form.*; the gated ones are block settings filled once G10 is confirmed.
+{% enddoc %}
+
+{%- liquid
+  assign form_id = 'StTalkForm-' | append: block.id
+  assign topics = block.settings.topics | split: '·'
+  assign ready = false
+  if block.settings.g10_confirmed and block.settings.heading != blank and block.settings.alias_label != blank and block.settings.submit_label != blank
+    assign ready = true
+  endif
+-%}
+
+{%- if ready -%}
+  <div class="st-talk-form" id="{{ block.settings.anchor | default: 'start-a-talk' }}" {{ block.shopify_attributes }}>
+    <h2 class="st-talk-form__heading">{{ block.settings.heading | escape }}</h2>
+    <p class="st-talk-form__intro">{{ 'small_talk.talks.form.intro' | t }}</p>
+
+    {%- form 'contact', id: form_id, class: 'st-talk-form__form', data-st-form: '', novalidate: 'novalidate' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="st-talk-form__success" role="status" tabindex="-1">{{ 'small_talk.talks.form_success' | t }}</p>
+      {%- else -%}
+        {%- if form.errors -%}
+          <div class="st-talk-form__errors" role="alert">{{ 'small_talk.talks.form.error' | t }}</div>
+        {%- endif -%}
+        <input type="hidden" name="contact[subject]" value="{{ block.settings.subject | escape }}">
+        <div
+          class="st-talk-form__fields"
+          data-msg-required="{{ 'small_talk.forms.required' | t | escape }}"
+          data-msg-email-missing="{{ 'small_talk.forms.required' | t | escape }}"
+          data-msg-email-invalid="{{ 'small_talk.forms.email_invalid' | t | escape }}"
+          data-msg-topic-missing="{{ 'small_talk.forms.topic_missing' | t | escape }}"
+          data-msg-too-long="{{ 'small_talk.forms.too_long' | t | escape }}"
+        >
+
+        {%- if topics.size > 1 -%}
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.talks.form.topic' | t }}</span>
+            <select name="contact[topic]" required data-msg="topic-missing">
+              {%- for topic in topics -%}
+                {%- assign topic_label = topic | strip -%}
+                <option{% if forloop.first %} value="" disabled selected{% endif %}>{{ topic_label | escape }}</option>
+              {%- endfor -%}
+            </select>
+          </label>
+        {%- endif -%}
+
+        <label class="st-field">
+          <span class="st-field__label">{{ 'small_talk.talks.form.title' | t }}</span>
+          <input type="text" name="contact[title]" maxlength="100" required placeholder="{{ 'small_talk.talks.form.title_placeholder' | t }}">
+        </label>
+
+        <label class="st-field">
+          <span class="st-field__label">{{ 'small_talk.talks.form.body' | t }}</span>
+          <textarea name="contact[body]" rows="5" maxlength="1500" required placeholder="{{ 'small_talk.talks.form.body_placeholder' | t }}"></textarea>
+        </label>
+
+        <label class="st-field">
+          <span class="st-field__label">{{ block.settings.alias_label | escape }}</span>
+          <input type="text" name="contact[alias]" maxlength="32" required autocomplete="nickname" placeholder="{{ 'small_talk.talks.form.alias_placeholder' | t }}">
+        </label>
+
+        <label class="st-field">
+          <span class="st-field__label">{{ 'small_talk.talks.form.email' | t }}</span>
+          <input type="email" name="contact[email]" required autocomplete="email" spellcheck="false" data-msg="email">
+        </label>
+        </div>
+
+        <p class="st-talk-form__privacy">{{ 'small_talk.talks.form.kindness' | t }}</p>
+
+        <button type="submit" class="button st-talk-form__submit" data-sending="{{ 'small_talk.help.form.sending' | t | escape }}">{{ block.settings.submit_label | escape }}</button>
+
+        {%- if block.settings.moderation_note != blank -%}
+          <p class="st-talk-form__privacy">{{ block.settings.moderation_note | escape }}</p>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+  <script type="module" src="{{ 'st-forms.js' | asset_url }}" fetchpriority="low"></script>
+{%- elsif request.design_mode -%}
+  <p class="st-talk-form__placeholder" {{ block.shopify_attributes }}>
+    Talk form hidden until fact G10 is confirmed (submission handling, consent, moderation).
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .st-talk-form {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border-radius: var(--st-radius-card);
+    background: var(--st-tint);
+    scroll-margin-block-start: 5rem;
+  }
+
+  .st-talk-form__heading {
+    margin: 0;
+    font-family: var(--st-font-display);
+    font-size: 2rem;
+  }
+
+  .st-talk-form__intro,
+  .st-talk-form__privacy {
+    margin: 0;
+    color: var(--st-muted);
+    font-size: 0.9375rem;
+  }
+
+  .st-talk-form__form,
+  .st-talk-form__fields {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .st-field__error {
+    color: var(--st-error);
+    font-size: 0.875rem;
+  }
+
+  .st-field [aria-invalid='true'] {
+    border-color: var(--st-error);
+  }
+
+  .st-field {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .st-field__label {
+    color: var(--st-ink);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .st-field input,
+  .st-field select,
+  .st-field textarea {
+    width: 100%;
+    min-height: var(--minimum-touch-target);
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--st-divider);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--st-body);
+    font: inherit;
+    font-size: max(1rem, 16px);
+  }
+
+  .st-field textarea {
+    resize: vertical;
+  }
+
+  .st-talk-form__submit {
+    justify-self: stretch;
+  }
+
+  .st-talk-form__success {
+    margin: 0;
+    color: var(--st-ink);
+    font-weight: 600;
+  }
+
+  .st-talk-form__errors {
+    color: var(--st-error);
+  }
+
+  .st-talk-form__placeholder {
+    margin: 0;
+    padding: 1rem;
+    border: 1px dashed var(--st-divider);
+    color: var(--st-muted);
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk talk form",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "g10_confirmed",
+      "label": "G10 confirmed (submission handling, consent, moderation)",
+      "default": false
+    },
+    { "type": "text", "id": "heading", "label": "Heading (PG-083, gated G10)" },
+    { "type": "text", "id": "alias_label", "label": "Alias label (PG-091, gated G10)" },
+    { "type": "text", "id": "submit_label", "label": "Submit label (PG-095, gated G10)" },
+    { "type": "textarea", "id": "moderation_note", "label": "Moderation note (PG-103, gated G10)" },
+    { "type": "text", "id": "topics", "label": "Topic options, separated by ·", "default": "Pick one · Friendship · Plot twists · Tiny wins · Nail talk · Something else" },
+    { "type": "text", "id": "subject", "label": "Email subject (internal)", "default": "the talks submission" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "start-a-talk" }
+  ],
+  "presets": [{ "name": "Small Talk talk form" }]
+}
+{% endschema %}

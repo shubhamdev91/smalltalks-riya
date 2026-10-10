@@ -1,0 +1,105 @@
+{% comment %}
+  Section contract.
+  Two tiles under the hero, board 3 (spec/landing.md "Tiles"): "Our story" (an illustration close-up, LND-010) and
+  "Shop all sets" (LND-011, a scatter of one nail per set). Each tile is one link (card + label). The section clips its
+  own curved top edge over the hero (snippets/st-landing-join).
+  @example
+  <!-- templates/index.json: after st-hero. -->
+{% endcomment %}
+
+<section class="st-land st-land--cream" data-land="tiles" style="{% render 'st-landing-join', key: 'tiles', part: 'style' %}">
+  <div class="st-land__inner">
+    {% render 'st-landing-join', key: 'tiles', part: 'beeline' %}
+
+    <a class="st-tiles__tile" href="{{ section.settings.story_url | default: routes.root_url }}" style="--x: 10; --y: 16; --w: 183;">
+      <span class="st-land__card" style="--w: 183; --hh: 263; --card-bg: #f8e6cb;">
+        {%- if section.settings.story_image != blank -%}
+          {{
+            section.settings.story_image
+            | image_url: width: 720
+            | image_tag: alt: section.settings.story_alt, loading: 'lazy', fetchpriority: 'low', sizes: '(min-width: 560px) 252px, 46vw', widths: '360, 540, 720', style: 'left: 0; top: 0; width: 100%; height: 100%; object-fit: cover;'
+          }}
+        {%- else -%}
+          {%- comment -%} HD batch 2: the "Our Vision" tile (opaque 549 × 789, cream ground), cover-fit; the card gives the radius. {%- endcomment -%}
+          {%- comment -%} v3.7.2 load plan: held (data-st-src) until the hero tone has loaded; see the script below. {%- endcomment -%}
+          <img
+            class="st-tiles__held"
+            data-st-src="{{ 'st-hd-our-vision-woman.webp' | asset_url }}"
+            width="549"
+            height="789"
+            alt="{{ section.settings.story_alt | escape }}"
+            decoding="async"
+            fetchpriority="low"
+            style="left: 0; top: 0; width: 100%; height: 100%; object-fit: cover;"
+          >
+          <noscript><img src="{{ 'st-hd-our-vision-woman.webp' | asset_url }}" width="549" height="789" alt="{{ section.settings.story_alt | escape }}" style="left: 0; top: 0; width: 100%; height: 100%; object-fit: cover;"></noscript>
+        {%- endif -%}
+      </span>
+      <span class="st-tiles__label">{{ section.settings.story_label | escape }} <span class="st-arrow" aria-hidden="true">↗</span></span>
+    </a>
+
+    <a class="st-tiles__tile" href="{{ section.settings.shop_url | default: routes.all_products_collection_url }}" style="--x: 205; --y: 18; --w: 180;">
+      <span
+        class="st-land__card st-tiles__collage"
+        style="--w: 180; --hh: 260; --card-bg: #f5e9da;"
+        {% if section.settings.shop_alt != blank %}role="img" aria-label="{{ section.settings.shop_alt | escape }}"{% else %}aria-hidden="true"{% endif %}
+      >
+        {%- render 'st-landing-map', key: 'all', field: 'collage' -%}
+      </span>
+      <span class="st-tiles__label">{{ section.settings.shop_label | escape }} <span class="st-arrow" aria-hidden="true">↗</span></span>
+    </a>
+    <noscript><style>.st-tiles__collage .st-tiles__nail { --st-nails: var(--st-nails-src); } .st-tiles__collage .st-tiles__nail::before { opacity: 1; } .st-tiles__held { display: none; }</style></noscript>
+    <script>
+      (() => {
+        // Hero load plan (v3.7.1 / v3.7.2): the collage's sheets and the held Our Vision tile wait for the hero tone
+        // (LCP); else window load or 4 s. Without a hero on the page they fill at once.
+        const root = document.currentScript.closest('.st-land');
+        if (!root) return;
+        const collage = root.querySelector('.st-tiles__collage');
+        const held = [...root.querySelectorAll('img.st-tiles__held[data-st-src]')];
+        let done = false;
+        const fill = () => {
+          if (done) return;
+          done = true;
+          if (collage) collage.classList.add('is-ready');
+          held.forEach((img) => {
+            const show = () => img.classList.add('is-shown');
+            img.addEventListener('load', show, { once: true });
+            img.addEventListener('error', show, { once: true });
+            img.src = img.dataset.stSrc;
+            img.removeAttribute('data-st-src');
+          });
+        };
+        const tone = document.querySelector('img.st-hero__tone');
+        if (!tone || (tone.complete && tone.naturalWidth)) return fill();
+        tone.addEventListener('load', fill, { once: true });
+        tone.addEventListener('error', fill, { once: true });
+        window.addEventListener('load', fill, { once: true });
+        setTimeout(fill, 4000);
+      })();
+    </script>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Small Talk tiles",
+  "class": "st-land-section",
+  "settings": [
+    { "type": "text", "id": "story_label", "label": "Left tile label", "default": "Our story" },
+    { "type": "url", "id": "story_url", "label": "Left tile link" },
+    { "type": "image_picker", "id": "story_image", "label": "Left tile image (optional)" },
+    {
+      "type": "metaobject",
+      "id": "story_campaign",
+      "label": "Left tile character (when no image)",
+      "metaobject_type": "small_talk_campaign"
+    },
+    { "type": "text", "id": "story_alt", "label": "Left tile alt text" },
+    { "type": "text", "id": "shop_label", "label": "Right tile label", "default": "Shop all sets" },
+    { "type": "url", "id": "shop_url", "label": "Right tile link" },
+    { "type": "text", "id": "shop_alt", "label": "Right tile alt text (nail collage)" }
+  ],
+  "presets": [{ "name": "Small Talk tiles" }]
+}
+{% endschema %}

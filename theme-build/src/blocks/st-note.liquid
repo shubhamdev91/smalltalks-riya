@@ -1,0 +1,79 @@
+{% doc %}
+  One line of page copy in one of the three type voices: handwritten (plum, smaller than the heading), a small
+  section heading, or body text.
+{% enddoc %}
+
+{%- assign style = block.settings.style -%}
+
+{%- if block.settings.text != blank -%}
+  {%- case style -%}
+    {%- when 'heading' -%}
+      <h2 class="st-note st-note--heading st-note--{{ block.settings.alignment }}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</h2>
+    {%- when 'pen' -%}
+      <p class="st-note st-note--pen st-pen st-note--{{ block.settings.alignment }}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+    {%- else -%}
+      <p class="st-note st-note--body st-note--{{ block.settings.alignment }}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+  {%- endcase -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .st-note {
+    margin: 0;
+  }
+
+  .st-note--center {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .st-note--heading {
+    color: var(--st-ink);
+    font-family: var(--st-font-display);
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+    line-height: 1.05;
+  }
+
+  .st-note--pen {
+    max-width: 22ch;
+    color: var(--st-plum);
+    font-size: clamp(1.5rem, 6.5vw, 2.125rem);
+    line-height: 1.15;
+  }
+
+  .st-note--body {
+    max-width: 60ch;
+    color: var(--st-body);
+    line-height: 1.55;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk note",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Voice",
+      "options": [
+        { "value": "pen", "label": "Handwritten" },
+        { "value": "heading", "label": "Small heading" },
+        { "value": "body", "label": "Body text" }
+      ],
+      "default": "pen"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "start", "label": "Start" },
+        { "value": "center", "label": "Centre" }
+      ],
+      "default": "center"
+    },
+    { "type": "textarea", "id": "text", "label": "Text" }
+  ],
+  "presets": [{ "name": "Small Talk note" }]
+}
+{% endschema %}

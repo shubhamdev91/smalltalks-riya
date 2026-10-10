@@ -1,0 +1,157 @@
+{% doc %}
+  Save toggle (board 5 bookmark; owner T23, copy PDP-055…057): an icon button that keeps the set in a saved list on this
+  device only (localStorage; there are no accounts, so nothing syncs). aria-pressed carries the state, the accessible
+  name and the hover/focus hint change with it, and a polite status announces each change. It stays hidden until the
+  script runs and storage works, so there is never a button that does nothing.
+
+  @param {product} product - The product to save.
+
+  @example
+  {% render 'st-save-toggle', product: product %}
+{% enddoc %}
+
+{%- liquid
+  assign title = product.title | escape
+  assign label_off = 'small_talk.product.save_label' | t: product: title
+  assign label_on = 'small_talk.product.saved_label' | t: product: title
+-%}
+
+<button
+  type="button"
+  class="st-save"
+  data-st-save="{{ product.handle }}"
+  data-label-off="{{ label_off }}"
+  data-label-on="{{ label_on }}"
+  data-hint-off="{{ 'small_talk.product.save_hint' | t }}"
+  data-hint-on="{{ 'small_talk.product.saved_hint' | t }}"
+  data-said-on="{{ 'small_talk.product.saved_note' | t }}"
+  data-said-off="{{ 'small_talk.product.unsaved_note' | t }}"
+  aria-pressed="false"
+  aria-label="{{ label_off }}"
+  hidden
+>
+  <svg class="st-save__icon" width="16" height="22" viewBox="0 0 16 22" aria-hidden="true" focusable="false">
+    <path d="M2 1.75h12v18.5l-6-4.6-6 4.6V1.75Z"/>
+  </svg>
+  <span class="st-save__hint" aria-hidden="true">{{ 'small_talk.product.save_hint' | t }}</span>
+</button>
+<span class="visually-hidden" role="status" data-st-save-status></span>
+
+<script>
+  (() => {
+    // One initialiser for every toggle on the page, re-run when Horizon re-renders the buy row.
+    if (window.stSave) return window.stSave();
+    const KEY = 'st-saved-sets';
+    const read = () => {
+      try {
+        const list = JSON.parse(localStorage.getItem(KEY) || '[]');
+        return Array.isArray(list) ? list : [];
+      } catch (error) {
+        return null;
+      }
+    };
+    const write = (list) => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(list));
+        return true;
+      } catch (error) {
+        return false;
+      }
+    };
+    const show = (button, on) => {
+      button.setAttribute('aria-pressed', String(on));
+      button.setAttribute('aria-label', on ? button.dataset.labelOn : button.dataset.labelOff);
+      const hint = button.querySelector('.st-save__hint');
+      const text = on ? button.dataset.hintOn : button.dataset.hintOff;
+      if (hint.textContent !== text) hint.textContent = text;
+    };
+    const init = (button) => {
+      button.dataset.stReady = '';
+      const list = read();
+      if (list === null) return; // storage blocked: the button stays hidden
+      const handle = button.dataset.stSave;
+      show(button, list.includes(handle));
+      button.hidden = false;
+      button.addEventListener('click', () => {
+        const current = read() || [];
+        const on = !current.includes(handle);
+        if (!write(on ? [...current, handle] : current.filter((h) => h !== handle))) return;
+        show(button, on);
+        const status = button.nextElementSibling;
+        if (status && status.matches('[data-st-save-status]')) {
+          status.textContent = '';
+          requestAnimationFrame(() => (status.textContent = on ? button.dataset.saidOn : button.dataset.saidOff));
+        }
+      });
+    };
+    window.stSave = () => document.querySelectorAll('[data-st-save]:not([data-st-ready])').forEach(init);
+    window.stSave();
+    new MutationObserver(() => window.stSave()).observe(document.body, { childList: true, subtree: true });
+  })();
+</script>
+
+{% stylesheet %}
+  /* Board: 30 × 42 outline button, 1.5 px burgundy, bookmark glyph; built 44 × 44 (touch minimum wins). */
+  .st-save {
+    position: relative;
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 1.5px solid var(--st-pdp-buy, #940326);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--st-pdp-buy, #940326);
+    cursor: pointer;
+  }
+
+  .product-form-buttons > .st-save {
+    flex: none;
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+  }
+
+  .st-save[hidden] {
+    display: none;
+  }
+
+  .st-save__icon path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+  }
+
+  .st-save[aria-pressed='true'] .st-save__icon path {
+    fill: currentColor;
+  }
+
+  .st-save__hint {
+    position: absolute;
+    inset-block-end: calc(100% + 6px);
+    inset-inline-end: 0;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: var(--st-ink, #1a1a2e);
+    color: #fff;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .st-save:hover .st-save__hint,
+  .st-save:focus-visible .st-save__hint {
+    opacity: 1;
+  }
+
+  .st-save:focus-visible {
+    outline: 2px solid var(--st-pdp-buy, #940326);
+    outline-offset: 2px;
+  }
+{% endstylesheet %}

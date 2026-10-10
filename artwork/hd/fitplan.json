@@ -1,0 +1,1250 @@
+{
+ "L-on-me-woman": {
+  "src": "chatgpt/_from-board-corrections/on-me-chapter.png",
+  "box": [
+   0,
+   77,
+   535,
+   800
+  ],
+  "board": "landing-col3@390.png",
+  "view": [
+   0,
+   1700,
+   390,
+   2387
+  ],
+  "left": -6,
+  "top": 1770,
+  "width": 364,
+  "feather_bottom": [
+   700,
+   800
+  ]
+ },
+ "L-on-me-receipt-hand": {
+  "src": "chatgpt/_from-board-corrections/on-me-chapter.png",
+  "box": [
+   781,
+   218,
+   1200,
+   800
+  ],
+  "board": "landing-col3@390.png",
+  "view": [
+   0,
+   1700,
+   390,
+   2387
+  ],
+  "left": 111,
+  "top": 1875,
+  "width": 308,
+  "feather_bottom": [
+   748,
+   800
+  ]
+ },
+ "L-green-flag-scene": {
+  "src": "chatgpt/_from-board-corrections/green-flag-chapter.png",
+  "box": [
+   27,
+   0,
+   1536,
+   1024
+  ],
+  "board": "landing-col2@390.png",
+  "view": [
+   0,
+   1280,
+   390,
+   1715
+  ],
+  "left": -20,
+  "top": 1395,
+  "width": 470
+ },
+ "L-shaadi-sweep": {
+  "src": "chatgpt/_from-board-corrections/shaadi-shift-chapter.png",
+  "box": [
+   0,
+   128,
+   1200,
+   800
+  ],
+  "board": "landing-col3@390.png",
+  "view": [
+   0,
+   1050,
+   390,
+   1330
+  ],
+  "left": 0,
+  "top": 1069,
+  "width": 456
+ },
+ "L-brainwave-notebook": {
+  "src": "chatgpt/_from-board-corrections/brainwave-notebook.png",
+  "box": [
+   136,
+   30,
+   1481,
+   1011
+  ],
+  "board": "landing-col2@390.png",
+  "view": [
+   0,
+   560,
+   390,
+   860
+  ],
+  "left": 12,
+  "top": 615,
+  "width": 370
+ },
+ "L-green-flag-woman": {
+  "src": "chatgpt/_from-board-corrections/green-flag-chapter.png",
+  "box": [
+   0,
+   0,
+   1536,
+   1024
+  ],
+  "mask_out_poly": [
+   [
+    18,
+    905
+   ],
+   [
+    28,
+    840
+   ],
+   [
+    60,
+    770
+   ],
+   [
+    110,
+    690
+   ],
+   [
+    165,
+    600
+   ],
+   [
+    188,
+    545
+   ],
+   [
+    246,
+    538
+   ],
+   [
+    262,
+    592
+   ],
+   [
+    380,
+    592
+   ],
+   [
+    394,
+    530
+   ],
+   [
+    447,
+    530
+   ],
+   [
+    472,
+    594
+   ],
+   [
+    530,
+    625
+   ],
+   [
+    600,
+    690
+   ],
+   [
+    628,
+    752
+   ],
+   [
+    636,
+    790
+   ],
+   [
+    662,
+    850
+   ],
+   [
+    668,
+    930
+   ],
+   [
+    642,
+    992
+   ],
+   [
+    560,
+    1016
+   ],
+   [
+    90,
+    1004
+   ],
+   [
+    18,
+    965
+   ]
+  ],
+  "board": "landing-col2@390.png",
+  "view": [
+   0,
+   1280,
+   390,
+   1715
+  ],
+  "left": -267.5,
+  "top": 1277.5,
+  "width": 768
+ },
+ "L-green-flag-phone": {
+  "src": "chatgpt/_from-board-corrections/green-flag-chapter.png",
+  "box": [
+   0,
+   500,
+   700,
+   1024
+  ],
+  "mask_poly": [
+   [
+    18,
+    905
+   ],
+   [
+    28,
+    840
+   ],
+   [
+    60,
+    770
+   ],
+   [
+    110,
+    690
+   ],
+   [
+    165,
+    600
+   ],
+   [
+    188,
+    545
+   ],
+   [
+    246,
+    538
+   ],
+   [
+    262,
+    592
+   ],
+   [
+    380,
+    592
+   ],
+   [
+    394,
+    530
+   ],
+   [
+    447,
+    530
+   ],
+   [
+    472,
+    594
+   ],
+   [
+    530,
+    625
+   ],
+   [
+    600,
+    690
+   ],
+   [
+    628,
+    752
+   ],
+   [
+    636,
+    790
+   ],
+   [
+    662,
+    850
+   ],
+   [
+    668,
+    930
+   ],
+   [
+    642,
+    992
+   ],
+   [
+    560,
+    1016
+   ],
+   [
+    90,
+    1004
+   ],
+   [
+    18,
+    965
+   ]
+  ],
+  "board": "landing-col2@390.png",
+  "view": [
+   0,
+   1280,
+   390,
+   1715
+  ],
+  "left": -48,
+  "top": 1470,
+  "width": 252
+ },
+ "H-on-me-woman": {
+  "src": "chatgpt/_from-board-corrections/on-me-chapter.png",
+  "box": [
+   0,
+   77,
+   535,
+   800
+  ],
+  "feather_bottom": [
+   700,
+   800
+  ],
+  "board": "hero-1-on-me@390.png",
+  "view": [
+   0,
+   380,
+   390,
+   885
+  ],
+  "left": -8,
+  "top": 518,
+  "width": 270
+ },
+ "H-green-flag-woman": {
+  "src": "chatgpt/_from-board-corrections/green-flag-chapter.png",
+  "box": [
+   0,
+   0,
+   1536,
+   1024
+  ],
+  "mask_out_poly": [
+   [
+    18,
+    905
+   ],
+   [
+    28,
+    840
+   ],
+   [
+    60,
+    770
+   ],
+   [
+    110,
+    690
+   ],
+   [
+    165,
+    600
+   ],
+   [
+    188,
+    545
+   ],
+   [
+    246,
+    538
+   ],
+   [
+    262,
+    592
+   ],
+   [
+    380,
+    592
+   ],
+   [
+    394,
+    530
+   ],
+   [
+    447,
+    530
+   ],
+   [
+    472,
+    594
+   ],
+   [
+    530,
+    625
+   ],
+   [
+    600,
+    690
+   ],
+   [
+    628,
+    752
+   ],
+   [
+    636,
+    790
+   ],
+   [
+    662,
+    850
+   ],
+   [
+    668,
+    930
+   ],
+   [
+    642,
+    992
+   ],
+   [
+    560,
+    1016
+   ],
+   [
+    90,
+    1004
+   ],
+   [
+    18,
+    965
+   ]
+  ],
+  "feather_bottom": [
+   790,
+   860
+  ],
+  "board": "hero-4-green-flag@390.png",
+  "view": [
+   0,
+   300,
+   390,
+   898
+  ],
+  "left": -32,
+  "top": 405,
+  "width": 491.5
+ },
+ "L-wild-card-woman": {
+  "src": "chatgpt/_from-board-corrections/wild-card-chapter.png",
+  "box": [
+   0,
+   0,
+   1014,
+   1024
+  ],
+  "board": "landing-col4@390.png",
+  "view": [
+   0,
+   230,
+   390,
+   850
+  ],
+  "left": -275,
+  "top": 416,
+  "width": 486.7
+ },
+ "L-wild-card-cards-hand": {
+  "src": "chatgpt/_from-board-corrections/wild-card-chapter.png",
+  "box": [
+   985,
+   468,
+   1479,
+   1024
+  ],
+  "board": "landing-col4@390.png",
+  "view": [
+   0,
+   230,
+   390,
+   850
+  ],
+  "left": 135,
+  "top": 580,
+  "width": 237
+ },
+ "L-pinky-promise-scene": {
+  "src": "chatgpt/_from-board-corrections/pinky-promise-chapter.png",
+  "box": [
+   0,
+   3,
+   1200,
+   800
+  ],
+  "board": "landing-col4@390.png",
+  "view": [
+   0,
+   1330,
+   390,
+   1715
+  ],
+  "left": -102,
+  "top": 1358,
+  "width": 540
+ },
+ "H-wild-card-woman": {
+  "src": "chatgpt/_from-board-corrections/wild-card-chapter.png",
+  "box": [
+   0,
+   0,
+   900,
+   1024
+  ],
+  "feather_right": [
+   780,
+   900
+  ],
+  "board": "hero-6-wild-card@390.png",
+  "view": [
+   0,
+   180,
+   390,
+   826
+  ],
+  "left": -285,
+  "top": 293,
+  "width": 405,
+  "feather_bottom": [
+   880,
+   1024
+  ]
+ },
+ "H-wild-card-cards-hand": {
+  "src": "chatgpt/_from-board-corrections/wild-card-chapter.png",
+  "box": [
+   985,
+   468,
+   1479,
+   1024
+  ],
+  "board": "hero-6-wild-card@390.png",
+  "view": [
+   0,
+   180,
+   390,
+   826
+  ],
+  "left": -30,
+  "top": 520,
+  "width": 170,
+  "feather_bottom": [
+   940,
+   1024
+  ]
+ },
+ "H-pinky-promise-woman": {
+  "src": "chatgpt/_from-board-corrections/pinky-promise-chapter.png",
+  "box": [
+   0,
+   3,
+   480,
+   700
+  ],
+  "feather_right": [
+   440,
+   480
+  ],
+  "feather_bottom": [
+   420,
+   500
+  ],
+  "board": "hero-7-pinky-promise@390.png",
+  "view": [
+   0,
+   60,
+   390,
+   400
+  ],
+  "left": -114,
+  "top": 47,
+  "width": 225.6
+ },
+ "H-shaadi-shift-prop": {
+  "src": "chatgpt/_from-board-corrections/shaadi-shift-chapter.png",
+  "box": [
+   420,
+   300,
+   1000,
+   800
+  ],
+  "feather_right": [
+   880,
+   1000
+  ],
+  "feather_top": [
+   300,
+   360
+  ],
+  "board": "hero-5-shaadi-shift@390.png",
+  "view": [
+   0,
+   380,
+   390,
+   851
+  ],
+  "left": -60,
+  "top": 590,
+  "width": 220
+ },
+ "L-brainwave-woman": {
+  "src": "chatgpt/named/brainwave/brainwave-chapter.png",
+  "box": [
+   0,
+   300,
+   300,
+   940
+  ],
+  "feather_right": [
+   230,
+   300
+  ],
+  "feather_bottom": [
+   800,
+   940
+  ],
+  "board": "landing-col2@390.png",
+  "view": [
+   0,
+   0,
+   390,
+   620
+  ],
+  "left": -2,
+  "top": -2,
+  "width": 165
+ },
+ "H-brainwave-woman": {
+  "src": "chatgpt/named/brainwave/brainwave-chapter.png",
+  "box": [
+   0,
+   200,
+   300,
+   880
+  ],
+  "feather_right": [
+   230,
+   300
+  ],
+  "feather_bottom": [
+   760,
+   880
+  ],
+  "board": "hero-2-brainwave@390.png",
+  "view": [
+   0,
+   0,
+   390,
+   560
+  ],
+  "left": -2,
+  "top": 0,
+  "width": 135
+ },
+ "L-diet-cherry-woman": {
+  "src": "chatgpt/named/diet-cherry/diet-cherry-chapter.png",
+  "box": [
+   0,
+   0,
+   560,
+   1024
+  ],
+  "feather_right": [
+   420,
+   560
+  ],
+  "board": "landing-col1@390.png",
+  "view": [
+   0,
+   1300,
+   390,
+   1720
+  ],
+  "left": -2,
+  "top": 1437,
+  "width": 196
+ },
+ "L-diet-cherry-can-hand": {
+  "src": "chatgpt/named/diet-cherry/diet-cherry-chapter.png",
+  "box": [
+   1080,
+   330,
+   1536,
+   1024
+  ],
+  "board": "landing-col1@390.png",
+  "view": [
+   0,
+   1300,
+   390,
+   1720
+  ],
+  "left": 277,
+  "top": 1522,
+  "width": 141.4
+ },
+ "L-wild-card-v2-woman": {
+  "src": "chatgpt/named/wild-card/wild-card-chapter-v2.png",
+  "box": [
+   0,
+   0,
+   1536,
+   1024
+  ],
+  "mask_out_poly": [
+   [
+    992,
+    560
+   ],
+   [
+    1100,
+    485
+   ],
+   [
+    1228,
+    468
+   ],
+   [
+    1410,
+    528
+   ],
+   [
+    1480,
+    580
+   ],
+   [
+    1425,
+    735
+   ],
+   [
+    1458,
+    830
+   ],
+   [
+    1475,
+    935
+   ],
+   [
+    1460,
+    1024
+   ],
+   [
+    1160,
+    1024
+   ],
+   [
+    1090,
+    935
+   ],
+   [
+    1040,
+    875
+   ],
+   [
+    1000,
+    870
+   ]
+  ],
+  "board": "landing-col4@390.png",
+  "view": [
+   0,
+   230,
+   390,
+   850
+  ],
+  "left": -270,
+  "top": 419,
+  "width": 721.9,
+  "mask_out_blur": 6,
+  "feather_top": [
+   0,
+   70
+  ],
+  "mask_out_grow": 8
+ },
+ "L-wild-card-v2-cards": {
+  "src": "chatgpt/named/wild-card/wild-card-chapter-v2.png",
+  "box": [
+   960,
+   440,
+   1536,
+   1024
+  ],
+  "mask_poly": [
+   [
+    992,
+    560
+   ],
+   [
+    1100,
+    485
+   ],
+   [
+    1228,
+    468
+   ],
+   [
+    1410,
+    528
+   ],
+   [
+    1480,
+    580
+   ],
+   [
+    1425,
+    735
+   ],
+   [
+    1458,
+    830
+   ],
+   [
+    1475,
+    935
+   ],
+   [
+    1460,
+    1024
+   ],
+   [
+    1160,
+    1024
+   ],
+   [
+    1090,
+    935
+   ],
+   [
+    1040,
+    875
+   ],
+   [
+    1000,
+    870
+   ]
+  ],
+  "board": "landing-col4@390.png",
+  "view": [
+   0,
+   230,
+   390,
+   850
+  ],
+  "left": 160,
+  "top": 596,
+  "width": 259.2,
+  "remove_dark_blobs": 400
+ },
+ "H-wild-card-v2-woman": {
+  "src": "chatgpt/named/wild-card/wild-card-chapter-v2.png",
+  "box": [
+   0,
+   0,
+   940,
+   1024
+  ],
+  "feather_right": [
+   820,
+   940
+  ],
+  "feather_bottom": [
+   880,
+   1024
+  ],
+  "board": "hero-6-wild-card@390.png",
+  "view": [
+   0,
+   180,
+   390,
+   826
+  ],
+  "left": -265,
+  "top": 311,
+  "width": 423,
+  "feather_top": [
+   0,
+   70
+  ]
+ },
+ "H-wild-card-v2-cards": {
+  "src": "chatgpt/named/wild-card/wild-card-chapter-v2.png",
+  "box": [
+   960,
+   440,
+   1536,
+   1024
+  ],
+  "mask_poly": [
+   [
+    992,
+    560
+   ],
+   [
+    1100,
+    485
+   ],
+   [
+    1228,
+    468
+   ],
+   [
+    1410,
+    528
+   ],
+   [
+    1480,
+    580
+   ],
+   [
+    1425,
+    735
+   ],
+   [
+    1458,
+    830
+   ],
+   [
+    1475,
+    935
+   ],
+   [
+    1460,
+    1024
+   ],
+   [
+    1160,
+    1024
+   ],
+   [
+    1090,
+    935
+   ],
+   [
+    1040,
+    875
+   ],
+   [
+    1000,
+    870
+   ]
+  ],
+  "remove_dark_blobs": 400,
+  "feather_bottom": [
+   985,
+   1024
+  ],
+  "board": "hero-6-wild-card@390.png",
+  "view": [
+   0,
+   180,
+   390,
+   826
+  ],
+  "left": -40,
+  "top": 568,
+  "width": 170
+ },
+ "L-green-flag-hand": {
+  "src": "chatgpt/_from-board-corrections/green-flag-chapter.png",
+  "box": [
+   700,
+   300,
+   1300,
+   1024
+  ],
+  "mask_poly": [
+   [
+    775,
+    1024
+   ],
+   [
+    740,
+    750
+   ],
+   [
+    744,
+    675
+   ],
+   [
+    775,
+    537
+   ],
+   [
+    787,
+    469
+   ],
+   [
+    875,
+    412
+   ],
+   [
+    975,
+    392
+   ],
+   [
+    881,
+    327
+   ],
+   [
+    912,
+    312
+   ],
+   [
+    1012,
+    316
+   ],
+   [
+    1055,
+    362
+   ],
+   [
+    1064,
+    512
+   ],
+   [
+    1094,
+    650
+   ],
+   [
+    1125,
+    700
+   ],
+   [
+    1225,
+    722
+   ],
+   [
+    1252,
+    800
+   ],
+   [
+    1246,
+    878
+   ],
+   [
+    1190,
+    928
+   ],
+   [
+    1075,
+    922
+   ],
+   [
+    1012,
+    952
+   ],
+   [
+    912,
+    1024
+   ]
+  ],
+  "remove_dark_blobs": 300,
+  "board": "landing-col2@390.png",
+  "view": [
+   0,
+   1280,
+   390,
+   1715
+  ],
+  "left": 82.5,
+  "top": 1427.5,
+  "width": 300.0
+ },
+ "H-shaadi-shift-pin-v2": {
+  "src": "hd/_derived/shaadi-shift-chapter-rot62.png",
+  "box": [
+   0,
+   0,
+   1276,
+   1438
+  ],
+  "feather_top": [
+   260,
+   430
+  ],
+  "board": "hero-5-shaadi-shift@390.png",
+  "view": [
+   0,
+   380,
+   390,
+   851
+  ],
+  "left": -152,
+  "top": 297,
+  "width": 484.88,
+  "keep_largest": true
+ },
+ "H-pinky-promise-woman-v2": {
+  "src": "chatgpt/_from-board-corrections/pinky-promise-chapter.png",
+  "box": [
+   0,
+   3,
+   640,
+   760
+  ],
+  "feather_bottom": [
+   470,
+   560
+  ],
+  "board": "hero-7-pinky-promise@390.png",
+  "view": [
+   0,
+   60,
+   390,
+   400
+  ],
+  "left": -114,
+  "top": 47,
+  "width": 225.6,
+  "keep_largest": true
+ },
+ "H-green-flag-woman-v2": {
+  "src": "chatgpt/_from-board-corrections/green-flag-chapter.png",
+  "box": [
+   0,
+   0,
+   1536,
+   1024
+  ],
+  "mask_out_poly": [
+   [
+    18,
+    905
+   ],
+   [
+    28,
+    840
+   ],
+   [
+    60,
+    770
+   ],
+   [
+    110,
+    690
+   ],
+   [
+    165,
+    600
+   ],
+   [
+    188,
+    545
+   ],
+   [
+    246,
+    538
+   ],
+   [
+    262,
+    592
+   ],
+   [
+    380,
+    592
+   ],
+   [
+    394,
+    530
+   ],
+   [
+    447,
+    530
+   ],
+   [
+    472,
+    594
+   ],
+   [
+    530,
+    625
+   ],
+   [
+    600,
+    690
+   ],
+   [
+    628,
+    752
+   ],
+   [
+    636,
+    790
+   ],
+   [
+    662,
+    850
+   ],
+   [
+    668,
+    930
+   ],
+   [
+    642,
+    992
+   ],
+   [
+    560,
+    1016
+   ],
+   [
+    90,
+    1004
+   ],
+   [
+    18,
+    965
+   ]
+  ],
+  "board": "hero-4-green-flag@390.png",
+  "view": [
+   0,
+   250,
+   390,
+   898
+  ],
+  "left": -139.99999999999994,
+  "top": 375.70000000000005,
+  "width": 629.76,
+  "feather_top": [
+   0,
+   60
+  ],
+  "feather_bottom": [
+   937,
+   1024
+  ],
+  "keep_largest": true
+ }
+}

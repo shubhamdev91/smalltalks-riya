@@ -1,0 +1,335 @@
+{% comment %}
+  Section contract.
+  "Start a talk" panel (#start-a-talk), board 4 frame 2 (spec/conversation.md), on the talks hub and on every thread.
+  A suggestion form, not a post: Shopify's contact form, tagged `start-a-talk`, sends the topic, title, body, alias
+  and email to the store; Small Talk may post it as a thread (TLK-060). Heading, sub and kindness hint are settings
+  (TLK-050/051/057); field labels, placeholders, hints and the states are locale (TLK-052…061); field errors reuse the
+  06-microcopy validation lines (small_talk.forms). Renders only on the blog named in "blog_handle".
+  @example
+  <!-- templates/blog.json and article.json, after the list / thread section -->
+{% endcomment %}
+
+{%- liquid
+  assign is_talks = false
+  if blog.handle == section.settings.blog_handle
+    assign is_talks = true
+  endif
+  assign topics = 'small_talk.talks.start.topics' | t | split: '·'
+  assign submit_label = 'small_talk.talks.start.submit' | t | remove: '↗' | strip
+  assign form_id = 'StartATalk-' | append: section.id
+-%}
+
+{%- if is_talks -%}
+  <div class="st-tform" id="start-a-talk">
+    <h2 class="st-tform__heading">{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.sub != blank -%}
+      {%- assign sub_parts = section.settings.sub | escape | split: '. ' -%}
+      <p class="st-tform__sub">
+        {{- sub_parts.first }}{% if sub_parts.size > 1 %}.<br>{{ sub_parts | slice: 1, 9 | join: '. ' }}{% endif -%}
+      </p>
+    {%- endif -%}
+
+    {%- form 'contact', id: form_id, class: 'st-tform__form', data-st-form: '', novalidate: 'novalidate' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="st-tform__success" role="status">{{ 'small_talk.talks.start.success' | t }}</p>
+      {%- else -%}
+        {%- if form.errors -%}
+          <p class="st-tform__error" role="alert">{{ 'small_talk.talks.start.error' | t }}</p>
+        {%- endif -%}
+        <input type="hidden" name="contact[tags]" value="start-a-talk">
+        <div
+          class="st-tform__fields"
+          data-msg-required="{{ 'small_talk.forms.required' | t | escape }}"
+          data-msg-name-missing="{{ 'small_talk.forms.name_missing' | t | escape }}"
+          data-msg-email-missing="{{ 'small_talk.forms.email_missing' | t | escape }}"
+          data-msg-email-invalid="{{ 'small_talk.forms.email_invalid' | t | escape }}"
+          data-msg-message-missing="{{ 'small_talk.forms.message_missing' | t | escape }}"
+          data-msg-topic-missing="{{ 'small_talk.forms.topic_missing' | t | escape }}"
+          data-msg-too-long="{{ 'small_talk.forms.too_long' | t | escape }}"
+        >
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.talks.start.topic_label' | t }}</span>
+            <span class="st-tform__select">
+              <select name="contact[topic]" required data-msg="topic-missing">
+                <option value="" disabled selected>{{ 'small_talk.talks.start.topic_placeholder' | t }}</option>
+                {%- for topic in topics -%}
+                  {%- assign topic_label = topic | strip -%}
+                  {%- if topic_label != blank -%}
+                    <option>{{ topic_label | escape }}</option>
+                  {%- endif -%}
+                {%- endfor -%}
+              </select>
+              <svg viewBox="0 0 16 10" aria-hidden="true" focusable="false"><path d="M1.5 1.5 L8 8 L14.5 1.5"/></svg>
+            </span>
+          </label>
+
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.talks.start.title_label' | t }}</span>
+            <input type="text" name="contact[title]" maxlength="100" required placeholder="{{ 'small_talk.talks.start.title_placeholder' | t | escape }}">
+          </label>
+
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.talks.start.body_label' | t }}</span>
+            <textarea name="contact[body]" rows="3" maxlength="1500" required data-msg="message-missing" placeholder="{{ 'small_talk.talks.start.body_placeholder' | t | escape }}"></textarea>
+          </label>
+
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.talks.start.alias_label' | t }}</span>
+            <input
+              type="text"
+              name="contact[alias]"
+              maxlength="40"
+              required
+              autocomplete="nickname"
+              data-msg="name-missing"
+              placeholder="{{ 'small_talk.talks.start.alias_placeholder' | t | escape }}"
+              aria-describedby="{{ form_id }}-alias-hint"
+              data-describedby="{{ form_id }}-alias-hint"
+            >
+            <span class="st-field__hint" id="{{ form_id }}-alias-hint">{{ 'small_talk.talks.start.alias_hint' | t }}</span>
+          </label>
+
+          <label class="st-field">
+            <span class="st-field__label">{{ 'small_talk.talks.start.email_label' | t }}</span>
+            <input
+              type="email"
+              name="contact[email]"
+              required
+              autocomplete="email"
+              spellcheck="false"
+              autocapitalize="off"
+              data-msg="email"
+              aria-describedby="{{ form_id }}-email-hint"
+              data-describedby="{{ form_id }}-email-hint"
+            >
+            <span class="st-field__hint" id="{{ form_id }}-email-hint">{{ 'small_talk.talks.start.email_hint' | t }}</span>
+          </label>
+        </div>
+
+        {%- if section.settings.kindness != blank -%}
+          <p class="st-field__hint st-tform__kind">{{ section.settings.kindness | escape }}</p>
+        {%- endif -%}
+
+        <button type="submit" class="st-tform__submit" data-sending="{{ 'small_talk.talks.start.sending' | t | escape }}">
+          {{- submit_label | escape -}}
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 12 L12 4 M5.5 4 H12 V10.5"/></svg>
+        </button>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+  <script type="module" src="{{ 'st-forms.js' | asset_url }}" fetchpriority="low"></script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Panel x 18–375, radius 12, #fdf1f0, id start-a-talk (conversation.md). */
+  .st-tform {
+    display: grid;
+    max-width: 40rem;
+    margin: 22px auto 0;
+    padding: 22px 20px 24px 22px;
+    border-radius: 12px;
+    background: #fdf1f0;
+    color: #1a1a2e;
+    font-family: var(--font-ui);
+    scroll-margin-block-start: 84px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .st-tform {
+      margin-inline: 18px 15px;
+    }
+  }
+
+  /* H2: spec says Source Serif 4 Bold 40 px; the board ink (186 × 34 at x 41, y 1037) is the Black cut at ~46 px,
+     −0.06em. #b00818. */
+  .st-tform__heading {
+    margin: 0;
+    color: #b00818;
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: 46px;
+    line-height: 1.05;
+    letter-spacing: -0.06em;
+  }
+
+  /* Sub: DM Sans 400, muted; the board line "Small moments. Open conversations." is 308 px wide = 18 px. */
+  .st-tform__sub {
+    margin: 12px 0 0;
+    color: var(--st-muted-text);
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .st-tform__form,
+  .st-tform__fields {
+    display: grid;
+    gap: 14px;
+  }
+
+  .st-tform__form {
+    margin-block-start: 18px;
+  }
+
+  /* Labels DM Sans 700, 17 px. Fields white, 1 px #ebe6e6, radius 6, 44 px (textarea 88). */
+  .st-tform .st-field__label {
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 17px;
+  }
+
+  .st-tform .st-field input,
+  .st-tform .st-field select,
+  .st-tform .st-field textarea {
+    inline-size: 100%;
+    min-block-size: 44px;
+    padding: 10px 14px;
+    border: 1px solid #ebe6e6;
+    border-radius: 6px;
+    background: #fff;
+    color: #1a1a2e;
+    font: inherit;
+    font-size: 16px;
+  }
+
+  .st-tform .st-field input,
+  .st-tform .st-field select,
+  .st-tform .st-field textarea {
+    box-shadow: 0 1px 6px rgb(26 26 46 / 0.07);
+  }
+
+  .st-tform .st-field textarea {
+    min-block-size: 88px;
+    resize: vertical;
+  }
+
+  /* Shared with the reply box on threads (this section renders on the hub and on every thread). */
+  .st-tform .st-field,
+  .st-reply .st-field {
+    display: grid;
+    gap: 6px;
+  }
+
+  .st-field__hint {
+    color: var(--st-muted-text);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .st-tform .st-field input::placeholder,
+  .st-tform .st-field textarea::placeholder,
+  .st-reply .st-field input::placeholder {
+    color: var(--st-placeholder);
+    opacity: 1;
+  }
+
+  .st-tform .st-field__error,
+  .st-reply .st-field__error {
+    color: #b00818;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .st-tform__select {
+    position: relative;
+    display: block;
+  }
+
+  .st-tform .st-field select {
+    appearance: none;
+    padding-inline-end: 44px;
+  }
+
+  .st-tform .st-field select:invalid {
+    color: var(--st-placeholder);
+  }
+
+  .st-tform__select svg {
+    position: absolute;
+    inset-inline-end: 16px;
+    inset-block-start: 50%;
+    inline-size: 15px;
+    block-size: 9px;
+    translate: 0 -50%;
+    fill: none;
+    stroke: #d0204a;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+
+  .st-tform .st-field input:focus-visible,
+  .st-tform .st-field select:focus-visible,
+  .st-tform .st-field textarea:focus-visible,
+  .st-tform__submit:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 2px;
+  }
+
+  .st-tform__kind {
+    margin: -4px 0 0;
+  }
+
+  /* Submit: full pill #a80f2a, Barlow Semi Condensed 600, 24 px, white, ↗. */
+  .st-tform__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    inline-size: 100%;
+    min-block-size: 50px;
+    margin-block-start: 2px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: var(--st-radius-pill);
+    background: #a80f2a;
+    color: #fff;
+    font-family: var(--font-pill);
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .st-tform__submit svg {
+    inline-size: 15px;
+    block-size: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-tform__submit[aria-disabled='true'] {
+    opacity: 0.75;
+  }
+
+  .st-tform__success {
+    margin: 0;
+    color: #1a1a2e;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  .st-tform__error {
+    margin: 0;
+    color: #b00818;
+    font-size: 15px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk start a talk",
+  "tag": "div",
+  "class": "st-tform-section",
+  "settings": [
+    { "type": "text", "id": "blog_handle", "label": "Talks blog handle", "default": "the-talks" },
+    { "type": "text", "id": "heading", "label": "Heading (TLK-050)", "default": "Start a talk" },
+    { "type": "text", "id": "sub", "label": "Sub (TLK-051)", "default": "Share your perspective. Small moments. Open conversations." },
+    { "type": "text", "id": "kindness", "label": "Kindness hint (TLK-057)", "default": "Keep it kind. Leave out names and identifying details." }
+  ]
+}
+{% endschema %}

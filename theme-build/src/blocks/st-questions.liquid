@@ -1,0 +1,38 @@
+{% doc %}
+  "Quick answers" list for content pages. Child st-question blocks each carry their own fact gate; the heading
+  renders only when at least one question is visible, so a gated list never shows an empty heading.
+{% enddoc %}
+
+{%- capture items -%}{% content_for 'blocks' %}{%- endcapture -%}
+
+{%- if items contains 'st-question__item' or request.design_mode -%}
+  <div class="st-questions" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank and items contains 'st-question__item' -%}
+      <h2 class="st-questions__heading">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+    <div class="st-questions__list">{{ items }}</div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .st-questions__heading {
+    margin: 0 0 0.5rem;
+    color: var(--st-ink);
+    font-family: var(--st-font-display);
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+    line-height: 1.05;
+  }
+
+  .st-questions__list {
+    border-block-start: 1px solid var(--st-divider);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk quick answers",
+  "settings": [{ "type": "text", "id": "heading", "label": "Heading" }],
+  "blocks": [{ "type": "st-question" }],
+  "presets": [{ "name": "Small Talk quick answers" }]
+}
+{% endschema %}

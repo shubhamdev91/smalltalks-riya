@@ -1,0 +1,183 @@
+<section id="tab-context" class="ctx" aria-labelledby="ctx-h" hidden>
+  <header class="ctx-head">
+    <p class="eyebrow">Handover for AI agents · state as of 10 Oct 2026</p>
+    <h1 id="ctx-h">Project context</h1>
+    <p class="ctx-lede">Dense, source-linked summary of the Small Talk rebuild. The source of truth is always <code>C:\Users\SSTS\Desktop\Riya\Small-Talk-Claude-Implementation-Checklist.md</code> → <b>RESUME HERE</b>. Where this page and that file disagree, the file wins. Facts marked <span class="tag tag-unk">unconfirmed</span> are not verified.</p>
+    <div class="ctx-start">
+      <h2>Start-here prompt for a new agent</h2>
+      <pre id="start-prompt" class="prompt-box"></pre>
+      <button class="btn btn-copy" data-copy-from="start-prompt" type="button">Copy start-here prompt</button>
+    </div>
+    <nav class="ctx-toc" aria-label="Context sections">
+      <a href="#c-themes">Themes</a><a href="#c-store">Store data</a><a href="#c-talks">Talks</a><a href="#c-growth">Growth &amp; SEO</a><a href="#c-brand">Brand</a><a href="#c-design">Design system</a><a href="#c-team">Team &amp; process</a><a href="#c-files">Files</a><a href="#c-decisions">Decisions</a><a href="#c-open">Open items</a>
+    </nav>
+  </header>
+
+  <article class="ctx-block" id="c-themes">
+    <h2>Themes</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Agents may</th></tr></thead>
+      <tbody>
+        <tr><td class="num">186651934933</td><td>Small Talk — Claude build (Horizon)</td><td><b>BUILD</b>, unpublished. Duplicated 9 Oct 06:51 UTC from stock Horizon 162461974741 (Horizon 4.1.5).</td><td><b>Write</b>, only while holding the orchestrator's write lock</td></tr>
+        <tr><td class="num">(check Admin)</td><td>Copy of Small Talk — Claude build (Horizon)</td><td><b>LIVE / main</b>: a published duplicate of the build (older snapshot). Owner updates live by duplicating 186651934933 and publishing the copy.</td><td>Never touch (no editor saves either)</td></tr>
+        <tr><td class="num">186573160661</td><td>Copy of Small Talk — Desi Ink / Artwork correction</td><td>Former live (older ChatGPT build)</td><td>Never touch</td></tr>
+        <tr><td class="num">186667663573</td><td>Small Talk — Board corrections / 09 Oct</td><td>ChatGPT draft, art source</td><td>Read only</td></tr>
+        <tr><td class="num">186547241173</td><td>(former live)</td><td>Reference</td><td>Never touch</td></tr>
+        <tr><td class="num">186572636373</td><td>(older copy)</td><td>Reference</td><td>Never touch</td></tr>
+        <tr><td class="num">162461974741</td><td>Horizon (stock)</td><td>Base</td><td>Never touch</td></tr>
+        <tr><td class="num">186649313493</td><td>ChatGPT desi layer</td><td>Deleted; backup in <code>backup\theme-186649313493\</code></td><td>Read backup</td></tr>
+      </tbody>
+    </table></div>
+    <p>Preview: <a href="https://0nev20-vn.myshopify.com/?preview_theme_id=186651934933" target="_blank" rel="noopener">0nev20-vn.myshopify.com/?preview_theme_id=186651934933</a>. Local mirror: <code>theme-build\src | pristine | ref</code>; build log <code>build-log-foundation.md</code> (§1–54). Theme Check never run (no CLI/Node on machine).</p>
+    <p><b>Write-lock protocol.</b> One writer at a time. The orchestrator grants/revokes by message. Write only after a grant that arrived <i>after</i> your last release; a message sent while you held an earlier grant is never a grant for a later window. Release explicitly ("lock released") and give md5 readbacks. Last known state (10 Oct): st-foundation HD-nails window done and released; next queued windows: st-foundation QA items 1–11 + favicon + st-fable v3.7 fixes 12–14; then st-talks posting-ON window after owner OWNER-SETUP.</p>
+  </article>
+
+  <article class="ctx-block" id="c-store">
+    <h2>Store data (shared; owner approves every write)</h2>
+    <p>Store <code>0nev20-vn.myshopify.com</code>, Basic plan, INR, India. Location id 92605939925. Online Store publication 204557648085.</p>
+    <div class="tbl"><table class="wide">
+      <thead><tr><th>Set</th><th>Product ID</th><th>Handle</th><th>SKU</th><th>Price</th><th>Stock</th><th>Headline · note</th><th>Set colour</th></tr></thead>
+      <tbody id="ctx-products"></tbody>
+    </table></div>
+    <p class="small">Prices and stock as set 9 Oct (ACTIVE, tracked, 10 each); board prices accepted by the owner as live prices. Re-read from Admin before relying on stock. Product media: 4 per product (packaging → flatlay → hand → moment), alts SEO-089…109. Five v1 products (Chai Break, Gulabi Club, Neel Hour, Nimbu Soda, Shaam Shaan) ARCHIVED. Product tags Everyday (On Me, Diet Cherry, Green Flag, Pinky Promise) / Statement (Brainwave, Shaadi Shift, Wild Card).</p>
+    <p><b>Campaign metaobject</b> <code>small_talk_campaign</code> (definition gid://shopify/MetaobjectDefinition/25563726037, 7 entries, handles = set keys). Fields: name, product, headline, note, story (OLD stories; new PDP stories are theme-local), short_description, background, foreground, cta_background, cta_foreground (Wild Card #baff00 unreadable → theme overrides), motion_index, nail_art, preview_art, character_art, chapter_art (all point at old atlases), journal, product_handle, package_url, preview_url. Product metafield <code>small_talk.campaign</code>. Snapshot: <code>backup\theme-186649313493\campaign-metaobjects.json</code>.</p>
+    <p><b>Content.</b> Blog "Journal" (7 published articles, register text JRN-*, category tags). Blog "the-talks" (gid://shopify/Blog/106571006165, 9 seed articles; superseded by talk metaobjects, SD29 unpublish + redirects pending). Pages: our-story, nail-guide-desi (guide; template suffix change to nail-guide pending, SD12), help, the-talks (legacy, noindex), nail-guide (old, to hide, SD22), our-world / contact (legacy, SD23).</p>
+    <p><b>Policies</b>: DONE and verified 10 Oct 18:39 IST (parent, owner's Chrome): Refund, Terms, Shipping (address-change paragraph removed, G13 = no) and Privacy (TLK-155 added). Earlier readback for history: Privacy ✔, unchanged since 15 Sep; talks paragraph TLK-155 v1.4.4 (final) not yet added (SD33). Shipping ✔ (still has the address-change paragraph vs G13 = no, SD26; phone line = owner's choice, D10 covers storefront pages only). Refund ✘ body is still the shipping text (SD25). Terms ✘ none exists, first paste of v1.4.4 (SD28). Source texts: <code>policies\Shipping-and-Returns-Policies.md</code>, <code>copy\terms-of-service-draft.md</code>, <code>copy\07-talks.md</code> TLK-155.</p>
+    <p><b>Done 10 Oct 18:39 IST:</b> ₹ money format, rate renamed "Standard delivery", home title/meta (SEO-001/002), checkout logo, logo files in Shopify Files; social share image comes from the theme on next publish; Instagram footer link approved (D5) and going into the theme. <b>Previously listed as owner-side (now mostly done):</b> payments (SD19, none active → checkout blocked), money format "Rs. {{amount}}" → ₹{{amount_no_decimals}} (SD20), domestic rate ₹379 named "मानक" + international ₹1,800 to 28 countries (SD21), home title still "Small Talk | Almond Press-On Nails. A Lot Said." → SEO-001/002 + social image (SD24), logo (SD27). Done: SD31 (NEW_CUSTOMER_ACCOUNTS), SD34 (backend deployed).</p>
+  </article>
+
+  <article class="ctx-block" id="c-talks">
+    <h2>the talks (anonymous board)</h2>
+    <ul>
+      <li>Design: <code>talks\DESIGN.md</code>; owner steps <code>talks\OWNER-SETUP.md</code>; copy <code>copy\07-talks.md</code> (TLK-001…155); notes <code>side-session-notes\…\st-talks-live.md</code>.</li>
+      <li>Metaobjects: talk_topic (25691881685, public read, pages /pages/talks/&lt;h&gt;), talk_thread (25691914453, publishable, pages /pages/talk/&lt;h&gt;), talk_reply (25691979989, publishable), talk_signal (25692012757, storefront NONE, hashed device_key/body_key, 7-day prune), talk_settings (25692045525, entry <code>main</code>: posting_open, hold_all, extra_blocked, extra_held). Topics: all, plot-twists, tiny-wins, nail-talk, something-else. 9 brand seed threads (alias "small talk", by_brand).</li>
+      <li>Backend: Vercel project <code>small-talk-talks-backend</code> (prj_0NtvhUiqMJGIaycQEjiEg1kF25vU), <a href="https://small-talk-talks-backend.vercel.app/api/talks" target="_blank" rel="noopener">/api/talks</a>; source <code>talks\backend\app.py</code> (stdlib WSGI, 37 tests); v0 chat <a href="https://v0.app/chat/pEcbsIUvnGe" target="_blank" rel="noopener">pEcbsIUvnGe</a>. Live build b3ce60f7f6e6 (configured:false) until owner Publishes c91d3d11afc1 from v0 (not Vercel Redeploy).</li>
+      <li>Route: App Proxy <code>/apps/talks</code> → <code>…/api/talks</code>, HMAC-verified. Decision A: no IP key behind the proxy; per-device limits + duplicate check + store-wide flood hold.</li>
+      <li>Theme: posting OFF via <code>snippets/st-talk-live.liquid</code>; TLK-154 pre-launch notice shown. Posting-ON window (HD avatars + switch + E2E + delete test posts) queued after owner says "talks app installed".</li>
+      <li>Owner blocker: Shopify Dev Dashboard email verification for riyaagg24@gmail.com, then OWNER-SETUP 1–5.</li>
+      <li>Requested next (owner, not started): reply pings with consent (WhatsApp/email) and private signed-in customer link (logged_in_customer_id), privacy text update. Brief in Tab 1 §9.</li>
+    </ul>
+  </article>
+
+  <article class="ctx-block" id="c-growth">
+    <h2>Owner plan, Our list, growth &amp; SEO/AEO</h2>
+    <ul>
+      <li><b>Three tabs (owner restructure, 10 Oct):</b> "Riya's plan" = only Riya's tasks: things only she can do (🔒 payments KYC, Dev Dashboard email, Vercel keys) and the growth tools she should learn hands-on with ✨ prompts. "Our list (Shubham + Claude)" = every admin chore, each tagged Claude or Shubham with a status; the parent session is doing the store-settings items in the owner's Chrome (marked In progress). This tab = agent context. Tick state for all tabs = db doc <code>progress/plan</code> (<code>{done: {taskId: ISO}}</code>); never write it from an agent.</li>
+      <li><b>Riya's "Do this next" order:</b> payments → test order → talks keys → kit facts → preview → publish → Know your visitors → SEO &amp; AEO → Instagram plan → carousels → AI video → UTM → email/WhatsApp → retargeting (after real traffic). Optional and habit tasks are skipped by the next-card.</li>
+      <li><b>Instagram:</b> <a href="https://www.instagram.com/smalltalks_com/" target="_blank" rel="noopener">@smalltalks_com</a> (3 posts incl. 1 carousel at 10 Oct). Plan: ~50% Reels (AI-video + simple real-hand), ~30% carousels, ~20% singles, 3–5 Stories daily; ramp 1/day (wk 1–2) → 2/day (wk 3–4) → 2–3/day only if the weekly batch holds quality; monthly ✨ calendar prompt; weekly 10-minute review. D5: Instagram footer link approved by the owner (10 Oct) and going into the theme.</li>
+      <li><b>SEO &amp; AEO section</b> (based on <code>seo\STRATEGY.md</code> + <code>copy\05-seo.md</code>): SEO vs AEO explainer; ✨ keyword + question finder (no invented volumes); ✨ monthly answer-first Journal post with FACTS-only claims (Journal template is story-shaped, so new posts stay Hidden until Claude checks rendering); ✨ monthly Search Console CSV review (3 actions max); ✨ title/meta/alt writer using STRATEGY §6–7 rules (titles "{subject} | Small Talk" ≤60, meta 120–155, alt ≤125, no "best"/almond/wear time/reusable/delivery speed/reviews); ✨ creator/blog outreach with ASCI disclosure and no paid positive reviews.</li>
+      <li><b>Talks upgrades</b> (reply pings + private signed-in customer link) moved to Our list; Riya sees a "coming soon" line. Brief prompt lives in Our list → Talks setup.</li>
+    </ul>
+  </article>
+
+  <article class="ctx-block" id="c-brand">
+    <h2>Brand brief (locked)</h2>
+    <p>Source: <code>C:\Users\SSTS\Downloads\Small-Talk-Claude-Complete-Brief (1).md</code>. Premium press-on nails for 18–24 urban desi women. Each set = a small moment where she naturally shows her hand. Warm, specific, understated Hinglish; nails are the hero; no generic luxury claims, empowerment speeches, forced slang, clutter or mascots.</p>
+    <ul>
+      <li>Locked strings: product names, seven headlines, seven notes, design descriptions, "the talks" lowercase, "Diet Cherry" (never "Cherry Repeat"), Brainwave = "Haan, mera idea hai." (URL handle keeps "tha"; the HD box now reads "hai").</li>
+      <li>No campus/college/Masters' Union references. No fake reviews, ratings, counts, activity. No medical/"non-damaging" claims. No third-party beverage brand in copy (Diet Cherry hero art with the can mark was accepted by the owner as an image exception, SD18).</li>
+      <li>Board fidelity rule (9 Oct): boards win over earlier written rules except honesty, accessibility minimums, commerce draft-safety. Blue/ink/plum chrome retired.</li>
+      <li>No new artwork generation by agents; owner supplies ChatGPT art; agents only mask, crop, feather, composite, WebP (≤1.3× Lanczos, never AI upscale). All 7 HD packaging boxes live incl. product media (10 Oct; Brainwave box reads "hai", Shaadi has the new tray); the earlier "packaging awaited / tha exception" notes are retired.</li>
+    </ul>
+    <div class="tbl"><table class="wide">
+      <thead><tr><th>Set</th><th>Headline</th><th>Note</th><th>Five-nail hand (thumb → little)</th><th>Story moment</th></tr></thead>
+      <tbody id="ctx-sets"></tbody>
+    </table></div>
+  </article>
+
+  <article class="ctx-block" id="c-design">
+    <h2>Design system</h2>
+    <p>Spec: <code>spec\INDEX.md</code>, <code>spec\tokens.css</code> (board-sampled, px at 390 viewport), per-screen md files, <code>spec\joins.json</code>, <code>spec\type\compare-*.png</code>, fonts (all OFL) in <code>spec\fonts\</code>.</p>
+    <ul>
+      <li><b>Chrome:</b> paper #fdfdfc · logo blue #1412d5 · "the talks" ink #0d0b10 · burgundy headings #820622 · red subheads #a31a33 · pills #920324 / white · blue handwriting #3653c7 · price navy #0b0b2e · body #6e7184 (paper only) · muted text #6a6d85 · outline red #c22e38 · panel #f8f7f7 · bag pink #fee2ed. #9698ab is non-text only.</li>
+      <li><b>Set grounds</b> (metaobject flat / board glow mid): On Me #ffb900/#f5a908 · Brainwave #073df1/#0444d9 · Diet Cherry #e10019/#b70a09 · Green Flag #007948/#04673c · Shaadi Shift #ff0078/#f61d6d · Wild Card #b7ef00/#b4f50a · Pinky Promise #6620f2/#621dec. Hero = radial glow per set; ink/pill per set in tokens.css.</li>
+      <li><b>Type roles:</b> hero headline Fraunces 900 SOFT 100 WONK 1 opsz 144, arc-set via SVG textPath, −3°; chapter headlines Fraunces 700 SOFT 50, −0.03em, word-spacing 0.18em; notes Caveat 700 −10°; header "the talks" Caveat 600; pills Barlow Semi Condensed 600; shop/PDP headings Source Serif 4 Bold opsz 60; logo Source Serif 4 Black (subset "small talk"); blue annotations Kalam Light −4°; UI DM Sans 400/600. Woff2 subsets (Latin + ₹), metric-matched fallbacks, preload headline + note faces only.</li>
+      <li><b>Curves + beeline:</b> each landing section clips its own curved top edge and draws its own dashed beeline segment, chained x_out[n] = x_in[n+1] (Diet Cherry → Pinky), from <code>spec\joins.json</code> via <code>snippets/st-landing-join</code>. Clear zones keep the thread off content.</li>
+      <li><b>Nail sprites:</b> one HD sheet per set <code>st-hd-nails-&lt;set&gt;</code> (1350×780, 3 cells 450×780: signature | accent | extra), plate base at 0.924–0.926 cell height, anchor (0.5, 0.925). Non-hero surfaces render the cell via ::before ×1.058 at 50%/92.5%. Hero main nail cell 0.526 of finger canvas. Preview hand: 4 visible nails, slots per <code>artwork\manifest.json</code> preview_slots. Finger tones tone-1..4 (q85).</li>
+      <li><b>Motion</b> (<code>motion\CONTRACT.md</code> v3.7, owner st-fable): <code>st-hero-motion.js</code> (WAAPI, transform/opacity only) + <code>st-hero.css</code>; JSON v2 per set (sprite, previewSlots, flightColumns, tones[].src, labels MC-080…091, live, altText, character). ~2.6 s per set: signature hold → accent flights → next set flies from preview hand + background cross-fade; 3 sets then settle; hold-to-pause, swipe, ?set= start, reduced motion, offscreen pause; static Liquid first paint; first-paint budget ~350 KB. Only st-fable edits motion files; st-foundation copies byte-identical (md5 readback).</li>
+      <li><b>Asset pipeline:</b> owner ChatGPT art (<code>artwork\ChatGPT-Artwork-Prompts*.md</code>, refs <code>artwork\chatgpt-refs\</code>) → <code>artwork\chatgpt\&lt;set&gt;\</code> → st-artwork processes (masks, feather, WebP, <code>artwork\manifest.json</code>, frozen md5s) → orchestrator verifies → lock holder uploads → st-fable accepts vs boards at 390 (<code>qa\fidelity\</code>).</li>
+    </ul>
+  </article>
+
+  <article class="ctx-block" id="c-team">
+    <h2>Team &amp; process</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Session</th><th>ID</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>st-orchestrator</td><td class="num">local_e4896004-68cd-4d55-9d37-ab925783b63b</td><td>Owns the checklist, write lock, shared-data writes (owner-approved), verification</td></tr>
+        <tr><td>parent</td><td class="num">local_04b83008-0590-42b6-b099-ee4eb0903f2d</td><td>User's direct session (Opus); shared notes folder is named after it</td></tr>
+        <tr><td>st-foundation</td><td class="num">local_8332ed5e-3194-46cb-9f5f-96383f1b33c5</td><td>Theme builder (Liquid, uploads); main lock holder</td></tr>
+        <tr><td>st-artwork (also st-boardspec)</td><td class="num">local_c55a80b1-2bae-496c-85e7-16d7729372d2</td><td>Spec, tokens, art processing, manifest</td></tr>
+        <tr><td>st-copy</td><td class="num">local_ae886ffe-08a8-44d3-abdb-ee70ca852b0d</td><td>Sole writer of shopper-visible words (copy\ register v1.4.4, 621 rows, FACTS.md)</td></tr>
+        <tr><td>st-talks</td><td class="num">local_2c74a7fd-f54e-43a8-9df1-0baf05c20c22</td><td>Talks feature, backend, staged theme files</td></tr>
+        <tr><td>st-fable</td><td class="num">local_46bc18b1-5655-4160-b44f-e32f2f475df6</td><td>The only Fable session: hero motion, SEO/AEO strategy (seo\), final acceptance</td></tr>
+        <tr><td>small-talk-operational-q</td><td class="num">local_56e70d67-a505-44da-9375-be71aad2ab88</td><td>Sonnet operational QA (qa\sonnet\QA-REPORT.md)</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li><b>Model rule (owner):</b> Opus at effort xhigh for all build/judgement work; Sonnet only for operational checks (rendered HTML, schema, Lighthouse, links, axe); never start another Fable session.</li>
+      <li><b>Copy ownership:</b> every shopper-visible string has a register ID from st-copy; builders map locale keys to IDs (<code>theme-build\copy-map.json</code>).</li>
+      <li><b>Shared data</b> (products, prices, pages, posts, menus, metaobjects, policies, SEO fields): proposal → orchestrator → owner; never silent.</li>
+      <li><b>Reporting:</b> SendMessage to the orchestrator, one-line summary first; large evidence as <code>&lt;worker&gt;-&lt;topic&gt;.md</code> in the shared notes folder <code>C:\Users\SSTS\AppData\Roaming\Claude\side-session-notes\local_04b83008-0590-42b6-b099-ee4eb0903f2d</code>.</li>
+      <li><b>Secrets:</b> owner pastes into Vercel / provider dashboards only; agents never see them.</li>
+    </ul>
+  </article>
+
+  <article class="ctx-block" id="c-files">
+    <h2>Where files live</h2>
+    <p>All under <code>C:\Users\SSTS\Desktop\Riya\</code></p>
+    <div class="tbl"><table><tbody>
+      <tr><td><code>Small-Talk-Claude-Implementation-Checklist.md</code></td><td>RESUME HERE, work packages, SD items, orchestration log</td></tr>
+      <tr><td><code>spec\</code></td><td>Board spec, tokens.css, type, fonts, joins/beelines JSON, TEXT-DIFFS</td></tr>
+      <tr><td><code>copy\</code></td><td>00-register (index, gates), 01-pdp, 02-journal, 03-landing, 04-pages, 05-seo, 06-microcopy, 07-talks, FACTS.md, terms draft</td></tr>
+      <tr><td><code>artwork\</code></td><td>manifest.json, hd\, nails\, fingers\, characters\, chapters\, packaging\, chatgpt-refs\, ChatGPT prompts</td></tr>
+      <tr><td><code>motion\</code></td><td>CONTRACT.md, st-hero-motion.js, st-hero.css, lab\ (st-fable)</td></tr>
+      <tr><td><code>talks\</code></td><td>DESIGN.md, OWNER-SETUP.md, backend\, staged\, seed\</td></tr>
+      <tr><td><code>seo\</code></td><td>STRATEGY.md, 05-seo-review.md (st-fable)</td></tr>
+      <tr><td><code>qa\</code></td><td>FINAL-ACCEPTANCE.md, fidelity\, motion\, store\, sonnet\QA-REPORT.md</td></tr>
+      <tr><td><code>theme-build\</code></td><td>Local theme mirror, lab, copy-map.json</td></tr>
+      <tr><td><code>policies\</code>, <code>backup\</code></td><td>Policy texts; theme/metaobject backups</td></tr>
+    </tbody></table></div>
+  </article>
+
+  <article class="ctx-block" id="c-decisions">
+    <h2>Key decisions</h2>
+    <ul>
+      <li>9 Oct · Build on fresh Horizon duplicate 186651934933; port only the desi layer.</li>
+      <li>9 Oct · Run end-to-end like a live store; products ACTIVE at board prices; owner does the final payment step.</li>
+      <li>9 Oct · Board fidelity directive; boards win except honesty/accessibility/commerce safety.</li>
+      <li>9 Oct · Owner: "new brand and test store, produce relevant facts" → FACTS.md F1–F15 (copy defaults to be checked against supplier). Only G11 (real photos) open.</li>
+      <li>9 Oct · G13 order changes = no (Orders topic hidden); D10 contact = email only; D5 social icons hidden until URLs exist.</li>
+      <li>9 Oct · Refund links hidden behind theme setting "Refund policy text verified" (default OFF) until SD25.</li>
+      <li>9 Oct · Hero CTA = Shop “{name}” ↗ (LND-009); Diet Cherry hero uses can art with mark (owner accepted).</li>
+      <li>10 Oct · Talks = metaobjects + Vercel backend via App Proxy, decision A (no IP key), device-only privacy (v1.4.4).</li>
+      <li>10 Oct · Product media installed (4 per product); HD nail sheets site-wide; hero v3.7 frozen and accepted.</li>
+      <li>10 Oct · Owner restructured Riya's guide: her tasks vs "Our list" (Shubham + Claude); new SEO &amp; AEO and Instagram plan sections; "Stuck? Copy this" helper prompt.</li>
+      <li>10 Oct · ALL LIVE reported to the parent: HD art installed everywhere, st-fable re-accepted. Logo (SD27) delivered and live in header, footer, favicon and share image. Lab: home main image 4.7 s (was 8.8 s), PDP 2.2 s; contrast 0 failures; axe on home 0 violations.</li>
+    </ul>
+  </article>
+
+  <article class="ctx-block" id="c-open">
+    <h2>Open items (owner unless noted)</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>ID</th><th>Item</th><th>Owner</th></tr></thead>
+      <tbody>
+        <tr><td>SD19</td><td>Payment provider (blocks orders)</td><td>Riya</td></tr>
+        <tr><td>Done 10 Oct</td><td>SD25 refund paste, SD28 Terms, SD26 address line, SD33 privacy paragraph, SD20 ₹ format, SD21 rate name, SD24 home title/meta, SD27 checkout logo (all verified 18:39 IST)</td><td>Parent (Chrome)</td></tr>
+        <tr><td>SD25</td><td>Refund text DONE → theme setting "Refund policy text verified" ON (lock holder only, never the owner in the editor: settings_data collisions)</td><td>Riya → lock holder</td></tr>
+        <tr><td>SD33</td><td>IT Rules / consumer-rules grievance contact check (Terms + privacy paragraph done)</td><td>Riya</td></tr>
+        <tr><td>SD21</td><td>Shipping price ₹379 and international zone (name done)</td><td>Shubham / Riya</td></tr>
+        <tr><td>SD27</td><td>Optional: Settings → Brand logo/square logo from the files already in Shopify Files (checkout logo done)</td><td>Shubham</td></tr>
+        <tr><td>SD26</td><td>Shipping-policy address-change line vs G13 = no</td><td>Riya</td></tr>
+        <tr><td>SD30</td><td>Dev Dashboard email verification, OWNER-SETUP 1–5, v0 Publish c91d3d11afc1</td><td>Riya</td></tr>
+                <tr><td>SD22 / SD23 / SD29</td><td>Legacy menus, pages, collections; unpublish 9 the-talks articles + redirects to /pages/talk/&lt;h&gt;; unpublish /pages/the-talks + 301 → /blogs/the-talks</td><td>Riya with orchestrator</td></tr>
+        <tr><td>SD12</td><td>nail-guide-desi template suffix → nail-guide; lift interim noindex</td><td>Orchestrator</td></tr>
+        <tr><td>G11</td><td>Real product photos</td><td>Riya</td></tr>
+        <tr><td>Housekeeping</td><td>Delete probe files snippets/st-zz-test.liquid, sections/st-zz-a…e.liquid (API blocks deletes; no session touches them, any time)</td><td>Riya (Edit code)</td></tr>
+        <tr><td>Perf (optional)</td><td>Remove unused apps/pixels (Settings → Apps / Customer events); Shopify web-pixels manager is the largest long-task contributor. Header logo fetch priority tweak blocked by a permission rule (low value; owner's call). Real-device checks still not done.</td><td>Riya / st-foundation</td></tr>
+        <tr><td>Talks</td><td>Read-only until owner OWNER-SETUP; backend fix sits in the v0 chat and ships with her Publish click (step 5). Then posting-ON window; then reply pings + customer link (new session)</td><td>st-talks / new session</td></tr>
+        <tr><td>Launch</td><td>Re-publish: duplicate 186651934933 and publish the copy (never edit the live theme); post-publish checks; Meta/Google tracking</td><td>Riya + orchestrator</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+</section>

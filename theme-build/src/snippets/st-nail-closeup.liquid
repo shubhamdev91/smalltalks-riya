@@ -1,0 +1,95 @@
+{% doc %}
+  Nail close-up on the set colour (Journal cards and story thumbs, board 4): four of the set's genuine sprite nails,
+  large and overlapping, cropped by the frame, on --st-tile-<set>. Decorative (the card's text names the story).
+  Sprite cells only, so no new artwork. The frame size comes from the caller (it fills its box).
+
+  @param {string} key - Campaign handle (on-me, brainwave, …).
+  @param {boolean} [journal] - Use the Journal ground (--st-journal-<set>, sampled from board 4) instead of the shop tile.
+
+  @example
+  <span class="st-journal__media">{% render 'st-nail-closeup', key: 'on-me' %}</span>
+{% enddoc %}
+
+{%- liquid
+  case key
+    when 'on-me'
+      assign cols = '0,2,1,0'
+    when 'brainwave'
+      assign cols = '0,1,0,1'
+    when 'green-flag'
+      assign cols = '1,0,1,0'
+    when 'shaadi-shift'
+      assign cols = '1,2,0,2'
+    when 'diet-cherry'
+      assign cols = '1,0,2,1'
+    when 'wild-card'
+      assign cols = '1,0,2,1'
+    else
+      assign cols = '0,0,0,0'
+  endcase
+  assign cols = cols | split: ','
+  # Journal grounds: median of each board-4 card's ground ring (4–10 px inside the image edge); the token wins once
+  # st-boardspec records --st-journal-<set> in tokens.css.
+  case key
+    when 'on-me'
+      assign journal_hex = '#fcc92a'
+    when 'brainwave'
+      assign journal_hex = '#0452e5'
+    when 'green-flag'
+      assign journal_hex = '#105908'
+    when 'shaadi-shift'
+      assign journal_hex = '#fa5987'
+    when 'diet-cherry'
+      assign journal_hex = '#cb0419'
+    when 'wild-card'
+      assign journal_hex = '#d6d306'
+    when 'pinky-promise'
+      assign journal_hex = '#ca89f4'
+  endcase
+  if journal
+    assign ground = 'var(--st-journal-' | append: key | append: ', ' | append: journal_hex | append: ')'
+  else
+    assign ground = 'var(--st-tile-' | append: key | append: ')'
+  endif
+-%}
+{%- if key != blank -%}
+  <span class="st-closeup" style="--st-closeup-bg: {{ ground }}; --st-nails: url('{{ 'st-hd-nails-' | append: key | append: '.webp' | asset_url }}')" aria-hidden="true">
+    {%- for col in cols -%}
+      <span class="st-closeup__nail" style="--col: {{ col }}"></span>
+    {%- endfor -%}
+  </span>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Four whole nails lying diagonally across the frame, slightly overlapping (board 4's nail close-ups). */
+  .st-closeup {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+    background: var(--st-closeup-bg, var(--st-tint));
+  }
+
+  .st-closeup__nail {
+    position: absolute;
+    top: 52%;
+    height: 96%;
+    aspect-ratio: 204 / 354;
+    translate: -50% -50%;
+    filter: drop-shadow(0 4px 6px rgb(31 26 46 / 0.25));
+  }
+
+  .st-closeup__nail::before {
+    content: '';
+    position: absolute;
+    inset: -5.365% -2.9% -0.435%;
+    background: var(--st-nails) calc(var(--col, 0) * 50%) 0 / 300% 100% no-repeat;
+  }
+
+  .st-closeup__nail:nth-child(1) { left: 16%; rotate: 32deg; }
+  .st-closeup__nail:nth-child(2) { left: 39%; rotate: 26deg; }
+  .st-closeup__nail:nth-child(3) { left: 62%; rotate: 34deg; }
+  .st-closeup__nail:nth-child(4) { left: 85%; rotate: 28deg; }
+{% endstylesheet %}

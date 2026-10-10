@@ -1,0 +1,25 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "st-seven-page",
+      "settings": {
+        "heading": "Let's talk.",
+        "body": "<p>Choosing a set or checking an order? Tell us what you need help with.</p>",
+        "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/dulhan-tu-duty-meri-approved-package.png?v=1791012074",
+        "contact": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

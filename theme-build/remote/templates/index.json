@@ -1,0 +1,239 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "st-hero",
+      "settings": {
+        "autoplay": true,
+        "default_tone": 2,
+        "show_character": true
+      },
+      "blocks": {
+        "on-me": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "on-me"
+          }
+        },
+        "brainwave": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "brainwave"
+          }
+        },
+        "diet-cherry": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "diet-cherry"
+          }
+        },
+        "green-flag": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "green-flag"
+          }
+        },
+        "shaadi-shift": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "shaadi-shift"
+          }
+        },
+        "wild-card": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "wild-card"
+          }
+        },
+        "pinky-promise": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "pinky-promise"
+          }
+        }
+      },
+      "block_order": [
+        "on-me",
+        "brainwave",
+        "diet-cherry",
+        "green-flag",
+        "shaadi-shift",
+        "wild-card",
+        "pinky-promise"
+      ]
+    },
+    "gallery": {
+      "type": "st-gallery",
+      "settings": {
+        "story_label": "Our Vision",
+        "story_url": "/pages/our-story",
+        "story_campaign": "on-me",
+        "shop_label": "Shop all nails",
+        "shop_url": "/collections/all"
+      }
+    },
+    "diet-cherry": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "diet-cherry",
+        "caption": "New plans. Same favourite.",
+        "story_label": "Read the story",
+        "thread": "right"
+      }
+    },
+    "talks": {
+      "type": "st-teaser",
+      "settings": {
+        "kind": "talks",
+        "heading": "the talks",
+        "note": "A little less filtered.",
+        "copy": "Real conversations on friendship, plans, overthinking and everything in between.",
+        "example_campaign": "green-flag",
+        "example_text": "Anyone else rehearse a text and still send ‘hey’?",
+        "example_alias": "Velvet Mango",
+        "link": "/pages/the-talks",
+        "label": "Join the conversation"
+      }
+    },
+    "brainwave": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "brainwave",
+        "caption": "You had the thought. You did the work.",
+        "story_label": "Read the story",
+        "thread": "left"
+      }
+    },
+    "green-flag": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "green-flag",
+        "caption": "Plans fell apart? Bring yourself.",
+        "story_label": "Read the story",
+        "thread": "right"
+      }
+    },
+    "journal": {
+      "type": "st-teaser",
+      "settings": {
+        "kind": "journal",
+        "heading": "Small stories. Big feelings.",
+        "note": "For the plans still taking shape…",
+        "copy": "Seven sets. So many stories.",
+        "example_campaign": "brainwave",
+        "link": "/blogs/journal",
+        "label": "From the Journal"
+      }
+    },
+    "guide": {
+      "type": "st-teaser",
+      "settings": {
+        "kind": "guide",
+        "eyebrow": "Nail Guide",
+        "heading": "Find your fit.",
+        "note": "A little help, at your fingertips.",
+        "copy": "Get to know your nails before you choose your set.",
+        "image": "shopify://shop_images/desi-nail-guide-v2.png",
+        "link": "/pages/nail-guide-desi",
+        "label": "Open the guide"
+      }
+    },
+    "shaadi-shift": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "shaadi-shift",
+        "caption": "Her big day. Your cue.",
+        "story_label": "Read the story",
+        "thread": "left"
+      }
+    },
+    "on-me": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "on-me",
+        "caption": "Good company. One more round.",
+        "story_label": "Before anyone starts splitting…",
+        "thread": "right"
+      }
+    },
+    "wild-card": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "wild-card",
+        "caption": "Cards down. Smile on.",
+        "story_label": "Read the story",
+        "thread": "left"
+      }
+    },
+    "pinky-promise": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "pinky-promise",
+        "caption": "Crowded room. Familiar hand.",
+        "story_label": "Same people. Different days. Still us.",
+        "thread": "right"
+      }
+    },
+    "faq": {
+      "type": "st-faq",
+      "settings": {
+        "shop_label": "Shop all sets",
+        "shop_url": "/collections/all",
+        "heading": "FAQs",
+        "help_label": "Need a hand?",
+        "help_url": "/pages/help"
+      },
+      "blocks": {
+        "choose": {
+          "type": "question",
+          "settings": {
+            "question": "How do I choose a set?",
+            "answer": "<p>Each set has its own palette and story. Open a set to see the original packaging, design details and available options.</p>"
+          }
+        },
+        "fit": {
+          "type": "question",
+          "settings": {
+            "question": "Where can I get help with fit?",
+            "answer": "<p>Visit the Nail Guide, or contact us with the name of the set you are considering. We can help you find the right information before you order.</p>"
+          }
+        },
+        "help": {
+          "type": "question",
+          "settings": {
+            "question": "How do I contact Small Talk?",
+            "answer": "<p>Use the form in our Help centre. For an order question, include your order number and leave out payment details.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "choose",
+        "fit",
+        "help"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "gallery",
+    "diet-cherry",
+    "talks",
+    "brainwave",
+    "green-flag",
+    "journal",
+    "guide",
+    "shaadi-shift",
+    "on-me",
+    "wild-card",
+    "pinky-promise",
+    "faq"
+  ]
+}

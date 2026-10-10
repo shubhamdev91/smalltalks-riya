@@ -1,0 +1,324 @@
+{% doc %}
+  SEO plumbing only, no copy. Titles, descriptions and canonical come from
+  `meta-tags` (native page_title / page_description / canonical_url).
+  This snippet adds (seo/STRATEGY.md §3 and §5; one block per type per page):
+  - robots "noindex, follow" per route (never a blanket noindex): cart, search, captcha, list-collections, empty
+    collections, tagged/filtered collection URLs, empty blogs, ?page=N past the last page of a collection or blog,
+    the legacy and interim page handles below, customer account pages, 404, password and gift card; the talks topic
+    pages and the old the-talks articles (STRATEGY §10)
+  - Organization JSON-LD on the home page
+  - Product + Offer JSON-LD from live variant data (no reviews or ratings); variants priced at 0 are not offered
+  - Article JSON-LD on Journal stories (author = the Small Talk organisation); none on the old the-talks articles
+  - BreadcrumbList on product (Home › Shop › Set), collection, blog, article (not the-talks) and page templates, and on
+    talk_thread pages (Home › the talks › title)
+  - DiscussionForumPosting on talk_thread pages from real fields only (headline, author: the shop's own alias →
+    Organization, other alias → Person, none → Person "Anonymous"; datePublished, url, text; interactionStatistic only as a live count of
+    published replies)
+
+  @example
+  {% render 'st-seo' %}
+{% enddoc %}
+
+{%- liquid
+  # Legacy routes that duplicate an intent: noindex until the owner deletes/redirects them (SD5). Remove a handle
+  # from this list when its page is gone or replaced.
+  # the-talks: the old talks page, a near-duplicate of /blogs/the-talks (QA F7; its canonical points there, meta-tags).
+  assign legacy_page_handles = 'our-world,nail-guide,contact,the-talks' | split: ','
+  # Interim: live pages too thin to index yet. nail-guide-desi: remove when G2–G4 guide content is live (only guide route;
+  # st-fable).
+  assign interim_noindex_handles = 'nail-guide-desi' | split: ','
+
+  assign noindex = false
+  case request.page_type
+    when 'cart', 'search', 'captcha', 'list-collections', '404', 'password', 'gift_card'
+      assign noindex = true
+    when 'collection'
+      if collection.products_count == 0 or current_tags != blank
+        assign noindex = true
+      endif
+      # A ?page=N past the last page renders an empty grid (st-shop pages by the theme setting st_shop_per_page).
+      if current_page > 1
+        assign shop_per_page = settings.st_shop_per_page | default: 24
+        assign shown_before = current_page | minus: 1 | times: shop_per_page
+        if collection.products_count <= shown_before
+          assign noindex = true
+        endif
+      endif
+      for filter in collection.filters
+        if filter.active_values.size > 0
+          assign noindex = true
+        endif
+        if filter.type == 'price_range'
+          if filter.min_value.value != blank or filter.max_value.value != blank
+            assign noindex = true
+          endif
+        endif
+      endfor
+    when 'blog'
+      if blog.articles_count == 0 or current_tags != blank
+        assign noindex = true
+      endif
+      # Same for the Journal, which st-journal pages by 12.
+      if current_page > 1
+        assign shown_before = current_page | minus: 1 | times: 12
+        if blog.articles_count <= shown_before
+          assign noindex = true
+        endif
+      endif
+    when 'page'
+      if legacy_page_handles contains page.handle
+        assign noindex = true
+      endif
+      # The interim noindex lifts by itself once the page renders the guide template (page.nail-guide) with the
+      # PG-015…031 content, so there is no window where the thin version is indexable.
+      if interim_noindex_handles contains page.handle and template.suffix != 'nail-guide'
+        assign noindex = true
+      endif
+  endcase
+  if request.page_type contains 'customers/'
+    assign noindex = true
+  endif
+  # the talks (STRATEGY §10): topic pages /pages/talks/<topic>, and the old /blogs/the-talks/<handle> articles until
+  # they are unpublished and redirected (SD29). Thread pages /pages/talk/<handle> stay indexable.
+  if metaobject and metaobject.system.type == 'talk_topic'
+    assign noindex = true
+  endif
+  assign talks_article = false
+  if request.page_type == 'article' and blog.handle == 'the-talks'
+    assign noindex = true
+    assign talks_article = true
+  endif
+-%}
+{%- if noindex -%}
+  <meta name="robots" content="noindex, follow">
+{%- endif -%}
+
+{%- liquid
+  assign shop_url = request.origin | append: routes.root_url | remove_last: '/'
+  if routes.root_url == '/'
+    assign shop_url = request.origin
+  endif
+-%}
+
+{%- liquid
+  # Organization/publisher logo: the theme logo, else the store's Brand logo (Settings › Brand). The header wordmark is
+  # live text, so with neither set there is no logo image to point at and the property is left out.
+  assign org_logo = settings.logo | default: shop.brand.logo | default: shop.brand.square_logo
+-%}
+
+{%- if request.page_type == 'index' -%}
+  {%- capture same_as -%}
+    {%- assign social_keys = 'social_instagram_link,social_pinterest_link,social_youtube_link,social_tiktok_link,social_facebook_link,social_twitter_link' | split: ',' -%}
+    {%- for key in social_keys -%}
+      {%- if settings[key] != blank -%}{{ settings[key] | json }},{%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ shop_url | json }}
+      {%- if org_logo != blank -%},
+        "logo": {{ org_logo | image_url: width: 600 | prepend: 'https:' | json }}
+      {%- endif -%}
+      {%- if same_as != blank -%},
+        "sameAs": [{{ same_as | strip | remove_last: ',' }}]
+      {%- endif %}
+    }
+  </script>
+{%- endif -%}
+
+{%- if request.page_type == 'product' and product != blank -%}
+  {%- liquid
+    assign seo_variant = product.selected_or_first_available_variant
+    assign offered = 0
+    for variant in product.variants
+      if variant.price > 0
+        assign offered = offered | plus: 1
+      endif
+    endfor
+  -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "@id": {{ request.origin | append: product.url | append: '#product' | json }},
+      "name": {{ product.title | json }},
+      "url": {{ request.origin | append: product.url | json }},
+      {%- if product.description != blank %}
+      "description": {{ product.description | replace: '><', '> <' | replace: '<br>', ' ' | strip_html | strip_newlines | split: ' ' | join: ' ' | truncate: 500 | json }},
+      {%- endif %}
+      {%- if product.images.size > 0 %}
+      "image": [
+        {%- for image in product.images limit: 6 -%}
+          {{ image | image_url: width: 1200 | prepend: 'https:' | json }}{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ],
+      {%- endif %}
+      {%- if seo_variant.sku != blank %}
+      "sku": {{ seo_variant.sku | json }},
+      {%- endif %}
+      {%- if seo_variant.barcode != blank %}
+      "gtin": {{ seo_variant.barcode | json }},
+      {%- endif %}
+      "brand": { "@type": "Brand", "name": {{ product.vendor | default: shop.name | json }} }
+      {%- if offered > 0 -%},
+      "offers": [
+        {%- assign written = 0 -%}
+        {%- for variant in product.variants -%}
+          {%- if variant.price > 0 -%}
+            {%- if written > 0 %},{% endif -%}
+            {%- assign written = written | plus: 1 -%}
+            {
+              "@type": "Offer",
+              {%- if variant.sku != blank %}"sku": {{ variant.sku | json }},{% endif %}
+              {%- if product.variants.size > 1 %}"name": {{ variant.title | json }},{% endif %}
+              "url": {{ request.origin | append: variant.url | json }},
+              "price": {{ variant.price | divided_by: 100.0 | json }},
+              "priceCurrency": {{ cart.currency.iso_code | json }},
+              "itemCondition": "https://schema.org/NewCondition",
+              "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}"
+            }
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+      {%- endif %}
+    }
+  </script>
+{%- endif -%}
+
+{%- if request.page_type == 'article' and article != blank and talks_article == false -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "@id": {{ request.origin | append: article.url | append: '#article' | json }},
+      "headline": {{ article.title | json }},
+      "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+      "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+      "author": { "@type": "Organization", "name": {{ shop.name | json }}, "url": {{ shop_url | json }} },
+      "publisher": {
+        "@type": "Organization",
+        "name": {{ shop.name | json }}
+        {%- if org_logo != blank -%},
+        "logo": { "@type": "ImageObject", "url": {{ org_logo | image_url: width: 600 | prepend: 'https:' | json }} }
+        {%- endif %}
+      },
+      {%- if article.image != blank %}
+      "image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},
+      {%- endif %}
+      {%- if article.excerpt != blank %}
+      "description": {{ article.excerpt | replace: '><', '> <' | strip_html | strip_newlines | split: ' ' | join: ' ' | json }},
+      {%- endif %}
+      "mainEntityOfPage": {{ canonical_url | json }}
+    }
+  </script>
+{%- endif -%}
+
+{%- liquid
+  assign crumb_names = ''
+  assign crumb_urls = ''
+  case request.page_type
+    when 'product'
+      assign crumb_names = 'small_talk.seo.shop_crumb' | t
+      assign crumb_urls = routes.all_products_collection_url
+      assign crumb_last_name = product.title
+      assign crumb_last_url = product.url
+    when 'collection'
+      if collection.handle == 'all'
+        assign crumb_last_name = 'small_talk.seo.shop_crumb' | t
+      else
+        assign crumb_last_name = collection.title
+      endif
+      assign crumb_last_url = collection.url
+    when 'blog'
+      assign crumb_last_name = blog.title
+      assign crumb_last_url = blog.url
+    when 'article'
+      unless talks_article
+        assign crumb_names = blog.title
+        assign crumb_urls = blog.url
+        assign crumb_last_name = article.title
+        assign crumb_last_url = article.url
+      endunless
+    when 'page'
+      assign crumb_last_name = page.title
+      assign crumb_last_url = page.url
+  endcase
+  if metaobject and metaobject.system.type == 'talk_thread' and blogs['the-talks'] != blank
+    assign crumb_names = blogs['the-talks'].title
+    assign crumb_urls = blogs['the-talks'].url
+    assign crumb_last_name = metaobject.title.value
+    assign crumb_last_url = metaobject.system.url
+  endif
+-%}
+
+{%- if metaobject and metaobject.system.type == 'talk_thread' and metaobject.title.value != blank -%}
+  {%- liquid
+    # Author (STRATEGY §10 + orchestrator, 10 Oct): an alias equal to the shop's name (the brand seeds' "small talk",
+    # case-insensitive, trimmed) is the Small Talk organisation; any other alias is a Person; a shopper's post with no
+    # alias is Person "Anonymous", never the brand.
+    assign thread_alias = metaobject.alias.value | strip
+    assign shop_name_down = shop.name | strip | downcase
+    assign thread_alias_down = thread_alias | downcase
+    assign thread_by_shop = false
+    if thread_alias != blank and thread_alias_down == shop_name_down
+      assign thread_by_shop = true
+    endif
+    if thread_alias == blank
+      assign thread_alias = 'Anonymous'
+    endif
+    # Reply count, computed at render time from the thread's published replies (drafts come back blank and are skipped,
+    # as on the thread page). Only when every reference is visible without pagination (≤ 50); otherwise left out.
+    assign thread_replies = ''
+    if metaobject.replies.value != blank and metaobject.replies.value.size <= 50
+      assign thread_replies = 0
+      for reply in metaobject.replies.value
+        if reply != blank and reply.body.value != blank
+          assign thread_replies = thread_replies | plus: 1
+        endif
+      endfor
+    endif
+  -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "DiscussionForumPosting",
+      "headline": {{ metaobject.title.value | json }},
+      {%- if thread_by_shop %}
+      "author": { "@type": "Organization", "name": {{ shop.name | json }}, "url": {{ shop_url | json }} },
+      {%- else %}
+      "author": { "@type": "Person", "name": {{ thread_alias | json }} },
+      {%- endif %}
+      {%- if metaobject.posted_at.value != blank %}
+      "datePublished": {{ metaobject.posted_at.value | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+      {%- endif %}
+      {%- if metaobject.body.value != blank %}
+      "text": {{ metaobject.body.value | json }},
+      {%- endif %}
+      {%- if thread_replies != '' %}
+      "interactionStatistic": { "@type": "InteractionCounter", "interactionType": "https://schema.org/CommentAction", "userInteractionCount": {{ thread_replies }} },
+      {%- endif %}
+      "url": {{ request.origin | append: metaobject.system.url | json }}
+    }
+  </script>
+{%- endif -%}
+
+{%- if crumb_last_name != blank -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": {{ shop.name | json }}, "item": {{ shop_url | json }} },
+        {%- if crumb_names != blank %}
+        { "@type": "ListItem", "position": 2, "name": {{ crumb_names | json }}, "item": {{ request.origin | append: crumb_urls | json }} },
+        { "@type": "ListItem", "position": 3, "name": {{ crumb_last_name | json }}, "item": {{ request.origin | append: crumb_last_url | json }} }
+        {%- else %}
+        { "@type": "ListItem", "position": 2, "name": {{ crumb_last_name | json }}, "item": {{ request.origin | append: crumb_last_url | json }} }
+        {%- endif %}
+      ]
+    }
+  </script>
+{%- endif -%}

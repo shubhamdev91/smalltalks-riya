@@ -1,0 +1,181 @@
+{% doc %}
+  The art inside a set-colour tile (board 5 shop card and bag line item): the set's approved package box at the left
+  with a column of loose nails from the set's sprite (genuine cells only; columns per set from spec/shop.md round 5).
+  Without a campaign it falls back to the product's featured image. The caller supplies the tile
+  (`.st-card__tile` inside an element carrying `.st-card[data-set]` for the colour); styles live in st-product-card.
+
+  @param {product} product - The product.
+  @param {boolean} [eager] - Load the box eagerly with high priority.
+  @param {string} [sizes] - sizes for the box image.
+
+  @example
+  <span class="st-card__tile">{% render 'st-pack-art', product: product, eager: true %}</span>
+{% enddoc %}
+
+{%- liquid
+  assign key = product.metafields.small_talk.campaign.value.system.handle
+  assign art_alt = product.featured_media.alt | default: ''
+  assign art_sizes = sizes | default: '(min-width: 990px) 14vw, (min-width: 750px) 18vw, 28vw'
+  if eager
+    assign art_loading = 'eager'
+  else
+    assign art_loading = 'lazy'
+  endif
+  if key != blank
+    capture pack_raw
+      render 'st-motion-map', key: key, field: 'package'
+    endcapture
+    assign pack = pack_raw | strip | split: ','
+    # Image source (HD ladder or the clean-edge pair, snippets/st-pack-src): "src|srcset|width|height".
+    capture ps
+      render 'st-pack-src', key: key
+    endcapture
+    assign ps = ps | strip | split: '|'
+    if pack.size == 4 and ps.size == 4
+      assign pack_h = ps[3] | plus: 0
+      assign box_ar = ps[2] | times: 1.0 | divided_by: pack_h | round: 4
+    endif
+  endif
+  # Loose-nail sprite columns, top to bottom (spec/shop.md round 5; 0/1/2 are the set's three genuine designs).
+  case key
+    when 'on-me'
+      assign nail_cols = '0,2,1,0'
+    when 'brainwave'
+      assign nail_cols = '0,1,0,1'
+    when 'green-flag'
+      assign nail_cols = '1,0,1,0'
+    when 'shaadi-shift'
+      assign nail_cols = '1,2,0,2'
+    when 'diet-cherry'
+      assign nail_cols = '1,0,2,1'
+    when 'wild-card'
+      assign nail_cols = '1,0,2'
+    when 'pinky-promise'
+      assign nail_cols = '0,0,0,0'
+    else
+      assign nail_cols = ''
+  endcase
+  assign nail_cols = nail_cols | split: ','
+-%}
+
+{%- if key != blank and pack.size == 4 -%}
+  <span class="st-card__art" style="--box-aspect: {{ ps[2] }} / {{ ps[3] }}; --box-ar: {{ box_ar }}">
+    <img
+      class="st-card__pack"
+      src="{{ ps[0] }}"
+      srcset="{{ ps[1] }}"
+      sizes="{{ art_sizes }}"
+      width="{{ ps[2] }}"
+      height="{{ ps[3] }}"
+      alt="{{ art_alt | escape }}"
+      loading="{{ art_loading }}"
+      decoding="async"
+      {% if eager %}fetchpriority="high"{% endif %}
+    >
+    {%- if nail_cols.size > 0 -%}
+      {%- assign nails_url = 'st-hd-nails-' | append: key | append: '.webp' | asset_url -%}
+      <span class="st-card__nails" style="--st-nails: url('{{ nails_url }}')" aria-hidden="true">
+        {%- for col in nail_cols -%}
+          <span class="st-card__nail" style="--col: {{ col }}; --i: {{ forloop.index0 }}"></span>
+        {%- endfor -%}
+      </span>
+    {%- endif -%}
+  </span>
+{%- elsif product.featured_media != blank -%}
+  {{
+    product.featured_media.preview_image
+    | image_url: width: 360
+    | image_tag: class: 'st-card__pack st-card__pack--media', alt: art_alt, loading: art_loading, sizes: '32vw', widths: '360'
+  }}
+{%- endif -%}
+
+{% stylesheet %}
+  /* Tile + art (shop card, bag line item). Lives here so it loads wherever the art renders. */
+
+  /* Tile grounds: board-5 medians (tokens --st-tile-<set>). */
+  .st-card[data-set='on-me'] { --st-tile: var(--st-tile-on-me); }
+  .st-card[data-set='brainwave'] { --st-tile: var(--st-tile-brainwave); }
+  .st-card[data-set='diet-cherry'] { --st-tile: var(--st-tile-diet-cherry); }
+  .st-card[data-set='green-flag'] { --st-tile: var(--st-tile-green-flag); }
+  .st-card[data-set='shaadi-shift'] { --st-tile: var(--st-tile-shaadi-shift); }
+  .st-card[data-set='wild-card'] { --st-tile: var(--st-tile-wild-card); }
+  .st-card[data-set='pinky-promise'] { --st-tile: var(--st-tile-pinky-promise); }
+
+  .st-card__tile {
+    position: relative;
+    display: block;
+    width: 100%;
+    container-type: size; /* cqw / cqh place the box and nails as % of the tile */
+    aspect-ratio: var(--st-tile-aspect, 176 / 172);
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--st-tile);
+  }
+
+  /* Box 8% in from the left, 90% of the tile height (≈ 64–66% of its width); the nail column starts at 76% of the
+     tile, or 4 px after the box if the box reaches further. */
+  .st-card__art {
+    position: absolute;
+    top: 5%;
+    top: 5cqh;
+    left: 8%;
+    left: 8cqw;
+    height: 90%;
+    height: 90cqh;
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    gap: max(4px, calc(68cqw - 90cqh * var(--box-ar, 0.75)));
+  }
+
+  .st-card__pack {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: none;
+    aspect-ratio: var(--box-aspect);
+    filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.18));
+    transition: transform var(--animation-speed, 0.2s) var(--animation-easing, ease);
+  }
+
+  .st-card__pack--media {
+    position: absolute;
+    inset: 8%;
+    width: 84%;
+    height: 84%;
+    object-fit: contain;
+  }
+
+  /* Loose nails: sprite cells (204 × 354, three designs side by side) stacked down the column, tips leaning right.
+     A cell is 32% of the column height; the nails step 25.3% (≈ 21.5% of the tile), starting level with the box top. */
+  .st-card__nails {
+    position: relative;
+    height: 100%;
+    aspect-ratio: 0.1844; /* 0.32 × 204 / 354 */
+  }
+
+  .st-card__nail {
+    position: absolute;
+    inset-inline-start: 0;
+    top: calc(var(--i) * 25.3%);
+    width: 100%;
+    aspect-ratio: 204 / 354;
+    rotate: 12deg;
+  }
+
+  .st-card__nail::before {
+    content: '';
+    position: absolute;
+    inset: -5.365% -2.9% -0.435%;
+    background: var(--st-nails) calc(var(--col, 0) * 50%) 0 / 300% 100% no-repeat;
+  }
+
+  /* Board: loose nails tilt alternately; Brainwave's lie near horizontal. */
+  .st-card__nail:nth-child(even) { rotate: -12deg; }
+  .st-card[data-set='brainwave'] .st-card__nail { rotate: 84deg; }
+  .st-card[data-set='brainwave'] .st-card__nail:nth-child(even) { rotate: 96deg; }
+
+  .st-card[data-set='wild-card'] .st-card__nail {
+    top: calc(var(--i) * 34%);
+  }
+{% endstylesheet %}

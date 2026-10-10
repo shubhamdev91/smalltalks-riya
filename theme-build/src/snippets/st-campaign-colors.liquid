@@ -1,0 +1,39 @@
+{% doc %}
+  Prints a campaign's scene colours as CSS custom properties for an inline style attribute:
+  --st-scene, --st-scene-ink, --st-cta-bg, --st-cta-ink.
+  Contrast guard: if the campaign's CTA text colour is below 4.5:1 on its CTA background, the scene
+  ink is used, then the brand ink. Shared metaobject data is never changed.
+
+  @param {metaobject} campaign - small_talk_campaign entry.
+  @param {string} [only] - 'cta_foreground' to print just the guarded CTA text colour.
+
+  @example
+  <div style="{% render 'st-campaign-colors', campaign: c %}">
+{% enddoc %}
+{%- liquid
+  assign scene = campaign.background.value | append: '' | default: '#EEE8F5'
+  assign scene_ink = campaign.foreground.value | append: '' | default: '#1F1A2E'
+  assign cta_bg = campaign.cta_background.value | append: '' | default: '#1013B3'
+  assign cta_ink = campaign.cta_foreground.value | append: '' | default: '#FFFDF5'
+
+  assign ratio = cta_bg | color_contrast: cta_ink
+  if ratio < 4.5
+    assign ratio_scene = cta_bg | color_contrast: scene_ink
+    if ratio_scene >= 4.5
+      assign cta_ink = scene_ink
+    else
+      assign ratio_ink = cta_bg | color_contrast: '#1F1A2E'
+      if ratio_ink >= 4.5
+        assign cta_ink = '#1F1A2E'
+      else
+        assign cta_ink = '#FFFDF5'
+      endif
+    endif
+  endif
+
+  if only == 'cta_foreground'
+    echo cta_ink
+  else
+    echo '--st-scene: ' | append: scene | append: '; --st-scene-ink: ' | append: scene_ink | append: '; --st-cta-bg: ' | append: cta_bg | append: '; --st-cta-ink: ' | append: cta_ink | append: ';'
+  endif
+-%}

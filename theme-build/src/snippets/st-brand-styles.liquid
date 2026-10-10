@@ -1,0 +1,237 @@
+{% doc %}
+  Small Talk brand foundation: brand font faces, colour tokens read from the theme
+  colour palette, and the few element defaults Horizon leaves unset (heading colour,
+  button face, focus ring, reduced motion). Rendered once from layout/theme.liquid,
+  after `theme-styles-variables` and `color-palette`, so its :root values win.
+
+  Palette keys (Theme settings → Colors):
+  background = ivory ground, foreground = body text, color1 = ink, color2 = divider,
+  color3 = blue (logo + actions), color4 = plum (editorial headings),
+  color5 = secondary text, color6 = tint.
+
+  @example
+  {% render 'st-brand-styles' %}
+{% enddoc %}
+
+{%- liquid
+  assign palette = settings.color_palette
+  assign st_ground = palette.background | default: '#FFFDF5'
+  assign st_body = palette.foreground | default: '#272332'
+  assign st_ink = palette.color1 | default: '#1F1A2E'
+  assign st_divider = palette.color2 | default: '#D8CFDA'
+  assign st_blue = palette.color3 | default: '#1013B3'
+  assign st_plum = palette.color4 | default: '#4A243D'
+  assign st_muted = palette.color5 | default: '#68616E'
+  assign st_tint = palette.color6 | default: '#EEE8F5'
+-%}
+
+{% style %}
+  @font-face {
+    font-family: 'ST Display';
+    src: url('{{ 'st-font-4.woff2' | asset_url }}') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ST Sans';
+    src: url('{{ 'st-font-3.woff2' | asset_url }}') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ST Pen';
+    src: url('{{ 'desi-pen.woff2' | asset_url }}') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ST Condensed';
+    src: url('{{ 'desi-condensed.woff2' | asset_url }}') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ST Condensed';
+    src: url('{{ 'st-font-1.woff2' | asset_url }}') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    /* Brand colour tokens */
+    --st-blue: {{ st_blue }};
+    --st-blue-rgb: {{ st_blue | color_to_rgb | remove: 'rgb(' | remove: ')' | replace: ',', ' ' }};
+    --st-ink: {{ st_ink }};
+    --st-plum: {{ st_plum }};
+    --st-body: {{ st_body }};
+    --st-muted: {{ st_muted }};
+    --st-ground: {{ st_ground }};
+    --st-tint: {{ st_tint }};
+    --st-divider: {{ st_divider }};
+    --st-error: #A00027;
+    --st-heading-color: var(--st-ink);
+
+    /* Official logo fill (st-artwork owner-D-1, small-talk-logo.svg): #001df9 replaces the board-sampled #1412d5 of
+       spec/tokens.css (which stays byte-identical); --st-icon-ink and --logo-color follow it. */
+    --st-logo-blue: #001df9;
+
+    /* Set grounds kept outside the board tokens (st-tokens.css = spec/tokens.css, byte-identical). --st-tile-<set> stays
+       the shop tiles'. Story cards: the landing chapter ground (= st-landing.css --g2). PDP illustration slide: the
+       campaign illustration's own ground, so the contained image shows no side stripes. */
+    --st-chapter-on-me: #fbbe10;
+    --st-chapter-brainwave: #033bd6;
+    --st-chapter-diet-cherry: #d40319;
+    --st-chapter-green-flag: #046f41;
+    --st-chapter-shaadi-shift: #f30b5e;
+    --st-chapter-wild-card: #aee60d;
+    --st-chapter-pinky-promise: #6919f9;
+    --st-art-on-me: #ffb900;
+    --st-art-brainwave: #063df1;
+    --st-art-diet-cherry: #e10019;
+    --st-art-green-flag: #007947;
+    --st-art-shaadi-shift: #fe0078;
+    --st-art-wild-card: #b7f000;
+    --st-art-pinky-promise: #6620f2;
+
+    /* Brand type voices */
+    --st-font-display: 'ST Display', Georgia, 'Times New Roman', serif;
+    --st-font-sans: 'ST Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    --st-font-pen: 'ST Pen', 'Segoe Print', 'Bradley Hand', cursive;
+    --st-font-button: 'ST Condensed', 'Arial Narrow', 'ST Sans', sans-serif;
+
+    /* Map Horizon's font roles onto the brand voices */
+    --font-body--family: var(--st-font-sans);
+    --font-subheading--family: var(--st-font-sans);
+    --font-subheading--weight: 600;
+    --font-heading--family: var(--st-font-display);
+    --font-heading--weight: 400;
+    --font-accent--family: var(--st-font-pen);
+    --font-accent--weight: 300;
+    --button-font-family-primary: var(--st-font-button);
+    --button-font-family-secondary: var(--st-font-button);
+
+    /* Layout + rhythm */
+    --st-gutter: 1rem;
+    --st-radius-card: 0.75rem;
+    --st-section-space: clamp(2.5rem, 8vw, 5rem);
+    --color-error: var(--st-error);
+
+    /* Focus */
+    --focus-outline-width: 2px;
+    --focus-outline-offset: 3px;
+  }
+
+  @media screen and (min-width: 750px) {
+    :root {
+      --st-gutter: 2rem;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4 {
+    color: var(--color, var(--st-heading-color));
+    text-wrap: balance;
+  }
+
+  .button,
+  .button-secondary,
+  button.shopify-payment-button__button--unbranded {
+    font-weight: 600;
+    font-size: 1.0625rem;
+    letter-spacing: 0.01em;
+  }
+
+  :focus-visible {
+    outline: var(--focus-outline-width) solid var(--st-blue);
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  /* Shared brand utilities, used by st-* sections */
+  .st-pen {
+    font-family: var(--st-font-pen);
+    font-weight: 300;
+    letter-spacing: 0;
+  }
+
+  .st-display {
+    font-family: var(--st-font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 0.98;
+  }
+
+  .st-editorial {
+    --st-heading-color: var(--st-plum);
+  }
+
+  .st-link {
+    color: var(--st-blue);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  .st-link:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .st-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    min-height: var(--minimum-touch-target);
+    padding: 0.55em 1.4em;
+    border-radius: 100px;
+    border: 1px solid var(--st-cta-border, var(--st-cta-bg, var(--st-blue)));
+    background: var(--st-cta-bg, var(--st-blue));
+    color: var(--st-cta-ink, var(--st-ground));
+    font-family: var(--st-font-button);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    line-height: 1.1;
+    text-decoration: none;
+    transition: transform var(--animation-speed) var(--animation-easing),
+      background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  .st-cta:hover {
+    transform: translateY(-1px);
+  }
+
+  .st-cta--outline {
+    --st-cta-bg: transparent;
+    --st-cta-ink: var(--st-blue);
+    --st-cta-border: var(--st-blue);
+  }
+
+  .st-arrow {
+    display: inline-block;
+    font-family: var(--st-font-sans);
+    font-weight: 400;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+{% endstyle %}

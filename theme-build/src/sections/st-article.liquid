@@ -1,0 +1,645 @@
+{% comment %}
+  Section contract.
+  Journal story (article template), board 4 frame 4 (spec/journal-story.md). "← All stories" (JRN-007), the beat
+  pager "n / N ‹ ›" (JRN-009) at the top right, the category eyebrow from the article's `category:<label>` tag
+  (JRN-008, uppercased by CSS), the set name (H1) and headline from the title "Name: Headline", the standfirst
+  (JRN-010, the body's first paragraph), the hero (the set's chapter art, bottom crop, on its colour; ≤1.3× source),
+  the article excerpt as the pull headline, then the story beats (the body's <section class="di-story-slide">
+  moments) as a swipeable scroll-snap track that the top pager drives (st-beats.js; swipe works without JS).
+  Then "Shop {set} →" (JRN-011, only while the set's product is live, G5) and "More stories from the Journal"
+  (JRN-013): three other stories in board order. "Next story" (JRN-012) is omitted: the board has no room (T81).
+  @example
+  <!-- templates/article.json and article.desi.json -->
+{% endcomment %}
+
+{%- liquid
+  assign campaigns = shop.metaobjects.small_talk_campaign.values
+  assign article_campaign = nil
+  for c in campaigns
+    if c.journal.value.id == article.id
+      assign article_campaign = c
+      break
+    endif
+  endfor
+  assign key = article_campaign.system.handle
+
+  assign title_parts = article.title | split: ': '
+  assign story_title = title_parts.first
+  assign story_sub = title_parts | slice: 1, 9 | join: ': '
+
+  assign category = ''
+  for tag in article.tags
+    assign tag_lower = tag | downcase
+    if tag_lower contains 'category:'
+      assign category = tag | split: ':' | last | strip
+      break
+    endif
+  endfor
+
+  assign body = article.content
+  assign beats_raw = ''
+  assign body_before = body
+  assign body_after = ''
+  if body contains 'di-story-slide"'
+    assign split_open = body | split: '<div class="di-story-slides"'
+    assign body_before = split_open.first
+    assign rest = split_open | slice: 1, 9 | join: '<div class="di-story-slides"'
+    assign rest_parts = rest | split: '</section>'
+    assign body_after = rest_parts.last | remove_first: '</div>'
+    assign beats_raw = rest | split: '<section class="di-story-slide">'
+  endif
+  assign body_before = body_before | remove: '<p class="di-eyebrow">' | replace_first: 'An original Small Talk brand story</p>', '' | strip
+  assign beats = ''
+  if beats_raw != ''
+    assign beats = beats_raw | slice: 1, 6
+  endif
+  if beats.size > 0
+    assign body_main = body_after | strip
+  else
+    assign body_main = body_before | append: body_after | strip
+  endif
+  assign pull = article.excerpt | strip_html | strip
+-%}
+
+<article class="st-story"{% if key != blank %} style="--st-story-set: var(--st-chapter-{{ key }}, {{ article_campaign.background.value }})"{% endif %}>
+  {%- if beats.size > 0 -%}<st-beats class="st-story__beats" data-count="{{ beats.size }}">{%- else -%}<div class="st-story__beats">{%- endif -%}
+    <div class="st-story__top">
+      <a class="st-story__back" href="{{ blog.url }}"><span class="st-arrow" aria-hidden="true">←</span> {{ 'small_talk.journal.all_stories' | t }}</a>
+      {%- if beats.size > 0 -%}
+        <div class="st-story__pager">
+          <p class="st-story__status" aria-live="polite" data-st-beats-status>{{ 'small_talk.journal.beat_status' | t: current: 1, total: beats.size }}</p>
+          <button type="button" class="st-story__arrow" data-st-beats-prev aria-label="{{ 'small_talk.journal.previous_beat' | t }}" disabled>
+            <svg viewBox="0 0 12 20" aria-hidden="true" focusable="false"><path d="M10 2 2 10l8 8"/></svg>
+          </button>
+          <button type="button" class="st-story__arrow" data-st-beats-next aria-label="{{ 'small_talk.journal.next_beat' | t }}">
+            <svg viewBox="0 0 12 20" aria-hidden="true" focusable="false"><path d="m2 2 8 8-8 8"/></svg>
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <header class="st-story__header">
+      {%- if category != blank -%}
+        <p class="st-story__eyebrow">{{ category | escape }}</p>
+      {%- endif -%}
+      <h1 class="st-story__title">{{ story_title | escape }}</h1>
+      {%- if story_sub != blank -%}
+        <p class="st-story__sub">{% render 'st-sentences', text: story_sub %}</p>
+      {%- endif -%}
+      {%- if beats.size > 0 and body_before != blank -%}
+        <div class="st-story__standfirst">{{ body_before | strip_html | escape }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if key != blank -%}
+      {%- comment -%}
+        HD art: Brainwave = the sketchbook still life (journal-story.md), centred at the box width; every other set = its
+        landing chapter scene (snippets/st-landing-map, HD pieces), shown as a window of the chapter scaled to the box.
+        A set without a window falls back to its chapter crop.
+      {%- endcomment -%}
+      {%- liquid
+        # Scene window per set, landing px: "y0,sh" = first visible row, and the scene's clip line (where every flat cut
+        # edge ends, so none floats inside the box). The box shows y0 … y0 + 463 (372 × 442 at the 390-px scale).
+        case key
+          when 'on-me'
+            assign scene = '604,1067'
+          when 'green-flag'
+            assign scene = '402,865'
+          when 'shaadi-shift'
+            assign scene = '312,775'
+          when 'wild-card'
+            assign scene = '387,850'
+          when 'pinky-promise'
+            assign scene = '402,865'
+          else
+            assign scene = ''
+        endcase
+        assign scene = scene | split: ','
+      -%}
+      {%- if key == 'diet-cherry' -%}
+          {%- comment -%}
+            st-fable HD2 fix 1: two layers in the 370 × 441 card at 1.25× the landing scale (card px): the woman bleeds
+            past the bottom, the can hand's wrist ends below it and bleeds right, so the art starts at ~20% of the card.
+          {%- endcomment -%}
+          <div class="st-story__hero st-story__hero--layers" aria-hidden="true">
+            <img src="{{ 'st-hd-diet-cherry-woman.webp' | asset_url }}" width="557" height="909" alt="" loading="eager" fetchpriority="high" decoding="async" style="--l: -2; --t: 82; --w: 243.6;">
+            <img src="{{ 'st-hd-diet-cherry-can-hand.webp' | asset_url }}" width="363" height="646" alt="" loading="eager" decoding="async" style="--l: 227; --t: 174; --w: 151.1;">
+          </div>
+      {%- elsif key == 'brainwave' -%}
+          <div class="st-story__hero st-story__hero--still" aria-hidden="true">
+            <img src="{{ 'st-hd-brainwave-sketchbook.webp' | asset_url }}" width="1110" height="810" alt="" loading="eager" fetchpriority="high" decoding="async">
+          </div>
+      {%- elsif scene.size == 2 -%}
+          <div class="st-story__hero st-story__hero--scene" aria-hidden="true">
+            <div class="st-story__scene" style="--y0: {{ scene[0] }}; --sh: {{ scene[1] }};">{% render 'st-landing-map', key: key, field: 'art' %}</div>
+          </div>
+      {%- else -%}
+          <div class="st-story__hero" aria-hidden="true">
+            <img
+              src="{{ 'st-chapter-' | append: key | append: '.webp' | asset_url }}"
+              width="270"
+              height="821"
+              alt=""
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            >
+          </div>
+      {%- endif -%}
+    {%- elsif article.image != blank -%}
+      <div class="st-story__hero">
+        {{ article.image | image_url: width: 800 | image_tag: alt: article.image.alt, loading: 'eager', sizes: '(min-width: 750px) 40rem, 95vw', widths: '400, 600, 800' }}
+      </div>
+    {%- endif -%}
+
+    {%- if pull != blank -%}
+      {%- comment -%} Board: one sentence per line ("You had the thought. / You did the work. / …"). {%- endcomment -%}
+      <p class="st-story__pull">{{ pull | escape | replace: '. ', '.<br>' }}</p>
+    {%- endif -%}
+
+    {%- if beats.size > 0 -%}
+      <ol class="st-story__track" data-st-beats-track tabindex="0" aria-label="{{ story_title | escape }}">
+        {%- for beat in beats -%}
+          {%- liquid
+            assign beat_html = beat | split: '</section>' | first
+            assign beat_text = beat_html | split: '<h3>' | last | split: '</h3>' | first | strip_html | strip
+          -%}
+          <li class="st-story__beat" aria-label="{{ 'small_talk.journal.beat_label' | t: n: forloop.index, total: beats.size }}">
+            <p>{{ beat_text | escape }}</p>
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+  {%- if beats.size > 0 -%}</st-beats>{%- else -%}</div>{%- endif -%}
+  {%- if beats.size > 0 -%}
+    <script type="module" src="{{ 'st-beats.js' | asset_url }}" fetchpriority="low"></script>
+  {%- endif -%}
+
+  {%- if body_main != blank -%}
+    <div class="st-story__body st-rte">{{ body_main }}</div>
+  {%- endif -%}
+
+  {%- comment -%} JRN-011 "Shop {set}" is gated on G5: only while the set's product is live. {%- endcomment -%}
+  {%- if article_campaign != blank and article_campaign.product.value != blank and article_campaign.product.value.price > 0 and article_campaign.product.value.available -%}
+    {%- capture shop_url -%}{% render 'st-campaign-url', campaign: article_campaign %}{%- endcapture -%}
+    <a class="st-story__cta" href="{{ shop_url | strip }}">
+      {{- 'small_talk.journal.shop_set' | t: name: article_campaign.name.value }} <span class="st-arrow" aria-hidden="true">→</span>
+    </a>
+  {%- endif -%}
+
+  {%- comment -%} More stories (JRN-013): the next three other stories in board order. {%- endcomment -%}
+  {%- liquid
+    assign set_order = section.settings.story_order | remove: ' ' | split: ','
+    assign more = 0
+  -%}
+  {%- capture more_list -%}
+    {%- for handle in set_order -%}
+      {%- if more >= 3 -%}{%- break -%}{%- endif -%}
+      {%- assign c = shop.metaobjects.small_talk_campaign[handle] -%}
+      {%- assign other = c.journal.value -%}
+      {%- if other != blank and other.id != article.id and other.url != blank -%}
+        {%- assign more = more | plus: 1 -%}
+        {%- assign other_parts = other.title | split: ': ' -%}
+        <li>
+          <a class="st-story__more-link" href="{{ other.url }}">
+            <span class="st-story__more-media">{%- render 'st-nail-closeup', key: handle, journal: true -%}</span>
+            <span class="st-story__more-text">
+              <span class="st-story__more-name">{{ other_parts.first | escape }}</span>
+              {%- assign more_sub = other_parts | slice: 1, 9 | join: ': ' -%}
+              <span class="st-story__more-sub">{% render 'st-sentences', text: more_sub %}</span>
+            </span>
+            <svg class="st-story__chevron" viewBox="0 0 12 20" aria-hidden="true" focusable="false"><path d="m2 2 8 8-8 8"/></svg>
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if more > 0 -%}
+    <aside class="st-story__more" aria-labelledby="StMore-{{ section.id }}">
+      <h2 class="st-story__more-heading" id="StMore-{{ section.id }}">{{ 'small_talk.journal.more_stories' | t }}</h2>
+      <ul role="list">{{ more_list }}</ul>
+    </aside>
+  {%- endif -%}
+</article>
+
+{% stylesheet %}
+  /* Board 4 frame 4 at 390 (spec/journal-story.md). Text column x 22–368; hero x 10–382. */
+  .st-story {
+    display: grid;
+    gap: 18px;
+    max-width: 44rem;
+    margin-inline: auto;
+    padding: 6px 22px var(--st-section-space);
+    color: #111;
+    font-family: var(--font-ui);
+  }
+
+  .st-story__beats {
+    display: grid;
+    gap: 14px;
+  }
+
+  .st-story__top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+
+  .st-story__back {
+    grid-column: 1 / -1;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 44px;
+    color: #111;
+    font-weight: 500;
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  .st-story__back:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-story__pager {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+  }
+
+  .st-story__status {
+    margin: 0 4px 0 0;
+    font-size: 16px;
+  }
+
+  .st-story__arrow {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #111;
+    cursor: pointer;
+  }
+
+  .st-story__arrow svg,
+  .st-story__chevron {
+    width: 9px;
+    height: 16px;
+  }
+
+  .st-story__arrow path,
+  .st-story__chevron path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-story__arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .st-story__header {
+    display: grid;
+    gap: 4px;
+  }
+
+  .st-story__eyebrow {
+    margin: 0;
+    color: #d0204a;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .st-story__title {
+    margin: 0;
+    color: #111;
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: min(62px, 17.8vw); /* board ink ~7% wider than the spec's 58; small phones keep "Brainwave" inside the column */
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+
+  .st-story__sub {
+    margin: 0;
+    font-size: 25px;
+    line-height: 1.15;
+  }
+
+  .st-story__standfirst {
+    margin-block-start: 4px;
+    color: var(--st-muted-text, #5c5f6b);
+    font-size: 14px;
+  }
+
+  /* Hero x 10–382 (372 × 442), radius 6: the chapter art's props, never wider than 1.3× its 270 px source. */
+  .st-story__hero {
+    position: relative;
+    margin-inline: -12px;
+    aspect-ratio: 372 / 442;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--st-story-set, var(--st-tint));
+  }
+
+  .st-story__hero img {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 50%;
+    width: min(100%, 351px);
+    max-width: none;
+    height: auto;
+    translate: -50% 0;
+  }
+
+  /* HD still life (Brainwave): centred, the box width. */
+  .st-story__hero--still img {
+    inset-block: 50% auto;
+    width: 100%;
+    translate: -50% -50%;
+  }
+
+  /* HD scene (Green Flag): the landing chapter's art in its 390-px frame, scaled to the box (--k as on the landing). */
+  .st-story__hero--scene {
+    container-type: inline-size;
+  }
+
+  .st-story__hero .st-story__scene {
+    --k: calc(100cqw / 390);
+    position: absolute;
+    inset-inline: 0;
+    top: calc(var(--y0) * -1 * var(--k));
+    height: calc(var(--sh) * var(--k));
+    overflow: hidden;
+  }
+
+  /* Positioned layers (Diet Cherry): card px of the 370-wide card, scaled with it. */
+  .st-story__hero--layers {
+    container-type: inline-size;
+  }
+
+  .st-story__hero--layers img {
+    --k: calc(100cqw / 370);
+    inset-block: calc(var(--t) * var(--k)) auto;
+    inset-inline-start: calc(var(--l) * var(--k));
+    width: calc(var(--w) * var(--k));
+    translate: none;
+  }
+
+  .st-story__hero .st-story__scene .st-land__art {
+    position: absolute;
+  }
+
+  .st-story__hero .st-story__scene img {
+    position: static;
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    translate: none;
+  }
+
+  .st-story__pull {
+    margin: 4px 0 0;
+    color: #111;
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: 33px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .st-story__track {
+    display: grid;
+    grid-auto-columns: 100%;
+    grid-auto-flow: column;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    list-style: none;
+  }
+
+  .st-story__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .st-story__beat {
+    scroll-snap-align: start;
+  }
+
+  /* Body grey: the spec's --st-body #6e7184 (the theme's --st-body is the brand setting, #272332). The story ground
+     is #fffdf5, paper-like: 4.73:1. */
+  .st-story__beat p {
+    margin: 0;
+    color: #6e7184;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .st-story__track:focus-visible {
+    outline: 2px solid #d0204a;
+    outline-offset: 4px;
+  }
+
+  /* "Shop {set} →": a full pill, #a80f2a, white DM Sans 600 18 px. */
+  .st-story__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    min-height: 44px;
+    margin-inline: -2px;
+    padding: 0 1.5rem;
+    border-radius: var(--st-radius-pill, 999px);
+    background: #a80f2a;
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+    text-decoration: none;
+  }
+
+  .st-story__cta:hover {
+    background: color-mix(in srgb, #a80f2a 86%, #000);
+  }
+
+  .st-story__more {
+    margin-block-start: 12px;
+  }
+
+  .st-story__more-heading {
+    margin: 0 0 4px;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .st-story__more ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-story__more li + li {
+    border-block-start: 1px solid #e8e9eb;
+  }
+
+  .st-story__more-link {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    min-height: 68px;
+    padding-block: 4px;
+    color: #111;
+    text-decoration: none;
+  }
+
+  .st-story__more-media {
+    display: block;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .st-story__more-text {
+    display: grid;
+  }
+
+  .st-story__more-name {
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .st-story__more-sub {
+    color: var(--st-muted-text, #5c5f6b);
+    font-size: 15px;
+  }
+
+  .st-story__chevron {
+    color: #d0204a;
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2) */
+  /* >= 1024: hero art card 5fr, sticky under the header at min(100svh - header - 48px, 640px) tall (v1.2: a shorter
+     372 x 380 card with the scene bottom-anchored, narrower where the column is), | the story 7fr: pager row, eyebrow, title, line, intro, beats, story text (68 ch),
+     quote, "Shop the set" and More stories. st-beats becomes display: contents so its hero can take the left column
+     (st-beats.js only measures its track). */
+  @media screen and (min-width: 1024px) {
+    .st-story {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: clamp(32px, 4vw, 72px);
+      align-items: start;
+      max-width: none;
+      width: min(1240px, 100% - 2 * clamp(32px, 4vw, 64px));
+      padding: 24px 0 var(--st-section-space);
+    }
+
+    .st-story__beats {
+      display: contents;
+    }
+
+    .st-story > *,
+    .st-story__beats > * {
+      grid-column: 2;
+    }
+
+    .st-story__beats > .st-story__hero {
+      grid-column: 1;
+      grid-row: 1 / span 8;
+      align-self: start;
+      position: sticky;
+      top: calc(var(--st-header-h, 76px) + 24px);
+      width: min(100%, min(100svh - var(--st-header-h, 76px) - 48px, 640px) * 372 / 380);
+      margin-inline: 0;
+      aspect-ratio: 372 / 380;
+      border-radius: 10px;
+    }
+
+    .st-story__hero--scene .st-story__scene {
+      top: auto;
+      bottom: 0;
+    }
+
+    .st-story__hero--layers img {
+      translate: 0 calc(-62 * var(--k));
+    }
+
+    .st-story__title {
+      font-size: 71px;
+    }
+
+    .st-story__sub {
+      font-size: 29px;
+    }
+
+    .st-story__standfirst {
+      max-width: 68ch;
+      font-size: 17px;
+    }
+
+    .st-story__pull {
+      font-size: 38px;
+    }
+
+    .st-story__beat p,
+    .st-story__body {
+      max-width: 68ch;
+      font-size: 18px;
+    }
+
+    .st-story__cta {
+      justify-self: start;
+      min-height: 52px;
+      font-size: 20px;
+    }
+
+    .st-story__more {
+      max-width: 68ch;
+    }
+  }
+  /* END store desktop */
+
+  /* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+  @media screen and (min-width: 1680px) {
+    .st-story {
+      width: min(1440px, 100% - 2 * clamp(32px, 4vw, 64px));
+    }
+
+    /* the reading text keeps its 1240-frame measure (the 7fr column, 680 px): the grid widens, the paragraphs don't */
+    .st-story__standfirst,
+    .st-story__beat p,
+    .st-story__body {
+      max-width: min(68ch, 680px);
+    }
+  }
+  /* END wide frame */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk story",
+  "class": "st-article-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "story_order",
+      "label": "Story order (campaign handles)",
+      "default": "on-me,brainwave,green-flag,shaadi-shift,diet-cherry,wild-card,pinky-promise",
+      "info": "\"More stories\" shows the next three other stories in this order."
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,77 @@
+{% comment %}
+  Section contract.
+  Closing block of the landing page, board 3 (spec/landing.md "Shop all / FAQ / footer"): filled "Shop all sets" pill,
+  navy FAQ heading and rows as native <details> (keyboard and screen-reader friendly without JavaScript), then an
+  optional help link. Cream ground, clips its own curved top edge; it grows with open answers (no fixed height).
+  The footer that follows continues on the same cream on the landing.
+  @example
+  <!-- templates/index.json: last section before the footer. -->
+{% endcomment %}
+
+<section
+  class="st-land st-land--cream st-land--flow"
+  data-land="shop-all-faq-footer"
+  style="{% render 'st-landing-join', key: 'shop-all-faq-footer', part: 'style' %}"
+  aria-labelledby="StFaq-{{ section.id }}"
+>
+  <div class="st-land__inner">
+    <div class="st-faq2">
+      {%- if section.settings.shop_label != blank -%}
+        <a
+          class="st-land__pill st-land__pill--filled st-faq2__shop"
+          href="{{ section.settings.shop_url | default: routes.all_products_collection_url }}"
+          style="--w: 320; --ph: 60; --fs: 26; --pill-bg: #b80219;"
+        >
+          {{- section.settings.shop_label | escape }} <span class="st-arrow" aria-hidden="true">↗</span>
+        </a>
+      {%- endif -%}
+
+      <h2 class="st-faq2__heading" id="StFaq-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+
+      <div class="st-faq2__list">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.question != blank -%}
+            <details class="st-faq2__item" {{ block.shopify_attributes }}>
+              <summary class="st-faq2__q">
+                <span>{{ block.settings.question | escape }}</span>
+                <span class="st-faq2__plus" aria-hidden="true"></span>
+              </summary>
+              <div class="st-faq2__a">{{ block.settings.answer }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.help_url != blank and section.settings.help_label != blank -%}
+        <a class="st-faq2__help" href="{{ section.settings.help_url }}">
+          {{- section.settings.help_label | escape }} <span class="st-arrow" aria-hidden="true">→</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Small Talk FAQ",
+  "class": "st-land-section",
+  "settings": [
+    { "type": "text", "id": "shop_label", "label": "Shop button label", "default": "Shop all sets" },
+    { "type": "url", "id": "shop_url", "label": "Shop button link" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "FAQs" },
+    { "type": "text", "id": "help_label", "label": "Help link label (optional)" },
+    { "type": "url", "id": "help_url", "label": "Help link" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Small Talk FAQ" }]
+}
+{% endschema %}

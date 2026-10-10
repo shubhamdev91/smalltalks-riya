@@ -1,0 +1,520 @@
+{% doc %}
+  Small Talk product notes, placed inside Horizon's product details (board 5 frame 2, spec/product.md).
+  part 'intro': the campaign's short design description (locked, 01-pdp) and "Find your fit →" (PDP-007) to the guide.
+  part 'details': the links row, "Delivery & returns →" (PDP-008; only once both policies are live and the refund text
+  is verified) | "Need a hand? →" (PDP-009); disclosures What's in the kit (PDP-002/003), Fit & application
+  (PDP-004/005) and The story: {headline} (PDP-001); then the coda: the Journal story's excerpt as a handwritten
+  quote, "Read the story →" (PDP-010) and the set's character peeking in from the right edge.
+  The story text is the theme-local D7 override (snippet st-story-override, PDP-024…PDP-054) when one exists for the
+  product handle, otherwise the campaign metaobject's `story`. Kit and fit text come from product metafields
+  small_talk.kit_contents / small_talk.fit_guide / small_talk.application when present, otherwise from this block's
+  settings. Empty disclosures are not rendered.
+  This block also carries the PDP's board styling for Horizon's own title, price and buy row (scoped to
+  .product-information); the title font is the --font-pdp-title token.
+{% enddoc %}
+
+{%- liquid
+  assign product = closest.product
+  assign campaign = product.metafields.small_talk.campaign.value
+  assign part = block.settings.part
+-%}
+
+<div class="st-notes st-notes--{{ part }}" {{ block.shopify_attributes }}>
+  {%- if part == 'intro' -%}
+    <script type="module" src="{{ 'st-product.js' | asset_url }}" fetchpriority="low"></script>
+    {%- assign short = campaign.short_description.value | default: block.settings.fallback_intro -%}
+    {%- if short != blank -%}
+      <p class="st-notes__short">{{ short | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.fit_link != blank -%}
+      <a class="st-notes__fit" href="{{ block.settings.fit_link }}">{{ 'small_talk.product.find_fit' | t }} <span class="st-arrow" aria-hidden="true">→</span></a>
+    {%- endif -%}
+  {%- else -%}
+    {%- liquid
+      assign policies_live = false
+      if shop.shipping_policy.body != blank and shop.refund_policy.body != blank and settings.st_refund_verified
+        assign policies_live = true
+      endif
+    -%}
+    {%- if block.settings.help_link != blank or policies_live -%}
+      <p class="st-notes__links">
+        {%- if policies_live -%}
+          <a href="{{ block.settings.delivery_link | default: '/pages/help#delivery' }}">{{ 'small_talk.product.delivery_returns' | t }} <span class="st-arrow" aria-hidden="true">→</span></a>
+        {%- endif -%}
+        {%- if policies_live and block.settings.help_link != blank -%}
+          <span class="st-notes__bar" aria-hidden="true"></span>
+        {%- endif -%}
+        {%- if block.settings.help_link != blank -%}
+          <a href="{{ block.settings.help_link }}">{{ 'small_talk.product.need_hand' | t }} <span class="st-arrow" aria-hidden="true">→</span></a>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+    {%- liquid
+      if product.metafields.small_talk.kit_contents != blank
+        assign kit = product.metafields.small_talk.kit_contents | metafield_tag
+      else
+        assign kit = block.settings.kit
+      endif
+      capture fit
+        if product.metafields.small_talk.fit_guide != blank
+          echo product.metafields.small_talk.fit_guide | metafield_tag
+        endif
+        if product.metafields.small_talk.application != blank
+          echo product.metafields.small_talk.application | metafield_tag
+        endif
+      endcapture
+      if fit == blank
+        assign fit = block.settings.fit
+      endif
+      capture story
+        render 'st-story-override', handle: product.handle
+      endcapture
+      assign story = story | strip
+      if story == blank
+        assign story = campaign.story.value
+      endif
+      assign article = campaign.journal.value
+      assign excerpt = article.excerpt | strip_html | strip
+    -%}
+
+    <div class="st-notes__disclosures">
+      {%- comment -%} PDP-002 is gated on G1, PDP-004 on G2–G4: each disclosure needs its gate confirmed AND content. {%- endcomment -%}
+      {%- if block.settings.g1_confirmed and kit != blank -%}
+        <details class="st-notes__item">
+          <summary class="st-notes__summary"><span>{{ block.settings.kit_heading | escape }}</span><span class="st-notes__icon" aria-hidden="true"></span></summary>
+          <div class="st-notes__body">{{ kit }}</div>
+        </details>
+      {%- elsif request.design_mode -%}
+        <p class="st-notes__placeholder">{{ block.settings.kit_heading | escape }}: hidden until G1 is confirmed and kit contents are added (this block or metafield small_talk.kit_contents).</p>
+      {%- endif -%}
+
+      {%- if block.settings.fit_confirmed and fit != blank -%}
+        <details class="st-notes__item">
+          <summary class="st-notes__summary"><span>{{ block.settings.fit_heading | escape }}</span><span class="st-notes__icon" aria-hidden="true"></span></summary>
+          <div class="st-notes__body">
+            {{ fit }}
+          </div>
+        </details>
+      {%- elsif request.design_mode -%}
+        <p class="st-notes__placeholder">{{ block.settings.fit_heading | escape }}: hidden until G2/G3/G4 are confirmed and fit text is added (this block or metafield small_talk.fit_guide).</p>
+      {%- endif -%}
+
+      {%- if story != blank -%}
+        <details class="st-notes__item st-notes__item--story"{% if block.settings.story_open %} open{% endif %}>
+          <summary class="st-notes__summary">
+            <span>{{ 'small_talk.product.story_heading' | t: headline: campaign.headline.value }}</span>
+            <span class="st-notes__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="st-notes__body">
+            <p class="st-notes__story">{{ story | escape | newline_to_br }}</p>
+            {%- if excerpt == blank and article.url != blank -%}
+              <a class="st-notes__read" href="{{ article.url }}">{{ 'small_talk.product.read_story' | t }} <span class="st-arrow" aria-hidden="true">→</span></a>
+            {%- endif -%}
+          </div>
+        </details>
+      {%- endif -%}
+    </div>
+
+    {%- if excerpt != blank -%}
+      {%- liquid
+        # HD character peek (snippets/st-peek-map, generated): "src,width,height,left,top,css_width".
+        capture peek
+          render 'st-peek-map', key: campaign.system.handle, part: 'pdp'
+        endcapture
+        assign peek = peek | strip | split: ','
+      -%}
+      <div class="st-notes__coda">
+        {%- comment -%} Board: one sentence per line ("One more round. / No announcement. / …"). {%- endcomment -%}
+        <blockquote class="st-notes__quote"><p>“{{ excerpt | escape | replace: '. ', '.<br>' }}”</p></blockquote>
+        {%- if article.url != blank -%}
+          <a class="st-notes__read" href="{{ article.url }}">{{ 'small_talk.product.read_story' | t }} <span class="st-arrow" aria-hidden="true">→</span></a>
+        {%- endif -%}
+        {%- if peek.size == 6 -%}
+          {%- comment -%} Board: the set's character peeks in from the right edge: one eye near (70, 65), the rest of the face cut off. {%- endcomment -%}
+          <span class="st-notes__peek" aria-hidden="true">
+            <img
+              src="{{ peek[0] | asset_url }}"
+              alt=""
+              width="{{ peek[1] }}"
+              height="{{ peek[2] }}"
+              style="left: {{ peek[3] }}px; top: {{ peek[4] }}px; width: {{ peek[5] }}px"
+              loading="lazy"
+              decoding="async"
+            >
+          </span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  /* ---- PDP board styling (board 5 frame 2 at 390, spec/product.md) for Horizon's own blocks ---- */
+  .product-information {
+    --st-pdp-buy: #940326;
+  }
+
+  .product-information .group-block h1 {
+    margin: 0;
+    color: var(--st-burgundy);
+    font-family: var(--font-pdp-title);
+    font-weight: 900;
+    font-size: var(--fs-pdp-title, 50px);
+    line-height: 0.8;
+    letter-spacing: var(--ls-pdp-title, 0);
+  }
+
+  .product-information product-price > * {
+    width: fit-content;
+    margin-inline-start: auto;
+  }
+
+  /* One price style with the shop and bag cards: IBM Plex Sans Condensed 700 (PDP acceptance 1: 25 px matches the board). */
+  .product-information product-price .price,
+  .product-information product-price .price * {
+    color: var(--color-price, var(--st-price));
+    font-family: var(--font-price);
+    font-weight: var(--fw-price, 700);
+    font-size: var(--fs-price-pdp, 25px);
+  }
+
+  /* Buy row: stepper 118 × 44 (−/+ 44 wide) | Add to bag (fill, radius 6, takes the rest) | Save 44 × 44.
+     The 44 px touch minimum wins over the board's narrower stepper and 30 px bookmark. */
+  .product-information .product-form-buttons {
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .product-information .quantity-selector-wrapper {
+    flex: none;
+  }
+
+  .product-information .product-form-buttons .quantity-selector {
+    width: 118px;
+    height: 44px;
+    min-height: 44px;
+    border: 1px solid #e2e3e3;
+    border-radius: 6px;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 18px;
+  }
+
+  .product-information .quantity-selector .button {
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .product-information .quantity-selector input {
+    width: 28px;
+    min-width: 0; /* Horizon sets ~37 px, which pushed + past the stepper */
+    flex: none;
+    font: inherit;
+  }
+
+  .product-information .product-form-buttons .add-to-cart-button {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    height: 44px;
+    min-height: 44px;
+    padding-block: 0;
+    padding-inline: 0.75rem;
+    border: 0;
+    border-radius: 6px;
+    background: var(--st-pdp-buy);
+    color: #fff;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .product-information .product-form-buttons .add-to-cart-button:hover:not([disabled]) {
+    background: color-mix(in srgb, var(--st-pdp-buy) 86%, #000);
+  }
+
+  .product-information .add-to-cart-button .add-to-cart-icon,
+  .product-information .add-to-cart-button svg {
+    display: none;
+  }
+
+  /* Add to bag takes what the row leaves; the stepper and Save keep their 44 px targets. */
+  .product-information .add-to-cart-button > span,
+  .product-information add-to-cart-component {
+    min-width: 0;
+  }
+
+  .product-information .product-form-buttons > :has(add-to-cart-component),
+  .product-information .product-form-buttons > span:not(.st-save):not(.quantity-selector-wrapper) {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Narrow phones: the visible label is "Add to bag"; " · {price}" stays in the accessible name (price is beside
+     the title already). */
+  @media screen and (max-width: 379px) {
+    .product-information .product-form-buttons {
+      gap: 8px;
+    }
+
+    .product-information .product-form-buttons .add-to-cart-button {
+      padding-inline: 6px;
+    }
+
+    .product-information .st-atb__more {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  }
+
+  /* ---- Notes ---- */
+  .st-notes {
+    width: 100%;
+    color: var(--st-body);
+  }
+
+  .st-notes__short {
+    margin: 0;
+    color: #373f8b;
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.25;
+  }
+
+  .st-notes__fit,
+  .st-notes__links a,
+  .st-notes__read {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    min-height: 32px;
+    color: var(--st-hand-blue);
+    font-family: var(--font-ui);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .st-notes__fit {
+    font-size: 16px;
+  }
+
+  .st-notes__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+  }
+
+  .st-notes__links a {
+    min-height: 44px;
+    font-size: 15px;
+  }
+
+  .st-notes__bar {
+    width: 1px;
+    height: 18px;
+    margin-inline: 12px;
+    background: currentColor;
+    color: var(--st-hand-blue);
+  }
+
+  .st-notes__disclosures {
+    border-block-start: 1px solid #e8e9eb;
+  }
+
+  .st-notes__item {
+    border-block-end: 1px solid #e8e9eb;
+  }
+
+  .st-notes__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 44px;
+    padding-block: 0;
+    color: #ae1f36;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.2;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .st-notes__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .st-notes__icon {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+
+  .st-notes__icon::before,
+  .st-notes__icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 2px;
+    background: #ae1f36;
+    translate: 0 -50%;
+  }
+
+  .st-notes__icon::after {
+    rotate: 90deg;
+  }
+
+  .st-notes__item[open] .st-notes__icon::after {
+    rotate: 0deg;
+  }
+
+  .st-notes__body {
+    padding-block-end: 1rem;
+    color: var(--st-body);
+    font-family: var(--font-ui);
+    font-size: 16px;
+  }
+
+  .st-notes__body > :first-child {
+    margin-block-start: 0;
+  }
+
+  .st-notes__story {
+    margin: 0 0 0.75rem;
+  }
+
+  /* Coda: quote x 25–235, "Read the story" x 125, character peek x 275–390 bleeding off the right edge. */
+  .st-notes__coda {
+    position: relative;
+    min-height: 140px;
+    padding: 10px 0 0 10px;
+  }
+
+  .st-notes__quote {
+    margin: 0;
+    color: #2e4ac7;
+    font-family: var(--font-annotation);
+    font-weight: var(--fw-annotation, 300);
+    max-width: min(195px, calc(100vw - 150px)); /* 195 at 390; narrower below ~345 so it clears the peek */
+    font-size: 22px;
+    line-height: 1.13;
+    rotate: -6deg;
+    transform-origin: 0 50%;
+  }
+
+  .st-notes__quote p {
+    margin: 0;
+  }
+
+  .st-notes__coda .st-notes__read {
+    margin: 4px 0 0 clamp(0px, calc(100vw - 290px), 100px); /* 100 at 390; below, the link moves left of the peek */
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .st-notes__peek {
+    position: absolute;
+    inset-block-start: 5px;
+    inset-inline-end: calc(-1 * var(--page-margin, 16px));
+    width: 115px;
+    height: 130px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .st-notes__peek img {
+    position: absolute;
+    max-width: none;
+    height: auto;
+  }
+
+  .st-notes__placeholder {
+    margin: 0;
+    padding: 0.75rem 0;
+    border-block-end: 1px dashed var(--st-divider);
+    color: var(--st-muted);
+    font-size: 0.875rem;
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2) */
+  /* >= 1024 (PDP, Horizon's half grid): the gallery raised to min(58 %, 720 px) of the content width; the details column
+     keeps Horizon's sticky. Its links and the quantity field at 44 px. */
+  @media screen and (min-width: 1024px) {
+    .product-information__grid.product-information__grid--half.product-information--media-left:not(.product-information--media-none) {
+      --st-pdp-media: min(calc(var(--full-page-grid-central-column-width) * 0.58), 720px);
+
+      grid-template-columns:
+        var(--full-page-grid-margin) var(--st-pdp-media)
+        calc(var(--full-page-grid-central-column-width) - var(--st-pdp-media)) var(--full-page-grid-margin);
+    }
+
+    .product-information .st-notes a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .product-information .product-form-buttons .quantity-selector {
+      width: auto;
+      min-height: 44px;
+    }
+
+    /* outranks Horizon's .quantity-selector input[type='number'] { min-width: 3ch } (same weight, later in the bundle) */
+    .product-information .quantity-selector input[type='number'] {
+      width: 44px;
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+  /* END store desktop */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk product notes",
+  "settings": [
+    {
+      "type": "select",
+      "id": "part",
+      "label": "Part",
+      "options": [
+        { "value": "intro", "label": "Short description + Find your fit" },
+        { "value": "details", "label": "Links, disclosures, story quote" }
+      ],
+      "default": "intro"
+    },
+    {
+      "type": "text",
+      "id": "fallback_intro",
+      "label": "Short description fallback",
+      "info": "Used when the product has no campaign.",
+      "visible_if": "{{ block.settings.part == 'intro' }}"
+    },
+    { "type": "url", "id": "fit_link", "label": "Find your fit link (Nail Guide)", "visible_if": "{{ block.settings.part == 'intro' }}" },
+    { "type": "url", "id": "help_link", "label": "Need a hand? link", "visible_if": "{{ block.settings.part == 'details' }}" },
+    { "type": "url", "id": "delivery_link", "label": "Delivery & returns link (shown once both policies have text)", "visible_if": "{{ block.settings.part == 'details' }}" },
+    { "type": "checkbox", "id": "g1_confirmed", "label": "G1 confirmed (kit contents)", "default": false, "visible_if": "{{ block.settings.part == 'details' }}" },
+    { "type": "text", "id": "kit_heading", "label": "Kit heading", "default": "What’s in the kit", "visible_if": "{{ block.settings.part == 'details' }}" },
+    { "type": "richtext", "id": "kit", "label": "Kit contents (fallback)", "visible_if": "{{ block.settings.part == 'details' }}" },
+    { "type": "checkbox", "id": "fit_confirmed", "label": "G2/G3/G4 confirmed (fit, application, removal)", "default": false, "visible_if": "{{ block.settings.part == 'details' }}" },
+    { "type": "text", "id": "fit_heading", "label": "Fit heading", "default": "Fit & application", "visible_if": "{{ block.settings.part == 'details' }}" },
+    { "type": "richtext", "id": "fit", "label": "Fit & application (fallback)", "visible_if": "{{ block.settings.part == 'details' }}" },
+    { "type": "checkbox", "id": "story_open", "label": "Open the story by default", "default": false, "visible_if": "{{ block.settings.part == 'details' }}" }
+  ],
+  "presets": [{ "name": "Small Talk product notes" }]
+}
+{% endschema %}

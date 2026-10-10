@@ -1,0 +1,12 @@
+<section class="di-wrap di-journal"><p>04 /</p><h1>{{ blog.title | escape }}</h1><p class="di-note">Seven sets. So many stories.</p>{% paginate blog.articles by 12 %}<div class="di-journal-grid">{% for article in blog.articles %}<article><a href="{{ article.url }}">{% if article.image %}{{ article.image | image_url: width: 650 | image_tag: loading:'lazy' }}{% endif %}<h2>{{ article.title | escape }}</h2></a><p>{{ article.excerpt_or_content | strip_html | truncate: 180 }}</p><a href="{{ article.url }}">Read the story →</a></article>{% else %}<p>Our stories are taking shape. Explore the little moments behind each set in the meantime.</p><a href="/collections/all">Explore the sets →</a>{% endfor %}</div>{{ paginate | default_pagination }}{% endpaginate %}</section>
+{% schema %}
+{
+  "name": "Blog",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Blog"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,5 @@
+our-vision-woman-A5-retry.png: retry of our-vision-woman. Background on target (#f6e4cc, dE00 1.4) but visibly softer than A4 (eye-region Laplacian variance 589 vs 851); A4 kept (dE00 2.1).
+C1-Cherry red nails_ chrome and French tip-1.png: alternate diet-cherry-pdp-hand (fingers up, palm-side framing, 1312x1199 not square); -7 matches the prompt pose and finger order. Kept -7.
+C2-Elegant manicure on mustard-yellow surface-2.png: on-me-pdp-hand retry with the WRONG finger order (index->little burgundy, tortoise, gold, tortoise; prompt: tortoise, gold, tortoise, burgundy). -3 is correct. Rejected.
+C12-Fuchsia daisy almond nail fan-12.png: shaadi-shift flatlay alternate, wide 1536x1024 (square requested); same design as -13. Kept -13.
+packaging-alt/shaadi-shift-alt*: Clinking teacups on Shaadi Shift-10.png; equally clean cutout, only hand/cup poses differ from -6; kept -6 (owner's first choice).

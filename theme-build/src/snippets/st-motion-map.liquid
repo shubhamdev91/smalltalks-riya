@@ -1,0 +1,163 @@
+{% doc %}
+  Single source of truth for hero motion mapping per campaign, copied from artwork/manifest.json
+  (`preview_slots`, `distinct_accents`; Phase 1, 9 Oct 2026). Replaces st-nail-sequence for the hero.
+  - preview_slots: sprite columns shown on the preview hand, index → little finger, keyed by the set SHOWN
+    on the hand (the next set). Columns: 0 signature, 1 accent, 2 extra.
+  - flight_columns: columns that fly in as accents (distinct designs minus the signature); empty = no flights.
+  - sprite: theme asset filename of the set's 3-cell nail sprite (cell 204×354, cuticle anchor 0.5, 0.925).
+  - character: "width,height,anchorX,anchorY,bleed edges (space-separated),css width at 390" for the set's
+    accepted character (theme asset st-character-<key>.webp), from manifest.phase2.characters (CONTRACT v2.1).
+  - hero_character: "file,width,height,anchorX,anchorY,bleed,css width at 390" for the hero only (CONTRACT v3). Same as
+    `character` except Diet Cherry, which uses the board 2 hand-with-can (st-diet-can.webp, owner-accepted 9 Oct).
+  - sample_columns: sprite columns on the hero's two loose samples when they differ from the default (CONTRACT v3
+    `sampleColumns`); empty = default (flight columns padded with unused accent columns).
+  - package: "width,height,width1.3x,height1.3x" of the clean-edge packaging derivatives (st-package-<key>.webp and
+    st-package-<key>-13x.webp), from manifest.phase2.packaging. Content is locked; never upscaled further.
+
+  @param {string} key - Campaign handle.
+  @param {string} field - 'preview_slots', 'flight_columns', 'sample_columns', 'sprite', 'hero_sprite', 'character',
+    'hero_character', 'hero_parts' or 'package'. 'sprite' / 'hero_sprite' = the set's HD nail sheet
+    (st-hd-nails-<key>.webp, 1350 x 780, cells 450 x 780, same column order as P1), one file site-wide; outside the
+    hero each surface draws the cell x1.058 about its cuticle (plates 0.846 of the cell vs P1 0.895).
+
+  @example
+  {% capture slots %}{% render 'st-motion-map', key: 'on-me', field: 'preview_slots' %}{% endcapture %}
+{% enddoc %}
+{%- liquid
+  case field
+    when 'sprite'
+      echo 'st-hd-nails-' | append: key | append: '.webp'
+    when 'hero_sprite'
+      echo 'st-hd-nails-' | append: key | append: '.webp'
+    when 'preview_slots'
+      case key
+        when 'on-me'
+          echo '0,2,1,0'
+        when 'brainwave'
+          echo '0,1,2,0'
+        when 'diet-cherry'
+          echo '1,0,2,1'
+        when 'green-flag'
+          echo '1,0,1,0'
+        when 'shaadi-shift'
+          echo '2,1,0,2'
+        when 'wild-card'
+          echo '1,2,0,1'
+        when 'pinky-promise'
+          echo '0,0,0,0'
+        else
+          echo '0,1,2,0'
+      endcase
+    when 'flight_columns'
+      case key
+        when 'green-flag'
+          echo '1'
+        when 'pinky-promise'
+          echo ''
+        else
+          echo '1,2'
+      endcase
+    when 'sample_columns'
+      case key
+        when 'green-flag'
+          echo '1,0'
+      endcase
+    when 'hero_character'
+      case key
+        when 'on-me'
+          echo 'st-hd-on-me-woman-hero.webp,535,721,0,1,left,150'
+        when 'brainwave'
+          echo 'st-hd-brainwave-woman-hero.webp,299,542,0,0,left top,150'
+        when 'diet-cherry'
+          echo 'st-diet-can.webp,1189,1323,0,0.5,left,220'
+        when 'green-flag'
+          echo 'st-hd-green-flag-woman-hero-v2.webp,729,1020,1,0.5,right,150'
+        when 'shaadi-shift'
+          echo 'st-hd-shaadi-shift-pin-hero-v2.webp,331,1172,0,1,left,150'
+        when 'wild-card'
+          echo 'st-hd-wild-card-woman-v2-hero.webp,366,1019,0,0.5,left,150'
+        when 'pinky-promise'
+          echo 'st-hd-pinky-promise-face-hero-v2.webp,340,516,0,0,left top,150'
+      endcase
+    when 'hero_parts'
+      # character.parts: extra layers above the main image, "src,width,height" joined by ";" (v3.5: Wild Card v2 cards hand).
+      case key
+        when 'wild-card'
+          echo 'st-hd-wild-card-cards-hand-v2-hero.webp,362,492'
+      endcase
+    when 'character'
+      case key
+        when 'on-me'
+          echo '308,629,0,1,left bottom,150'
+        when 'brainwave'
+          echo '303,631,0,0,left top,150'
+        when 'diet-cherry'
+          echo '281,625,0,0.5,left,150'
+        when 'green-flag'
+          echo '290,620,1,0.5,right,150'
+        when 'shaadi-shift'
+          echo '281,622,0,1,left bottom,150'
+        when 'wild-card'
+          echo '294,628,0,0.5,left,150'
+        when 'pinky-promise'
+          echo '311,630,0,0,left top,150'
+      endcase
+    when 'hd_pack'
+      # Owner (10 Oct): HD packaging (st-artwork owner-D-1: q85 cut-outs with alpha, width ladder 240/360/480/720 + the
+      # box width, as st-hd-pack-<key>-<w>.webp); all 7 sets (Brainwave + Shaadi Shift delivered 10 Oct). To switch a
+      # set back to the clean-edge pair, remove it here (no other code change).
+      case key
+        when 'on-me'
+          echo 'true'
+        when 'brainwave'
+          echo 'true'
+        when 'shaadi-shift'
+          echo 'true'
+        when 'diet-cherry'
+          echo 'true'
+        when 'green-flag'
+          echo 'true'
+        when 'wild-card'
+          echo 'true'
+        when 'pinky-promise'
+          echo 'true'
+        else
+          echo 'false'
+      endcase
+    when 'pack_hd'
+      # Box size = the ladder's largest file (no upscale): "width,height".
+      case key
+        when 'on-me'
+          echo '863,1153'
+        when 'brainwave'
+          echo '867,1154'
+        when 'shaadi-shift'
+          echo '859,1136'
+        when 'diet-cherry'
+          echo '866,1151'
+        when 'green-flag'
+          echo '865,1153'
+        when 'wild-card'
+          echo '865,1153'
+        when 'pinky-promise'
+          echo '867,1131'
+      endcase
+    when 'package'
+      case key
+        when 'on-me'
+          echo '362,494,470,642'
+        when 'brainwave'
+          echo '358,494,465,642'
+        when 'diet-cherry'
+          echo '377,481,490,625'
+        when 'green-flag'
+          echo '355,494,461,642'
+        when 'shaadi-shift'
+          echo '364,494,473,642'
+        when 'wild-card'
+          echo '372,481,483,625'
+        when 'pinky-promise'
+          echo '372,481,483,625'
+      endcase
+  endcase
+-%}

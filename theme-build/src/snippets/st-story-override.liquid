@@ -1,0 +1,23 @@
+{% doc %}
+  Theme-local PDP story override (owner decision D7), keyed by product handle. Text is copied verbatim from the
+  st-copy register (01-pdp.md); the campaign metaobject `story` field is left untouched. Prints nothing for any
+  other handle, so st-product-notes falls back to the metaobject.
+
+  @param {string} handle - product handle
+{% enddoc %}
+{%- case handle -%}
+  {%- when 'bill-idhar' -%}{%- comment -%} PDP-024 {%- endcomment -%}
+    Everyone’s still talking when the bill arrives. You catch the server’s eye and slide it towards you, burgundy and a little gold catching the light. You wanted to treat them. Bas. No speech needed. Bill idhar.
+  {%- when 'haan-mera-idea-tha' -%}{%- comment -%} PDP-029 {%- endcomment -%}
+    The bag still isn’t right. You turn the sketchbook, redraw the curve, and there it is. Later, someone asks whose idea that detail was. Your cobalt nail taps the page. Haan, mera idea hai.
+  {%- when 'haan-wohi-wali' -%}{%- comment -%} PDP-034 {%- endcomment -%}
+    New place. Same friend, who knows your order before you’ve even opened the menu. You reach for the cold can, deep red and silver bright against it. “The usual?” You’re already smiling. Haan, wohi wali.
+  {%- when 'tum-aa-jao-main-dekh-lungi' -%}{%- comment -%} PDP-039 {%- endcomment -%}
+    Her plans just fell through. You tuck the receiver against your shoulder and pull out another chair. Green-tipped fingers rest on its back while she asks if you’re sure. You are. Tum aa jao. Main dekh lungi.
+  {%- when 'dulhan-tu-duty-meri' -%}{%- comment -%} PDP-044 {%- endcomment -%}
+    Everyone’s calling for the bride. She’s looking for you. One last fix to her dupatta, one whispered joke, and she’s laughing again. The little yellow flower on your nail flashes as you smooth the edge. Dulhan tu. Duty meri.
+  {%- when 'achha-tum-pehle' -%}{%- comment -%} PDP-049 {%- endcomment -%}
+    You’ve got a good hand. Maybe good enough. You tuck the cards closer, acid lime and blue-white checks bright against the edges. Across the table, someone’s itching to go first. You let them. Achha. Tum pehle.
+  {%- when 'haath-do-main-hoon' -%}{%- comment -%} PDP-054 {%- endcomment -%}
+    At the doorway, she slows down. You reach back and her fingers find yours. Lilac, burgundy tips, one small squeeze. Koi jaldi nahi. You’ll walk in together. Haath do. Main hoon.
+{%- endcase -%}

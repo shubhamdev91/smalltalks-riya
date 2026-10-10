@@ -1,0 +1,75 @@
+{
+  "header": {
+    "open_menu": "Open menu",
+    "close_menu": "Close menu",
+    "menu_label": "Main menu",
+    "bag": "Your bag",
+    "search": "Search"
+  },
+  "footer": {
+    "menu_label": "Footer menu",
+    "social_label": "Small Talk on social media",
+    "contact": "Contact",
+    "rights": "All rights reserved."
+  },
+  "hero": {
+    "region_label": "Seven sets, one hand",
+    "pause": "Pause the preview",
+    "play": "Play the preview",
+    "tone": "Change skin tone",
+    "tone_status": "Skin tone {{ index }} of {{ count }}",
+    "next_set": "Next set: {{ name }}",
+    "shop_set": "Shop “{{ name }}”"
+  },
+  "chapter": {
+    "shop_set": "Shop set",
+    "read_story": "Read the story"
+  },
+  "product": {
+    "add_to_bag": "Add to bag",
+    "coming_soon": "Coming soon",
+    "sold_out": "Sold out",
+    "find_fit": "Find your fit",
+    "view_set": "View set",
+    "need_hand": "Need a hand?",
+    "read_story": "Read the story",
+    "thumbnails_label": "Product images",
+    "show_image": "Show image {{ index }} of {{ count }}"
+  },
+  "cart": {
+    "title": "Your bag",
+    "items": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    },
+    "empty": "Your bag is empty.",
+    "empty_cta": "Shop all sets",
+    "continue": "Continue shopping"
+  },
+  "journal": {
+    "all_stories": "All stories",
+    "beat_status": "{{ index }} / {{ count }}",
+    "previous_beat": "Previous",
+    "next_beat": "Next",
+    "beats_label": "Story",
+    "more_stories": "More stories from the Journal",
+    "featured": "Featured"
+  },
+  "talks": {
+    "example_label": "Example conversation",
+    "examples_heading": "Example conversations",
+    "examples_note": "These are written examples to show the kind of talks we hope to share. They are not real posts.",
+    "form_success": "Thank you. Your talk has been sent privately for review.",
+    "rules": "Community rules"
+  },
+  "shop": {
+    "filter_label": "Filter sets",
+    "all": "All sets",
+    "empty": "No sets to show yet. Check back soon."
+  },
+  "common": {
+    "shop_all": "Shop all sets",
+    "previous": "Previous",
+    "next": "Next"
+  }
+}

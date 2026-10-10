@@ -1,0 +1,82 @@
+{
+  "sections": {
+    "cart-section": {
+      "type": "main-cart",
+      "blocks": {
+        "cart-page-title": {
+          "type": "_cart-title",
+          "static": true,
+          "settings": {
+            "title": "Your bag",
+            "show_count": true,
+            "type_preset": "h2",
+            "alignment": "left",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "cart-page-items": {
+          "type": "_cart-products",
+          "static": true,
+          "settings": {
+            "gap": 20,
+            "image_ratio": "square",
+            "dividers": true,
+            "vendor": false,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "cart-page-summary": {
+          "type": "_cart-summary",
+          "static": true,
+          "settings": {
+            "extend_summary": true,
+            "background_color": "{{ settings.color_palette.color6 }}",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 12
+          },
+          "blocks": {}
+        }
+      },
+      "settings": {
+        "section_width": "page-width",
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 24,
+        "padding-block-end": 48
+      }
+    },
+    "bag-extras": {
+      "type": "st-bag-extras",
+      "settings": {
+        "help_heading": "Need a hand?",
+        "g8_confirmed": true,
+        "help_text": "Questions about fit, your order or anything else? Ask us.",
+        "help_label": "Help centre",
+        "help_url": "/pages/help",
+        "help_live": true,
+        "policies_label": "Shipping & returns",
+        "policies_url": "/pages/help#delivery",
+        "contact_label": "Contact us",
+        "contact_url": "/pages/help#contact",
+        "contact_live": true,
+        "promo_heading": "Nails for every plot twist.",
+        "campaign": "on-me",
+        "continue_url": "/collections/all",
+        "promo_sub": "Collect the whole story."
+      }
+    }
+  },
+  "order": [
+    "cart-section",
+    "bag-extras"
+  ]
+}

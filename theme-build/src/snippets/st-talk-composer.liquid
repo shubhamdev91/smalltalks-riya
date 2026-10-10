@@ -1,0 +1,373 @@
+{% doc %}
+  The talks composer: start a talk with no name, email or login. She writes inside the thread UI, picks a topic (or
+  types her own) and taps Post once; st-talks.js posts it to the talks backend and shows it straight away. Her alias,
+  avatar set and device id live in localStorage only. "row" = the first row of the hub list (opens on focus);
+  "panel" = inside the Start-a-talk panel (always open). Copy: small_talk.talks.live.* (TLK-1xx).
+
+  @param {string} mode - "row" or "panel".
+  @param {string} topics - Topic handles in chip order, comma-separated (talk_topic metaobjects).
+  @param {string} [current] - Topic handle to preselect (topic pages).
+  @param {string} id - Unique suffix for element ids (section.id).
+  @param {boolean} [live] - Posting is switched on (section setting "Posting live"). Off: a quiet pre-launch note
+    renders instead of the form (TLK-153), so nobody meets a box that can't post yet.
+
+  @example
+  {% render 'st-talk-composer', mode: 'row', topics: 'plot-twists,tiny-wins', current: '', id: section.id %}
+{% enddoc %}
+
+{%- liquid
+  assign form_id = 'StCompose-' | append: id
+  assign handles = topics | split: ','
+  assign grievance = ''
+  if shop.email != blank
+    assign email_link = '<a href="mailto:' | append: shop.email | append: '">' | append: shop.email | append: '</a>'
+    assign grievance = 'small_talk.talks.live.grievance' | t: email: '@@E@@' | escape | replace: '@@E@@', email_link
+  endif
+-%}
+{%- unless live -%}
+  <div class="st-compose st-compose--{{ mode }} st-compose--soon">
+    <p class="st-compose__soon">{{ 'small_talk.talks.live.prelaunch' | t }}</p>
+  </div>
+{%- else -%}
+<form
+  class="st-compose st-compose--{{ mode }}"
+  id="{{ form_id }}"
+  data-st-compose
+  {% if mode == 'panel' %}data-open{% endif %}
+  novalidate
+>
+  <div class="st-compose__head">
+    <span class="st-compose__avatar" data-st-me-avatar>{%- render 'st-talk-avatar', set: '', alias: '?' -%}</span>
+    <div class="st-compose__field">
+      <label class="visually-hidden" for="{{ form_id }}-text">{{ 'small_talk.talks.live.composer_label' | t }}</label>
+      <textarea
+        id="{{ form_id }}-text"
+        class="st-compose__text"
+        name="text"
+        rows="{% if mode == 'panel' %}3{% else %}1{% endif %}"
+        maxlength="1200"
+        placeholder="{{ 'small_talk.talks.live.composer_placeholder' | t | escape }}"
+        aria-describedby="{{ form_id }}-status"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="st-compose__more">
+    {%- render 'st-talk-alias', id: form_id -%}
+
+    <fieldset class="st-compose__topics">
+      <legend class="st-compose__label">{{ 'small_talk.talks.live.topic_label' | t }}</legend>
+      <div class="st-compose__picks">
+        {%- for h in handles -%}
+          {%- assign key = h | strip -%}
+          {%- assign topic = metaobjects.talk_topic[key] -%}
+          {%- if topic and topic.pickable.value == true -%}
+            <label class="st-pick">
+              <input type="radio" name="topic" value="{{ key | escape }}"{% if key == current %} checked{% endif %}>
+              <span>{{ topic.label.value | escape }}</span>
+            </label>
+          {%- endif -%}
+        {%- endfor -%}
+        <label class="st-pick">
+          <input type="radio" name="topic" value="__own">
+          <span>{{ 'small_talk.talks.live.topic_own' | t }}</span>
+        </label>
+      </div>
+      <input
+        type="text"
+        class="st-compose__own"
+        name="topic_own"
+        maxlength="30"
+        placeholder="{{ 'small_talk.talks.live.topic_own_placeholder' | t | escape }}"
+        aria-label="{{ 'small_talk.talks.live.topic_own_placeholder' | t | escape }}"
+        hidden
+      >
+    </fieldset>
+
+    <div class="st-hp" aria-hidden="true">
+      <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <div class="st-compose__foot">
+      <p class="st-compose__status" id="{{ form_id }}-status" role="status" data-st-status></p>
+      <span class="st-compose__left" data-st-left aria-hidden="true"></span>
+      <button type="submit" class="st-compose__post">
+        {{- 'small_talk.talks.live.post' | t -}}
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 12 L12 4 M5.5 4 H12 V10.5"/></svg>
+      </button>
+    </div>
+
+    <p class="st-compose__rules">
+      {{ 'small_talk.talks.live.rules_short' | t }}
+      <a href="#house-rules">{{ 'small_talk.talks.live.rules_link' | t }}</a>
+      {%- if grievance != blank %} · {{ grievance }}{% endif %}
+    </p>
+  </div>
+  <noscript><p class="st-compose__noscript">{{ 'small_talk.talks.live.noscript' | t }}</p></noscript>
+</form>
+{%- endunless -%}
+
+{% stylesheet %}
+  /* Composer: board talk-row language (avatar disc + white pill field), the reply box's #a80f2a action colour and
+     the hub chips for topics. Row mode opens on focus; panel mode sits in the Start-a-talk panel. */
+  .st-compose {
+    display: grid;
+    gap: 12px;
+    color: #1a1a2e;
+    font-family: var(--font-ui);
+    --st-tavatar-size: 52px;
+  }
+
+  .st-compose--row {
+    margin: 26px 15px 0 18px;
+    padding: 14px 14px 14px 12px;
+    border: 1px solid #f1e4e6;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 2px 14px rgb(26 26 46 / 0.06);
+    scroll-margin-block-start: 90px;
+  }
+
+  .st-compose__head {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+  }
+
+  .st-compose__avatar {
+    display: block;
+    inline-size: 52px;
+    block-size: 52px;
+  }
+
+  .st-compose__text {
+    display: block;
+    inline-size: 100%;
+    min-block-size: 52px;
+    padding: 13px 18px;
+    border: 1px solid #ebe6e6;
+    border-radius: 26px;
+    background: #fff;
+    color: #1a1a2e;
+    font: inherit;
+    font-size: 17px;
+    line-height: 1.5;
+    resize: none;
+    field-sizing: content;
+    max-block-size: 50vh;
+  }
+
+  .st-compose[data-open] .st-compose__text {
+    min-block-size: 96px;
+    border-radius: 14px;
+  }
+
+  .st-compose--panel .st-compose__text {
+    min-block-size: 112px;
+    border-radius: 6px;
+    box-shadow: 0 1px 6px rgb(26 26 46 / 0.07);
+  }
+
+  .st-compose__text::placeholder,
+  .st-compose__own::placeholder {
+    color: var(--st-placeholder);
+    opacity: 1;
+  }
+
+  .st-compose__more {
+    display: grid;
+    gap: 12px;
+  }
+
+  .st-compose--row:not([data-open]):not(:focus-within) .st-compose__more {
+    display: none;
+  }
+
+  .st-compose__own {
+    flex: 1 1 160px;
+    min-inline-size: 0;
+    min-block-size: 44px;
+    padding: 10px 14px;
+    border: 1px solid #ebe6e6;
+    border-radius: 6px;
+    background: #fff;
+    color: #1a1a2e;
+    font: inherit;
+    font-size: 16px;
+  }
+
+  .st-compose__label {
+    padding: 0;
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .st-compose__topics {
+    display: grid;
+    gap: 8px;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .st-compose__picks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .st-pick {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .st-pick input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .st-pick span {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    padding-inline: 15px;
+    border-radius: var(--st-radius-pill);
+    background: #fdf0f0;
+    color: var(--st-muted-text);
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .st-pick input:checked + span {
+    background: #c0142f;
+    color: #fff;
+  }
+
+  .st-pick input:focus-visible + span,
+  .st-compose__text:focus-visible,
+  .st-compose__own:focus-visible,
+  .st-compose__post:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 2px;
+  }
+
+  .st-compose__own[hidden] {
+    display: none;
+  }
+
+  .st-hp {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .st-compose__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px 12px;
+  }
+
+  .st-compose__status {
+    flex: 1 1 160px;
+    margin: 0;
+    color: #1a1a2e;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .st-compose__status[data-tone='error'] {
+    color: #b00818;
+  }
+
+  .st-compose__status a {
+    color: var(--st-burgundy);
+    font-weight: 600;
+  }
+
+  .st-compose__left {
+    color: var(--st-muted-text);
+    font-size: 13px;
+  }
+
+  /* Post: full pill #a80f2a, Barlow Semi Condensed 600, white, ↗ (board "Post ↗"). */
+  .st-compose__post {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-block-size: 48px;
+    padding: 0 26px;
+    border: 0;
+    border-radius: var(--st-radius-pill);
+    background: #a80f2a;
+    color: #fff;
+    font-family: var(--font-pill);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .st-compose--panel .st-compose__post {
+    inline-size: 100%;
+    min-block-size: 50px;
+    font-size: 24px;
+  }
+
+  .st-compose__post svg {
+    inline-size: 14px;
+    block-size: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-compose__post[aria-disabled='true'] {
+    opacity: 0.7;
+  }
+
+  .st-compose__rules {
+    margin: 0;
+    color: var(--st-muted-text);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .st-compose__rules a {
+    color: var(--st-burgundy);
+    font-weight: 600;
+    text-underline-offset: 2px;
+    overflow-wrap: anywhere;
+  }
+
+  .st-compose--soon {
+    gap: 0;
+  }
+
+  .st-compose__soon {
+    margin: 0;
+    color: var(--st-muted-text);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .st-compose__noscript {
+    margin: 0;
+    color: var(--st-muted-text);
+    font-size: 14px;
+  }
+{% endstylesheet %}

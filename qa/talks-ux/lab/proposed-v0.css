@@ -1,0 +1,209 @@
+/* the talks: PROPOSED UX (lab, 10 Oct). Reddit-like but softer: one feed of compact cards, a one-tap "spill your
+   tea" bar, threaded replies two levels deep. Fonts already on the site: Caveat (headers only) + DM Sans (everything
+   people read and tap). Colours from the landing teaser (st-fable v1.1) so the hub reads as the teaser, opened up. */
+
+.tk {
+  --tk-ink: #1a1a2e;
+  --tk-muted: #5d5562;          /* 6.6:1 on the cream */
+  --tk-soft: #8a8190;           /* decoration only, never text under 4.5:1 */
+  --tk-line: #efe4de;
+  --tk-card: #ffffff;
+  --tk-chip: #fdf0f0;
+  --tk-chip-ink: #a31a33;       /* 6.9:1 on the chip */
+  --tk-accent: #c3021d;         /* "spill your tea" (6.3:1 white on it) */
+  --tk-thread: #f1d3da;         /* reply connector */
+  --tk-r: 16px;
+  --tk-display: 'Caveat', 'Caveat Fallback', cursive;
+  --tk-ui: 'DM Sans', 'DM Sans Fallback', system-ui, sans-serif;
+  color: var(--tk-ink);
+  font-family: var(--tk-ui);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+:where(.tk) *, :where(.tk) *::before, :where(.tk) *::after { box-sizing: border-box; }
+:where(.tk) :where(p, h1, h2, h3, ul, ol) { margin: 0; padding: 0; }
+:where(.tk) :where(ul, ol) { list-style: none; }
+:where(.tk) :where(a) { color: inherit; text-decoration: none; }
+:where(.tk) :where(button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+/* the theme styles h1–h3 in its serif: every talks heading is DM Sans unless it is a display (Caveat) one */
+.tk :is(h1, h2, h3) { font-family: var(--tk-ui); letter-spacing: normal; text-transform: none; }
+.tk :is(.tk-title, .tk-sheet__h, .tk-empty__h, .tk-box-card h2) { font-family: var(--tk-display); }
+
+/* ---------- page frame ---------- */
+.tk-page { padding: 18px 16px 40px; }
+.tk-side, .tk-aside { display: none; }
+
+/* ---------- hub header ---------- */
+.tk-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 10px; margin-bottom: 14px; }
+.tk-title { font-family: var(--tk-display); font-weight: 700; font-size: 40px; line-height: 1; letter-spacing: -0.01em; }
+.tk-tag { color: var(--tk-muted); font-size: 15px; }
+
+/* ---------- one-tap composer bar ---------- */
+.tk-bar {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px 8px 8px 10px;
+  border: 1px solid var(--tk-line); border-radius: 999px; background: var(--tk-card);
+  box-shadow: 0 6px 18px -12px rgb(60 30 10 / 0.35); text-align: left;
+}
+.tk-bar__text { flex: 1; color: var(--tk-muted); font-size: 16px; }
+.tk-bar__go {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--tk-accent); color: #fff;
+}
+.tk-bar__go svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.tk-bar--closed { box-shadow: none; background: transparent; border-style: dashed; cursor: default; }
+.tk-bar--closed .tk-bar__go { background: var(--tk-chip); color: var(--tk-chip-ink); }
+
+/* ---------- topic chips ---------- */
+.tk-chips { display: flex; gap: 8px; margin: 14px -16px 0; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+.tk-chip {
+  display: inline-flex; align-items: center; flex: none; min-height: 44px; padding: 0 16px; border-radius: 999px;
+  background: var(--tk-chip); color: var(--tk-chip-ink); font-size: 14px; font-weight: 600; white-space: nowrap;
+}
+.tk-chip[aria-current] { background: var(--tk-chip-ink); color: #fff; }
+
+/* ---------- feed ---------- */
+.tk-feedhead { display: flex; justify-content: space-between; align-items: center; margin: 18px 2px 8px; color: var(--tk-muted); font-size: 13px; font-weight: 500; }
+.tk-feed { display: grid; gap: 10px; }
+
+.tk-card {
+  display: grid; gap: 6px; padding: 14px 16px 12px; border: 1px solid var(--tk-line); border-radius: var(--tk-r);
+  background: var(--tk-card);
+}
+.tk-card:hover .tk-card__title { text-decoration: underline; text-underline-offset: 3px; }
+.tk-meta { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--tk-muted); font-size: 13px; }
+.tk-meta__who { color: var(--tk-ink); font-weight: 600; }
+.tk-meta__topic { margin-left: auto; padding: 3px 10px; border-radius: 999px; background: var(--tk-chip); color: var(--tk-chip-ink); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.tk-card__title { font-size: 17px; font-weight: 700; line-height: 1.3; letter-spacing: -0.005em; }
+.tk-card__body { color: var(--tk-muted); font-size: 15px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tk-card__foot { display: flex; align-items: center; gap: 6px; margin-top: 2px; color: var(--tk-muted); font-size: 13px; font-weight: 500; }
+.tk-card__foot svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+
+/* avatars: the set nail on blush (st-talk-avatar), HD sheet geometry */
+.tk .st-tavatar { --st-tavatar-size: 32px; }
+.tk-av-36 .st-tavatar { --st-tavatar-size: 36px; }
+.tk-av-44 .st-tavatar { --st-tavatar-size: 44px; }
+.tk .st-tavatar__nail { transform: translateY(42.5%) scale(1.058) translateY(-42.5%); }
+
+/* ---------- empty state ---------- */
+.tk-empty { display: grid; justify-items: center; gap: 6px; padding: 36px 20px 30px; border: 1px dashed var(--tk-line); border-radius: var(--tk-r); text-align: center; }
+.tk-empty__h { font-family: var(--tk-display); font-weight: 600; font-size: 30px; line-height: 1.1; }
+.tk-empty__p { color: var(--tk-muted); font-size: 15px; }
+.tk-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; background: var(--tk-accent); color: #fff; font-size: 15px; font-weight: 600; }
+.tk-empty .tk-btn { margin-top: 10px; }
+
+/* ---------- house rules (collapsed) + sign-off ---------- */
+.tk-rules { margin-top: 18px; border-top: 1px solid var(--tk-line); }
+.tk-rules summary { display: flex; justify-content: space-between; align-items: center; min-height: 52px; color: var(--tk-ink); font-size: 14px; font-weight: 600; cursor: pointer; list-style: none; }
+.tk-rules summary::-webkit-details-marker { display: none; }
+.tk-rules summary span { color: var(--tk-muted); font-weight: 400; }
+.tk-sign { margin-top: 22px; color: var(--tk-muted); font-family: var(--tk-display); font-weight: 500; font-size: 24px; text-align: center; rotate: -2deg; }
+
+/* ---------- thread ---------- */
+.tk-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--tk-muted); font-size: 14px; font-weight: 500; }
+.tk-op { display: grid; gap: 10px; padding: 16px; border: 1px solid var(--tk-line); border-radius: var(--tk-r); background: var(--tk-card); }
+.tk-op .tk-meta { font-size: 14px; }
+.tk-op__title { font-size: 22px; font-weight: 800; line-height: 1.25; letter-spacing: -0.01em; }
+.tk-op__body { color: #3a3346; font-size: 17px; line-height: 1.5; }
+.tk-op__foot { display: flex; justify-content: space-between; align-items: center; color: var(--tk-muted); font-size: 13px; font-weight: 500; }
+.tk-op__foot .tk-act { margin-right: -10px; }
+
+.tk-replies { margin-top: 18px; }
+.tk-replies__h { margin: 0 2px 6px; color: var(--tk-muted); font-size: 13px; font-weight: 500; }
+.tk-reply { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0 10px; padding: 10px 0 2px; }
+.tk-reply__av { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--c, #fcb939); color: #1a1a2e; font-size: 13px; font-weight: 700; }
+.tk-reply__av--light { color: #fff; }
+.tk-reply__meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; color: var(--tk-muted); font-size: 13px; line-height: 28px; }
+.tk-reply__meta b { color: var(--tk-ink); font-weight: 600; }
+.tk-reply__body { grid-column: 2; font-size: 16px; line-height: 1.5; }
+.tk-reply__acts { grid-column: 2; display: flex; gap: 4px; margin-left: -10px; }
+.tk-act { display: inline-flex; align-items: center; min-height: 40px; padding: 0 10px; color: var(--tk-muted); font-size: 13px; font-weight: 600; }
+/* one nested level: indent under the parent, a soft connector from the parent's avatar */
+.tk-reply--nested { margin-left: 38px; }
+.tk-reply--nested::before { content: ""; position: absolute; left: -24px; top: -6px; width: 14px; height: 30px; border-left: 2px solid var(--tk-thread); border-bottom: 2px solid var(--tk-thread); border-bottom-left-radius: 10px; }
+.tk-reply__to { color: var(--tk-muted); font-size: 12px; }
+
+.tk-own { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 14px 16px; border-radius: var(--tk-r); background: var(--tk-chip); }
+.tk-own p { font-family: var(--tk-display); font-weight: 600; font-size: 24px; line-height: 1; }
+.tk-own a { display: inline-flex; align-items: center; min-height: 44px; color: var(--tk-chip-ink); font-size: 14px; font-weight: 700; }
+
+/* sticky reply bar (phone); the thread page leaves room for it */
+.tk-page--thread { padding-bottom: 120px; }
+.tk-replybar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; display: grid; gap: 4px; padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--tk-line); background: rgb(255 253 246 / 0.96); backdrop-filter: blur(6px);
+}
+.tk-replybar__row { display: flex; align-items: center; gap: 10px; }
+.tk-replybar__field { flex: 1; display: flex; align-items: center; min-height: 46px; padding: 0 6px 0 16px; border: 1px solid var(--tk-line); border-radius: 999px; background: #fff; color: var(--tk-muted); font-size: 15px; }
+.tk-replybar__field > span:first-child { flex: 1; }
+.tk-replybar .tk-bar__go { width: 36px; height: 36px; }
+.tk-replybar__who { padding-left: 56px; color: var(--tk-muted); font-size: 12px; }
+.tk-replybar__who b { color: var(--tk-ink); font-weight: 600; }
+
+/* ---------- composer sheet ---------- */
+.tk-scrim { position: fixed; inset: 0; z-index: 20; background: rgb(26 26 46 / 0.38); }
+.tk-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 21; display: grid; gap: 14px; max-height: 92vh; overflow: auto;
+  padding: 10px 16px calc(18px + env(safe-area-inset-bottom)); border-radius: 22px 22px 0 0; background: #fffdf6;
+  box-shadow: 0 -10px 30px -12px rgb(26 26 46 / 0.35);
+}
+.tk-sheet__grab { justify-self: center; width: 40px; height: 4px; border-radius: 4px; background: #e2d6cf; }
+.tk-sheet__top { display: flex; justify-content: space-between; align-items: center; }
+.tk-sheet__h { font-family: var(--tk-display); font-weight: 700; font-size: 34px; line-height: 1; }
+.tk-x { display: grid; place-items: center; width: 44px; height: 44px; margin-right: -10px; color: var(--tk-muted); }
+.tk-x svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.tk-step { color: var(--tk-ink); font-size: 13px; font-weight: 700; }
+.tk-picks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.tk-picks .tk-chip { min-height: 40px; padding: 0 14px; }
+.tk-box { display: grid; gap: 8px; }
+.tk-text {
+  min-height: 132px; padding: 14px 16px; border: 1px solid #e6d9d2; border-radius: 14px; background: #fff;
+  color: var(--tk-ink); font-size: 16px; line-height: 1.5;
+}
+.tk-text--typed b { font-weight: 700; }
+.tk-text__ph { color: var(--tk-muted); }
+.tk-starters { display: flex; flex-wrap: wrap; gap: 8px; }
+.tk-starter { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border: 1px dashed #d9c3c8; border-radius: 999px; color: var(--tk-chip-ink); font-size: 13px; font-weight: 500; }
+.tk-count { justify-self: end; color: var(--tk-muted); font-size: 12px; }
+.tk-as { display: flex; align-items: center; justify-content: space-between; color: var(--tk-muted); font-size: 14px; }
+.tk-as b { color: var(--tk-ink); font-weight: 600; }
+.tk-as button { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 2px 0 10px; color: var(--tk-chip-ink); font-weight: 600; }
+.tk-sheet .tk-btn { width: 100%; min-height: 52px; font-size: 16px; }
+.tk-fine { color: var(--tk-muted); font-size: 12px; text-align: center; }
+.tk-fine a { color: var(--tk-chip-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---------- desktop: Reddit-like three columns in the shared page frame ---------- */
+@media screen and (min-width: 1024px) {
+  .tk-page {
+    display: grid; grid-template-columns: 220px minmax(0, 1fr) 300px; gap: 0 clamp(28px, 3vw, 48px); align-items: start;
+    width: min(1240px, 100% - 2 * clamp(32px, 4vw, 64px)); margin: 0 auto; padding: 28px 0 56px;
+  }
+  .tk-side, .tk-aside { display: grid; gap: 14px; position: sticky; top: calc(var(--st-header-h, 76px) + 24px); }
+  .tk-main { max-width: 680px; }
+  .tk-main > .tk-head, .tk-main > .tk-chips { display: none; }
+  .tk-side .tk-title { font-size: 52px; }
+  .tk-side .tk-tag { display: block; margin-top: 4px; font-size: 16px; }
+  .tk-nav { display: grid; gap: 2px; margin-top: 8px; }
+  .tk-nav a { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 14px; border-radius: 12px; color: var(--tk-ink); font-size: 15px; font-weight: 500; }
+  .tk-nav a span { color: var(--tk-muted); font-size: 13px; }
+  .tk-nav a[aria-current] { background: var(--tk-chip); color: var(--tk-chip-ink); font-weight: 700; }
+  .tk-nav a[aria-current] span { color: var(--tk-chip-ink); }
+  .tk-box-card { padding: 16px 18px; border: 1px solid var(--tk-line); border-radius: var(--tk-r); background: var(--tk-card); }
+  .tk-box-card h2 { font-family: var(--tk-display); font-weight: 700; font-size: 28px; line-height: 1; margin-bottom: 10px; }
+  .tk-how { display: grid; gap: 10px; font-size: 14px; color: var(--tk-ink); }
+  .tk-how li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; }
+  .tk-how li::before { content: "♡"; color: var(--tk-accent); }
+  .tk-aside .tk-fine { text-align: left; }
+  .tk-card { padding: 16px 20px 14px; }
+  .tk-card__title { font-size: 19px; }
+  .tk-card__body { font-size: 16px; -webkit-line-clamp: 1; }
+  .tk-op { padding: 22px 24px; }
+  .tk-op__title { font-size: 28px; }
+  .tk-op__body { font-size: 18px; max-width: 64ch; }
+  .tk-reply__body { font-size: 17px; max-width: 64ch; }
+  .tk-page--thread { padding-bottom: 56px; }
+  .tk-replybar { position: static; margin-top: 16px; padding: 12px 14px; border: 1px solid var(--tk-line); border-radius: var(--tk-r); background: var(--tk-card); backdrop-filter: none; }
+  .tk-sheet { left: 50%; right: auto; bottom: auto; top: 50%; width: 560px; translate: -50% -50%; border-radius: 22px; padding: 22px 26px 22px; }
+  .tk-sheet__grab { display: none; }
+}

@@ -1,0 +1,516 @@
+{% comment %}
+  Section contract.
+  Our Story, board 4 frame 5 (spec/our-story.md). Centred H1 (PG-001, one sentence per line), the page body's first
+  paragraph as the sub (PG-002), a stack of three approved package boxes (campaign handles in `stack`; box alt = the
+  product media's own alt, SEO-033…039), two value columns with drawn icons (PG-006…009), a character eye crop bleeding
+  in from the left with the handwritten line (PG-010), and two pill buttons (PG-011 "Shop all sets →", PG-012 "Read
+  the Journal"). The rest of the page body (PG-003…005) is not on the board; `show_body` renders it below the columns.
+  @example
+  <!-- templates/page.desi.json (the Our Story page) -->
+{% endcomment %}
+
+{%- liquid
+  assign body_parts = page.content | split: '</p>'
+  assign intro = body_parts.first | strip_html | strip
+  assign rest = body_parts | slice: 1, 99 | join: '</p>' | strip
+  assign stack = section.settings.stack | remove: ' ' | split: ','
+  assign eye_key = section.settings.eye_campaign | default: 'on-me'
+  # Eye crop (snippets/st-peek-map, generated): the HD character's eye near (48, 42) in the 190 x 80 crop, as on the
+  # board (one eye, the rest cut off). An unknown handle falls back to On Me.
+  capture eye
+    render 'st-peek-map', key: eye_key, part: 'story'
+  endcapture
+  assign eye = eye | strip | split: ','
+  if eye.size != 6
+    capture eye
+      render 'st-peek-map', key: 'on-me', part: 'story'
+    endcapture
+    assign eye = eye | strip | split: ','
+  endif
+-%}
+
+<section class="st-ours" aria-labelledby="StOurs-{{ section.id }}">
+  <header class="st-ours__header">
+    <h1 class="st-ours__title" id="StOurs-{{ section.id }}">{% render 'st-sentences', text: section.settings.heading %}</h1>
+    {%- if intro != blank -%}
+      <p class="st-ours__sub">{{ intro | escape }}</p>
+    {%- endif -%}
+  </header>
+
+  {%- if stack.size > 0 -%}
+    <ul class="st-ours__stack" role="list">
+      {%- for handle in stack -%}
+        {%- liquid
+          assign c = shop.metaobjects.small_talk_campaign[handle]
+          assign product = c.product.value
+          capture pack_raw
+            render 'st-motion-map', key: handle, field: 'package'
+          endcapture
+          assign pack = pack_raw | strip | split: ','
+        -%}
+        {%- if pack.size == 4 -%}
+          {%- capture ps -%}{% render 'st-pack-src', key: handle %}{%- endcapture -%}
+          {%- assign ps = ps | strip | split: '|' -%}
+          <li class="st-ours__box" style="z-index: {{ forloop.rindex }}">
+            <img
+              src="{{ ps[0] }}"
+              srcset="{{ ps[1] }}"
+              sizes="180px"
+              width="{{ ps[2] }}"
+              height="{{ ps[3] }}"
+              alt="{{ product.featured_media.alt | escape }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              decoding="async"
+            >
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  <div class="st-ours__values">
+    <div class="st-ours__value">
+      <svg class="st-ours__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <path d="M14 3c1 5 3 7 8 8-5 1-7 3-8 8-1-5-3-7-8-8 5-1 7-3 8-8Z"/><path d="M23 18c.4 2 1.2 2.8 3 3.2-1.8.4-2.6 1.2-3 3.2-.4-2-1.2-2.8-3-3.2 1.8-.4 2.6-1.2 3-3.2Z"/><path d="M5 2.5c.3 1.4.9 2 2.2 2.3-1.3.3-1.9.9-2.2 2.3-.3-1.4-.9-2-2.2-2.3 1.3-.3 1.9-.9 2.2-2.3Z"/>
+      </svg>
+      <h2 class="st-ours__value-heading">{{ section.settings.block1_heading | escape }}</h2>
+      <p class="st-ours__value-text">{{ section.settings.block1_text | escape }}</p>
+    </div>
+    <div class="st-ours__value">
+      <svg class="st-ours__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <path d="M14 24S3.5 17.3 3.5 10.2A5.4 5.4 0 0 1 14 7.6a5.4 5.4 0 0 1 10.5 2.6C24.5 17.3 14 24 14 24Z"/>
+      </svg>
+      <h2 class="st-ours__value-heading">{% render 'st-sentences', text: section.settings.block2_heading %}</h2>
+      <p class="st-ours__value-text">{{ section.settings.block2_text | escape }}</p>
+    </div>
+  </div>
+
+  {%- if section.settings.show_body and rest != blank -%}
+    <div class="st-ours__body st-rte">{{ rest }}</div>
+  {%- endif -%}
+
+  <div class="st-ours__moment">
+    <span class="st-ours__eye" aria-hidden="true">
+      <img
+        src="{{ eye[0] | asset_url }}"
+        alt=""
+        width="{{ eye[1] }}"
+        height="{{ eye[2] }}"
+        style="left: {{ eye[3] }}px; top: {{ eye[4] }}px; width: {{ eye[5] }}px"
+        loading="lazy"
+        decoding="async"
+      >
+    </span>
+    {%- if section.settings.handwriting != blank -%}
+      <p class="st-ours__hand">
+        <svg class="st-ours__slash" viewBox="0 0 14 44" aria-hidden="true" focusable="false"><path d="M12 2 2 42"/></svg>
+        {% render 'st-sentences', text: section.settings.handwriting %}<svg class="st-ours__heart" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21S3 15.2 3 9a4.6 4.6 0 0 1 9-2.2A4.6 4.6 0 0 1 21 9c0 6.2-9 12-9 12Z"/></svg>
+      </p>
+    {%- endif -%}
+  </div>
+
+  <div class="st-ours__ctas">
+    {%- if section.settings.cta1_label != blank and section.settings.cta1_url != blank -%}
+      <a class="st-ours__cta st-ours__cta--fill" href="{{ section.settings.cta1_url }}">{{ section.settings.cta1_label | escape }} <span class="st-arrow" aria-hidden="true">→</span></a>
+    {%- endif -%}
+    {%- if section.settings.cta2_label != blank and section.settings.cta2_url != blank -%}
+      <a class="st-ours__cta st-ours__cta--line" href="{{ section.settings.cta2_url }}">{{ section.settings.cta2_label | escape }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  /* Board 4 frame 5 at 390 (spec/our-story.md). */
+  .st-ours {
+    display: grid;
+    max-width: 44rem;
+    margin-inline: auto;
+    padding: 22px 22px var(--st-section-space);
+    overflow: hidden;
+    font-family: var(--font-ui);
+  }
+
+  .st-ours__header {
+    display: grid;
+    gap: 14px;
+    text-align: center;
+  }
+
+  .st-ours__title {
+    margin: 0;
+    color: var(--st-burgundy);
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: clamp(52px, 17.4vw, 68px); /* board ink "Small talk." x 53–348 at 390 (spec said 58); ≈56 at 320 keeps "Small talk." on one line */
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+  }
+
+  .st-ours__title .st-sent {
+    display: block;
+  }
+
+  .st-ours__sub {
+    margin: 0 auto;
+    max-width: 300px;
+    color: #373f8b;
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  /* Three boxes stacked, each tucked ~8 px under the one above, soft shadow. */
+  .st-ours__stack {
+    display: grid;
+    justify-items: center;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-ours__box {
+    position: relative;
+  }
+
+  .st-ours__box + .st-ours__box {
+    margin-block-start: -8px;
+  }
+
+  .st-ours__box img {
+    display: block;
+    width: auto;
+    height: 240px;
+    max-width: none;
+    filter: drop-shadow(0 10px 14px rgb(31 26 46 / 0.22));
+  }
+
+  .st-ours__values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-block-start: 16px;
+  }
+
+  .st-ours__value {
+    display: grid;
+    align-content: start;
+    gap: 2px;
+  }
+
+  .st-ours__icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .st-ours__icon path {
+    fill: none;
+    stroke: #d0204a;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .st-ours__value-heading {
+    margin: 0;
+    color: #d0204a;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.15;
+  }
+
+  .st-ours__value-text {
+    margin: 4px 0 0;
+    color: var(--st-muted-text, #6a6d85);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .st-ours__body {
+    margin-block-start: 18px;
+    color: #373f8b;
+  }
+
+  /* Eye crop x 0–190 bleeding left, the handwritten line to its right. */
+  .st-ours__moment {
+    position: relative;
+    display: grid;
+    grid-template-columns: 168px 1fr;
+    align-items: center;
+    min-height: 80px;
+    margin: 10px -22px 0;
+  }
+
+  .st-ours__eye {
+    position: relative;
+    display: block;
+    width: 190px;
+    height: 80px;
+    overflow: hidden;
+    clip-path: polygon(0 0, 62% 0, 100% 60%, 100% 100%, 0 100%); /* board: the crop's top-right edge is cut at a slant */
+  }
+
+  .st-ours__eye img {
+    position: absolute;
+    max-width: none;
+    height: auto;
+  }
+
+  .st-ours__hand {
+    position: relative;
+    justify-self: start;
+    width: fit-content; /* box = the words + heart, so the rotated box stays inside the page */
+    margin: 0;
+    padding-inline-start: 18px;
+    color: #2b39c4;
+    font-family: var(--font-annotation);
+    font-weight: var(--fw-annotation, 300);
+    font-size: 24px;
+    line-height: 1.1;
+    rotate: -10deg;
+  }
+
+  .st-ours__hand .st-sent {
+    display: block;
+    width: fit-content;
+  }
+
+  .st-ours__hand .st-sent:last-of-type {
+    display: inline-block;
+  }
+
+  .st-ours__hand .st-sent + .st-sent {
+    padding-inline-start: 22px;
+  }
+
+  .st-ours__slash {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 2px;
+    width: 12px;
+    height: 40px;
+  }
+
+  .st-ours__heart {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    margin-inline-start: 8px;
+    vertical-align: -2px;
+  }
+
+  .st-ours__slash path,
+  .st-ours__heart path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-ours__ctas {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    gap: 12px;
+    margin-block-start: 14px;
+  }
+
+  .st-ours__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35em;
+    min-height: 44px;
+    padding: 0 1rem;
+    border-radius: var(--st-radius-pill, 999px);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .st-ours__cta--fill {
+    background: #a80f2a;
+    color: #fff;
+  }
+
+  .st-ours__cta--line {
+    border: 1.5px solid #d0204a;
+    color: #d0204a;
+  }
+
+  /* Narrow phones: a smaller handwritten line starting further left, so the rotated note stays inside the page. */
+  @media screen and (max-width: 359px) {
+    .st-ours__moment {
+      grid-template-columns: 140px 1fr;
+    }
+
+    .st-ours__eye {
+      width: 150px;
+    }
+
+    .st-ours__hand {
+      padding-inline-start: 14px;
+      font-size: 18px;
+    }
+
+    .st-ours__hand .st-sent + .st-sent {
+      padding-inline-start: 16px;
+    }
+
+    .st-ours__heart {
+      width: 18px;
+      height: 18px;
+    }
+
+    .st-ours__ctas {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* BEGIN store desktop (st-fable, qa/desktop/STORE-DESKTOP-SPEC.md v1 section 2) */
+  /* >= 1024: hero 6fr | 6fr: title, intro and the two CTAs left; the three boxes right as a fan (v1.2), height-driven,
+     each box over the one to its left so every title (on a box's left side) stays visible. Below, in the page frame: the two values side by side; the eye crop keeps its cut on
+     the screen's left edge, the handwritten line beside it, and the rest of the story text. */
+  @media screen and (min-width: 1024px) {
+    .st-ours {
+      --ours-box: min(clamp(200px, 19vw, 290px), (100svh - var(--st-header-h, 76px)) * 0.62);
+
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      column-gap: clamp(32px, 4vw, 72px);
+      align-items: center;
+      max-width: none;
+      padding: 40px max(clamp(32px, 4vw, 64px), (100% - 1240px) / 2) var(--st-section-space);
+    }
+
+    .st-ours__header {
+      grid-column: 1;
+      grid-row: 1;
+      align-self: end;
+      text-align: start;
+    }
+
+    .st-ours__title {
+      font-size: 78px;
+    }
+
+    .st-ours__sub {
+      max-width: 440px;
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .st-ours__ctas {
+      grid-column: 1;
+      grid-row: 2;
+      align-self: start;
+      justify-content: start;
+      margin-block-start: 28px;
+    }
+
+    .st-ours__cta {
+      min-height: 52px;
+      padding-inline: 1.5rem;
+      font-size: 18px;
+    }
+
+    .st-ours__stack {
+      display: flex;
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      justify-content: center;
+      align-items: flex-end;
+      margin: 0;
+      padding-block: 24px;
+    }
+
+    .st-ours__box + .st-ours__box {
+      margin-block-start: 0;
+      margin-inline-start: calc(var(--ours-box) * -0.135);
+    }
+
+    .st-ours__box:nth-child(1) {
+      z-index: 1 !important; /* over the inline stacking order of the phone column */
+      rotate: -7deg;
+      translate: 0 14px;
+    }
+
+    .st-ours__box:nth-child(2) {
+      z-index: 2 !important;
+    }
+
+    .st-ours__box:nth-child(3) {
+      z-index: 3 !important;
+      rotate: 7deg;
+      translate: 0 14px;
+    }
+
+    .st-ours__box img {
+      height: var(--ours-box);
+    }
+
+    .st-ours__values {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      gap: clamp(32px, 4vw, 72px);
+      margin-block-start: 64px;
+    }
+
+    .st-ours__value-heading {
+      font-size: 19px;
+    }
+
+    .st-ours__value-text {
+      max-width: 60ch;
+      font-size: 16px;
+    }
+
+    .st-ours__moment {
+      grid-column: 1;
+      grid-row: 4;
+      margin: 40px 0 0 calc(-1 * max(clamp(32px, 4vw, 64px), (100vw - 1240px) / 2));
+    }
+
+    .st-ours__body {
+      grid-column: 2;
+      grid-row: 4;
+      max-width: 68ch;
+      margin-block-start: 40px;
+      font-size: 18px;
+    }
+  }
+  /* END store desktop */
+
+  /* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+  @media screen and (min-width: 1680px) {
+    .st-ours {
+      padding-inline: max(clamp(32px, 4vw, 64px), (100% - 1440px) / 2);
+    }
+
+    .st-ours__moment {
+      margin-inline-start: calc(-1 * max(clamp(32px, 4vw, 64px), (100vw - 1440px) / 2));
+    }
+  }
+  /* END wide frame */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk our story",
+  "class": "st-our-story-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading (PG-001)" },
+    { "type": "text", "id": "stack", "label": "Package stack (campaign handles)", "default": "on-me,brainwave,pinky-promise" },
+    { "type": "text", "id": "block1_heading", "label": "Block 1 heading (PG-006)" },
+    { "type": "text", "id": "block1_text", "label": "Block 1 text (PG-007)" },
+    { "type": "text", "id": "block2_heading", "label": "Block 2 heading (PG-008)" },
+    { "type": "text", "id": "block2_text", "label": "Block 2 text (PG-009)" },
+    { "type": "checkbox", "id": "show_body", "label": "Show the rest of the page body (PG-003…005)", "default": false, "info": "Not on the board; off by default." },
+    { "type": "text", "id": "eye_campaign", "label": "Eye crop character (campaign handle)", "default": "on-me" },
+    { "type": "text", "id": "handwriting", "label": "Handwritten line (PG-010)" },
+    { "type": "text", "id": "cta1_label", "label": "Button 1 label (PG-011)" },
+    { "type": "url", "id": "cta1_url", "label": "Button 1 link" },
+    { "type": "text", "id": "cta2_label", "label": "Button 2 label (PG-012)" },
+    { "type": "url", "id": "cta2_url", "label": "Button 2 link" }
+  ]
+}
+{% endschema %}

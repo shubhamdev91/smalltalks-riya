@@ -1,0 +1,59 @@
+{% doc %}
+  "Help topics" (PG-036) for the Help page: child st-help-topic blocks, each a disclosure with its own anchor id
+  (delivery, returns, orders…). The heading renders only when at least one topic is visible. Opening the page at
+  #delivery (PDP-008, bag, SEO-057/069) or another topic anchor opens that topic.
+{% enddoc %}
+
+{%- capture topics -%}{% content_for 'blocks' %}{%- endcapture -%}
+
+{%- if topics contains 'st-topic__item' or request.design_mode -%}
+  <div class="st-topics" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank and topics contains 'st-topic__item' -%}
+      <h2 class="st-topics__heading">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+    <div class="st-topics__list">{{ topics }}</div>
+  </div>
+  <script>
+    (() => {
+      const open = () => {
+        const id = decodeURIComponent(location.hash.slice(1));
+        const target = id && document.getElementById(id);
+        if (target instanceof HTMLDetailsElement) target.open = true;
+      };
+      open();
+      addEventListener('hashchange', open);
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* "Browse help topics" x 25–228, y 380–405: DM Sans 700, #111 (spec 21 px; the board ink, 199 px wide, is 22 px);
+     the list starts at y 425. */
+  .st-topics {
+    margin-block-start: 52px;
+  }
+
+  .st-topics__heading {
+    margin: 0;
+    color: #111;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .st-topics__list {
+    margin-block-start: 22px;
+    border-block-start: 1px solid #efeff2;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk help topics",
+  "settings": [{ "type": "text", "id": "heading", "label": "Heading" }],
+  "blocks": [{ "type": "st-help-topic" }],
+  "presets": [{ "name": "Small Talk help topics" }]
+}
+{% endschema %}

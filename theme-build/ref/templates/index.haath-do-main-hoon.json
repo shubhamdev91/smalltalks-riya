@@ -1,0 +1,177 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "st-seven-product",
+      "settings": {
+        "heading": "Haath do. Main hoon.",
+        "emotion": "Reassurance",
+        "line": "For the friend who reaches back.",
+        "intro": "Lilac and blush almond press-ons with deep pink-red asymmetric tips. Inspired by the friend who reaches back before you need to ask twice.",
+        "story": "Some friends don't make a speech. They move closer, hold out a hand and say, Main hoon. This set carries that familiar gesture in lilac, blush and deep pink-red tips. A small reminder of the people who make a crowded room feel easier, simply by being beside you.",
+        "design": "Lilac and blush almond press-ons with deep pink-red asymmetric tips.",
+        "handle": "haath-do-main-hoon",
+        "product": "haath-do-main-hoon",
+        "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/haath-do-main-hoon-approved-package.png?v=1791012932",
+        "sprite": 0,
+        "background": "#334fe9",
+        "shade": "#10134d",
+        "ink": "#ffffff",
+        "finger_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/small-talk-seven-finger-states.png?v=1791011150"
+      }
+    },
+    "collection": {
+      "type": "st-seven-collection",
+      "settings": {},
+      "blocks": {
+        "campaign_6": {
+          "type": "campaign",
+          "settings": {
+            "heading": "Haath do. Main hoon.",
+            "emotion": "Reassurance",
+            "line": "For the friend who reaches back.",
+            "intro": "Lilac and blush almond press-ons with deep pink-red asymmetric tips. Inspired by the friend who reaches back before you need to ask twice.",
+            "story": "Some friends don't make a speech. They move closer, hold out a hand and say, Main hoon. This set carries that familiar gesture in lilac, blush and deep pink-red tips. A small reminder of the people who make a crowded room feel easier, simply by being beside you.",
+            "design": "Lilac and blush almond press-ons with deep pink-red asymmetric tips.",
+            "handle": "haath-do-main-hoon",
+            "product": "haath-do-main-hoon",
+            "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/haath-do-main-hoon-approved-package.png?v=1791012932",
+            "sprite": 0,
+            "background": "#334fe9",
+            "shade": "#10134d",
+            "ink": "#ffffff"
+          }
+        },
+        "campaign_0": {
+          "type": "campaign",
+          "settings": {
+            "heading": "Bill idhar.",
+            "emotion": "Quiet confidence",
+            "line": "For the moment you reach for the bill.",
+            "intro": "Burgundy, tortoiseshell and gold-toned accents in an almond press-on set. For the small, certain gesture that says: this one's on me.",
+            "story": "The conversation carries on. You catch the server's eye and reach for the bill. No announcement needed. Bill idhar is that easy confidence in colour: rich burgundy, warm tortoiseshell and a flash of gold. A little gesture, entirely your own.",
+            "design": "Burgundy, tortoiseshell and gold-toned accents in an almond press-on set.",
+            "handle": "bill-idhar",
+            "product": "bill-idhar",
+            "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/bill-idhar-approved-package.png?v=1791011866",
+            "sprite": 1,
+            "background": "#ffd531",
+            "shade": "#9b4214",
+            "ink": "#341d0c"
+          }
+        },
+        "campaign_1": {
+          "type": "campaign",
+          "settings": {
+            "heading": "Haan, mera idea tha.",
+            "emotion": "Originality",
+            "line": "For the idea you put your name to.",
+            "intro": "Cobalt blue, pearly white and silver-toned accents in an almond press-on set. For the thought you chased, made real and proudly called yours.",
+            "story": "It started as a thought you couldn't leave alone. You sketched it, tried it and made it happen. Haan, mera idea tha is the moment you own it. Cobalt, pearly white and silver-toned accents echo the inventive spirit of the illustrated package. Give yourself the credit.",
+            "design": "Cobalt blue, pearly white and silver-toned accents in an almond press-on set.",
+            "handle": "haan-mera-idea-tha",
+            "product": "haan-mera-idea-tha",
+            "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/haan-mera-idea-tha-approved-package.png?v=1791011888",
+            "sprite": 2,
+            "background": "#164dff",
+            "shade": "#06166d",
+            "ink": "#ffffff"
+          }
+        },
+        "campaign_2": {
+          "type": "campaign",
+          "settings": {
+            "heading": "Tum aa jao. Main dekh lungi.",
+            "emotion": "Steady care",
+            "line": "For the friend who makes room and sorts the rest.",
+            "intro": "Deep green and blush almond press-ons with green-tipped accents. A colour story for the friend whose first answer is always: come over.",
+            "story": "The phone rings. Someone needs a plan, a place to land or just a familiar face. Tum aa jao. Main dekh lungi. A few words that make everything feel easier. Deep green and blush bring that steady, practical warmth to a set made around showing up for your people.",
+            "design": "Deep green and blush almond press-ons with green-tipped accents.",
+            "handle": "tum-aa-jao-main-dekh-lungi",
+            "product": "tum-aa-jao-main-dekh-lungi",
+            "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/tum-aa-jao-main-dekh-lungi-approved-package.png?v=1791012011",
+            "sprite": 3,
+            "background": "#06805a",
+            "shade": "#012f2c",
+            "ink": "#ffffff"
+          }
+        },
+        "campaign_3": {
+          "type": "campaign",
+          "settings": {
+            "heading": "Dulhan tu. Duty meri.",
+            "emotion": "Celebration and care",
+            "line": "For every little thing you handle on her big day.",
+            "intro": "Pink and red almond press-ons with yellow floral accents. For the friend holding the chai, fixing the details and keeping the bride laughing.",
+            "story": "A cup of chai, one last adjustment, a shared look before the music starts. You're there for all of it. Dulhan tu. Duty meri. turns those little acts of wedding-day friendship into pink, red and yellow floral details. Her big day has a whole story of your friendship inside it.",
+            "design": "Pink and red almond press-ons with yellow floral accents.",
+            "handle": "dulhan-tu-duty-meri",
+            "product": "dulhan-tu-duty-meri",
+            "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/dulhan-tu-duty-meri-approved-package.png?v=1791012074",
+            "sprite": 4,
+            "background": "#ff447e",
+            "shade": "#a7093a",
+            "ink": "#ffffff"
+          }
+        },
+        "campaign_4": {
+          "type": "campaign",
+          "settings": {
+            "heading": "Haan, wohi wali.",
+            "emotion": "Self-assurance",
+            "line": "For the favourites that need no explanation.",
+            "intro": "Glossy red, blush and silver-toned almond press-ons, with red-tipped accents. A set for knowing what you like and coming back to it.",
+            "story": "Your usual order. Your favourite corner. The colour you reach for again. Haan, wohi wali. is the comfort of knowing your own taste. Red, blush and silver-toned accents make a familiar choice feel unmistakably yours. Some favourites don't need reinventing.",
+            "design": "Glossy red, blush and silver-toned almond press-ons, with red-tipped accents.",
+            "handle": "haan-wohi-wali",
+            "product": "haan-wohi-wali",
+            "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/haan-wohi-wali-approved-package.png?v=1791012088",
+            "sprite": 5,
+            "background": "#ef291f",
+            "shade": "#800b24",
+            "ink": "#ffffff"
+          }
+        },
+        "campaign_5": {
+          "type": "campaign",
+          "settings": {
+            "heading": "Achha. Tum pehle.",
+            "emotion": "Playful composure",
+            "line": "For the smile that gives nothing away.",
+            "intro": "Chartreuse, blush and cobalt-and-white checks in an almond press-on set. A playful mix for the calm smile before your next move.",
+            "story": "Cards on the table. A glance across it. You let them go first, still smiling. Achha. Tum pehle. brings that playful composure to chartreuse, blush and cobalt-and-white checks. Bright colour, a little mischief and absolutely no need to show your whole hand.",
+            "design": "Chartreuse, blush and cobalt-and-white checks in an almond press-on set.",
+            "handle": "achha-tum-pehle",
+            "product": "achha-tum-pehle",
+            "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/achha-tum-pehle-approved-package.png?v=1791012911",
+            "sprite": 6,
+            "background": "#e1e636",
+            "shade": "#829a08",
+            "ink": "#102575"
+          }
+        }
+      },
+      "block_order": [
+        "campaign_6",
+        "campaign_0",
+        "campaign_1",
+        "campaign_2",
+        "campaign_3",
+        "campaign_4",
+        "campaign_5"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "collection"
+  ]
+}

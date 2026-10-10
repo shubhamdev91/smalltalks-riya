@@ -1,0 +1,25 @@
+<section class="di-wrap di-page{% if page.handle == 'our-story' %} di-about{% endif %}"><h1>{% if page.handle == 'our-story' %}Small talk.<br>A lot said.{% else %}{{ page.title | escape }}{% endif %}</h1>{% if page.handle == 'our-story' %}<p class="di-about-intro">Seven nail sets, inspired by the little things we say for each other.</p><div class="di-about-packages">{% assign keys = 'on-me,brainwave,pinky-promise' | split: ',' %}{% for key in keys %}{% assign item = shop.metaobjects.small_talk_campaign[key] %}<a href="{% render 'di-link',c:item %}"><img src="{{ item.package_url.value | escape }}&width=800" width="400" height="560" loading="lazy" alt="{{ item.name.value | escape }} original illustrated packaging"></a>{% endfor %}</div>{% endif %}{% if page.handle == 'nail-guide-desi' %}<img class="di-guide-page-image" src="https://cdn.shopify.com/s/files/1/0830/2339/7077/files/desi-nail-guide-v2.png?v=1791345943&amp;width=800" width="600" height="800" alt="A measuring tape across the widest part of a fingernail" loading="lazy">{% endif %}<div class="rte">{% if page.handle == 'our-story' %}{{ page.content | remove_first: '<h2>Small talk.<br>A lot said.</h2>' | remove_first: '<p>Seven nail sets, inspired by the little things we say for each other.</p>' }}{% else %}{{ page.content }}{% endif %}</div>{% for block in section.blocks %}{% if block.type == 'image' %}{% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy' }}{% endif %}{% endif %}{% endfor %}</section>
+{% schema %}
+{
+  "name": "Page",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Page"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Page image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

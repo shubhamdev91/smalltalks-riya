@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\SSTS\Desktop\Riya\theme-build\tools\payload.py", line 3, in <module>
+    files=[{"filename":f,"body":{"type":"TEXT","value":open('src/'+f,encoding='utf-8').read()}} for f in sys.argv[1:]]
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'src/sections/st-hero.liquid'

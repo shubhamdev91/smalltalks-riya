@@ -1,0 +1,336 @@
+{% comment %}
+  Section contract.
+  Small Talk shop (collection template), board 5 frame 1 (spec/shop.md): burgundy serif heading, blue handwritten
+  annotation with a drawn arrow, filter chips, a two-column grid of packaging cards, pagination. Chips are product
+  tags (MC-018/019): "All sets" plus each tag named in the settings that exists in the collection, linked as
+  Shopify tag URLs (/collections/<handle>/<tag>), which st-seo marks noindex. On page 1 the cards follow the board
+  order from `card_order` (campaign handles); sets not listed keep the collection order after them.
+  @example
+  <!-- templates/collection.json -->
+{% endcomment %}
+
+{%- liquid
+  assign heading = section.settings.heading | default: collection.title
+  # Page size is a theme setting (Small Talk › Shop) so st-seo can noindex pages past the last one.
+  assign per_page = settings.st_shop_per_page | default: 24
+  assign chip_tags = section.settings.chip_tags | split: ','
+  assign order = section.settings.card_order | remove: ' ' | split: ','
+  assign note = section.settings.note | escape
+  if note contains '. '
+    assign note = note | replace_first: '. ', '.<br><span class="st-shop__note-2">' | append: '</span>'
+  endif
+-%}
+
+<section class="st-shop" aria-labelledby="StShop-{{ section.id }}">
+  <header class="st-shop__header">
+    <h1 class="st-shop__heading" id="StShop-{{ section.id }}">{{ heading | escape }}</h1>
+    {%- if section.settings.note != blank -%}
+      <p class="st-shop__note">
+        {{- note -}}
+        <svg class="st-shop__arrow" viewBox="0 0 40 48" aria-hidden="true" focusable="false">
+          <path d="M6 3 C 18 6, 26 16, 24 30 C 23 37, 22 41, 21 45 M14 37 L21 45 L29 38"/>
+        </svg>
+      </p>
+    {%- endif -%}
+  </header>
+
+  {%- capture chips -%}
+    {%- for raw in chip_tags -%}
+      {%- assign tag = raw | strip -%}
+      {%- if tag != blank and collection.all_tags contains tag -%}
+        <a class="st-shop__chip" href="{{ collection.url }}/{{ tag | handle }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{{ tag | escape }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if chips != blank -%}
+    <nav class="st-shop__chips" aria-label="{{ 'accessibility.filters' | t }}">
+      <a class="st-shop__chip" href="{{ collection.url }}"{% if current_tags == blank %} aria-current="page"{% endif %}>{{ 'small_talk.shop.all' | t }}</a>
+      {{ chips }}
+    </nav>
+  {%- endif -%}
+
+  {%- paginate collection.products by per_page -%}
+    {%- if current_tags != blank -%}
+      <p class="visually-hidden" role="status">{{ 'small_talk.shop.count' | t: count: collection.products_count }}</p>
+    {%- endif -%}
+
+    {%- if collection.products.size > 0 -%}
+      {%- capture cards -%}
+        {%- if paginate.current_page == 1 and order.size > 0 -%}
+          {%- for handle in order -%}
+            {%- for product in collection.products -%}
+              {%- if product.metafields.small_talk.campaign.value.system.handle == handle -%}
+                <li>{% render 'st-product-card', product: product, eager: forloop.parentloop.first %}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+          {%- for product in collection.products -%}
+            {%- assign key = product.metafields.small_talk.campaign.value.system.handle -%}
+            {%- unless order contains key -%}
+              <li>{% render 'st-product-card', product: product %}</li>
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for product in collection.products -%}
+            <li>{% render 'st-product-card', product: product, eager: forloop.first %}</li>
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endcapture -%}
+      <ul class="st-shop__grid" role="list">{{ cards }}</ul>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="st-shop__pagination" aria-label="{{ 'content.pagination.nav_label' | t }}">
+          {%- if paginate.previous -%}
+            <a class="st-shop__page-link" href="{{ paginate.previous.url }}">← {{ 'content.pagination.previous' | t }}</a>
+          {%- endif -%}
+          <span>{{ paginate.current_page }} / {{ paginate.pages }}</span>
+          {%- if paginate.next -%}
+            <a class="st-shop__page-link" href="{{ paginate.next.url }}">{{ 'content.pagination.next' | t }} →</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- else -%}
+      <div class="st-shop__empty">
+        {%- comment -%} MC-025: "see all sets" is the link that clears the filters. {%- endcomment -%}
+        <p>
+          {%- if current_tags != blank -%}
+            {{ 'small_talk.shop.empty_html' | t: url: collection.url }}
+          {%- else -%}
+            {{ 'small_talk.shop.empty' | t }}
+          {%- endif -%}
+        </p>
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+</section>
+
+{% stylesheet %}
+  /* Board 5 at 390 (spec/shop.md); px values are the board's, the grid widens to 3 / 4 columns on larger screens. */
+  .st-shop {
+    max-width: var(--normal-page-width);
+    margin-inline: auto;
+    padding: 1px 15px 1rem; /* board: the footer rows follow the last card closely */
+    background: var(--st-paper);
+  }
+
+  .st-shop__header {
+    display: grid;
+    padding-inline-start: 3px;
+  }
+
+  /* Fitted to the board-5 ink (x 19–277, baselines 117 / 166): Black opsz 60 at 63 px on a 49 px line, heavier and
+     larger than the spec's 700 / 54 px. */
+  .st-shop__heading {
+    margin: 0;
+    color: var(--st-burgundy);
+    font-family: var(--font-shop-display);
+    font-weight: 900;
+    font-size: 63px;
+    line-height: 49px;
+    letter-spacing: var(--ls-shop-h1);
+    max-width: 300px; /* board: "Pick your / plot twist." */
+  }
+
+  .st-shop__note {
+    position: relative;
+    justify-self: start;
+    margin: 6px 0 0 67px;
+    color: var(--st-hand-blue);
+    font-family: var(--font-annotation);
+    font-weight: var(--fw-annotation);
+    font-size: 23px; /* board ink reads larger than the spec's 19 px */
+    letter-spacing: var(--ls-annotation);
+    line-height: 1.02;
+    rotate: -4deg;
+  }
+
+  .st-shop__note-2 {
+    margin-inline-start: 45px; /* board: second line indented */
+  }
+
+  /* Small phones: pull the note left so its arrow stays on screen. */
+  @media screen and (max-width: 359px) {
+    .st-shop__note {
+      margin-inline-start: 36px;
+    }
+  }
+
+  .st-shop__arrow {
+    position: absolute;
+    right: -2.1rem;
+    bottom: -0.35rem;
+    width: 1.6rem;
+    height: 2rem;
+    overflow: visible;
+  }
+
+  .st-shop__arrow path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st-shop__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-block: 10px 16px;
+  }
+
+  .st-shop__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 108px;
+    min-height: var(--st-touch-min, 44px);
+    padding: 0 1.1rem; /* three chips fit one row at 390 with the selected one bold (board: 108 / 110 / 120 px) */
+    box-sizing: border-box;
+    border: 1px solid var(--st-chip-line);
+    border-radius: var(--st-radius-pill);
+    background: var(--st-chip-bg);
+    color: #1a1a2e;
+    font-family: var(--font-ui);
+    font-weight: 400;
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  .st-shop__chip[aria-current] {
+    border-color: var(--st-pill);
+    background: var(--st-pill);
+    color: var(--st-pill-ink);
+    font-weight: 600;
+  }
+
+  .st-shop__chip:focus-visible {
+    outline: 2px solid var(--st-pill);
+    outline-offset: 2px;
+  }
+
+  .st-shop__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 13px;
+    row-gap: 15px; /* board rows every 236 px */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Phones: an odd last card sits alone, left, wider and shorter (board: x 14–237, image 155 px). */
+  @media screen and (max-width: 749px) {
+    .st-shop__grid > li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      width: 62%;
+      --st-tile-aspect: 223 / 155;
+    }
+
+    /* The board's last box is drawn wide; the approved box is portrait, so box + nails sit centred as one group. */
+    .st-shop__grid > li:last-child:nth-child(odd) .st-card__art {
+      left: 50%;
+      translate: -50% 0;
+      gap: 8px;
+    }
+  }
+
+  .st-shop__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    margin-block-start: 1.5rem;
+    font-family: var(--font-ui);
+  }
+
+  .st-shop__page-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--st-touch-min, 44px);
+    color: var(--st-hand-blue);
+  }
+
+  .st-shop__empty {
+    padding-block: 2rem;
+    font-family: var(--font-ui);
+    color: var(--st-body);
+  }
+
+  .st-shop__empty a {
+    color: var(--st-hand-blue);
+  }
+
+  @media screen and (min-width: 750px) {
+    .st-shop {
+      padding-inline: var(--st-gutter);
+    }
+
+    .st-shop__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 20px;
+      row-gap: 28px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .st-shop__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* BEGIN wide frame (Tier A, >= 1680: the page frame grows to min(1440px, 100% - 2 gutters), the Journal §F rule; grids widen, text keeps its measure) */
+  @media screen and (min-width: 1680px) {
+    .st-shop__grid {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+
+    .st-shop__grid > li {
+      grid-column: span 2;
+    }
+
+    .st-shop__grid > li:nth-child(4n + 1):nth-last-child(3) {
+      grid-column: 2 / span 2;
+    }
+
+    .st-shop__grid > li:nth-child(4n + 1):nth-last-child(2) {
+      grid-column: 3 / span 2;
+    }
+
+    .st-shop__grid > li:nth-child(4n + 1):last-child {
+      grid-column: 4 / span 2;
+    }
+  }
+  /* END wide frame */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk shop",
+  "class": "st-shop-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave empty to use the collection title."
+    },
+    { "type": "text", "id": "note", "label": "Handwritten note", "info": "Breaks after the first sentence." },
+    {
+      "type": "text",
+      "id": "chip_tags",
+      "label": "Filter chips (product tags)",
+      "default": "Everyday,Statement",
+      "info": "Comma-separated tags. A chip shows only when the collection has products with that tag."
+    },
+    {
+      "type": "text",
+      "id": "card_order",
+      "label": "Card order (campaign handles)",
+      "default": "on-me,brainwave,green-flag,shaadi-shift,diet-cherry,wild-card,pinky-promise",
+      "info": "Board order on page 1. Sets not listed follow in the collection's order."
+    }
+  ]
+}
+{% endschema %}

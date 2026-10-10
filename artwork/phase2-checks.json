@@ -1,0 +1,37 @@
+{
+ "characters_v2": {
+  "distinct_women": "FAIL: all seven cells read as the same woman (same face, curly hair, bindi); brief asks for distinct women. Pinky Promise has two women.",
+  "on-me": {"bill": "PASS", "nails": "PASS burgundy almond (signature)", "crop": "tests/checks/char-on-me-bill.png"},
+  "brainwave": {"notebook_blue_pen": "PASS", "crescent_bag_sketch": "NOT VISIBLE (notebook page faces away)", "machinery": "none, PASS", "crop": "tests/checks/char-brainwave-notebook-pen.png"},
+  "diet-cherry": {"can": "PASS unbranded plain silver can, no lettering", "nails": "deep red solid = accent column (signature silver not shown)", "crop": "tests/checks/char-diet-cherry-can.png"},
+  "green-flag": {"rotary_phone": "PASS pink handset + coiled cord (rotary body not in frame)", "nails": "PASS emerald", "crop": "tests/checks/char-green-flag-phone.png"},
+  "shaadi-shift": {"dupatta_safety_pin": "PASS", "nails": "PASS pink with flower", "crop": "tests/checks/char-shaadi-shift-pin.png"},
+  "wild-card": {"cards_face_her": "PASS backs to viewer", "nails": "PASS lime + checks", "crop": "tests/checks/char-wild-card-cards.png"},
+  "pinky-promise": {"connected_hands": "PLAUSIBLE, needs human review: hands clasped (not a pinky hook); 7 nails visible, no obvious extra digit but finger structure is ambiguous", "nails": "MINOR MISMATCH: one solid burgundy nail and one lilac without tip; set has lilac + burgundy tip only", "crop": "tests/checks/char-pinky-promise-hands.png"},
+  "edges": "panel cuts feathered 36 px (smoothstep) on non-bleed straight cuts only; hair silhouette untouched. Caveat: where black hair is cut, the dissolve reads as a soft dark smudge on yellow/lime."
+ },
+ "chapter_scenes": {
+  "ground_colour": "FAIL all 7 vs metaobject (see phase2.chapters.*.ground_delta_rgb; worst pinky-promise B-98, diet-cherry R-70, brainwave B-61, green-flag G-40). Not recoloured. Mitigation: *-fade.webp dissolves the top 38% into transparency so the page shows the true campaign colour.",
+  "resolution": "FAIL for full-width use: panels are ~270 px wide; 2x only at <=135 css px.",
+  "on-me": {"bill": "FAIL not in scene (brass cups/plate)", "crop": "tests/checks/scene-on-me-no-bill.png"},
+  "brainwave": {"crescent_bag_sketchbook": "PASS silver crescent bag + sketchbook of crescent-bag drawings", "blue_pen": "FAIL not visible", "machinery": "none, PASS", "crop": "tests/checks/scene-brainwave-bag-sketchbook.png"},
+  "diet-cherry": {"brand": "PASS plain silver can, no wordmark", "crop": "tests/checks/scene-diet-cherry-can-unbranded.png"},
+  "green-flag": {"rotary_phone": "PASS pink rotary phone", "crop": "tests/checks/scene-green-flag-rotary-phone.png"},
+  "shaadi-shift": {"safety_pin": "UNCLEAR: a tiny pin-like shape on the saree, not legible as a safety pin", "crop": "tests/checks/scene-shaadi-shift-no-safety-pin.png"},
+  "wild-card": {"cards_face_her": "PASS backs to viewer", "crop": "tests/checks/scene-wild-card-cards-face-her.png"},
+  "pinky-promise": {"connected_hands": "FAIL no hands in scene", "crop": "tests/checks/scene-pinky-promise-no-hands.png"},
+  "nails": "no nails visible in any scene; nothing to mismatch"
+ },
+ "finger_states": {
+  "order_in_source": "pinky-promise, on-me, brainwave, green-flag, shaadi-shift, diet-cherry, wild-card (not motion_index); re-keyed by handle",
+  "shaadi-shift": "MISMATCH: two yellow flowers with white centres; set sprite has one flower with red centre",
+  "pinky-promise": "MISMATCH: crimson/raspberry tip; set sprite tip is deep burgundy",
+  "others": "PASS"
+ },
+ "diet_can_v1": {
+  "brand": "FAIL: legible 'Diet Coke' wordmark (owner conflict with brief/D8)",
+  "crop": "proposal only: rejected/can-crop-proposal-below-wordmark.webp (lower can + 3 nails, hard top cut must sit off-canvas); not shipped",
+  "nails": "deep red/burgundy solid, close to diet-cherry accent"
+ },
+ "packaging": "copied as-is, never upscaled; status awaiting hi-res from owner"
+}

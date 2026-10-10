@@ -1,0 +1,344 @@
+/* Small Talk hero — layout contract for the motion controller.
+   Rules: no CSS transforms on any ancestor of a nail element (the controller measures the offset chain);
+   nails rotate only via the `rotate` property on the nail element itself, with transform-origin at the cuticle. */
+
+.st-hero {
+  --hero-h: clamp(34rem, calc(100svh - 4rem), 54rem);
+  --finger-h: calc(var(--hero-h) * 0.62);
+  --finger-w: calc(var(--finger-h) * 310 / 840);   /* finger canvas 310×840 */
+  --finger-cx: 60%;
+  --nail-w: calc(var(--finger-w) * 0.526);          /* 204 × 0.8 / 310 */
+  --nail-h: calc(var(--nail-w) * 354 / 204);
+  --accent-w: calc(var(--nail-w) * 0.78);
+  --hand-w: clamp(7.5rem, 37.4vw, 13.75rem);        /* 146 css px at a 390 px scene */
+  --hand-right: -3%;
+  --hand-top: -4%;
+
+  position: relative;
+  height: var(--hero-h);
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--st-scene, #eee8f5);
+  color: var(--st-scene-ink, #1f1a2e);
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.st-hero__scene {            /* next scene colour, cross-faded in by the controller */
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.st-hero__halo {
+  position: absolute;
+  z-index: 1;
+  left: calc(var(--finger-cx) - var(--finger-w) * 0.9);
+  bottom: calc(var(--finger-h) * 0.35);
+  width: calc(var(--finger-w) * 1.8);
+  height: calc(var(--finger-h) * 0.7);
+  background: radial-gradient(ellipse at center, rgb(255 255 255 / 0.12), transparent 65%);
+  pointer-events: none;
+}
+
+.st-hero__copy {
+  position: absolute;
+  z-index: 5;
+  inset-inline: 6% 30%;
+  top: 6%;
+  pointer-events: none;
+}
+
+.st-hero__note {
+  max-width: 70%;
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.5rem, 6.5vw, 2.25rem);
+  line-height: 1.05;
+  rotate: -6deg;
+  transform-origin: left center;
+}
+
+.st-hero__headline {
+  margin: 0;
+  font-size: clamp(2.75rem, 12vw, 4.25rem);
+  line-height: 0.92;
+  rotate: -4deg;
+  transform-origin: left center;
+  color: inherit;
+  text-wrap: balance;
+}
+
+/* A nail is one cell of a 3-column sprite (signature | accent | extra). */
+.st-nail {
+  display: block;
+  aspect-ratio: 204 / 354;
+  background-image: var(--st-nails);
+  background-repeat: no-repeat;
+  background-size: 300% 100%;
+  background-position: calc(var(--col, 0) * 50%) 0;
+  transform-origin: 50% 92.5%;
+  rotate: var(--rot, 0deg);
+  pointer-events: none;
+}
+
+.st-nail.is-hidden { opacity: 0; }
+
+.st-hero__finger {
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  left: calc(var(--finger-cx) - var(--finger-w) / 2);
+  width: var(--finger-w);
+  height: var(--finger-h);
+}
+
+.st-hero__tone {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+/* Main nail: a button so it can be held. Its nail cell anchor sits on the finger's nail bed (0.5, 0.2649). */
+.st-hero__main {
+  position: absolute;
+  z-index: 2;
+  left: calc(50% - var(--nail-w) / 2);
+  top: calc(var(--finger-h) * 0.2649 - var(--nail-h) * 0.925);
+  width: var(--nail-w);
+  height: var(--nail-h);
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 50% 50% 45% 45%;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.st-hero__main:active { cursor: grabbing; }
+
+.st-hero__main .st-nail { width: 100%; height: 100%; }
+
+.st-hero__accent {
+  position: absolute;
+  z-index: 4;
+  width: var(--accent-w);
+  height: calc(var(--accent-w) * 354 / 204);
+}
+
+.st-hero__accent--1 { left: 20%; top: 50%; --rot: -14deg; }
+.st-hero__accent--2 { left: 5%; top: 42%; --rot: -30deg; }
+.st-hero__accent .st-nail { width: 100%; height: 100%; }
+
+/* Preview hand: a button. The image's wrist touches its top/right edges, so it enters from the corner. */
+.st-hero__preview {
+  position: absolute;
+  z-index: 2;
+  top: var(--hand-top);
+  right: var(--hand-right);
+  width: var(--hand-w);
+  aspect-ratio: 511 / 639;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.st-hero__hand {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.st-hero__preview .st-nail {
+  position: absolute;
+  width: calc(var(--hand-w) * var(--cell-frac));
+  height: calc(var(--hand-w) * var(--cell-frac) * 354 / 204);
+  left: calc(var(--cx) * 100% - var(--hand-w) * var(--cell-frac) * 0.5);
+  top: calc(var(--cy) * 100% - var(--hand-w) * var(--cell-frac) * 354 / 204 * 0.925);
+}
+
+/* Slot geometry from artwork/hand/preview-hand.json */
+[data-st-hero-preview-nail='0'] { --cx: 0.1009; --cy: 0.8172; --rot: -138.7deg; --cell-frac: 0.0963; }
+[data-st-hero-preview-nail='1'] { --cx: 0.1605; --cy: 0.9019; --rot: -137.8deg; --cell-frac: 0.0933; }
+[data-st-hero-preview-nail='2'] { --cx: 0.3003; --cy: 0.9071; --rot: -136.2deg; --cell-frac: 0.0937; }
+[data-st-hero-preview-nail='3'] { --cx: 0.5022; --cy: 0.8720; --rot: -137.0deg; --cell-frac: 0.0856; }
+
+.st-hero__flyers {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+.st-hero__flyer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.st-hero__character {
+  /* Width scales with the scene: widthAt390 css px at a 390 px hero, never above the native 2x density cap. */
+  --char-w390: 150;
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  width: clamp(7rem, calc(var(--char-w390) * 100vw / 390), 19rem);
+  aspect-ratio: var(--char-ratio, 308 / 629);
+  pointer-events: none;
+}
+
+.st-hero__character img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.st-hero__character[data-bleed~='left'] { margin-left: -2%; }
+.st-hero__character[data-bleed~='right'] { margin-right: -2%; }
+.st-hero__character[data-bleed~='bottom'] { margin-bottom: -1%; }
+.st-hero__character[data-bleed~='top'] { margin-top: -1%; }
+
+/* A top-anchored character owns the top-left corner: copy moves right and down so the headline never crosses her face
+   and its first line clears the preview hand's fingertips (hand bottom ≈ 20% of the hero at 390). */
+.st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__copy {
+  inset-inline: 36% 5%;
+  /* just under the hand's fingertips: hand height = --hand-w × 639/511, nails end at ≈95% of it, hand top = -4% of the hero */
+  top: calc(var(--hand-w) * 1.19 - var(--hero-h) * 0.04 + 0.35rem);
+}
+@media (max-height: 700px) and (min-width: 360px) {
+  /* Short phones: no room for note + headline between the hand and the main nail, so the headline shrinks and sits higher
+     (its first line may pass under the hand's fingertips; the main nail stays clear). */
+  .st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__copy { top: 9%; }
+  .st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__headline { font-size: clamp(1.9rem, 9vw, 2.3rem); }
+}
+
+/* Accent samples follow the character so they never sit on her face or props (board 2).
+   Default column (top-left or right-anchored character): left 5% / 20%, top 42% / 50%, see .st-hero__accent--1/2. */
+@media (max-width: 989px) {
+  /* Bottom-left character (On Me, Shaadi Shift): samples rise above her head. */
+  .st-hero:has(.st-hero__character[data-bleed~='bottom']:not([hidden])) .st-hero__accent--2 { top: 29%; }
+  .st-hero:has(.st-hero__character[data-bleed~='bottom']:not([hidden])) .st-hero__accent--1 { top: 39%; }
+  /* Mid-left character (Diet Cherry, Wild Card; bleed = left only): samples move to the right of the finger, tips leaning toward it. */
+  .st-hero:has(.st-hero__character[data-bleed='left']:not([hidden])) .st-hero__accent--2 { left: 80%; top: 33%; }
+  .st-hero:has(.st-hero__character[data-bleed='left']:not([hidden])) .st-hero__accent--1 { left: 73%; top: 49%; }
+}
+.st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__note { max-width: 100%; font-size: clamp(1.2rem, 5.3vw, 1.8rem); } /* ends before the hand's fingertips */
+.st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__headline { font-size: clamp(2.4rem, 10.5vw, 3.75rem); }
+
+.st-hero__controls {
+  position: absolute;
+  z-index: 6;
+  right: 3%;
+  bottom: 15%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.st-hero__control {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--st-ground, #fffdf5);
+  color: var(--st-blue, #1013b3);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgb(31 26 46 / 0.18);
+}
+
+.st-hero__control[aria-disabled='true'] { cursor: default; }
+.st-hero__control--pause .st-hero__icon-play,
+.st-hero__control--pause[data-state='paused'] .st-hero__icon-pause,
+.st-hero__control--pause[data-state='replay'] .st-hero__icon-pause { display: none; }
+.st-hero__control--pause[data-state='paused'] .st-hero__icon-play,
+.st-hero__control--pause[data-state='replay'] .st-hero__icon-play { display: block; }
+
+.st-hero__swatch {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--st-tone-swatch, #d7895d);
+  box-shadow: inset 0 0 0 2px var(--st-ground, #fffdf5);
+}
+
+.st-hero__cta {
+  position: absolute;
+  z-index: 6;
+  left: 8%;
+  right: 8%;
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--st-cta-ink, #fffdf5);
+  border-radius: 999px;
+  background: var(--st-cta-bg, #1013b3);
+  color: var(--st-cta-ink, #fffdf5);
+  font-weight: 600;
+  font-size: 1.1875rem;
+  text-decoration: none;
+}
+
+.st-hero :focus-visible { outline: 3px solid currentColor; outline-offset: 4px; }
+
+@media (min-width: 990px) {
+  .st-hero {
+    --hero-h: clamp(36rem, calc(100svh - 4.75rem), 50rem);
+    --finger-h: calc(var(--hero-h) * 0.8);
+    --finger-cx: 66%;
+    --hand-w: clamp(11rem, 16vw, 15rem);
+    --hand-right: 2%;
+    --hand-top: 0;
+  }
+  .st-hero__copy { inset-inline: 7% auto; top: 16%; width: 42%; }
+  .st-hero__note { font-size: 2.5rem; }
+  .st-hero__headline { font-size: clamp(4rem, 6vw, 5.75rem); }
+  .st-hero__accent--2 { left: 44%; top: 42%; }
+  .st-hero__accent--1 { left: 50%; top: 58%; }
+  .st-hero__character { width: clamp(9rem, 15vw, 19rem); }
+  /* Right-anchored character (Green Flag) sits on the bottom edge on desktop, clear of the preview hand above it
+     (board 2: she is bottom-right, the hand top-right). The controller writes the anchor inline, hence !important. */
+  .st-hero__character[data-bleed='right'] { top: auto !important; bottom: 0 !important; translate: none !important; }
+  /* Left-anchored, not top-anchored character (On Me, Shaadi Shift, Diet Cherry, Wild Card): copy and CTA start right of her,
+     so the headline and the button never sit on the art. Top-anchored sets keep their own rule below. */
+  .st-hero:has(.st-hero__character[data-bleed~='left']:not([data-bleed~='top']):not([hidden])) .st-hero__copy {
+    inset-inline-start: calc(clamp(9rem, 15vw, 19rem) + 3%);
+    width: 36%;
+  }
+  .st-hero:has(.st-hero__character[data-bleed~='left']:not([data-bleed~='top']):not([hidden])) .st-hero__headline { font-size: clamp(3.4rem, 5vw, 4.75rem); }
+  .st-hero:has(.st-hero__character[data-bleed~='left']:not([data-bleed~='top']):not([hidden])) .st-hero__cta { left: calc(clamp(9rem, 15vw, 19rem) + 3%); }
+  .st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__copy { inset-inline: 22% auto; top: 16%; width: 40%; }
+  .st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__headline { font-size: clamp(4rem, 6vw, 5.75rem); }
+  .st-hero__cta { left: 7%; right: auto; bottom: 16%; min-width: 20rem; }
+  .st-hero__controls { right: 2.5%; bottom: 8%; }
+}
+
+@media (max-width: 359px) {
+  .st-hero__headline { font-size: clamp(2.1rem, 11.5vw, 2.6rem); }
+  .st-hero__note { font-size: 1.35rem; }
+  .st-hero__copy { inset-inline: 6% 28%; top: 5%; }
+  /* Top-anchored character on a narrow phone: the headline must end above the main nail tip (≈35% of the hero at 320). */
+  .st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__copy { inset-inline: 36% 4%; top: 18%; }
+  .st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__note { font-size: 1.2rem; }
+  .st-hero:has(.st-hero__character[data-bleed~='top']:not([hidden])) .st-hero__headline { font-size: clamp(1.7rem, 9vw, 2rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-hero__flyer { display: none; }
+}

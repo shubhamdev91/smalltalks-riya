@@ -1,0 +1,95 @@
+{% doc %}
+  Campaign art outside the hero, always as a lazy <img> with width/height so nothing below the fold loads at
+  first paint (the hero keeps its own CSS-sprite nails per motion/CONTRACT.md).
+  - 'signature' | 'accent' | 'extra': one cell of the set's HD nail sheet (st-hd-nails-<key>.webp via st-motion-map
+    'sprite', 3 cells 450×780, cuticle 0.5 / 0.925), cropped with object-fit/object-position. Rotates about the cuticle
+    via --rot and is drawn ×1.058 there (HD plates are 0.846 of the cell vs P1 0.895).
+  - 'character': the set's accepted Phase 2 character (st-character-<key>.webp).
+  - 'scene': the set's accepted Phase 2 chapter scene, fade variant (st-chapter-<key>.webp, 270×821; shown no wider
+    than 180 css px by the caller).
+  - 'lifestyle': the set's accepted lifestyle composite (st-lifestyle-<key>.webp, 571×679), always labelled as an
+    illustration by its alt (SEO-079…085).
+  Decorative unless `alt` is passed.
+
+  @param {metaobject} campaign - small_talk_campaign entry.
+  @param {string} [role] - 'signature' (default), 'accent', 'extra', 'character', 'scene' or 'lifestyle'.
+  @param {string} [class] - Extra class on the image.
+  @param {string} [alt] - Alt text (copy register); empty = decorative.
+  @param {string} [loading] - 'lazy' (default) or 'eager'.
+
+  @example
+  {% render 'st-nail', campaign: c, role: 'accent', class: 'st-chapter__nail' %}
+{% enddoc %}
+{%- liquid
+  assign nail_role = role | default: 'signature'
+  assign key = campaign.system.handle
+  assign img_loading = loading | default: 'lazy'
+  case nail_role
+    when 'character'
+      capture char_raw
+        render 'st-motion-map', key: key, field: 'character'
+      endcapture
+      assign char = char_raw | strip | split: ','
+      assign src = 'st-character-' | append: key | append: '.webp' | asset_url
+      assign w = char[0] | default: 300
+      assign h = char[1] | default: 628
+      assign img_class = 'st-art st-art--character'
+    when 'scene'
+      assign src = 'st-chapter-' | append: key | append: '.webp' | asset_url
+      assign w = 270
+      assign h = 821
+      assign img_class = 'st-art st-art--scene'
+    when 'lifestyle'
+      assign src = 'st-lifestyle-' | append: key | append: '.webp' | asset_url
+      assign w = 571
+      assign h = 679
+      assign img_class = 'st-art st-art--lifestyle'
+    else
+      case nail_role
+        when 'accent'
+          assign col = 1
+        when 'extra'
+          assign col = 2
+        else
+          assign col = 0
+      endcase
+      capture sprite_file
+        render 'st-motion-map', key: key, field: 'sprite'
+      endcapture
+      assign src = sprite_file | strip | asset_url
+      assign w = 204
+      assign h = 354
+      assign pos = col | times: 50
+      assign img_class = 'st-nail-img st-nail-img--' | append: nail_role
+  endcase
+-%}
+<img
+  class="{{ img_class }} {{ class }}"
+  src="{{ src }}"
+  width="{{ w }}"
+  height="{{ h }}"
+  alt="{{ alt | strip | escape }}"
+  loading="{{ img_loading }}"
+  decoding="async"
+  {% if img_loading == 'lazy' %}fetchpriority="low"{% endif %}
+  {% if pos != blank %}style="object-position: {{ pos }}% 0;"{% endif %}
+>
+
+{% stylesheet %}
+  .st-nail-img {
+    display: block;
+    height: auto;
+    aspect-ratio: 204 / 354;
+    object-fit: cover;
+    transform-origin: 50% 92.5%;
+    rotate: var(--rot, 0deg);
+    scale: 1.058;
+    pointer-events: none;
+  }
+
+  .st-art {
+    display: block;
+    height: auto;
+    pointer-events: none;
+  }
+{% endstylesheet %}

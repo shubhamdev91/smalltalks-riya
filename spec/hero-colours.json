@@ -1,0 +1,170 @@
+{
+  "1-on-me": {
+    "frame_px": [
+      390,
+      885
+    ],
+    "header_bg": "#fdfdfc",
+    "ground_dominant": "#f8a808",
+    "ground_mean": "#f5a908",
+    "glow": {
+      "centre_pct": [
+        46.3,
+        39.0
+      ],
+      "inner": "#fcc01d",
+      "outer": "#e18e05",
+      "radius_px_at390": 180.0
+    },
+    "pill_band_top_colours": [
+      "#96061e",
+      "#960612",
+      "#a2061e",
+      "#8a061e"
+    ]
+  },
+  "2-brainwave": {
+    "frame_px": [
+      390,
+      860
+    ],
+    "header_bg": "#fcfcfc",
+    "ground_dominant": "#0848d8",
+    "ground_mean": "#0444d9",
+    "glow": {
+      "centre_pct": [
+        51.9,
+        34.1
+      ],
+      "inner": "#0958f4",
+      "outer": "#032cb8",
+      "radius_px_at390": 240.0
+    },
+    "pill_band_top_colours": [
+      "#ffffff",
+      "#f6f6ff",
+      "#f6f6f6",
+      "#fff6ff"
+    ]
+  },
+  "3-diet-cherry": {
+    "frame_px": [
+      390,
+      854
+    ],
+    "header_bg": "#fdfcfc",
+    "ground_dominant": "#a80808",
+    "ground_mean": "#b70a09",
+    "glow": {
+      "centre_pct": [
+        34.8,
+        38.4
+      ],
+      "inner": "#d41614",
+      "outer": "#780303",
+      "radius_px_at390": 240.0
+    },
+    "pill_band_top_colours": [
+      "#ffffff",
+      "#fff6f6",
+      "#f6f6f6",
+      "#fffff6"
+    ]
+  },
+  "4-green-flag": {
+    "frame_px": [
+      390,
+      898
+    ],
+    "header_bg": "#fdfdfc",
+    "ground_dominant": "#086838",
+    "ground_mean": "#04673c",
+    "glow": {
+      "centre_pct": [
+        43.2,
+        43.3
+      ],
+      "inner": "#0d7b4e",
+      "outer": "#034727",
+      "radius_px_at390": 320.0
+    },
+    "pill_band_top_colours": [
+      "#ffffff",
+      "#f6f6f6",
+      "#f6fff6",
+      "#fffff6"
+    ]
+  },
+  "5-shaadi-shift": {
+    "frame_px": [
+      390,
+      851
+    ],
+    "header_bg": "#fdfdfc",
+    "ground_dominant": "#f81868",
+    "ground_mean": "#f61d6d",
+    "glow": {
+      "centre_pct": [
+        49.1,
+        44.8
+      ],
+      "inner": "#fa357f",
+      "outer": "#df0a4d",
+      "radius_px_at390": 320.0
+    },
+    "pill_band_top_colours": [
+      "#96061e",
+      "#960612",
+      "#a2061e",
+      "#8a0612"
+    ]
+  },
+  "6-wild-card": {
+    "frame_px": [
+      390,
+      826
+    ],
+    "header_bg": "#fdfdfb",
+    "ground_dominant": "#a8f808",
+    "ground_mean": "#b4f50a",
+    "glow": {
+      "centre_pct": [
+        50.9,
+        40.2
+      ],
+      "inner": "#d2fb23",
+      "outer": "#94e004",
+      "radius_px_at390": 160.0
+    },
+    "pill_band_top_colours": [
+      "#ffffff",
+      "#f6f6ff",
+      "#f6f6f6",
+      "#fffff6"
+    ]
+  },
+  "7-pinky-promise": {
+    "frame_px": [
+      390,
+      820
+    ],
+    "header_bg": "#fdfdfc",
+    "ground_dominant": "#5818e8",
+    "ground_mean": "#621dec",
+    "glow": {
+      "centre_pct": [
+        37.5,
+        38.2
+      ],
+      "inner": "#792ffb",
+      "outer": "#4812c8",
+      "radius_px_at390": 240.0
+    },
+    "pill_band_top_colours": [
+      "#ffffff",
+      "#fff6f6",
+      "#f6f6f6",
+      "#fffff6"
+    ]
+  }
+}

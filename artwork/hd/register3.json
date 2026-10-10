@@ -1,0 +1,50 @@
+{
+ "L-brainwave-woman": {
+  "scale": 0.2475,
+  "left": 13,
+  "top": -200,
+  "ncc": 0.207,
+  "w": 188,
+  "h": 253
+ },
+ "H-brainwave-woman": {
+  "scale": 0.235,
+  "left": 111,
+  "top": -83,
+  "ncc": 0.221,
+  "w": 179,
+  "h": 241
+ },
+ "L-diet-cherry-woman": {
+  "scale": 0.2425,
+  "left": 49,
+  "top": 1530,
+  "ncc": 0.281,
+  "w": 184,
+  "h": 248
+ },
+ "L-diet-cherry-can-hand": {
+  "scale": 0.2178,
+  "left": 275,
+  "top": 1707,
+  "ncc": 0.284,
+  "w": 99,
+  "h": 151
+ },
+ "L-wild-card-v2-woman": {
+  "scale": 0.288,
+  "left": 9,
+  "top": 356,
+  "ncc": 0.133,
+  "w": 288,
+  "h": 295
+ },
+ "L-wild-card-v2-cards": {
+  "scale": 0.2575,
+  "left": 315,
+  "top": 714,
+  "ncc": 0.28,
+  "w": 138,
+  "h": 135
+ }
+}

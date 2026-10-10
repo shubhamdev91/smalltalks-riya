@@ -1,0 +1,45 @@
+{% doc %}
+  The packaging box's image source for a set, as "src|srcset|width|height" (split on |). HD sets (st-motion-map
+  'hd_pack') use st-artwork's cut-out ladder st-hd-pack-<key>-240/360/480/720/<box width>.webp (callers' sizes pick
+  ~3x, never above the box-width source); the others keep the clean-edge derivatives st-package-<key>.webp + -13x.webp (≤380 css px).
+
+  @param {string} key - Campaign handle.
+
+  @example
+  {%- capture ps -%}{% render 'st-pack-src', key: key %}{%- endcapture -%}{%- assign ps = ps | strip | split: '|' -%}
+  <img src="{{ ps[0] }}" srcset="{{ ps[1] }}" width="{{ ps[2] }}" height="{{ ps[3] }}" sizes="…" alt="…">
+{% enddoc %}
+{%- liquid
+  capture hd
+    render 'st-motion-map', key: key, field: 'hd_pack'
+  endcapture
+  if hd contains 'true'
+    capture dims
+      render 'st-motion-map', key: key, field: 'pack_hd'
+    endcapture
+    assign d = dims | strip | split: ','
+    assign base = 'st-hd-pack-' | append: key | append: '-'
+    assign set = ''
+    assign ladder = '240,360,480,720,' | append: d[0] | split: ','
+    for w in ladder
+      assign f = base | append: w | append: '.webp' | asset_url
+      assign set = set | append: f | append: ' ' | append: w | append: 'w'
+      unless forloop.last
+        assign set = set | append: ', '
+      endunless
+    endfor
+    assign src = base | append: '480.webp' | asset_url
+    echo src | append: '|' | append: set | append: '|' | append: d[0] | append: '|' | append: d[1]
+  else
+    capture pack_raw
+      render 'st-motion-map', key: key, field: 'package'
+    endcapture
+    assign pack = pack_raw | strip | split: ','
+    if pack.size == 4
+      assign s1 = 'st-package-' | append: key | append: '.webp' | asset_url
+      assign s13 = 'st-package-' | append: key | append: '-13x.webp' | asset_url
+      assign set = s1 | append: ' ' | append: pack[0] | append: 'w, ' | append: s13 | append: ' ' | append: pack[2] | append: 'w'
+      echo s1 | append: '|' | append: set | append: '|' | append: pack[0] | append: '|' | append: pack[1]
+    endif
+  endif
+-%}

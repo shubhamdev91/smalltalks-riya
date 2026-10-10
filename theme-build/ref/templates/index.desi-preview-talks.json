@@ -1,0 +1,57 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "di-talks",
+      "settings": {},
+      "blocks": {
+        "green": {
+          "type": "example",
+          "settings": {
+            "alias": "@almostonetime",
+            "heading": "What is your smallest friendship green flag?",
+            "body": "Mine remembers the stories I never finished.",
+            "topic": "plot",
+            "nail_index": 3
+          }
+        },
+        "outfit": {
+          "type": "example",
+          "settings": {
+            "alias": "@softlaunchsamosa",
+            "heading": "Same outfit, different confidence.",
+            "body": "What changed for you?",
+            "topic": "nails",
+            "nail_index": 4
+          }
+        },
+        "compliment": {
+          "type": "example",
+          "settings": {
+            "alias": "@plotplease",
+            "heading": "The compliment that stayed with you.",
+            "body": "Still thinking about it.",
+            "topic": "wins",
+            "nail_index": 6
+          }
+        }
+      },
+      "block_order": [
+        "green",
+        "outfit",
+        "compliment"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

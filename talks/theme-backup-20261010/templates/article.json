@@ -1,0 +1,40 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-talks-thread",
+      "settings": {
+        "rule_line": "Keep it kind. No real names, nothing that could identify anyone. Replies go live straight away."
+      }
+    },
+    "start": {
+      "type": "st-talks-start",
+      "settings": {
+        "blog_handle": "the-talks",
+        "heading": "Start a talk",
+        "sub": "Share your perspective. Small moments. Open conversations.",
+        "kindness": "Keep it kind. Leave out names and identifying details."
+      }
+    },
+    "rules": {
+      "type": "st-talks-rules",
+      "settings": {
+        "blog_handle": "the-talks",
+        "heading": "House rules",
+        "rule_1": "Gossip about situations, not people.",
+        "rule_2": "No real names, no handles, no screenshots, nothing that could identify anyone.",
+        "rule_3": "No hate, harassment or bullying. No selling, no links.",
+        "rule_4": "Your alias is the only name anyone sees. Your email stays private.",
+        "moderation": "Replies go live straight away. We read them, and we take down anything that breaks these rules.",
+        "report": "Spotted something that breaks the rules? Email us at {email} with the link.",
+        "support": "If a talk gets heavy, you don’t have to carry it alone. Call Tele-MANAS, India’s free 24×7 mental health helpline, on 14416 or 1800-891-4416.",
+        "support_tel_1": "14416",
+        "support_tel_2": "1800-891-4416"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "start",
+    "rules"
+  ]
+}

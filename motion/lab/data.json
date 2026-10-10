@@ -1,0 +1,360 @@
+{
+ "version": 2,
+ "autoplay": true,
+ "defaultTone": 2,
+ "tones": [
+  {
+   "index": 1,
+   "swatch": "#e99a6f",
+   "src": "../../artwork/hd/fingers/tone-1.web.webp"
+  },
+  {
+   "index": 2,
+   "swatch": "#d18256",
+   "src": "../../artwork/hd/fingers/tone-2.web.webp"
+  },
+  {
+   "index": 3,
+   "swatch": "#a25838",
+   "src": "../../artwork/hd/fingers/tone-3.web.webp"
+  },
+  {
+   "index": 4,
+   "swatch": "#86472f",
+   "src": "../../artwork/hd/fingers/tone-4.web.webp"
+  }
+ ],
+ "finger": {
+  "width": 310,
+  "height": 840,
+  "anchor": {
+   "x": 0.5,
+   "y": 0.2649
+  },
+  "nailCellScale": 0.76
+ },
+ "nailCell": {
+  "width": 204,
+  "height": 354,
+  "anchor": {
+   "x": 0.5,
+   "y": 0.925
+  }
+ },
+ "previewHand": {
+  "src": "../../artwork/hand/hd/preview-hand.web.webp",
+  "width": 510,
+  "height": 498,
+  "slots": [
+   {
+    "cuticle": {
+     "x": 0.1104,
+     "y": 0.7119
+    },
+    "rotation": -151.9,
+    "cellWidthFrac": 0.0828
+   },
+   {
+    "cuticle": {
+     "x": 0.1784,
+     "y": 0.7836
+    },
+    "rotation": -156.8,
+    "cellWidthFrac": 0.1144
+   },
+   {
+    "cuticle": {
+     "x": 0.3019,
+     "y": 0.8128
+    },
+    "rotation": -154.0,
+    "cellWidthFrac": 0.1035
+   },
+   {
+    "cuticle": {
+     "x": 0.4607,
+     "y": 0.7894
+    },
+    "rotation": -154.7,
+    "cellWidthFrac": 0.0812
+   }
+  ]
+ },
+ "labels": {
+  "pause": "Pause",
+  "play": "Play",
+  "replay": "Play again",
+  "next": "Next set: {name}",
+  "tone": "Skin tone, Skin tone {n} of {count}",
+  "announce": "{name}. {headline}",
+  "hold": "Press and hold to pause."
+ },
+ "campaigns": [
+  {
+   "key": "on-me",
+   "name": "On Me",
+   "headline": "Bill idhar.",
+   "note": "I\u2019ve got this.",
+   "index": 0,
+   "colors": {
+    "scene": "#ffb900",
+    "ink": "#180e0b",
+    "ctaBackground": "#a00027",
+    "ctaForeground": "#fffaf0"
+   },
+   "url": "/products/bill-idhar",
+   "ctaLabel": "Shop \u201cOn Me\u201d",
+   "sprite": "../../artwork/hd/nails/on-me.web.webp",
+   "previewSlots": [
+    0,
+    2,
+    1,
+    0
+   ],
+   "flightColumns": [
+    1,
+    2
+   ],
+   "live": true,
+   "altText": "On Me nail design: Burgundy. Tortoiseshell. A little gold.",
+   "character": {
+    "src": "../../artwork/hd/characters/on-me-woman-hero.web.webp",
+    "width": 535,
+    "height": 721,
+    "bleed": [
+     "left"
+    ]
+   }
+  },
+  {
+   "key": "brainwave",
+   "name": "Brainwave",
+   "headline": "Haan, mera idea hai.",
+   "note": "Called it.",
+   "index": 1,
+   "colors": {
+    "scene": "#073df1",
+    "ink": "#fffaf0",
+    "ctaBackground": "#fffaf0",
+    "ctaForeground": "#0739e8"
+   },
+   "url": "/products/haan-mera-idea-tha",
+   "ctaLabel": "Shop \u201cBrainwave\u201d",
+   "sprite": "../../artwork/hd/nails/brainwave.web.webp",
+   "previewSlots": [
+    0,
+    1,
+    2,
+    0
+   ],
+   "flightColumns": [
+    1,
+    2
+   ],
+   "live": true,
+   "altText": "Brainwave nail design: Cobalt blue, pearly white and silver-toned shine.",
+   "character": {
+    "src": "../../artwork/hd/characters/brainwave-woman-hero.web.webp",
+    "width": 299,
+    "height": 542,
+    "bleed": [
+     "left",
+     "top"
+    ]
+   }
+  },
+  {
+   "key": "diet-cherry",
+   "name": "Diet Cherry",
+   "headline": "Haan, wohi wali.",
+   "note": "My usual.",
+   "index": 2,
+   "colors": {
+    "scene": "#e10019",
+    "ink": "#fffaf0",
+    "ctaBackground": "#fffaf0",
+    "ctaForeground": "#c40725"
+   },
+   "url": "/products/haan-wohi-wali",
+   "ctaLabel": "Shop \u201cDiet Cherry\u201d",
+   "sprite": "../../artwork/hd/nails/diet-cherry.web.webp",
+   "previewSlots": [
+    1,
+    0,
+    2,
+    1
+   ],
+   "flightColumns": [
+    1,
+    2
+   ],
+   "live": true,
+   "altText": "Diet Cherry nail design: Deep red, blush and silver-toned accents.",
+   "character": {
+    "src": "../../artwork/_source/desi-diet-can-v1.webp",
+    "width": 1189,
+    "height": 1323,
+    "anchor": {
+     "x": 0,
+     "y": 0.5
+    },
+    "bleed": [
+     "left"
+    ],
+    "widthAt390": 220
+   }
+  },
+  {
+   "key": "green-flag",
+   "name": "Green Flag",
+   "headline": "Tum aa jao. Main dekh lungi.",
+   "note": "Sorted.",
+   "index": 3,
+   "colors": {
+    "scene": "#007948",
+    "ink": "#fffaf0",
+    "ctaBackground": "#fffaf0",
+    "ctaForeground": "#00744e"
+   },
+   "url": "/products/tum-aa-jao-main-dekh-lungi",
+   "ctaLabel": "Shop \u201cGreen Flag\u201d",
+   "sprite": "../../artwork/hd/nails/green-flag.web.webp",
+   "previewSlots": [
+    1,
+    0,
+    1,
+    0
+   ],
+   "flightColumns": [
+    1
+   ],
+   "live": true,
+   "altText": "Green Flag nail design: Emerald green and blush, with pointed green tips.",
+   "sampleColumns": [
+    1,
+    0
+   ],
+   "character": {
+    "src": "../../artwork/hd/characters/green-flag-woman-hero-v2.web.webp",
+    "width": 729,
+    "height": 1020,
+    "bleed": [
+     "right"
+    ]
+   }
+  },
+  {
+   "key": "shaadi-shift",
+   "name": "Shaadi Shift",
+   "headline": "Dulhan tu. Duty meri.",
+   "note": "On duty.",
+   "index": 4,
+   "colors": {
+    "scene": "#ff0078",
+    "ink": "#fffaf0",
+    "ctaBackground": "#a00027",
+    "ctaForeground": "#fffaf0"
+   },
+   "url": "/products/dulhan-tu-duty-meri",
+   "ctaLabel": "Shop \u201cShaadi Shift\u201d",
+   "sprite": "../../artwork/hd/nails/shaadi-shift.web.webp",
+   "previewSlots": [
+    2,
+    1,
+    0,
+    2
+   ],
+   "flightColumns": [
+    1,
+    2
+   ],
+   "live": true,
+   "altText": "Shaadi Shift nail design: Pink and deep red, with a little yellow flower.",
+   "character": {
+    "src": "../../artwork/hd/props/shaadi-shift-pin-hero-v2.web.webp",
+    "width": 331,
+    "height": 1172,
+    "bleed": [
+     "left"
+    ]
+   }
+  },
+  {
+   "key": "wild-card",
+   "name": "Wild Card",
+   "headline": "Achha. Tum pehle.",
+   "note": "Your move.",
+   "index": 5,
+   "colors": {
+    "scene": "#b7ef00",
+    "ink": "#09195d",
+    "ctaBackground": "#fffaf0",
+    "ctaForeground": "#09195d"
+   },
+   "url": "/products/achha-tum-pehle",
+   "ctaLabel": "Shop \u201cWild Card\u201d",
+   "sprite": "../../artwork/hd/nails/wild-card.web.webp",
+   "previewSlots": [
+    1,
+    2,
+    0,
+    1
+   ],
+   "flightColumns": [
+    1,
+    2
+   ],
+   "live": true,
+   "altText": "Wild Card nail design: Acid lime, blush and cobalt-and-white checks.",
+   "character": {
+    "src": "../../artwork/hd/characters/wild-card-woman-v2-hero.web.webp",
+    "width": 366,
+    "height": 1019,
+    "bleed": [
+     "left"
+    ],
+    "parts": [
+     {
+      "src": "../../artwork/hd/props/wild-card-cards-hand-v2-hero.web.webp",
+      "width": 362,
+      "height": 492
+     }
+    ]
+   }
+  },
+  {
+   "key": "pinky-promise",
+   "name": "Pinky Promise",
+   "headline": "Haath do. Main hoon.",
+   "note": "Right here.",
+   "index": 6,
+   "colors": {
+    "scene": "#6620f2",
+    "ink": "#fffaf0",
+    "ctaBackground": "#fffaf0",
+    "ctaForeground": "#681bed"
+   },
+   "url": "/products/haath-do-main-hoon",
+   "ctaLabel": "Shop \u201cPinky Promise\u201d",
+   "sprite": "../../artwork/hd/nails/pinky-promise.web.webp",
+   "previewSlots": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "flightColumns": [],
+   "live": true,
+   "altText": "Pinky Promise nail design: Lilac with deep burgundy, asymmetric pointed tips.",
+   "character": {
+    "src": "../../artwork/hd/characters/pinky-promise-face-hero-v2.web.webp",
+    "width": 340,
+    "height": 516,
+    "bleed": [
+     "left",
+     "top"
+    ]
+   }
+  }
+ ]
+}

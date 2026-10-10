@@ -1,0 +1,52 @@
+{% doc %}
+  One or two pill buttons (primary blue, secondary outline). A button renders only with a label and link.
+{% enddoc %}
+
+<div class="st-buttons st-buttons--{{ block.settings.alignment }}" {{ block.shopify_attributes }}>
+  {%- if block.settings.label_1 != blank and block.settings.link_1 != blank -%}
+    <a class="st-cta" href="{{ block.settings.link_1 }}">{{ block.settings.label_1 | escape }} <span class="st-arrow" aria-hidden="true">↗</span></a>
+  {%- endif -%}
+  {%- if block.settings.label_2 != blank and block.settings.link_2 != blank -%}
+    <a class="st-cta st-cta--outline" href="{{ block.settings.link_2 }}">{{ block.settings.label_2 | escape }} <span class="st-arrow" aria-hidden="true">↗</span></a>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .st-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .st-buttons--center {
+    justify-content: center;
+  }
+
+  .st-buttons--stretch > * {
+    flex: 1 1 12rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk buttons",
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Layout",
+      "options": [
+        { "value": "start", "label": "Start" },
+        { "value": "center", "label": "Centre" },
+        { "value": "stretch", "label": "Full width" }
+      ],
+      "default": "center"
+    },
+    { "type": "text", "id": "label_1", "label": "Primary label" },
+    { "type": "url", "id": "link_1", "label": "Primary link" },
+    { "type": "text", "id": "label_2", "label": "Secondary label" },
+    { "type": "url", "id": "link_2", "label": "Secondary link" }
+  ],
+  "presets": [{ "name": "Small Talk buttons" }]
+}
+{% endschema %}

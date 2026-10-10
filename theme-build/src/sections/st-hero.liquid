@@ -1,0 +1,424 @@
+{% comment %}
+  Section contract.
+  Small Talk landing hero, DOM + data per motion/CONTRACT.md v3 (owner: Fable). Each block picks one
+  small_talk_campaign. Liquid renders the FIRST campaign as a complete static scene (CSS only); the motion
+  controller (assets/st-hero-motion.js, layout CSS assets/st-hero.css — both installed byte-identical, never
+  edited here) upgrades every [data-st-hero] root.
+  Art: theme assets st-hd-nails-<key>.webp (v3.6 HD sheets, 3 cells: signature | accent | extra, 450×780, cuticle
+  0.5/0.925; main-nail scale is CSS),
+  st-hd-tone-<n>.webp (558×1512, v3.5 HD fingers; same aspect and nail-bed anchor as 310×840), st-hd-preview-hand.webp
+  (510×498, v3.4 HD hand), the hero character per set (HD st-hd-*.webp: On Me hero cut (v3.6) / Brainwave / Green Flag v2
+  / Shaadi pin v2 / Wild Card v2 (+ its cards-hand part) / Pinky face v2 (v3.7); st-diet-can.webp for Diet Cherry;
+  decorative, lazy). Character placement is CSS keyed on data-active-key (v3: no inline
+  position styles). Mapping: snippets/st-motion-map.liquid (hero_character, hero_parts, sample_columns).
+  SEO-041: each set's "{name} nail design: {short_description}" is `altText` in the JSON and set 1's copy sits in
+  [data-st-hero-main-desc], referenced by the hold button's aria-describedby.
+  Words: locale small_talk.hero.* (register MC-080…MC-091, LND-009). The CTA (Shop “{name}”, LND-009) is gated
+  on G5: it renders only while the set's product is live (published, price > 0); `live` is in the JSON.
+  @example
+  <!-- templates/index.json: one "campaign" block per set, in play order. -->
+{% endcomment %}
+
+{%- liquid
+  assign first_block = section.blocks.first
+  assign c = first_block.settings.campaign
+  if section.blocks.size > 1
+    assign next_block = section.blocks[1]
+  else
+    assign next_block = first_block
+  endif
+  assign next_c = next_block.settings.campaign
+
+  assign tone_swatches = '#e99a6f,#d18256,#a25838,#86472f' | split: ','
+  assign tone = section.settings.default_tone | default: 2
+  assign tone_i = tone | minus: 1
+  assign tone_src = 'st-hd-tone-' | append: tone | append: '.webp' | asset_url
+  assign hand_src = 'st-hd-preview-hand.webp' | asset_url
+  assign tone_status_template = 'small_talk.hero.tone_status' | t: n: '{n}'
+  assign label_tone = 'small_talk.hero.tone_group' | t | append: ', ' | append: tone_status_template
+  assign label_next = 'small_talk.hero.next_set' | t: name: '{name}'
+  assign label_previous = 'small_talk.hero.previous_set' | t: name: '{name}'
+  assign label_announce = 'small_talk.hero.announce' | t: name: '{name}', headline: '{headline}'
+-%}
+
+{%- if c != blank -%}
+  {%- liquid
+    capture first_sprite_file
+      render 'st-motion-map', key: c.system.handle, field: 'hero_sprite'
+    endcapture
+    assign first_sprite = first_sprite_file | strip | asset_url
+    capture next_sprite_file
+      render 'st-motion-map', key: next_c.system.handle, field: 'hero_sprite'
+    endcapture
+    assign next_sprite = next_sprite_file | strip | asset_url
+    capture next_slots_raw
+      render 'st-motion-map', key: next_c.system.handle, field: 'preview_slots'
+    endcapture
+    assign next_slots = next_slots_raw | strip | split: ','
+    capture first_url
+      render 'st-campaign-url', campaign: c
+    endcapture
+    capture scene_style
+      render 'st-campaign-colors', campaign: c
+    endcapture
+    assign first_live = false
+    if c.product.value != blank and c.product.value.price > 0 and c.product.value.available
+      assign first_live = true
+    endif
+    assign first_alt = c.name.value | append: ' nail design: ' | append: c.short_description.value
+    capture first_char_raw
+      render 'st-motion-map', key: c.system.handle, field: 'hero_character'
+    endcapture
+    assign first_char = first_char_raw | strip | split: ','
+    capture first_parts_raw
+      render 'st-motion-map', key: c.system.handle, field: 'hero_parts'
+    endcapture
+    assign first_parts = first_parts_raw | strip | split: ';'
+    capture first_samples_raw
+      render 'st-motion-map', key: c.system.handle, field: 'sample_columns'
+    endcapture
+    assign first_samples = first_samples_raw | strip
+    if first_samples == blank
+      capture first_flights_raw
+        render 'st-motion-map', key: c.system.handle, field: 'flight_columns'
+      endcapture
+      assign first_flights = first_flights_raw | strip | split: ','
+      assign sample_a = first_flights[0] | default: ''
+      assign sample_b = first_flights[1] | default: ''
+      for pad in (1..2)
+        assign pad_s = pad | append: ''
+        unless first_flights contains pad_s
+          if sample_a == ''
+            assign sample_a = pad_s
+          elsif sample_b == ''
+            assign sample_b = pad_s
+          endif
+        endunless
+      endfor
+    else
+      assign samples = first_samples | split: ','
+      assign sample_a = samples[0]
+      assign sample_b = samples[1]
+    endif
+  -%}
+
+  {%- comment -%}
+    CONTRACT v3.7.1 load plan: the LCP tone and set 1's nail sheet are preloaded from layout/theme.liquid's <head>
+    (before the stylesheets), read from the data-st-preload-* attributes below; nothing else from the hero is preloaded.
+    v3.7.2: the set 1 character and the preview hand carry their URL in data-st-src; the controller reveals them after
+    the tone has loaded (decorative, so they stay empty without JS).
+  {%- endcomment -%}
+  {{ 'st-hero.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'st-hero-motion.js' | asset_url }}" defer></script>
+
+  <section
+    class="st-hero"
+    data-st-hero
+    data-active-key="{{ c.system.handle }}"
+    data-active-index="0"
+    data-next-key="{{ next_c.system.handle }}"
+    data-tone="{{ tone }}"
+    data-tone-count="4"
+    data-autoplay="{{ section.settings.autoplay }}"
+    data-st-preload-tone="{{ tone_src }}"
+    data-st-preload-sprite="{{ first_sprite }}"
+    aria-label="{{ 'small_talk.hero.region_label' | t }}"
+    aria-roledescription="carousel"
+    style="{{ scene_style | strip }} --st-tone-swatch: {{ tone_swatches[tone_i] }};"
+  >
+    <div class="st-hero__scene" data-st-hero-scene aria-hidden="true"></div>
+    <div class="st-hero__halo" aria-hidden="true"></div>
+
+    {%- if section.settings.show_character and first_char.size == 7 -%}
+      <div class="st-hero__character" data-st-hero-character aria-hidden="true" data-bleed="{{ first_char[5] }}">
+        <img data-st-hero-character-img data-st-src="{{ first_char[0] | asset_url }}" width="{{ first_char[1] }}" height="{{ first_char[2] }}" alt="" decoding="async" fetchpriority="low">
+        {%- comment -%} v3.4 character.parts at first paint (the controller reuses these by index). {%- endcomment -%}
+        {%- for part in first_parts -%}
+          {%- assign part_bits = part | split: ',' -%}
+          {%- if part_bits.size == 3 -%}
+            <img data-st-hero-character-part="{{ forloop.index }}" src="{{ part_bits[0] | asset_url }}" width="{{ part_bits[1] }}" height="{{ part_bits[2] }}" alt="" loading="lazy" decoding="async" fetchpriority="low">
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <button
+      type="button"
+      class="st-hero__preview"
+      data-st-hero-preview
+      data-key="{{ next_c.system.handle }}"
+      aria-label="{{ 'small_talk.hero.next_set' | t: name: next_c.name.value }}"
+      aria-disabled="true"
+    >
+      <img class="st-hero__hand" data-st-src="{{ hand_src }}" width="510" height="498" alt="" decoding="async" fetchpriority="low">
+      {%- for slot_col in next_slots -%}
+        <span class="st-nail" data-st-hero-preview-nail="{{ forloop.index0 }}" style="--col: {{ slot_col }};"></span>
+      {%- endfor -%}
+    </button>
+
+    <div class="st-hero__copy">
+      {%- if c.note.value != blank -%}
+        <p class="st-hero__note" data-st-hero-note>{{ c.note.value | escape }}</p>
+      {%- endif -%}
+      <h1 class="st-hero__headline" data-st-hero-headline>{{ c.headline.value | escape }}</h1>
+    </div>
+
+    <div class="st-hero__accent st-hero__accent--2" aria-hidden="true">
+      <span class="st-nail{% if sample_b == '' %} is-hidden{% endif %}" data-st-hero-accent="2" style="--st-nails: url('{{ first_sprite }}'); --col: {{ sample_b | default: 2 }};"></span>
+    </div>
+    <div class="st-hero__accent st-hero__accent--1" aria-hidden="true">
+      <span class="st-nail{% if sample_a == '' %} is-hidden{% endif %}" data-st-hero-accent="1" style="--st-nails: url('{{ first_sprite }}'); --col: {{ sample_a | default: 1 }};"></span>
+    </div>
+
+    {%- comment -%}
+      CONTRACT v3.7.1 (QA F4): no aria-hidden on the wrapper (the hold-to-pause button inside stays focusable: Space /
+      Enter hold pauses the hero); the decorative tone image is hidden at the element level.
+    {%- endcomment -%}
+    <div class="st-hero__finger" data-st-hero-finger>
+      <img
+        class="st-hero__tone"
+        data-st-hero-tone-sprite
+        src="{{ tone_src }}"
+        width="558"
+        height="1512"
+        alt=""
+        aria-hidden="true"
+        fetchpriority="high"
+      >
+      <button
+        type="button"
+        class="st-hero__main"
+        data-st-hero-main
+        aria-label="{{ 'small_talk.hero.hold_hint' | t }}"
+        aria-description="{{ 'small_talk.hero.hold' | t }}"
+        aria-describedby="st-hero-main-desc-{{ section.id }}"
+        aria-disabled="true"
+      >
+        <span class="st-nail" data-st-hero-main-nail style="--st-nails: url('{{ first_sprite }}'); --col: 0;"></span>
+      </button>
+    </div>
+
+    <div class="st-hero__flyers" data-st-hero-flyers aria-hidden="true"></div>
+
+    <div class="st-hero__controls">
+      <button
+        type="button"
+        class="st-hero__control st-hero__control--pause"
+        data-st-hero-pause
+        aria-pressed="false"
+        aria-disabled="true"
+        aria-label="{{ 'small_talk.hero.pause' | t }}"
+      >
+        <svg class="st-hero__icon-pause" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><rect x="1" y="1" width="4" height="14" rx="1" fill="currentColor"/><rect x="9" y="1" width="4" height="14" rx="1" fill="currentColor"/></svg>
+        <svg class="st-hero__icon-play" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path d="M2 1l11 7-11 7z" fill="currentColor"/></svg>
+      </button>
+      <button
+        type="button"
+        class="st-hero__control st-hero__control--tone"
+        data-st-hero-tone
+        aria-disabled="true"
+        aria-label="{{ 'small_talk.hero.tone_group' | t }}, {{ 'small_talk.hero.tone_status' | t: n: tone }}"
+      >
+        <span class="st-hero__swatch" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <a class="st-hero__cta" href="{{ first_url | strip }}" data-st-hero-cta{% unless first_live %} hidden{% endunless %}>
+      {{- 'small_talk.hero.shop_set' | t: name: c.name.value -}}
+      <span class="st-arrow" aria-hidden="true">↗</span>
+    </a>
+
+    <p class="visually-hidden" aria-live="polite" data-st-hero-status></p>
+    <p class="visually-hidden" data-st-hero-main-desc id="st-hero-main-desc-{{ section.id }}">{{ first_alt | escape }}</p>
+
+    <ul class="visually-hidden">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.campaign != blank -%}
+          <li {{ block.shopify_attributes }}>{{ block.settings.campaign.name.value | escape }}</li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    <script type="application/json" data-st-hero-data>
+      {
+        "version": 2,
+        "autoplay": {{ section.settings.autoplay | json }},
+        "defaultTone": {{ tone | json }},
+        "tones": [
+          {%- for i in (1..4) -%}
+            {%- assign t_src = 'st-hd-tone-' | append: i | append: '.webp' | asset_url -%}
+            { "index": {{ i }}, "swatch": {{ tone_swatches[forloop.index0] | json }}, "src": {{ t_src | json }} }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ],
+        "finger": { "width": 310, "height": 840, "anchor": { "x": 0.5, "y": 0.2649 }, "nailCellScale": 0.76 },
+        "nailCell": { "width": 204, "height": 354, "anchor": { "x": 0.5, "y": 0.925 } },
+        "previewHand": { "src": {{ hand_src | json }}, "width": 510, "height": 498 },
+        "labels": {
+          "pause": {{ 'small_talk.hero.pause' | t | json }},
+          "play": {{ 'small_talk.hero.play' | t | json }},
+          "replay": {{ 'small_talk.hero.replay' | t | json }},
+          "next": {{ label_next | json }},
+          "previous": {{ label_previous | json }},
+          "tone": {{ label_tone | json }},
+          "announce": {{ label_announce | json }},
+          "hold": {{ 'small_talk.hero.hold' | t | json }},
+          "holdHint": {{ 'small_talk.hero.hold_hint' | t | json }}
+        },
+        "campaigns": [
+          {%- assign written = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- assign item = block.settings.campaign -%}
+            {%- if item != blank -%}
+              {%- liquid
+                capture item_url
+                  render 'st-campaign-url', campaign: item
+                endcapture
+                capture item_cta_fg
+                  render 'st-campaign-colors', campaign: item, only: 'cta_foreground'
+                endcapture
+                capture item_sprite_file
+                  render 'st-motion-map', key: item.system.handle, field: 'hero_sprite'
+                endcapture
+                assign item_sprite = item_sprite_file | strip | asset_url
+                capture item_slots
+                  render 'st-motion-map', key: item.system.handle, field: 'preview_slots'
+                endcapture
+                capture item_flights
+                  render 'st-motion-map', key: item.system.handle, field: 'flight_columns'
+                endcapture
+                assign item_live = false
+                if item.product.value != blank and item.product.value.price > 0 and item.product.value.available
+                  assign item_live = true
+                endif
+                assign item_alt = item.name.value | append: ' nail design: ' | append: item.short_description.value
+                capture item_char_raw
+                  render 'st-motion-map', key: item.system.handle, field: 'hero_character'
+                endcapture
+                assign item_char = item_char_raw | strip | split: ','
+                assign item_char_src = item_char[0] | asset_url
+                assign item_bleed = item_char[5] | split: ' '
+                capture item_parts_raw
+                  render 'st-motion-map', key: item.system.handle, field: 'hero_parts'
+                endcapture
+                assign item_parts = item_parts_raw | strip | split: ';'
+                capture item_samples
+                  render 'st-motion-map', key: item.system.handle, field: 'sample_columns'
+                endcapture
+                assign item_samples = item_samples | strip
+              -%}
+              {%- if written > 0 %},{% endif -%}
+              {%- assign written = written | plus: 1 -%}
+              {
+                "key": {{ item.system.handle | json }},
+                "name": {{ item.name.value | json }},
+                "headline": {{ item.headline.value | json }},
+                "note": {{ item.note.value | json }},
+                "index": {{ item.motion_index.value | plus: 0 }},
+                "colors": {
+                  "scene": {{ item.background.value | append: '' | json }},
+                  "ink": {{ item.foreground.value | append: '' | json }},
+                  "ctaBackground": {{ item.cta_background.value | append: '' | json }},
+                  "ctaForeground": {{ item_cta_fg | strip | json }}
+                },
+                "url": {{ item_url | strip | json }},
+                "ctaLabel": {{ 'small_talk.hero.shop_set' | t: name: item.name.value | json }},
+                "live": {{ item_live | json }},
+                "sprite": {{ item_sprite | json }},
+                "previewSlots": [{{ item_slots | strip }}],
+                "flightColumns": [{{ item_flights | strip }}],
+                "altText": {{ item_alt | json }}
+                {%- if item_samples != blank -%},
+                "sampleColumns": [{{ item_samples }}]
+                {%- endif -%}
+                {%- if section.settings.show_character and item_char.size == 7 -%},
+                "character": {
+                  "src": {{ item_char_src | json }},
+                  "width": {{ item_char[1] | plus: 0 }},
+                  "height": {{ item_char[2] | plus: 0 }},
+                  "bleed": {{ item_bleed | json }}
+                  {%- if item_parts.size > 0 -%},
+                  "parts": [
+                    {%- for part in item_parts -%}
+                      {%- assign part_bits = part | split: ',' -%}
+                      {%- assign part_src = part_bits[0] | asset_url -%}
+                      { "src": {{ part_src | json }}, "width": {{ part_bits[1] | plus: 0 }}, "height": {{ part_bits[2] | plus: 0 }} }{% unless forloop.last %},{% endunless %}
+                    {%- endfor -%}
+                  ]
+                  {%- endif %}
+                }
+                {%- endif %}
+              }
+            {%- endif -%}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  </section>
+{%- elsif request.design_mode -%}
+  <div class="st-hero st-hero--empty">
+    <p>Add a campaign block to show the hero.</p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Layout lives in assets/st-hero.css (Fable). Only theme-local additions here. */
+  .st-hero--empty {
+    display: grid;
+    place-items: center;
+    min-height: 20rem;
+    background: var(--st-tint);
+  }
+
+  .st-hero .st-hero__cta[hidden] {
+    display: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk hero",
+  "class": "st-hero-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Play through sets automatically (when motion is available)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "default_tone",
+      "label": "Starting skin tone",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_character",
+      "label": "Show campaign character",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "campaign",
+      "name": "Campaign",
+      "settings": [
+        {
+          "type": "metaobject",
+          "id": "campaign",
+          "label": "Campaign",
+          "metaobject_type": "small_talk_campaign"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Small Talk hero"
+    }
+  ]
+}
+{% endschema %}

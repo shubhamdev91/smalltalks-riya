@@ -1,0 +1,156 @@
+{% doc %}
+  "Posting as {alias} · change" and the alias editor, shared by the composer and the reply box. st-talks.js fills
+  the alias (generated per device, kept in localStorage) and handles change / shuffle / save. Copy:
+  small_talk.talks.live.change / alias_* (TLK-105…109).
+
+  @param {string} id - Unique prefix for element ids (the form id).
+
+  @example
+  {% render 'st-talk-alias', id: form_id %}
+{% enddoc %}
+<p class="st-alias">
+  <span data-st-as></span>
+  <button
+    type="button"
+    class="st-alias__link"
+    data-st-alias-toggle
+    aria-expanded="false"
+    aria-controls="{{ id }}-alias"
+    aria-label="{{ 'small_talk.talks.live.change_label' | t | escape }}"
+  >
+    {{- 'small_talk.talks.live.change' | t -}}
+  </button>
+</p>
+<div class="st-alias__panel" id="{{ id }}-alias" data-st-alias-panel hidden>
+  <label class="st-alias__label" for="{{ id }}-alias-input">{{ 'small_talk.talks.live.alias_label' | t }}</label>
+  <div class="st-alias__row">
+    <input
+      id="{{ id }}-alias-input"
+      type="text"
+      maxlength="24"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      data-st-alias-input
+      aria-describedby="{{ id }}-alias-hint"
+    >
+    <button type="button" class="st-alias__ghost" data-st-alias-shuffle aria-label="{{ 'small_talk.talks.live.shuffle_label' | t | escape }}">
+      {{- 'small_talk.talks.live.alias_shuffle' | t -}}
+    </button>
+    <button type="button" class="st-alias__save" data-st-alias-save>{{ 'small_talk.talks.live.alias_save' | t }}</button>
+  </div>
+  <p class="st-alias__hint" id="{{ id }}-alias-hint" data-st-alias-hint>{{ 'small_talk.talks.live.alias_hint' | t }}</p>
+</div>
+
+{% stylesheet %}
+  .st-alias {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 8px;
+    margin: 0;
+    color: var(--st-muted-text);
+    font-family: var(--font-ui);
+    font-size: 14px;
+  }
+
+  .st-alias [data-st-as] {
+    overflow-wrap: anywhere;
+  }
+
+  .st-alias__link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: var(--st-burgundy);
+    font: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .st-alias__panel {
+    display: grid;
+    gap: 6px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #fdf1f0;
+    font-family: var(--font-ui);
+  }
+
+  .st-alias__panel[hidden] {
+    display: none;
+  }
+
+  .st-alias__label {
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .st-alias__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .st-alias__row input {
+    flex: 1 1 160px;
+    min-inline-size: 0;
+    min-block-size: 44px;
+    padding: 10px 14px;
+    border: 1px solid #ebe6e6;
+    border-radius: 6px;
+    background: #fff;
+    color: #1a1a2e;
+    font: inherit;
+    font-size: 16px;
+  }
+
+  .st-alias__ghost,
+  .st-alias__save {
+    min-block-size: 44px;
+    padding: 0 16px;
+    border-radius: var(--st-radius-pill);
+    font: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .st-alias__ghost {
+    border: 2px solid var(--st-outline-red);
+    background: transparent;
+    color: var(--st-outline-red);
+  }
+
+  .st-alias__save {
+    border: 0;
+    background: #a80f2a;
+    color: #fff;
+  }
+
+  .st-alias__hint {
+    margin: 0;
+    color: var(--st-muted-text);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .st-alias__hint[data-tone='error'] {
+    color: #b00818;
+    font-size: 14px;
+  }
+
+  .st-alias__link:focus-visible,
+  .st-alias__row input:focus-visible,
+  .st-alias__ghost:focus-visible,
+  .st-alias__save:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 2px;
+  }
+{% endstylesheet %}

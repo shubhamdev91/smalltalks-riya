@@ -1,0 +1,378 @@
+{
+ "wild-card-chapter-v2": {
+  "original": "chatgpt/A/Curly-haired woman, lime saree, diamond cards-1.png",
+  "folder": "A",
+  "order": 1,
+  "mtime_rank": 1,
+  "named": "chatgpt/named/wild-card/wild-card-chapter-v2.png"
+ },
+ "brainwave-chapter": {
+  "original": "chatgpt/A/Curly-haired woman with blue pen-2.png",
+  "folder": "A",
+  "order": 2,
+  "mtime_rank": 2,
+  "named": "chatgpt/named/brainwave/brainwave-chapter.png"
+ },
+ "our-vision-woman": {
+  "original": "chatgpt/A/Burgundy Gold Eye Portrait-4.png",
+  "folder": "A",
+  "order": 4,
+  "mtime_rank": 3,
+  "named": "chatgpt/named/_shared/our-vision-woman.png"
+ },
+ "diet-cherry-chapter": {
+  "original": "chatgpt/A/Peeking woman with a Diet Cherry can-3.png",
+  "folder": "A",
+  "order": 3,
+  "mtime_rank": 4,
+  "named": "chatgpt/named/diet-cherry/diet-cherry-chapter.png"
+ },
+ "_set_aside": [
+  {
+   "original": "chatgpt/A/Comic portrait on a pale peach background-5.png",
+   "folder": "A",
+   "order": 5,
+   "reason": "retry of our-vision-woman (A4); visibly softer (eye-region Laplacian var 589 vs 851), background equivalent (dE00 1.4 vs 2.1). Kept A4."
+  },
+  {
+   "original": "chatgpt/C/Cherry red nails_ chrome and French tip-1.png",
+   "folder": "C",
+   "order": 1,
+   "reason": "alternate diet-cherry-pdp-hand (fingers up, palm-side framing, 1312x1199 not square); -7 matches the prompt pose and finger order. Kept -7."
+  },
+  {
+   "original": "chatgpt/C/Elegant manicure on mustard-yellow surface-2.png",
+   "folder": "C",
+   "order": 2,
+   "reason": "on-me-pdp-hand retry with the WRONG finger order (index->little burgundy, tortoise, gold, tortoise; prompt: tortoise, gold, tortoise, burgundy). -3 is correct. Rejected."
+  },
+  {
+   "original": "chatgpt/C/Fuchsia daisy almond nail fan-12.png",
+   "folder": "C",
+   "order": 12,
+   "reason": "shaadi-shift flatlay alternate, wide 1536x1024 (square requested); same design as -13. Kept -13."
+  }
+ ],
+ "on-me-nail-1": {
+  "original": "chatgpt/B/Glossy burgundy almond press-on nail-1.png",
+  "folder": "B",
+  "order": 1,
+  "mtime_rank": 1,
+  "named": "chatgpt/named/on-me/on-me-nail-1.png"
+ },
+ "on-me-nail-2": {
+  "original": "chatgpt/B/Reflective gold chrome almond nail-2.png",
+  "folder": "B",
+  "order": 2,
+  "mtime_rank": 2,
+  "named": "chatgpt/named/on-me/on-me-nail-2.png"
+ },
+ "on-me-nail-3": {
+  "original": "chatgpt/B/Glossy amber tortoiseshell press-on nail-3.png",
+  "folder": "B",
+  "order": 3,
+  "mtime_rank": 3,
+  "named": "chatgpt/named/on-me/on-me-nail-3.png"
+ },
+ "brainwave-nail-1": {
+  "original": "chatgpt/B/Glossy cobalt blue almond nail-4.png",
+  "folder": "B",
+  "order": 4,
+  "mtime_rank": 4,
+  "named": "chatgpt/named/brainwave/brainwave-nail-1.png"
+ },
+ "brainwave-nail-2": {
+  "original": "chatgpt/B/Pearly white almond press-on nail-5.png",
+  "folder": "B",
+  "order": 5,
+  "mtime_rank": 5,
+  "named": "chatgpt/named/brainwave/brainwave-nail-2.png"
+ },
+ "brainwave-nail-3": {
+  "original": "chatgpt/B/Silver chrome almond press-on nail-6.png",
+  "folder": "B",
+  "order": 6,
+  "mtime_rank": 6,
+  "named": "chatgpt/named/brainwave/brainwave-nail-3.png"
+ },
+ "diet-cherry-nail-1": {
+  "original": "chatgpt/B/Polished silver chrome almond nail-7.png",
+  "folder": "B",
+  "order": 7,
+  "mtime_rank": 7,
+  "named": "chatgpt/named/diet-cherry/diet-cherry-nail-1.png"
+ },
+ "diet-cherry-nail-2": {
+  "original": "chatgpt/B/Glossy deep cherry press-on nail-8.png",
+  "folder": "B",
+  "order": 8,
+  "mtime_rank": 8,
+  "named": "chatgpt/named/diet-cherry/diet-cherry-nail-2.png"
+ },
+ "diet-cherry-nail-3": {
+  "original": "chatgpt/B/Glossy Blush Nail with Cherry Tip-9.png",
+  "folder": "B",
+  "order": 9,
+  "mtime_rank": 9,
+  "named": "chatgpt/named/diet-cherry/diet-cherry-nail-3.png"
+ },
+ "green-flag-nail-1": {
+  "original": "chatgpt/B/Glossy Peach Nail with Emerald Tip-10.png",
+  "folder": "B",
+  "order": 10,
+  "mtime_rank": 10,
+  "named": "chatgpt/named/green-flag/green-flag-nail-1.png"
+ },
+ "green-flag-nail-2": {
+  "original": "chatgpt/B/Glossy emerald green press-on nail-11.png",
+  "folder": "B",
+  "order": 11,
+  "mtime_rank": 11,
+  "named": "chatgpt/named/green-flag/green-flag-nail-2.png"
+ },
+ "shaadi-shift-nail-1": {
+  "original": "chatgpt/B/Glossy Pink Nail with Yellow Daisy-12.png",
+  "folder": "B",
+  "order": 12,
+  "mtime_rank": 12,
+  "named": "chatgpt/named/shaadi-shift/shaadi-shift-nail-1.png"
+ },
+ "shaadi-shift-nail-2": {
+  "original": "chatgpt/B/Glossy scarlet almond press-on nail-13.png",
+  "folder": "B",
+  "order": 13,
+  "mtime_rank": 13,
+  "named": "chatgpt/named/shaadi-shift/shaadi-shift-nail-2.png"
+ },
+ "shaadi-shift-nail-3": {
+  "original": "chatgpt/B/Glossy soft pink almond press-on nail-14.png",
+  "folder": "B",
+  "order": 14,
+  "mtime_rank": 14,
+  "named": "chatgpt/named/shaadi-shift/shaadi-shift-nail-3.png"
+ },
+ "wild-card-nail-1": {
+  "original": "chatgpt/B/Glossy cobalt checkerboard almond nail-15.png",
+  "folder": "B",
+  "order": 15,
+  "mtime_rank": 15,
+  "named": "chatgpt/named/wild-card/wild-card-nail-1.png"
+ },
+ "wild-card-nail-2": {
+  "original": "chatgpt/B/Glossy acid lime almond press-on nail-16.png",
+  "folder": "B",
+  "order": 16,
+  "mtime_rank": 16,
+  "named": "chatgpt/named/wild-card/wild-card-nail-2.png"
+ },
+ "wild-card-nail-3": {
+  "original": "chatgpt/B/Glossy Peach Nail with Lime Tip-17.png",
+  "folder": "B",
+  "order": 17,
+  "mtime_rank": 17,
+  "named": "chatgpt/named/wild-card/wild-card-nail-3.png"
+ },
+ "pinky-promise-nail-1": {
+  "original": "chatgpt/B/Lilac nail with burgundy asymmetric tip-18.png",
+  "folder": "B",
+  "order": 18,
+  "mtime_rank": 18,
+  "named": "chatgpt/named/pinky-promise/pinky-promise-nail-1.png"
+ },
+ "finger-tone-1": {
+  "original": "chatgpt/B/Single upright index finger-19.png",
+  "folder": "B",
+  "order": 19,
+  "mtime_rank": 19,
+  "named": "chatgpt/named/_shared/finger-tone-1.png"
+ },
+ "finger-tone-2": {
+  "original": "chatgpt/B/Warm golden tan index finger-20.png",
+  "folder": "B",
+  "order": 20,
+  "mtime_rank": 20,
+  "named": "chatgpt/named/_shared/finger-tone-2.png"
+ },
+ "finger-tone-3": {
+  "original": "chatgpt/B/Rich warm brown index finger-21.png",
+  "folder": "B",
+  "order": 21,
+  "mtime_rank": 21,
+  "named": "chatgpt/named/_shared/finger-tone-3.png"
+ },
+ "finger-tone-4": {
+  "original": "chatgpt/B/Deep brown index finger with natural nail-22.png",
+  "folder": "B",
+  "order": 22,
+  "mtime_rank": 22,
+  "named": "chatgpt/named/_shared/finger-tone-4.png"
+ },
+ "on-me-pdp-hand": {
+  "original": "chatgpt/C/Burgundy, tortoiseshell, and mirror-gold nails-3.png",
+  "folder": "C",
+  "order": 3,
+  "mtime_rank": 3,
+  "named": "chatgpt/named/on-me/on-me-pdp-hand.png"
+ },
+ "on-me-pdp-moment": {
+  "original": "chatgpt/C/Elegant Hand on a Leather Caf\u00e9 Folder-4.png",
+  "folder": "C",
+  "order": 4,
+  "mtime_rank": 4,
+  "named": "chatgpt/named/on-me/on-me-pdp-moment.png"
+ },
+ "brainwave-pdp-hand": {
+  "original": "chatgpt/C/Elegant Hand With Glossy Multicolor Nails-5.png",
+  "folder": "C",
+  "order": 5,
+  "mtime_rank": 5,
+  "named": "chatgpt/named/brainwave/brainwave-pdp-hand.png"
+ },
+ "brainwave-pdp-moment": {
+  "original": "chatgpt/C/Elegant hand on crescent bag sketch-6.png",
+  "folder": "C",
+  "order": 6,
+  "mtime_rank": 6,
+  "named": "chatgpt/named/brainwave/brainwave-pdp-moment.png"
+ },
+ "diet-cherry-pdp-hand": {
+  "original": "chatgpt/C/Elegant cherry red and chrome manicure-7.png",
+  "folder": "C",
+  "order": 7,
+  "mtime_rank": 7,
+  "named": "chatgpt/named/diet-cherry/diet-cherry-pdp-hand.png"
+ },
+ "diet-cherry-pdp-moment": {
+  "original": "chatgpt/C/Chrome and Crimson Manicure Moment-8.png",
+  "folder": "C",
+  "order": 8,
+  "mtime_rank": 8,
+  "named": "chatgpt/named/diet-cherry/diet-cherry-pdp-moment.png"
+ },
+ "green-flag-pdp-flatlay": {
+  "original": "chatgpt/C/Emerald and blush almond press-on nails-9.png",
+  "folder": "C",
+  "order": 9,
+  "mtime_rank": 9,
+  "named": "chatgpt/named/green-flag/green-flag-pdp-flatlay.png"
+ },
+ "green-flag-pdp-hand": {
+  "original": "chatgpt/C/Emerald and blush French tips-10.png",
+  "folder": "C",
+  "order": 10,
+  "mtime_rank": 10,
+  "named": "chatgpt/named/green-flag/green-flag-pdp-hand.png"
+ },
+ "green-flag-pdp-moment": {
+  "original": "chatgpt/C/Emerald manicure with pink vintage receiver-11.png",
+  "folder": "C",
+  "order": 11,
+  "mtime_rank": 11,
+  "named": "chatgpt/named/green-flag/green-flag-pdp-moment.png"
+ },
+ "shaadi-shift-pdp-flatlay": {
+  "original": "chatgpt/C/Glossy daisy-accented pink and red nails-13.png",
+  "folder": "C",
+  "order": 13,
+  "mtime_rank": 13,
+  "named": "chatgpt/named/shaadi-shift/shaadi-shift-pdp-flatlay.png"
+ },
+ "shaadi-shift-pdp-hand": {
+  "original": "chatgpt/C/Shaadi Shift nails on fuchsia background-14.png",
+  "folder": "C",
+  "order": 14,
+  "mtime_rank": 14,
+  "named": "chatgpt/named/shaadi-shift/shaadi-shift-pdp-hand.png"
+ },
+ "shaadi-shift-pdp-moment": {
+  "original": "chatgpt/C/Glossy red index nail beside safety pin-16.png",
+  "folder": "C",
+  "order": 16,
+  "mtime_rank": 15,
+  "named": "chatgpt/named/shaadi-shift/shaadi-shift-pdp-moment.png"
+ },
+ "wild-card-pdp-flatlay": {
+  "original": "chatgpt/C/Lime, blush & checkerboard nail set-17.png",
+  "folder": "C",
+  "order": 17,
+  "mtime_rank": 16,
+  "named": "chatgpt/named/wild-card/wild-card-pdp-flatlay.png"
+ },
+ "wild-card-pdp-hand": {
+  "original": "chatgpt/C/Lime manicure with cobalt checker accent-18.png",
+  "folder": "C",
+  "order": 18,
+  "mtime_rank": 17,
+  "named": "chatgpt/named/wild-card/wild-card-pdp-hand.png"
+ },
+ "wild-card-pdp-moment": {
+  "original": "chatgpt/C/Polished hand over cards on green felt-20.png",
+  "folder": "C",
+  "order": 20,
+  "mtime_rank": 18,
+  "named": "chatgpt/named/wild-card/wild-card-pdp-moment.png"
+ },
+ "pinky-promise-pdp-flatlay": {
+  "original": "chatgpt/C/Lilac Nails with Burgundy Sweeping Tips-21.png",
+  "folder": "C",
+  "order": 21,
+  "mtime_rank": 19,
+  "named": "chatgpt/named/pinky-promise/pinky-promise-pdp-flatlay.png"
+ },
+ "pinky-promise-pdp-hand": {
+  "original": "chatgpt/C/Lilac nails with burgundy tips-23.png",
+  "folder": "C",
+  "order": 23,
+  "mtime_rank": 20,
+  "named": "chatgpt/named/pinky-promise/pinky-promise-pdp-hand.png"
+ },
+ "pinky-promise-pdp-moment": {
+  "original": "chatgpt/C/Lilac pinky promise-24.png",
+  "folder": "C",
+  "order": 24,
+  "mtime_rank": 21,
+  "named": "chatgpt/named/pinky-promise/pinky-promise-pdp-moment.png"
+ },
+ "guide-measure": {
+  "original": "chatgpt/C/Paper strip nail width measurement-25.png",
+  "folder": "C",
+  "order": 25,
+  "mtime_rank": 22,
+  "named": "chatgpt/named/_shared/guide-measure.png"
+ },
+ "guide-apply": {
+  "original": "chatgpt/C/Tortoiseshell press-on nail application-26.png",
+  "folder": "C",
+  "order": 26,
+  "mtime_rank": 23,
+  "named": "chatgpt/named/_shared/guide-apply.png"
+ },
+ "guide-remove": {
+  "original": "chatgpt/C/Careful press-on nail edge lifting-28.png",
+  "folder": "C",
+  "order": 28,
+  "mtime_rank": 24,
+  "named": "chatgpt/named/_shared/guide-remove.png"
+ },
+ "on-me-pdp-flatlay": {
+  "original": "chatgpt/C/Five-nail press-on fan in mustard.png",
+  "folder": "C",
+  "order": null,
+  "mtime_rank": 25,
+  "named": "chatgpt/named/on-me/on-me-pdp-flatlay.png"
+ },
+ "brainwave-pdp-flatlay": {
+  "original": "chatgpt/C/Brainwave Cobalt Five-Nail Fan.png",
+  "folder": "C",
+  "order": null,
+  "mtime_rank": 26,
+  "named": "chatgpt/named/brainwave/brainwave-pdp-flatlay.png"
+ },
+ "diet-cherry-pdp-flatlay": {
+  "original": "chatgpt/C/Diet Cherry Five-Nail Fan.png",
+  "folder": "C",
+  "order": null,
+  "mtime_rank": 27,
+  "named": "chatgpt/named/diet-cherry/diet-cherry-pdp-flatlay.png"
+ }
+}

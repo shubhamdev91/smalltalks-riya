@@ -1,0 +1,43 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-talks-list",
+      "settings": {
+        "blog_handle": "the-talks",
+        "hub_url": "/blogs/the-talks",
+        "heading": "the talks",
+        "tagline": "a little less filtered.",
+        "subheading": "Small moments. Open conversations.",
+        "cta_label": "Start a talk ↗",
+        "all_label": "All",
+        "chip_order": "plot-twists, tiny-wins, nail-talk, something-else",
+        "list_label": "Latest talks",
+        "per_page": 10,
+        "panel_text": "Different thoughts. Same energy. ♡",
+        "endpoint": "/apps/talks"
+      }
+    },
+    "rules": {
+      "type": "st-talks-rules",
+      "settings": {
+        "blog_handle": "the-talks",
+        "heading": "House rules",
+        "rule_1": "Gossip about situations, not people.",
+        "rule_2": "No real names, numbers, handles or links. Nothing that could identify anyone.",
+        "rule_3": "No hate, harassment or bullying. No selling.",
+        "rule_4": "Your alias is the only name anyone sees. We don’t ask for a name, email or account.",
+        "privacy": "To stop spam, we keep a scrambled code for your device (never your IP address) and delete it within 30 days.",
+        "moderation_prelaunch": "Once posting opens, talks and replies go live straight away. Anything that might name a real person is held for a quick check first, and we take down whatever breaks these rules.",
+        "moderation": "Talks and replies go live straight away. Anything that might name a real person is held for a quick check first, and we take down whatever breaks these rules.",
+        "report": "Tap Report on anything that breaks these rules. Three reports from different people and it’s hidden until we’ve checked it. Something here about you? Email {email} with the link and we’ll take it down.",
+        "support": "If a talk gets heavy, you don’t have to carry it alone. Call Tele-MANAS, India’s free 24×7 mental health helpline, on 14416 or 1800-891-4416.",
+        "support_tel_1": "14416",
+        "support_tel_2": "1800-891-4416"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rules"
+  ]
+}

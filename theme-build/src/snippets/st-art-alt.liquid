@@ -1,0 +1,47 @@
+{% doc %}
+  Alt text for campaign art, keyed by campaign handle, copied verbatim from the copy register:
+  - chapter: landing chapter art, SEO-045…051 (v1.3.7 HD batch 1; v1.4.1 HD batch 2: SEO-046, SEO-047, SEO-050)
+  - chapter-desk: a chapter's laptop-only art where it differs from the phone art: SEO-111 (v1.4.12, Shaadi Shift's
+    full-face portrait, >= 1024; the phone sweep keeps SEO-049)
+  - lifestyle: accepted lifestyle composites, SEO-079…085 (labelled as illustration)
+  - package: packaging boxes, SEO-033…039 wording, used theme-locally per SEO-053 (one alt per box image)
+
+  @param {string} key - Campaign handle.
+  @param {string} kind - chapter, chapter-desk, lifestyle or package.
+{% enddoc %}
+{%- case kind -%}
+  {%- when 'chapter' -%}
+    {%- case key -%}
+      {%- when 'on-me' -%}{%- comment -%} SEO-045 {%- endcomment -%}Illustration: a woman in gold hoops beside a hand holding a receipt that reads “On me. xx”, its nails burgundy.
+      {%- when 'brainwave' -%}{%- comment -%} SEO-046 {%- endcomment -%}Illustration: a woman in tortoiseshell glasses and gold hoops beside a sketchbook of crescent-bag sketches and a blue pen.
+      {%- when 'diet-cherry' -%}{%- comment -%} SEO-047 {%- endcomment -%}Illustration: a woman in gold jhumkas beside a hand holding a cold silver can with red lettering, nails deep red and blush.
+      {%- when 'green-flag' -%}{%- comment -%} SEO-048 {%- endcomment -%}Illustration: a woman on a pink rotary phone, receiver at her ear, nails emerald and blush with green tips.
+      {%- when 'shaadi-shift' -%}{%- comment -%} SEO-049 {%- endcomment -%}Illustration: an eye peeking out from under a red and gold dupatta, with a gold safety pin on it.
+      {%- when 'wild-card' -%}{%- comment -%} SEO-050 {%- endcomment -%}Illustration: a woman with long curly hair in a green saree, holding red-backed cards; nails lime, checked and lime-tipped.
+      {%- when 'pinky-promise' -%}{%- comment -%} SEO-051 {%- endcomment -%}Illustration: a woman holding hands with someone in a lilac sleeve, nails lilac with burgundy tips.
+    {%- endcase -%}
+  {%- when 'chapter-desk' -%}
+    {%- case key -%}
+      {%- when 'shaadi-shift' -%}{%- comment -%} SEO-111 {%- endcomment -%}Illustration: a smiling woman with a bindi and gold jhumkas, her red and gold dupatta pinned with a gold safety pin.
+    {%- endcase -%}
+  {%- when 'lifestyle' -%}
+    {%- case key -%}
+      {%- when 'on-me' -%}{%- comment -%} SEO-079 {%- endcomment -%}Illustration: a hand on mustard yellow wearing the On Me set: burgundy, tortoiseshell and gold nails.
+      {%- when 'brainwave' -%}{%- comment -%} SEO-080 {%- endcomment -%}Illustration: a hand on cobalt blue wearing the Brainwave set: cobalt, pearly white and silver nails.
+      {%- when 'diet-cherry' -%}{%- comment -%} SEO-081 {%- endcomment -%}Illustration: a hand on cherry red wearing the Diet Cherry set: deep red, silver and red-tipped blush nails.
+      {%- when 'green-flag' -%}{%- comment -%} SEO-082 {%- endcomment -%}Illustration: a hand on emerald wearing the Green Flag set: emerald nails and blush nails with green tips.
+      {%- when 'shaadi-shift' -%}{%- comment -%} SEO-083 {%- endcomment -%}Illustration: a hand on fuchsia wearing the Shaadi Shift set: pink and red nails, one with a little yellow flower.
+      {%- when 'wild-card' -%}{%- comment -%} SEO-084 {%- endcomment -%}Illustration: a hand on acid lime wearing the Wild Card set: lime and blush nails, one with blue-and-white checks.
+      {%- when 'pinky-promise' -%}{%- comment -%} SEO-085 {%- endcomment -%}Illustration: a hand on violet wearing the Pinky Promise set: lilac nails with deep burgundy asymmetric tips.
+    {%- endcase -%}
+  {%- when 'package' -%}
+    {%- case key -%}
+      {%- when 'on-me' -%}{%- comment -%} SEO-033 {%- endcomment -%}On Me press-on nail box by Small Talk, illustrated front, with burgundy, tortoiseshell and gold nails in the tray.
+      {%- when 'brainwave' -%}{%- comment -%} SEO-034 {%- endcomment -%}Brainwave press-on nail box by Small Talk, illustrated front, with cobalt, pearly white and silver nails in the tray.
+      {%- when 'diet-cherry' -%}{%- comment -%} SEO-035 {%- endcomment -%}Diet Cherry press-on nail box by Small Talk, illustrated front, with deep red, silver and red-tipped blush nails in the tray.
+      {%- when 'green-flag' -%}{%- comment -%} SEO-036 {%- endcomment -%}Green Flag press-on nail box by Small Talk, illustrated front, with emerald and green-tipped blush nails in the tray.
+      {%- when 'shaadi-shift' -%}{%- comment -%} SEO-037 {%- endcomment -%}Shaadi Shift press-on nail box by Small Talk, illustrated front, with pink, deep red and yellow-flower nails in the tray.
+      {%- when 'wild-card' -%}{%- comment -%} SEO-038 {%- endcomment -%}Wild Card press-on nail box by Small Talk, illustrated front, with lime, blush and blue-and-white checked nails in the tray.
+      {%- when 'pinky-promise' -%}{%- comment -%} SEO-039 {%- endcomment -%}Pinky Promise press-on nail box by Small Talk, illustrated front, with lilac nails with deep burgundy tips in the tray.
+    {%- endcase -%}
+{%- endcase -%}

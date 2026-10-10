@@ -1,0 +1,64 @@
+{% doc %}
+  "A few ground rules" for the talks page: heading and up to four short rules. Rule 4 is an owner decision (D3,
+  helpline wording) and renders only when "Rule 4 approved" is on.
+{% enddoc %}
+
+<div class="st-rules" {{ block.shopify_attributes }}>
+  {%- if block.settings.heading != blank -%}
+    <h2 class="st-rules__heading">{{ block.settings.heading | escape }}</h2>
+  {%- endif -%}
+  <ul class="st-rules__list">
+    {%- for i in (1..4) -%}
+      {%- assign r_key = 'rule_' | append: i -%}
+      {%- assign rule = block.settings[r_key] -%}
+      {%- if rule != blank -%}
+        {%- if i == 4 and block.settings.rule_4_approved == false -%}
+          {%- continue -%}
+        {%- endif -%}
+        <li>{{ rule | escape }}</li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% stylesheet %}
+  .st-rules {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--st-radius-card);
+    background: var(--st-tint);
+  }
+
+  .st-rules__heading {
+    margin: 0;
+    color: var(--st-ink);
+    font-family: var(--st-font-button);
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+
+  .st-rules__list {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding-inline-start: 1.1rem;
+    color: var(--st-body);
+    line-height: 1.5;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk ground rules",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "text", "id": "rule_1", "label": "Rule 1" },
+    { "type": "text", "id": "rule_2", "label": "Rule 2" },
+    { "type": "text", "id": "rule_3", "label": "Rule 3" },
+    { "type": "textarea", "id": "rule_4", "label": "Rule 4 (owner decision D3)" },
+    { "type": "checkbox", "id": "rule_4_approved", "label": "Rule 4 approved (D3)", "default": false }
+  ],
+  "presets": [{ "name": "Small Talk ground rules" }]
+}
+{% endschema %}

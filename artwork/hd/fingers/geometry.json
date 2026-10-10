@@ -1,0 +1,32 @@
+{
+ "canvas": [
+  558,
+  1512
+ ],
+ "nail_bed_anchor": {
+  "x": 0.5,
+  "y": 0.2649,
+  "px": [
+   279.0,
+   400.5
+  ],
+  "meaning": "proximal edge (cuticle) of the natural nail plate on its centre line; identical in all four tones (measured 279/401 each)"
+ },
+ "natural_plate_width_px": 207.5,
+ "natural_plate_width_frac": 0.3719,
+ "main_nail": {
+  "rule": "press-on visible width = 1.08 x natural plate width; sprite cell anchor (0.5, 0.925) on the nail-bed anchor",
+  "hd_cell_scale": 0.5882,
+  "cell_width_frac_of_finger_canvas": 0.4743,
+  "p1_cell_scale_equiv": 0.7208,
+  "press_on_visible_width_px": 224.1,
+  "press_on_top_y_px": -11.2,
+  "tuck_px": 0.0
+ },
+ "vs_phase1": "P1 fingers: anchor (0.5, 0.2649), cell 0.5 of canvas width (cell scale 0.76). HD: same anchor, cell 0.474 of canvas width (main nail ~5% narrower relative to the finger).",
+ "checks": [
+  "tests/hd/fingers-plate-measure.png",
+  "tests/hd/fingers-hd-main-nail-all.png",
+  "tests/hd/fingers-hd-main-nail-base-2x.png"
+ ]
+}

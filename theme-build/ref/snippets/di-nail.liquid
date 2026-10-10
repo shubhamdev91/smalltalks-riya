@@ -1,0 +1,10 @@
+{% doc %}
+  Renders a decorative nail from the registered artwork atlases.
+  @param {number} [index] - Campaign artwork column.
+  @param {number} [row] - Signature (0), accent (1), or supplementary accent (2).
+  @param {string} [class] - Additional CSS class.
+  @param {image} [art] - Optional primary atlas.
+  @example
+  {% render 'di-nail', index: 0, row: 0 %}
+{% enddoc %}
+<span class="di-nail {{ class }}{% if row == 2 %} di-nail--extra{% endif %}" aria-hidden="true" style="--nail-column:{{ index | default: 0 }};--nail-row:{{ row | default: 0 }};{% if art != blank %}--nails:url('{{ art | image_url: width: 1800 }}');{% endif %}"></span>

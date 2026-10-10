@@ -1,0 +1,707 @@
+{
+ "note": "Fitted at 390 against board 3 (st-foundation lab, 9 Oct). Boxes are section-relative board px [x0,y0,x1,y1]; text boxes are line boxes (headline = SVG text cells incl. ascent gap, so their tops sit ~0.25em above the ink). \"spec\" = landing.md boxes; \"delta\" = fitted - spec (top/bottom). Ink-band check vs the board crop: tools/ink_bands.py.",
+ "chapters": {
+  "diet-cherry": {
+   "note": {
+    "fitted": [
+     70,
+     23,
+     290,
+     139
+    ],
+    "spec": [
+     70,
+     23,
+     290,
+     113
+    ],
+    "delta_top": 0,
+    "delta_bottom": 26
+   },
+   "head": {
+    "fitted": [
+     60,
+     112,
+     361,
+     286
+    ],
+    "spec": [
+     60,
+     108,
+     360,
+     238
+    ],
+    "delta_top": 4,
+    "delta_bottom": 48
+   },
+   "nails": {
+    "fitted": [
+     13,
+     282,
+     398,
+     416
+    ],
+    "spec": [
+     22,
+     248,
+     368,
+     378
+    ],
+    "delta_top": 34,
+    "delta_bottom": 38
+   },
+   "name": {
+    "fitted": [
+     146,
+     427,
+     244,
+     453
+    ],
+    "spec": [
+     null,
+     393,
+     null,
+     428
+    ],
+    "delta_top": 34,
+    "delta_bottom": 25
+   },
+   "pill": {
+    "fitted": [
+     118,
+     464,
+     272,
+     510
+    ],
+    "spec": [
+     118,
+     443,
+     272,
+     488
+    ],
+    "delta_top": 21,
+    "delta_bottom": 22
+   },
+   "params": {
+    "note_x": 67,
+    "note_y": 40,
+    "note_w": 220,
+    "note_rot": -8,
+    "note_fs": 41.17,
+    "head_y": 128,
+    "head_fs": 64.85,
+    "head_lead": 0.95,
+    "nails_y": 282.0,
+    "name_y": 427.0,
+    "pill_x": 118,
+    "pill_y": 464.0,
+    "pill_w": 154,
+    "head_dx": 13.0
+   }
+  },
+  "brainwave": {
+   "note": {
+    "fitted": [
+     130,
+     105,
+     370,
+     207
+    ],
+    "spec": [
+     130,
+     105,
+     370,
+     220
+    ],
+    "delta_top": 0,
+    "delta_bottom": -13
+   },
+   "head": {
+    "fitted": [
+     60,
+     196,
+     365,
+     350
+    ],
+    "spec": [
+     60,
+     235,
+     365,
+     345
+    ],
+    "delta_top": -39,
+    "delta_bottom": 5
+   },
+   "nails": {
+    "fitted": [
+     13,
+     374,
+     398,
+     507
+    ],
+    "spec": [
+     22,
+     365,
+     368,
+     500
+    ],
+    "delta_top": 9,
+    "delta_bottom": 7
+   },
+   "name": {
+    "fitted": [
+     150,
+     527,
+     240,
+     553
+    ],
+    "spec": [
+     null,
+     525,
+     null,
+     555
+    ],
+    "delta_top": 2,
+    "delta_bottom": -2
+   },
+   "pill": {
+    "fitted": [
+     105,
+     565,
+     295,
+     611
+    ],
+    "spec": [
+     105,
+     565,
+     295,
+     612
+    ],
+    "delta_top": 0,
+    "delta_bottom": -1
+   },
+   "params": {
+    "note_x": 117,
+    "note_y": 127,
+    "note_w": 270,
+    "note_rot": -8,
+    "note_fs": 33.03,
+    "head_y": 214,
+    "head_fs": 56.9,
+    "head_lead": 1.04,
+    "nails_y": 373.5,
+    "name_y": 527.0,
+    "pill_x": 105,
+    "pill_y": 565.0,
+    "pill_w": 190,
+    "head_dx": 17.5
+   }
+  },
+  "green-flag": {
+   "note": {
+    "fitted": [
+     80,
+     25,
+     310,
+     141
+    ],
+    "spec": [
+     80,
+     25,
+     310,
+     135
+    ],
+    "delta_top": 0,
+    "delta_bottom": 6
+   },
+   "head": {
+    "fitted": [
+     40,
+     117,
+     385,
+     264
+    ],
+    "spec": [
+     40,
+     140,
+     385,
+     275
+    ],
+    "delta_top": -23,
+    "delta_bottom": -11
+   },
+   "nails": {
+    "fitted": [
+     13,
+     284,
+     398,
+     417
+    ],
+    "spec": [
+     22,
+     285,
+     368,
+     400
+    ],
+    "delta_top": -1,
+    "delta_bottom": 17
+   },
+   "name": {
+    "fitted": [
+     149,
+     432,
+     241,
+     458
+    ],
+    "spec": [
+     null,
+     430,
+     null,
+     460
+    ],
+    "delta_top": 2,
+    "delta_bottom": -2
+   },
+   "pill": {
+    "fitted": [
+     105,
+     475,
+     285,
+     521
+    ],
+    "spec": [
+     105,
+     475,
+     285,
+     522
+    ],
+    "delta_top": 0,
+    "delta_bottom": -1
+   },
+   "params": {
+    "note_x": 83,
+    "note_y": 46,
+    "note_w": 230,
+    "note_rot": -8,
+    "note_fs": 39.98,
+    "head_y": 131,
+    "head_fs": 46.3,
+    "head_lead": 1.0,
+    "nails_y": 283.5,
+    "name_y": 432.0,
+    "pill_x": 105,
+    "pill_y": 475.0,
+    "pill_w": 180,
+    "head_dx": 15.0
+   }
+  },
+  "shaadi-shift": {
+   "note": {
+    "fitted": [
+     60,
+     80,
+     330,
+     154
+    ],
+    "spec": [
+     60,
+     80,
+     330,
+     145
+    ],
+    "delta_top": 0,
+    "delta_bottom": 9
+   },
+   "head": {
+    "fitted": [
+     60,
+     127,
+     365,
+     302
+    ],
+    "spec": [
+     60,
+     160,
+     365,
+     285
+    ],
+    "delta_top": -33,
+    "delta_bottom": 17
+   },
+   "nails": {
+    "fitted": [
+     13,
+     326,
+     398,
+     459
+    ],
+    "spec": [
+     22,
+     315,
+     368,
+     440
+    ],
+    "delta_top": 11,
+    "delta_bottom": 19
+   },
+   "name": {
+    "fitted": [
+     137,
+     468,
+     253,
+     497
+    ],
+    "spec": [
+     null,
+     470,
+     null,
+     495
+    ],
+    "delta_top": -2,
+    "delta_bottom": 2
+   },
+   "pill": {
+    "fitted": [
+     140,
+     507,
+     322,
+     553
+    ],
+    "spec": [
+     140,
+     505,
+     322,
+     555
+    ],
+    "delta_top": 2,
+    "delta_bottom": -2
+   },
+   "params": {
+    "note_x": 62,
+    "note_y": 100,
+    "note_w": 270,
+    "note_rot": -6,
+    "note_fs": 36.24,
+    "head_y": 146,
+    "head_fs": 61.7,
+    "head_lead": 1.0,
+    "nails_y": 325.5,
+    "name_y": 469.0,
+    "pill_x": 140,
+    "pill_y": 507.0,
+    "pill_w": 182,
+    "head_dx": 15.0
+   }
+  },
+  "on-me": {
+   "note": {
+    "fitted": [
+     100,
+     60,
+     335,
+     182
+    ],
+    "spec": [
+     100,
+     60,
+     335,
+     160
+    ],
+    "delta_top": 0,
+    "delta_bottom": 22
+   },
+   "head": {
+    "fitted": [
+     40,
+     166,
+     375,
+     298
+    ],
+    "spec": [
+     40,
+     190,
+     375,
+     260
+    ],
+    "delta_top": -24,
+    "delta_bottom": 38
+   },
+   "nails": {
+    "fitted": [
+     13,
+     294,
+     398,
+     428
+    ],
+    "spec": [
+     22,
+     295,
+     368,
+     435
+    ],
+    "delta_top": -1,
+    "delta_bottom": -7
+   },
+   "name": {
+    "fitted": [
+     169,
+     454,
+     221,
+     480
+    ],
+    "spec": [
+     null,
+     455,
+     null,
+     480
+    ],
+    "delta_top": -1,
+    "delta_bottom": 0
+   },
+   "pill": {
+    "fitted": [
+     120,
+     492,
+     295,
+     538
+    ],
+    "spec": [
+     120,
+     490,
+     295,
+     540
+    ],
+    "delta_top": 2,
+    "delta_bottom": -2
+   },
+   "params": {
+    "note_x": 99,
+    "note_y": 78,
+    "note_w": 235,
+    "note_rot": -8,
+    "note_fs": 36.86,
+    "head_y": 188,
+    "head_fs": 73.05,
+    "head_lead": 0.95,
+    "nails_y": 294.0,
+    "name_y": 454.0,
+    "pill_x": 120,
+    "pill_y": 492.0,
+    "pill_w": 175,
+    "cap_x": 50,
+    "cap_y": 945,
+    "cap_w": 280,
+    "cap_rot": -3,
+    "cap_fs": 30,
+    "head_dx": 11.0
+   }
+  },
+  "wild-card": {
+   "note": {
+    "fitted": [
+     55,
+     40,
+     330,
+     126
+    ],
+    "spec": [
+     55,
+     40,
+     330,
+     100
+    ],
+    "delta_top": 0,
+    "delta_bottom": 26
+   },
+   "head": {
+    "fitted": [
+     85,
+     96,
+     365,
+     248
+    ],
+    "spec": [
+     85,
+     105,
+     365,
+     230
+    ],
+    "delta_top": -9,
+    "delta_bottom": 18
+   },
+   "nails": {
+    "fitted": [
+     13,
+     261,
+     398,
+     395
+    ],
+    "spec": [
+     22,
+     255,
+     368,
+     385
+    ],
+    "delta_top": 6,
+    "delta_bottom": 10
+   },
+   "name": {
+    "fitted": [
+     154,
+     435,
+     236,
+     461
+    ],
+    "spec": [
+     null,
+     435,
+     null,
+     462
+    ],
+    "delta_top": 0,
+    "delta_bottom": -1
+   },
+   "pill": {
+    "fitted": [
+     145,
+     473,
+     320,
+     519
+    ],
+    "spec": [
+     145,
+     470,
+     320,
+     522
+    ],
+    "delta_top": 3,
+    "delta_bottom": -3
+   },
+   "params": {
+    "note_x": 56,
+    "note_y": 59,
+    "note_w": 275,
+    "note_rot": -8,
+    "note_fs": 33.46,
+    "head_y": 110,
+    "head_fs": 55.17,
+    "head_lead": 1.0,
+    "nails_y": 261.0,
+    "name_y": 435.0,
+    "pill_x": 145,
+    "pill_y": 473.0,
+    "pill_w": 175,
+    "head_dx": 28.0
+   }
+  },
+  "pinky-promise": {
+   "note": {
+    "fitted": [
+     30,
+     15,
+     385,
+     95
+    ],
+    "spec": [
+     30,
+     15,
+     385,
+     95
+    ],
+    "delta_top": 0,
+    "delta_bottom": 0
+   },
+   "head": {
+    "fitted": [
+     70,
+     55,
+     360,
+     214
+    ],
+    "spec": [
+     70,
+     85,
+     360,
+     205
+    ],
+    "delta_top": -30,
+    "delta_bottom": 9
+   },
+   "nails": {
+    "fitted": [
+     13,
+     241,
+     398,
+     375
+    ],
+    "spec": [
+     22,
+     240,
+     368,
+     360
+    ],
+    "delta_top": 1,
+    "delta_bottom": 15
+   },
+   "name": {
+    "fitted": [
+     133,
+     384,
+     257,
+     410
+    ],
+    "spec": [
+     null,
+     395,
+     null,
+     425
+    ],
+    "delta_top": -11,
+    "delta_bottom": -15
+   },
+   "pill": {
+    "fitted": [
+     120,
+     424,
+     298,
+     470
+    ],
+    "spec": [
+     120,
+     440,
+     298,
+     490
+    ],
+    "delta_top": -16,
+    "delta_bottom": -20
+   },
+   "params": {
+    "note_x": 31,
+    "note_y": 39.0,
+    "note_w": 355,
+    "note_rot": -6,
+    "note_fs": 34.95,
+    "head_y": 71,
+    "head_fs": 56.57,
+    "head_lead": 1.0,
+    "nails_y": 241.0,
+    "name_y": 384.0,
+    "pill_x": 120,
+    "pill_y": 424.0,
+    "pill_w": 178,
+    "cap_x": 230,
+    "cap_y": 515,
+    "cap_w": 155,
+    "cap_rot": -12,
+    "cap_fs": 28,
+    "head_dx": 17.5
+   }
+  }
+ },
+ "beeline_overrides": {
+  "chapter-on-me": "M386,0 C330,14 140,4 60,14 C78,40 76,80 45,120 C25,150 18,190 22,230 L22,430 C22,560 30,700 60,800 C120,880 300,890 386,900 L386,1067 (board: in from the top-left, dash beside the bill); downstream dash offsets recomputed: wild-card -2.31, pinky-promise -0.89"
+ },
+ "art": {
+  "note": "see tools/build_landing.py CHAPTERS[...].art (asset, left, top, width in board px, optional crop box and feather)"
+ }
+}

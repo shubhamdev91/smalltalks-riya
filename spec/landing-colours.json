@@ -1,0 +1,210 @@
+{
+ "hero-on-me": {
+  "col": 1,
+  "y_range_in_col": [
+   69,
+   722
+  ],
+  "height_px": 653,
+  "ground": "#fbb804",
+  "glow_inner": "#fcc90a",
+  "glow_outer": "#e8a005",
+  "glow_centre_pct": [
+   49,
+   22
+  ],
+  "coverage": 0.37
+ },
+ "tiles": {
+  "col": 1,
+  "y_range_in_col": [
+   722,
+   1062
+  ],
+  "height_px": 340,
+  "ground": "#fdf6e9",
+  "glow_inner": "#fefbf6",
+  "glow_outer": "#fbe0d5",
+  "glow_centre_pct": [
+   34,
+   47
+  ],
+  "coverage": 0.3
+ },
+ "chapter-diet-cherry": {
+  "col": 1,
+  "y_range_in_col": [
+   1062,
+   1700
+  ],
+  "height_px": 638,
+  "ground": "#d40319",
+  "glow_inner": "#ea071e",
+  "glow_outer": "#bb030f",
+  "glow_centre_pct": [
+   49,
+   40
+  ],
+  "coverage": 0.56
+ },
+ "talks-teaser": {
+  "col": 1,
+  "y_range_in_col": [
+   1700,
+   2264
+  ],
+  "height_px": 564,
+  "ground": "#fef6e9",
+  "glow_inner": "#fefbf8",
+  "glow_outer": "#eae6f3",
+  "glow_centre_pct": [
+   46,
+   62
+  ],
+  "coverage": 0.78
+ },
+ "chapter-brainwave": {
+  "col": 2,
+  "y_range_in_col": [
+   0,
+   850
+  ],
+  "height_px": 850,
+  "ground": "#033bd6",
+  "glow_inner": "#044ff5",
+  "glow_outer": "#032ebd",
+  "glow_centre_pct": [
+   55,
+   37
+  ],
+  "coverage": 0.46
+ },
+ "chapter-green-flag": {
+  "col": 2,
+  "y_range_in_col": [
+   850,
+   1715
+  ],
+  "height_px": 865,
+  "ground": "#046f41",
+  "glow_inner": "#097d4e",
+  "glow_outer": "#035b35",
+  "glow_centre_pct": [
+   53,
+   27
+  ],
+  "coverage": 0.45
+ },
+ "journal-teaser": {
+  "col": 2,
+  "y_range_in_col": [
+   1715,
+   2387
+  ],
+  "height_px": 672,
+  "ground": "#fef6e9",
+  "glow_inner": "#fefcf8",
+  "glow_outer": "#f9f1e3",
+  "glow_centre_pct": [
+   48,
+   53
+  ],
+  "coverage": 0.66
+ },
+ "nail-guide-teaser": {
+  "col": 3,
+  "y_range_in_col": [
+   0,
+   545
+  ],
+  "height_px": 545,
+  "ground": "#fdf5e7",
+  "glow_inner": "#fef9f0",
+  "glow_outer": "#f8e7de",
+  "glow_centre_pct": [
+   40,
+   40
+  ],
+  "coverage": 0.63
+ },
+ "chapter-shaadi-shift": {
+  "col": 3,
+  "y_range_in_col": [
+   545,
+   1320
+  ],
+  "height_px": 775,
+  "ground": "#f30b5e",
+  "glow_inner": "#f91366",
+  "glow_outer": "#df0747",
+  "glow_centre_pct": [
+   54,
+   37
+  ],
+  "coverage": 0.48
+ },
+ "chapter-on-me": {
+  "col": 3,
+  "y_range_in_col": [
+   1320,
+   2387
+  ],
+  "height_px": 1067,
+  "ground": "#fbbe10",
+  "glow_inner": "#fbc526",
+  "glow_outer": "#f5ac06",
+  "glow_centre_pct": [
+   48,
+   26
+  ],
+  "coverage": 0.45
+ },
+ "chapter-wild-card": {
+  "col": 4,
+  "y_range_in_col": [
+   0,
+   850
+  ],
+  "height_px": 850,
+  "ground": "#aee60d",
+  "glow_inner": "#bff02b",
+  "glow_outer": "#a2de04",
+  "glow_centre_pct": [
+   62,
+   47
+  ],
+  "coverage": 0.42
+ },
+ "chapter-pinky-promise": {
+  "col": 4,
+  "y_range_in_col": [
+   850,
+   1715
+  ],
+  "height_px": 865,
+  "ground": "#6919f9",
+  "glow_inner": "#701ffc",
+  "glow_outer": "#5a10e9",
+  "glow_centre_pct": [
+   46,
+   15
+  ],
+  "coverage": 0.4
+ },
+ "shop-all-faq-footer": {
+  "col": 4,
+  "y_range_in_col": [
+   1715,
+   2348
+  ],
+  "height_px": 633,
+  "ground": "#fdfbf4",
+  "glow_inner": "#fdfcfa",
+  "glow_outer": "#f7f7f3",
+  "glow_centre_pct": [
+   43,
+   55
+  ],
+  "coverage": 0.83
+ }
+}

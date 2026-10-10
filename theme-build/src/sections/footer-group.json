@@ -1,0 +1,33 @@
+{
+  "type": "footer",
+  "name": "t:names.footer",
+  "sections": {
+    "footer": {
+      "type": "st-footer",
+      "settings": {
+        "tagline": "Nails for real conversations.",
+        "social_instagram": "https://www.instagram.com/smalltalks_com/",
+        "social_pinterest": "",
+        "social_youtube": "",
+        "social_tiktok": "",
+        "link_1_label": "Shop",
+        "link_1_url": "/collections/all",
+        "link_2_label": "Our Story",
+        "link_2_url": "/pages/our-story",
+        "link_3_label": "the talks",
+        "link_3_url": "/blogs/the-talks",
+        "link_4_label": "Journal",
+        "link_4_url": "/blogs/journal",
+        "link_5_label": "Nail Guide",
+        "link_5_url": "/pages/nail-guide-desi",
+        "link_6_label": "",
+        "link_6_url": "",
+        "link_7_label": "Contact us",
+        "link_7_url": "/pages/help#contact"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

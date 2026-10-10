@@ -1,0 +1,135 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-page",
+      "settings": {
+        "title_style": "pen",
+        "heading": "the talks",
+        "note": "a little less filtered.",
+        "intro": "Small moments, said out loud.",
+        "show_content": false
+      },
+      "blocks": {
+        "how": {
+          "type": "st-gate",
+          "settings": {
+            "gate": "G10",
+            "confirmed": false
+          },
+          "blocks": {
+            "text": {
+              "type": "st-note",
+              "settings": {
+                "style": "body",
+                "alignment": "center",
+                "text": "This isn’t a live feed. Below are a few example talks we wrote to show the idea. Got one of your own? Send it to us. It comes straight to the Small Talk team and isn’t posted anywhere automatically."
+              }
+            }
+          },
+          "block_order": [
+            "text"
+          ]
+        },
+        "start": {
+          "type": "st-gate",
+          "settings": {
+            "gate": "G10",
+            "confirmed": false
+          },
+          "blocks": {
+            "buttons": {
+              "type": "st-buttons",
+              "settings": {
+                "alignment": "center",
+                "label_1": "Start a talk",
+                "link_1": "#start-a-talk"
+              }
+            }
+          },
+          "block_order": [
+            "buttons"
+          ]
+        },
+        "examples": {
+          "type": "st-talk-examples",
+          "settings": {},
+          "blocks": {
+            "ex1": {
+              "type": "st-talk-example",
+              "settings": {
+                "alias": "Almost On Time",
+                "title": "What’s your smallest friendship green flag?",
+                "text": "Mine remembers the end of stories I never finished telling.",
+                "campaign": "green-flag"
+              }
+            },
+            "ex2": {
+              "type": "st-talk-example",
+              "settings": {
+                "alias": "Velvet Mango",
+                "title": "Anyone else rehearse a whole text and still just send “hey”?",
+                "text": "Wrote three paragraphs. Deleted three paragraphs. “hey” it is.",
+                "campaign": "shaadi-shift"
+              }
+            },
+            "ex3": {
+              "type": "st-talk-example",
+              "settings": {
+                "alias": "Plot Please",
+                "title": "A compliment you still think about?",
+                "text": "A stranger in a lift said I laugh like I mean it. That was two years ago.",
+                "campaign": "pinky-promise"
+              }
+            }
+          },
+          "block_order": [
+            "ex1",
+            "ex2",
+            "ex3"
+          ]
+        },
+        "closing": {
+          "type": "st-note",
+          "settings": {
+            "style": "pen",
+            "alignment": "center",
+            "text": "Different thoughts. Same energy."
+          }
+        },
+        "form": {
+          "type": "st-talk-form",
+          "settings": {
+            "g10_confirmed": false,
+            "heading": "Start a talk",
+            "alias_label": "Sign it as",
+            "submit_label": "Send it",
+            "subject": "the talks submission",
+            "anchor": "start-a-talk"
+          }
+        },
+        "rules": {
+          "type": "st-rules",
+          "settings": {
+            "heading": "A few ground rules",
+            "rule_1": "Be kind, including to yourself.",
+            "rule_2": "No real names, no screenshots of other people’s chats, nothing that could identify anyone.",
+            "rule_3": "No hate, no harassment, no selling.",
+            "rule_4": "If you’re going through something serious, please talk to someone you trust or a local helpline. This isn’t a support service.",
+            "rule_4_approved": false
+          }
+        }
+      },
+      "block_order": [
+        "how",
+        "start",
+        "examples",
+        "closing",
+        "form",
+        "rules"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

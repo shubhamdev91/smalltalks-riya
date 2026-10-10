@@ -1,0 +1,175 @@
+{% comment %}
+  Section contract.
+  House rules for the talks (TLK-070…077), last on the hub, topic pages and threads (#house-rules, linked from the
+  composer and the reply box). Not on the board; set in the talks type so it reads as part of the page. "{email}" in
+  the report line becomes a mailto: link to the store's contact email (TLK-076). The support line turns the two
+  helpline numbers into tel: links (TLK-077: tel:14416, tel:18008914416). Renders on the blog named in "blog_handle"
+  and on talk_thread / talk_topic pages.
+  @example
+  <!-- templates/blog.json, metaobject/talk_thread.json, metaobject/talk_topic.json, last section -->
+{% endcomment %}
+
+{%- capture live_flag -%}{%- render 'st-talk-live' -%}{%- endcapture -%}
+{%- liquid
+  assign live = false
+  if live_flag == 'on'
+    assign live = true
+  endif
+-%}
+{%- liquid
+  assign is_talks = false
+  if blog.handle == section.settings.blog_handle and article == blank
+    assign is_talks = true
+  elsif metaobject
+    if metaobject.system.type == 'talk_thread' or metaobject.system.type == 'talk_topic'
+      assign is_talks = true
+    endif
+  endif
+
+  assign report = section.settings.report | escape
+  if shop.email != blank
+    assign email_link = '<a href="mailto:' | append: shop.email | append: '">' | append: shop.email | append: '</a>'
+    assign report = report | replace: '{email}', email_link
+  else
+    assign report = ''
+  endif
+
+  assign support = section.settings.support | escape
+  assign tel_1 = section.settings.support_tel_1 | strip
+  assign tel_2 = section.settings.support_tel_2 | strip
+  if tel_1 != blank and support contains tel_1
+    assign href_1 = tel_1 | remove: '-' | remove: ' '
+    assign link_1 = '<a href="tel:' | append: href_1 | append: '">@@TEL1@@</a>'
+    assign support = support | replace_first: tel_1, link_1
+  endif
+  if tel_2 != blank and support contains tel_2
+    assign href_2 = tel_2 | remove: '-' | remove: ' '
+    assign link_2 = '<a href="tel:' | append: href_2 | append: '">@@TEL2@@</a>'
+    assign support = support | replace_first: tel_2, link_2
+  endif
+  assign support = support | replace: '@@TEL1@@', tel_1 | replace: '@@TEL2@@', tel_2
+
+  assign rules = '' | split: ''
+  for i in (1..4)
+    assign key = 'rule_' | append: i
+    if section.settings[key] != blank
+      assign rule = section.settings[key] | split: '@@'
+      assign rules = rules | concat: rule
+    endif
+  endfor
+-%}
+
+{%- if is_talks -%}
+  <section class="st-trules" id="house-rules" aria-labelledby="StRules-{{ section.id }}">
+    <h2 class="st-trules__heading" id="StRules-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+    {%- if rules.size > 0 -%}
+      <ul class="st-trules__list">
+        {%- for rule in rules -%}
+          <li>{{ rule | escape }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    {%- if section.settings.privacy != blank -%}
+      <p>{{ section.settings.privacy | escape }}</p>
+    {%- endif -%}
+    {%- liquid
+      assign moderation = section.settings.moderation
+      unless live
+        assign moderation = section.settings.moderation_prelaunch | default: section.settings.moderation
+      endunless
+    -%}
+    {%- if moderation != blank -%}
+      <p>{{ moderation | escape }}</p>
+    {%- endif -%}
+    {%- if report != blank -%}
+      <p>{{ report }}</p>
+    {%- endif -%}
+    {%- if support != blank -%}
+      <p class="st-trules__support">{{ support }}</p>
+    {%- endif -%}
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .st-trules {
+    display: grid;
+    gap: 12px;
+    max-width: 40rem;
+    margin: 30px auto 0;
+    padding: 0 22px 36px;
+    scroll-margin-block-start: 84px;
+    color: #1a1a2e;
+    font-family: var(--font-ui);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .st-trules__heading {
+    margin: 0;
+    color: var(--st-burgundy);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .st-trules p {
+    margin: 0;
+  }
+
+  .st-trules__list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding-inline-start: 20px;
+  }
+
+  .st-trules__list li::marker {
+    color: #d0204a;
+  }
+
+  /* 44 px tall hit areas without moving the text (padding cancelled by negative margin). */
+  .st-trules a {
+    display: inline-block;
+    padding-block: 12px;
+    margin-block: -12px;
+    color: var(--st-burgundy);
+    font-weight: 600;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+
+  .st-trules__support {
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #fdf1f0;
+  }
+
+  .st-trules__support a {
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk house rules",
+  "tag": "div",
+  "class": "st-trules-section",
+  "settings": [
+    { "type": "text", "id": "blog_handle", "label": "Talks blog handle", "default": "the-talks" },
+    { "type": "text", "id": "heading", "label": "Heading (TLK-070)", "default": "House rules" },
+    { "type": "text", "id": "rule_1", "label": "Rule 1 (TLK-071)", "default": "Gossip about situations, not people." },
+    { "type": "text", "id": "rule_2", "label": "Rule 2 (TLK-072)", "default": "No real names, numbers, handles or links. Nothing that could identify anyone." },
+    { "type": "text", "id": "rule_3", "label": "Rule 3 (TLK-073)", "default": "No hate, harassment or bullying. No selling." },
+    { "type": "text", "id": "rule_4", "label": "Rule 4 (TLK-074)", "default": "Your alias is the only name anyone sees. We don’t ask for a name, email or account." },
+    { "type": "textarea", "id": "privacy", "label": "Privacy line (TLK-148)", "default": "To stop spam, we keep a scrambled code for your device (never your IP address) and delete it within 30 days." },
+    { "type": "textarea", "id": "moderation_prelaunch", "label": "Moderation before posting opens (TLK-154)", "info": "Shown instead of TLK-075 while the talks posting switch (snippet st-talk-live) is off.", "default": "Once posting opens, talks and replies go live straight away. Anything that might name a real person is held for a quick check first, and we take down whatever breaks these rules." },
+    { "type": "textarea", "id": "moderation", "label": "Moderation (TLK-075)", "default": "Talks and replies go live straight away. Anything that might name a real person is held for a quick check first, and we take down whatever breaks these rules." },
+    { "type": "textarea", "id": "report", "label": "How to report (TLK-076)", "info": "{email} becomes a link to the store's contact email.", "default": "Tap Report on anything that breaks these rules. Three reports from different people and it’s hidden until we’ve checked it. Something here about you? Email {email} with the link and we’ll take it down." },
+    { "type": "textarea", "id": "support", "label": "Support line (TLK-077)", "default": "If a talk gets heavy, you don’t have to carry it alone. Call Tele-MANAS, India’s free 24×7 mental health helpline, on 14416 or 1800-891-4416." },
+    { "type": "text", "id": "support_tel_1", "label": "Helpline number 1 (becomes a tel: link)", "default": "14416" },
+    { "type": "text", "id": "support_tel_2", "label": "Helpline number 2 (becomes a tel: link)", "default": "1800-891-4416" }
+  ]
+}
+{% endschema %}

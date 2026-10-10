@@ -1,0 +1,10 @@
+{%- liquid
+ assign target = c.product.value.url
+ if target == blank
+  assign target = '/products/' | append: c.product_handle.value
+  if settings.di_review_mode
+   assign target = '/?view=desi-preview-product-' | append: c.system.handle
+  endif
+ endif
+ echo target
+-%}

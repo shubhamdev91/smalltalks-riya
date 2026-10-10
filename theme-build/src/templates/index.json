@@ -1,0 +1,242 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "st-hero",
+      "settings": {
+        "autoplay": true,
+        "default_tone": 2,
+        "show_character": true
+      },
+      "blocks": {
+        "on-me": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "on-me"
+          }
+        },
+        "brainwave": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "brainwave"
+          }
+        },
+        "diet-cherry": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "diet-cherry"
+          }
+        },
+        "green-flag": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "green-flag"
+          }
+        },
+        "shaadi-shift": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "shaadi-shift"
+          }
+        },
+        "wild-card": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "wild-card"
+          }
+        },
+        "pinky-promise": {
+          "type": "campaign",
+          "settings": {
+            "campaign": "pinky-promise"
+          }
+        }
+      },
+      "block_order": [
+        "on-me",
+        "brainwave",
+        "diet-cherry",
+        "green-flag",
+        "shaadi-shift",
+        "wild-card",
+        "pinky-promise"
+      ]
+    },
+    "gallery": {
+      "type": "st-gallery",
+      "settings": {
+        "story_label": "Our Vision",
+        "story_url": "/pages/our-story",
+        "story_campaign": "on-me",
+        "shop_label": "Shop all nails",
+        "shop_url": "/collections/all",
+        "story_alt": "Illustration: a woman with a bindi resting her hand on her cheek, nails burgundy and gold.",
+        "shop_alt": "Illustration: ten nails from every set, packed tight: burgundy, tortoiseshell, emerald, lime, cobalt, checks, lilac and red."
+      }
+    },
+    "diet-cherry": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "diet-cherry",
+        "caption": "New plans. Same favourite.",
+        "cta_label": "Shop set"
+      }
+    },
+    "talks": {
+      "type": "st-teaser",
+      "settings": {
+        "kind": "talks",
+        "heading": "the talks",
+        "note": "a little less filtered.",
+        "example_label": "Example talk",
+        "example_text": "Anyone else rehearse a text and still send ‘hey’?",
+        "example_alias": "Velvet Mango",
+        "example_campaign": "diet-cherry",
+        "copy": "real talk on friendship, plans, overthinking and everything in between.",
+        "list_label": "latest talks",
+        "topic_order": "plot-twists, tiny-wins, nail-talk, something-else",
+        "link": "/blogs/the-talks",
+        "label": "spill your tea",
+        "cta_aria": "spill your tea on the talks"
+      }
+    },
+    "brainwave": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "brainwave",
+        "caption": "You had the thought. You did the work.",
+        "cta_label": "Shop set"
+      }
+    },
+    "green-flag": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "green-flag",
+        "caption": "Plans fell apart? Bring yourself.",
+        "cta_label": "Shop set"
+      }
+    },
+    "journal": {
+      "type": "st-teaser",
+      "settings": {
+        "kind": "journal",
+        "heading": "Small stories. Big feelings.",
+        "note": "For the plans still taking shape…",
+        "example_campaign": "brainwave",
+        "link": "/blogs/journal",
+        "label": "From the Journal",
+        "tile_1_alt": "Illustration: a woman in glasses and gold jhumkas writing in a notebook with a blue pen, her nails deep red.",
+        "tile_2_alt": "Illustration: a black crescent-shaped handbag beside a blue notebook and a blue pen."
+      }
+    },
+    "guide": {
+      "type": "st-teaser",
+      "settings": {
+        "kind": "guide",
+        "eyebrow": "Nail Guide",
+        "heading": "Find your fit.",
+        "note": "A little help, at your fingertips.",
+        "image_alt": "Illustration: a fingertip with a bare natural nail and a measuring tape wrapped across it.",
+        "gate": "G2",
+        "gate_confirmed": true,
+        "label": "Open the guide",
+        "link": "/pages/nail-guide-desi"
+      }
+    },
+    "shaadi-shift": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "shaadi-shift",
+        "caption": "Her big day. Your cue.",
+        "cta_label": "Shop set"
+      }
+    },
+    "on-me": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "on-me",
+        "caption": "Good company. One more round.",
+        "cta_label": "Shop set",
+        "caption_2": "Before anyone starts splitting…"
+      }
+    },
+    "wild-card": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "wild-card",
+        "caption": "Cards down. Smile on.",
+        "cta_label": "Shop set"
+      }
+    },
+    "pinky-promise": {
+      "type": "st-chapter",
+      "settings": {
+        "campaign": "pinky-promise",
+        "caption": "Crowded room. Familiar hand.",
+        "cta_label": "Shop set",
+        "caption_2": "Same people. Different days. Still us."
+      }
+    },
+    "faq": {
+      "type": "st-faq",
+      "settings": {
+        "shop_label": "Shop all sets",
+        "shop_url": "/collections/all",
+        "heading": "FAQs",
+        "help_label": "",
+        "help_url": ""
+      },
+      "blocks": {
+        "size": {
+          "type": "question",
+          "settings": {
+            "question": "How do I find my size?",
+            "answer": "<p>Every kit has all 12 sizes, so there’s nothing to pick at checkout. At home, match each nail to a press-on, or measure with our <a href=\"/pages/nail-guide-desi\">Nail Guide</a>.</p>"
+          }
+        },
+        "apply": {
+          "type": "question",
+          "settings": {
+            "question": "How do I apply and remove?",
+            "answer": "<p>Prep your nails, then press on with glue (lasts up to about 2 weeks) or tabs (1–3 days). To remove, soak for 10–15 minutes and lift gently from the side. Never force them. Step by step in our <a href=\"/pages/nail-guide-desi\">Nail Guide</a>.</p>"
+          }
+        },
+        "box": {
+          "type": "question",
+          "settings": {
+            "question": "What comes in the box?",
+            "answer": "<p>24 almond press-ons in 12 sizes, nail glue, a sheet of adhesive tabs, a mini file, a prep pad, a cuticle stick and an instruction card.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "size",
+        "apply",
+        "box"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "gallery",
+    "diet-cherry",
+    "talks",
+    "brainwave",
+    "green-flag",
+    "journal",
+    "guide",
+    "shaadi-shift",
+    "on-me",
+    "wild-card",
+    "pinky-promise",
+    "faq"
+  ]
+}

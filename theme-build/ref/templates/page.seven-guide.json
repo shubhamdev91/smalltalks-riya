@@ -1,0 +1,25 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "st-seven-page",
+      "settings": {
+        "heading": "Get to know your set.",
+        "body": "<p>Start with the shape, explore the design and check the details for your nails.</p><h2>Explore the design</h2><p>Every set has an almond silhouette and its own mix of colours and accent nails. The packaging gallery shows the whole colour story.</p><h2>Choose with care</h2><p>Shape, fit and kit contents all matter when choosing press-ons. Check the product details, or ask us about the set you have in mind.</p>",
+        "image_url": "https://cdn.shopify.com/s/files/1/0830/2339/7077/files/achha-tum-pehle-approved-package.png?v=1791012911",
+        "contact": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

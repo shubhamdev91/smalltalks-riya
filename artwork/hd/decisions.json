@@ -1,0 +1,203 @@
+{
+ "_how": "my visual verdict per file stem: {status: accepted|rejected|interim, reason}; read by scripts/hd_intake.py",
+ "on-me-nail-1": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "on-me-nail-2": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "on-me-nail-3": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "brainwave-nail-1": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "brainwave-nail-2": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "brainwave-nail-3": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "diet-cherry-nail-1": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "diet-cherry-nail-2": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "diet-cherry-nail-3": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "green-flag-nail-1": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "green-flag-nail-2": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "shaadi-shift-nail-1": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "shaadi-shift-nail-2": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "shaadi-shift-nail-3": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "wild-card-nail-1": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white; minor: checker squares slightly smaller than P1 (~5 vs 4 across), same pattern"
+ },
+ "wild-card-nail-2": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "wild-card-nail-3": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "pinky-promise-nail-1": {
+  "status": "accepted",
+  "reason": "design/colour match locked sprite col (dE00 0.8-7.4), almond, tip up, clean alpha; HD vs P1 checked on set colour + white"
+ },
+ "finger-tone-1": {
+  "status": "accepted",
+  "reason": "bare natural nail, clean cuticle, one finger from the bottom edge; anchor verified (tests/hd/fingers-anchor-hd.png); canvas 1.8x P1"
+ },
+ "finger-tone-2": {
+  "status": "accepted",
+  "reason": "bare natural nail, clean cuticle, one finger from the bottom edge; anchor verified (tests/hd/fingers-anchor-hd.png); canvas 1.8x P1"
+ },
+ "finger-tone-3": {
+  "status": "accepted",
+  "reason": "bare natural nail, clean cuticle, one finger from the bottom edge; anchor verified (tests/hd/fingers-anchor-hd.png); canvas 1.8x P1"
+ },
+ "finger-tone-4": {
+  "status": "accepted",
+  "reason": "bare natural nail, clean cuticle, one finger from the bottom edge; anchor verified (tests/hd/fingers-anchor-hd.png); canvas 1.8x P1"
+ },
+ "our-vision-woman": {
+  "status": "accepted",
+  "reason": "A4 (sharper than retry A5); cream ground dE00 2.1; auto ground flag is the hair touching the border. Tile crop: hd/tiles/our-vision-woman.webp"
+ },
+ "wild-card-chapter-v2": {
+  "status": "split",
+  "reason": "split into pieces, see hd.batches.chatgpt-AB-1"
+ },
+ "brainwave-chapter": {
+  "status": "split",
+  "reason": "split into pieces, see hd.batches.chatgpt-AB-1"
+ },
+ "diet-cherry-chapter": {
+  "status": "split",
+  "reason": "split into pieces, see hd.batches.chatgpt-AB-1"
+ },
+ "on-me-pdp-hand": {
+  "status": "accepted",
+  "reason": "five fingers, back of hand, set-colour surface; finger order matches the prompt exactly (index->little tortoise, gold, tortoise, burgundy; thumb burgundy)"
+ },
+ "on-me-pdp-flatlay": {
+  "status": "accepted",
+  "reason": "5-nail fan on the set colour (ground dE00 <= 3.5), designs match the nail table; FLAG G1: 5 nails shown, must not contradict the kit count"
+ },
+ "brainwave-pdp-hand": {
+  "status": "accepted",
+  "reason": "five fingers, back of hand, set-colour surface; finger order matches the prompt exactly (silver, cobalt, pearly white, cobalt; thumb pearly white)"
+ },
+ "brainwave-pdp-flatlay": {
+  "status": "accepted",
+  "reason": "5-nail fan on the set colour (ground dE00 <= 3.5), designs match the nail table; FLAG G1: 5 nails shown, must not contradict the kit count"
+ },
+ "diet-cherry-pdp-hand": {
+  "status": "accepted",
+  "reason": "five fingers, back of hand, set-colour surface; finger order matches the prompt exactly (silver, blush red-tip, deep red, deep red; thumb deep red)"
+ },
+ "diet-cherry-pdp-flatlay": {
+  "status": "accepted",
+  "reason": "5-nail fan on the set colour (ground dE00 <= 3.5), designs match the nail table; FLAG G1: 5 nails shown, must not contradict the kit count"
+ },
+ "green-flag-pdp-hand": {
+  "status": "accepted",
+  "reason": "five fingers, back of hand, set-colour surface; finger order matches the prompt exactly (blush emerald-tip, emerald, blush tip, emerald; thumb emerald)"
+ },
+ "green-flag-pdp-flatlay": {
+  "status": "accepted",
+  "reason": "5-nail fan on the set colour (ground dE00 <= 3.5), designs match the nail table; FLAG G1: 5 nails shown, must not contradict the kit count"
+ },
+ "shaadi-shift-pdp-hand": {
+  "status": "accepted",
+  "reason": "five fingers, back of hand, set-colour surface; finger order matches the prompt exactly (deep red, pink daisy, deep red, pink; thumb pink)"
+ },
+ "shaadi-shift-pdp-flatlay": {
+  "status": "accepted",
+  "reason": "5-nail fan on the set colour (ground dE00 <= 3.5), designs match the nail table; FLAG G1: 5 nails shown, must not contradict the kit count"
+ },
+ "wild-card-pdp-hand": {
+  "status": "accepted",
+  "reason": "five fingers, back of hand, set-colour surface; finger order matches the prompt exactly (blush lime-tip, lime, checker, lime; thumb lime)"
+ },
+ "wild-card-pdp-flatlay": {
+  "status": "accepted",
+  "reason": "5-nail fan on the set colour (ground dE00 <= 3.5), designs match the nail table; FLAG G1: 5 nails shown, must not contradict the kit count"
+ },
+ "pinky-promise-pdp-hand": {
+  "status": "accepted",
+  "reason": "five fingers, back of hand, set-colour surface; finger order matches the prompt exactly (lilac with burgundy swept tips on all)"
+ },
+ "pinky-promise-pdp-flatlay": {
+  "status": "accepted",
+  "reason": "5-nail fan on the set colour (ground dE00 <= 3.5), designs match the nail table; FLAG G1: 5 nails shown, must not contradict the kit count"
+ },
+ "on-me-pdp-moment": {
+  "status": "accepted",
+  "reason": "hand on a leather cafe bill folder; nails match the set. Ground is the scene (not the set colour) by design"
+ },
+ "brainwave-pdp-moment": {
+  "status": "accepted",
+  "reason": "blue pen over a crescent-bag sketch; nails match the set. Ground is the scene (not the set colour) by design"
+ },
+ "diet-cherry-pdp-moment": {
+  "status": "accepted",
+  "reason": "plain UNBRANDED silver can (no label, checked at 2x) on marble; nails match the set. Ground is the scene (not the set colour) by design"
+ },
+ "green-flag-pdp-moment": {
+  "status": "accepted",
+  "reason": "pink vintage receiver; nails match the set. Ground is the scene (not the set colour) by design"
+ },
+ "shaadi-shift-pdp-moment": {
+  "status": "accepted",
+  "reason": "gold safety pin into red bandhani dupatta; nails match the set. Ground is the scene (not the set colour) by design"
+ },
+ "wild-card-pdp-moment": {
+  "status": "accepted",
+  "reason": "cards face-down on green felt; nails match the set. Ground is the scene (not the set colour) by design"
+ },
+ "pinky-promise-pdp-moment": {
+  "status": "accepted",
+  "reason": "two hands linking little fingers, both lilac/burgundy; nails match the set. Ground is the scene (not the set colour) by design"
+ },
+ "guide-measure": {
+  "status": "accepted",
+  "reason": "paper strip across the widest part of a bare natural nail, pen mark each side"
+ },
+ "guide-apply": {
+  "status": "accepted",
+  "reason": "tortoiseshell almond press-on pressed at the cuticle"
+ },
+ "guide-remove": {
+  "status": "accepted",
+  "reason": "burgundy press-on edge lifted with a wooden stick"
+ }
+}
