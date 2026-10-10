@@ -1,6 +1,6 @@
 # Small Talk — project backup
 
-Everything needed to rebuild the Small Talk store work if this laptop is lost.
+Everything needed to rebuild the Small Talk store work if this laptop is lost. **Agents: start with [AGENTS.md](AGENTS.md).**
 
 | Folder | What it is | Where the live copy runs |
 |---|---|---|
