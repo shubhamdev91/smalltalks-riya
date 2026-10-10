@@ -109,7 +109,7 @@ const RIYA = [
 },
 {
   id: 's3', set: 'diet-cherry', icon: '💬', title: 'Turn on the talks',
-  sub: 'Your two secret-key steps, then a 2-minute daily check.',
+  sub: 'Your two secret-key steps. After that the talks run themselves.',
   foot: '🔜 Coming soon to the talks: "get a ping when someone replies" (WhatsApp or email, only if she agrees).',
   tasks: [
     pick('t-email', { lock: true }),
@@ -117,7 +117,15 @@ const RIYA = [
       'Start once <b>Settings → Apps</b> lists the talks app "Small Talk talks".',
       ...OLD['t-vercel'].steps
     ] }),
-    pick('t-moderate', { habit: true, t: 'Learn the 2-minute daily check (once talks are live)' })
+    pick('t-moderate', { optional: true, habit: false, t: 'Optional: look at reported talks now and then', min: '2 min, when you like',
+      why: 'Nothing waits on you. Posts go live straight away, risky ones (contact details, links, handles, slurs, spam, possible real names) are refused when someone tries to post, and a post that 3 different people report hides itself.',
+      steps: [
+        '<b>Content → Metaobjects → Talk thread</b>. Look for posts whose <b>Moderation note</b> says "auto-hidden: 3 reports" (Status shows Draft).',
+        'Read it. Fine after all? Set Status <b>Active</b> and change <b>Reports</b> to <code>0</code> → Save. Not fine? Leave it hidden, or <b>⋯ → Delete</b>.',
+        'Do the same in <b>Talk reply</b>.',
+        'If someone emails you about a post that\'s about them, hide or delete it the same way.',
+        'Emergency stop for all posting: <b>Talk settings → main → Posting open: off</b>.'
+      ] })
   ]
 },
 {

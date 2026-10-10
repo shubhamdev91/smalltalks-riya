@@ -25,7 +25,7 @@ const PRIORITY = [
   ['P2', 'u-build', 'Label links before you share any, or you can\'t tell what sold.'],
   ['P2', 'e-discount', 'The welcome offer your signup form and email point to.'],
   ['P2', 'e-email', 'Every new subscriber gets a hello automatically.'],
-  ['P2', 't-moderate', 'Starts the day posting opens on the talks.'],
+  ['P2', 't-moderate', 'Optional: posts publish on their own; this is only an occasional look at reports.'],
   ['P2', 'r-links', 'Bookmark your tools once, so you can find them all month.'],
   ['P3', 'ig-batch', 'One making-day a week keeps quality up and weekdays free.'],
   ['P3', 'ig-setup', 'A carousel chat that already knows your voice and nails.'],
@@ -51,7 +51,7 @@ const PRIORITY = [
   ['P4', 'seo-gsc', 'Needs about 4 weeks of Search Console data.'],
   ['P4', 'g-domain', 'Nice to have; best decided before you scale ads.']
 ];
-const HABITS = ['t-moderate', 'ig-batch', 'ig-cal', 'ig-review', 'seo-meta', 'seo-journal', 'seo-gsc', 'a-weekly'];
+const HABITS = ['ig-batch', 'ig-cal', 'ig-review', 'seo-meta', 'seo-journal', 'seo-gsc', 'a-weekly'];
 const TIER_OF = {}, PWHY = {};
 PRIORITY.forEach(([tier, id, why]) => { TIER_OF[id] = tier; PWHY[id] = why; });
 /* habits are ticked once she has started them */

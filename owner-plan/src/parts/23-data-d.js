@@ -133,6 +133,7 @@ const SECTIONS_D = [
       ['Talks backend status', BACKEND + '/api/talks'],
       ['v0 chat (talks backend)', 'https://v0.app/chat/pEcbsIUvnGe'],
       ['Vercel', 'https://vercel.com/'],
+      ['GitHub repository','https://github.com/shubhamdev91/smalltalks-riya'],
       ['Meta Business Suite', 'https://business.facebook.com/'],
       ['Meta Events Manager', 'https://business.facebook.com/events_manager'],
       ['Meta Ads Manager', 'https://adsmanager.facebook.com/'],

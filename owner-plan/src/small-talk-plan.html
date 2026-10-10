@@ -337,6 +337,7 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
     <p class="eyebrow">Handover for AI agents · state as of 10 Oct 2026</p>
     <h1 id="ctx-h">Project context</h1>
     <p class="ctx-lede">Dense, source-linked summary of the Small Talk rebuild. The source of truth is always <code>C:\Users\SSTS\Desktop\Riya\Small-Talk-Claude-Implementation-Checklist.md</code> → <b>RESUME HERE</b>. Where this page and that file disagree, the file wins. Facts marked <span class="tag tag-unk">unconfirmed</span> are not verified.</p>
+    <p class="ctx-lede"><b>Project repo:</b> <a href="https://github.com/shubhamdev91/smalltalks-riya" target="_blank" rel="noopener">github.com/shubhamdev91/smalltalks-riya</a> (private). The project's source repository: theme, talks backend, artwork, specs and records. Agents working outside the project folder clone it and read <code>AGENTS.md</code> first. Shopify and Vercel hold the live state.</p>
     <div class="ctx-start">
       <h2>Start-here prompt for a new agent</h2>
       <pre id="start-prompt" class="prompt-box"></pre>
@@ -388,7 +389,8 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
       <li>Backend: Vercel project <code>small-talk-talks-backend</code> (prj_0NtvhUiqMJGIaycQEjiEg1kF25vU), <a href="https://small-talk-talks-backend.vercel.app/api/talks" target="_blank" rel="noopener">/api/talks</a>; source <code>talks\backend\app.py</code> (stdlib WSGI, 37 tests); v0 chat <a href="https://v0.app/chat/pEcbsIUvnGe" target="_blank" rel="noopener">pEcbsIUvnGe</a>. Live build b3ce60f7f6e6 (configured:false) until owner Publishes c91d3d11afc1 from v0 (not Vercel Redeploy).</li>
       <li>Route: App Proxy <code>/apps/talks</code> → <code>…/api/talks</code>, HMAC-verified. Decision A: no IP key behind the proxy; per-device limits + duplicate check + store-wide flood hold.</li>
       <li>Theme: posting OFF via <code>snippets/st-talk-live.liquid</code>; TLK-154 pre-launch notice shown. Posting-ON window (HD avatars + switch + E2E + delete test posts) queued after owner says "talks app installed".</li>
-      <li>Owner blocker: Shopify Dev Dashboard email verification for riyaagg24@gmail.com, then OWNER-SETUP 1–5.</li>
+      <li>Owner setup done 10 Oct (app installed, keys in Vercel, v0 published).</li>
+      <li><b>Moderation (owner decision, 10 Oct):</b> NO review queue. Posts and replies publish immediately; anything risky (contact details, links, handles, slurs, spam, possible real names) is refused at submit with nothing saved; the only automatic removal is auto-hide at 3 distinct reports. Riya's talks task is an OPTIONAL occasional look at reported posts; never describe approving or reviewing posts.</li>
       <li>Requested next (owner, not started): reply pings with consent (WhatsApp/email) and private signed-in customer link (logged_in_customer_id), privacy text update. Brief in Tab 1 §9.</li>
     </ul>
   </article>
@@ -459,8 +461,9 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 
   <article class="ctx-block" id="c-files">
     <h2>Where files live</h2>
-    <p>All under <code>C:\Users\SSTS\Desktop\Riya\</code></p>
+    <p>All under <code>C:\Users\SSTS\Desktop\Riya\</code>. Repository: <a href="https://github.com/shubhamdev91/smalltalks-riya" target="_blank" rel="noopener">shubhamdev91/smalltalks-riya</a> (private; same paths, minus bulk QA screenshots).</p>
     <div class="tbl"><table><tbody>
+      <tr><td><code>AGENTS.md</code>, <code>CLAUDE.md</code></td><td>Repository map and rules for any agent</td></tr>
       <tr><td><code>Small-Talk-Claude-Implementation-Checklist.md</code></td><td>RESUME HERE, work packages, SD items, orchestration log</td></tr>
       <tr><td><code>spec\</code></td><td>Board spec, tokens.css, type, fonts, joins/beelines JSON, TEXT-DIFFS</td></tr>
       <tr><td><code>copy\</code></td><td>00-register (index, gates), 01-pdp, 02-journal, 03-landing, 04-pages, 05-seo, 06-microcopy, 07-talks, FACTS.md, terms draft</td></tr>
@@ -1529,6 +1532,7 @@ const SECTIONS_D = [
       ['Talks backend status', BACKEND + '/api/talks'],
       ['v0 chat (talks backend)', 'https://v0.app/chat/pEcbsIUvnGe'],
       ['Vercel', 'https://vercel.com/'],
+      ['GitHub repository','https://github.com/shubhamdev91/smalltalks-riya'],
       ['Meta Business Suite', 'https://business.facebook.com/'],
       ['Meta Events Manager', 'https://business.facebook.com/events_manager'],
       ['Meta Ads Manager', 'https://adsmanager.facebook.com/'],
@@ -1666,7 +1670,7 @@ const RIYA = [
 },
 {
   id: 's3', set: 'diet-cherry', icon: '💬', title: 'Turn on the talks',
-  sub: 'Your two secret-key steps, then a 2-minute daily check.',
+  sub: 'Your two secret-key steps. After that the talks run themselves.',
   foot: '🔜 Coming soon to the talks: "get a ping when someone replies" (WhatsApp or email, only if she agrees).',
   tasks: [
     pick('t-email', { lock: true }),
@@ -1674,7 +1678,15 @@ const RIYA = [
       'Start once <b>Settings → Apps</b> lists the talks app "Small Talk talks".',
       ...OLD['t-vercel'].steps
     ] }),
-    pick('t-moderate', { habit: true, t: 'Learn the 2-minute daily check (once talks are live)' })
+    pick('t-moderate', { optional: true, habit: false, t: 'Optional: look at reported talks now and then', min: '2 min, when you like',
+      why: 'Nothing waits on you. Posts go live straight away, risky ones (contact details, links, handles, slurs, spam, possible real names) are refused when someone tries to post, and a post that 3 different people report hides itself.',
+      steps: [
+        '<b>Content → Metaobjects → Talk thread</b>. Look for posts whose <b>Moderation note</b> says "auto-hidden: 3 reports" (Status shows Draft).',
+        'Read it. Fine after all? Set Status <b>Active</b> and change <b>Reports</b> to <code>0</code> → Save. Not fine? Leave it hidden, or <b>⋯ → Delete</b>.',
+        'Do the same in <b>Talk reply</b>.',
+        'If someone emails you about a post that\'s about them, hide or delete it the same way.',
+        'Emergency stop for all posting: <b>Talk settings → main → Posting open: off</b>.'
+      ] })
   ]
 },
 {
@@ -2061,7 +2073,7 @@ const PRIORITY = [
   ['P2', 'u-build', 'Label links before you share any, or you can\'t tell what sold.'],
   ['P2', 'e-discount', 'The welcome offer your signup form and email point to.'],
   ['P2', 'e-email', 'Every new subscriber gets a hello automatically.'],
-  ['P2', 't-moderate', 'Starts the day posting opens on the talks.'],
+  ['P2', 't-moderate', 'Optional: posts publish on their own; this is only an occasional look at reports.'],
   ['P2', 'r-links', 'Bookmark your tools once, so you can find them all month.'],
   ['P3', 'ig-batch', 'One making-day a week keeps quality up and weekdays free.'],
   ['P3', 'ig-setup', 'A carousel chat that already knows your voice and nails.'],
@@ -2087,7 +2099,7 @@ const PRIORITY = [
   ['P4', 'seo-gsc', 'Needs about 4 weeks of Search Console data.'],
   ['P4', 'g-domain', 'Nice to have; best decided before you scale ads.']
 ];
-const HABITS = ['t-moderate', 'ig-batch', 'ig-cal', 'ig-review', 'seo-meta', 'seo-journal', 'seo-gsc', 'a-weekly'];
+const HABITS = ['ig-batch', 'ig-cal', 'ig-review', 'seo-meta', 'seo-journal', 'seo-gsc', 'a-weekly'];
 const TIER_OF = {}, PWHY = {};
 PRIORITY.forEach(([tier, id, why]) => { TIER_OF[id] = tier; PWHY[id] = why; });
 /* habits are ticked once she has started them */
@@ -2145,7 +2157,7 @@ const EXT = {
   if (o2 && !o2.tasks.some(t => t.id === 'x-talks-open')) {
     o2.tasks.splice(o2.tasks.findIndex(t => t.id === 't-privacy'), 0, {
       id: 'x-talks-open', who: 'Claude', status: 'Waiting', t: 'Talks posting is open on the live store', min: '—',
-      why: 'Riya\'s daily talks check and the talks upgrades start the day posting opens.',
+      why: 'The talks upgrades (and Riya\'s optional look at reported posts) start the day posting opens.',
       steps: ['st-talks runs its posting-ON window (HD avatars, posting on, real end-to-end test, test posts deleted).', 'Tick this when shoppers can post on the live store.']
     });
   }
@@ -2647,6 +2659,7 @@ function renderContext() {
 }
 
 const START_PROMPT = `You are joining the Small Talk store rebuild as a Claude Code session. Work in C:\\Users\\SSTS\\Desktop\\Riya. Use Opus at effort xhigh unless the task is purely operational (then Sonnet).
+Working outside that folder? Clone the private repository https://github.com/shubhamdev91/smalltalks-riya and read AGENTS.md first; paths below are relative to its root.
 
 1. Read, in order: Small-Talk-Claude-Implementation-Checklist.md (RESUME HERE is the current truth), C:\\Users\\SSTS\\AppData\\Roaming\\Claude\\side-session-notes\\local_04b83008-0590-42b6-b099-ee4eb0903f2d\\00-orchestrator-protocol.md, C:\\Users\\SSTS\\Downloads\\Small-Talk-Claude-Complete-Brief (1).md (brand rules), spec\\INDEX.md + spec\\tokens.css, copy\\00-register.md + copy\\FACTS.md, qa\\FINAL-ACCEPTANCE.md, and anything in talks\\ or motion\\ your task touches.
 2. Store: 0nev20-vn.myshopify.com (Basic, INR, India). BUILD theme = 186651934933 "Small Talk — Claude build (Horizon)", unpublished; it is the ONLY theme anyone writes. LIVE theme = a published duplicate (older copy) of 186651934933; the owner re-publishes by duplicating the build and publishing the copy. Never touch the live copy, nor 186573160661 (former live ChatGPT build), 186547241173, 186572636373, 162461974741, 186667663573.

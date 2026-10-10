@@ -495,6 +495,7 @@ function renderContext() {
 }
 
 const START_PROMPT = `You are joining the Small Talk store rebuild as a Claude Code session. Work in C:\\Users\\SSTS\\Desktop\\Riya. Use Opus at effort xhigh unless the task is purely operational (then Sonnet).
+Working outside that folder? Clone the private repository https://github.com/shubhamdev91/smalltalks-riya and read AGENTS.md first; paths below are relative to its root.
 
 1. Read, in order: Small-Talk-Claude-Implementation-Checklist.md (RESUME HERE is the current truth), C:\\Users\\SSTS\\AppData\\Roaming\\Claude\\side-session-notes\\local_04b83008-0590-42b6-b099-ee4eb0903f2d\\00-orchestrator-protocol.md, C:\\Users\\SSTS\\Downloads\\Small-Talk-Claude-Complete-Brief (1).md (brand rules), spec\\INDEX.md + spec\\tokens.css, copy\\00-register.md + copy\\FACTS.md, qa\\FINAL-ACCEPTANCE.md, and anything in talks\\ or motion\\ your task touches.
 2. Store: 0nev20-vn.myshopify.com (Basic, INR, India). BUILD theme = 186651934933 "Small Talk — Claude build (Horizon)", unpublished; it is the ONLY theme anyone writes. LIVE theme = a published duplicate (older copy) of 186651934933; the owner re-publishes by duplicating the build and publishing the copy. Never touch the live copy, nor 186573160661 (former live ChatGPT build), 186547241173, 186572636373, 162461974741, 186667663573.

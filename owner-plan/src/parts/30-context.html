@@ -3,6 +3,7 @@
     <p class="eyebrow">Handover for AI agents · state as of 10 Oct 2026</p>
     <h1 id="ctx-h">Project context</h1>
     <p class="ctx-lede">Dense, source-linked summary of the Small Talk rebuild. The source of truth is always <code>C:\Users\SSTS\Desktop\Riya\Small-Talk-Claude-Implementation-Checklist.md</code> → <b>RESUME HERE</b>. Where this page and that file disagree, the file wins. Facts marked <span class="tag tag-unk">unconfirmed</span> are not verified.</p>
+    <p class="ctx-lede"><b>Project repo:</b> <a href="https://github.com/shubhamdev91/smalltalks-riya" target="_blank" rel="noopener">github.com/shubhamdev91/smalltalks-riya</a> (private). The project's source repository: theme, talks backend, artwork, specs and records. Agents working outside the project folder clone it and read <code>AGENTS.md</code> first. Shopify and Vercel hold the live state.</p>
     <div class="ctx-start">
       <h2>Start-here prompt for a new agent</h2>
       <pre id="start-prompt" class="prompt-box"></pre>
@@ -54,7 +55,8 @@
       <li>Backend: Vercel project <code>small-talk-talks-backend</code> (prj_0NtvhUiqMJGIaycQEjiEg1kF25vU), <a href="https://small-talk-talks-backend.vercel.app/api/talks" target="_blank" rel="noopener">/api/talks</a>; source <code>talks\backend\app.py</code> (stdlib WSGI, 37 tests); v0 chat <a href="https://v0.app/chat/pEcbsIUvnGe" target="_blank" rel="noopener">pEcbsIUvnGe</a>. Live build b3ce60f7f6e6 (configured:false) until owner Publishes c91d3d11afc1 from v0 (not Vercel Redeploy).</li>
       <li>Route: App Proxy <code>/apps/talks</code> → <code>…/api/talks</code>, HMAC-verified. Decision A: no IP key behind the proxy; per-device limits + duplicate check + store-wide flood hold.</li>
       <li>Theme: posting OFF via <code>snippets/st-talk-live.liquid</code>; TLK-154 pre-launch notice shown. Posting-ON window (HD avatars + switch + E2E + delete test posts) queued after owner says "talks app installed".</li>
-      <li>Owner blocker: Shopify Dev Dashboard email verification for riyaagg24@gmail.com, then OWNER-SETUP 1–5.</li>
+      <li>Owner setup done 10 Oct (app installed, keys in Vercel, v0 published).</li>
+      <li><b>Moderation (owner decision, 10 Oct):</b> NO review queue. Posts and replies publish immediately; anything risky (contact details, links, handles, slurs, spam, possible real names) is refused at submit with nothing saved; the only automatic removal is auto-hide at 3 distinct reports. Riya's talks task is an OPTIONAL occasional look at reported posts; never describe approving or reviewing posts.</li>
       <li>Requested next (owner, not started): reply pings with consent (WhatsApp/email) and private signed-in customer link (logged_in_customer_id), privacy text update. Brief in Tab 1 §9.</li>
     </ul>
   </article>
@@ -125,8 +127,9 @@
 
   <article class="ctx-block" id="c-files">
     <h2>Where files live</h2>
-    <p>All under <code>C:\Users\SSTS\Desktop\Riya\</code></p>
+    <p>All under <code>C:\Users\SSTS\Desktop\Riya\</code>. Repository: <a href="https://github.com/shubhamdev91/smalltalks-riya" target="_blank" rel="noopener">shubhamdev91/smalltalks-riya</a> (private; same paths, minus bulk QA screenshots).</p>
     <div class="tbl"><table><tbody>
+      <tr><td><code>AGENTS.md</code>, <code>CLAUDE.md</code></td><td>Repository map and rules for any agent</td></tr>
       <tr><td><code>Small-Talk-Claude-Implementation-Checklist.md</code></td><td>RESUME HERE, work packages, SD items, orchestration log</td></tr>
       <tr><td><code>spec\</code></td><td>Board spec, tokens.css, type, fonts, joins/beelines JSON, TEXT-DIFFS</td></tr>
       <tr><td><code>copy\</code></td><td>00-register (index, gates), 01-pdp, 02-journal, 03-landing, 04-pages, 05-seo, 06-microcopy, 07-talks, FACTS.md, terms draft</td></tr>
