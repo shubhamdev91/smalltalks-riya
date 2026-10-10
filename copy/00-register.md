@@ -250,3 +250,15 @@ Rule from the owner, via the orchestrator: board wording wins, with the listed e
 - Not touched: SEO rows (TLK-090…093), seed threads (TLK-080…088), the privacy-policy paragraph (TLK-155), alias word lists (TLK-150/151).
 
 **v1.5.1 (10 Oct), st-talks UX slots U1–U17:** updated TLK-003, 007, 020, 026, 050, 102, 104, 110, 113, 134, 153, 158, 159; new TLK-163…169 (empty-topic headline, line and button; house-rules toggle; reassurance line; “got your own tea?” card and link).
+
+**v1.5.2 (10 Oct):** composer split into a title field and a details field: TLK-170 “what’s the tea, in one line?”, TLK-171 “the rest of the tea (optional)”, TLK-172 details label; TLK-101 → “headline”; TLK-102 superseded.
+
+**v1.5.3 (10 Oct):** the C1/C2 split is cancelled by st-talks. TLK-102 is the only composer placeholder again; TLK-101 is back to “your talk”; TLK-170…172 are withdrawn (IDs kept).
+
+**v1.5.4 (10 Oct):** the C1/C2 two-field composer is back (st-fable REVIEW-2). TLK-170 “what’s the tea, in one line?” and TLK-171 “the rest of the tea (optional)” are reinstated, plus label TLK-172; TLK-101 → “headline”; TLK-102 superseded.
+
+**v1.6 (10 Oct), talks round 3 (Reddit-style nesting, big box, minimal text):** new TLK-173 (big-box placeholder), TLK-174 (rotating alternates), TLK-175 “need a nudge?” (replaces TLK-162), TLK-176 (flat nudge list), TLK-177 (reply-to-comment placeholder), TLK-178 “continue this thread ›”, TLK-179 (collapse/expand). Kept: TLK-143 as the one-line rule, plus TLK-104, TLK-026, TLK-133 and TLK-113.
+
+**v1.6.1 (10 Oct), st-talks v4 slots V1–V7:** TLK-173 now two lines (+ headline hint); TLK-179 collapsed line “{n} more replies”; TLK-177 superseded (every inline box uses TLK-026); new TLK-180 “replying to a hidden comment”. Reused: TLK-175, TLK-178, TLK-133, TLK-135.
+
+**v1.7 (10 Oct), owner decisions:** topics locked (TLK-006). No review queue: TLK-116 and TLK-149 retired; TLK-075 and TLK-154 rewritten (“we take down whatever breaks these rules”); TLK-155 privacy paragraph updated (re-paste if already pasted); FACTS F14 and Terms §6 aligned. New refusals TLK-181 (might name someone) and TLK-182 (busy, optional). Existing refusals TLK-123…130 and TLK-034 kept.
