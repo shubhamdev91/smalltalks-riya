@@ -61,16 +61,40 @@ my session):
 1. Install the theme files first, posting UI ON, while `posting_open` is still "false". Shoppers can't post yet.
 2. Run `metaobjectUpdate` on 616028176597: `posting_open` → "true". Wait ≤ 60 s, then check that `GET /apps/talks`
    returns `{"open": true}`.
-3. Run the real E2E: post, reply, report with no login; blocked content; slow-down; 320/390/1280. Then delete the
-   test posts.
-4. **Pass:** leave it "true".
-5. **Any failure:** set it back to "false", confirm `{"open": false}`, and report.
+3. Run the real E2E on the BUILD preview: post, reply, report with no login; blocked content; slow-down;
+   320/390/1280.
+4. **Delete every test post and reply BEFORE reporting.** Read back that they're gone: the thread, reply and signal
+   rows, plus the topic lists.
+5. **Set it back to "false"** and confirm `{"open": false}`, pass or fail. The LIVE theme still runs the old talks UI
+   until the owner publishes the new build copy, so posting must not be open while live runs the old theme.
+6. **Report:** pass or fail, plus the evidence.
+7. **After the owner publishes the build copy** (live = new UI): set it to "true", confirm `{"open": true}`, and check
+   the live talks pages. Only then is posting really open. If the owner wants posting live at that moment, it's their
+   OK in my session.
 
-**Backend deploy with this window** (owner's OK + the owner's v0 Publish; the build string changes):
+Sequence (orchestrator, 10 Oct): E2E on the build → test posts deleted → "false" → owner publishes → "true".
+
+**Backend deploy with this window** (scope approved by the orchestrator 10 Oct; still needs the owner's OK and the
+owner's v0 Publish; the build string changes):
 
 - remove `?diag=ip`;
 - make settings fail-closed: open only when `posting_open == "true"`; a missing entry means closed;
-- optional: gate reports too, if the owner wants that.
+- reports stay UNGATED (decided; a one-line change only if the owner asks).
+
+**Superseded:** the deploy is now build **b27475e7fe2b** = v5 + v6 (nesting) + v7 (no review queue), with 53 tests.
+See `talks/backend/SECURITY-v5.md` and `talks/staged/nesting/PROPOSAL.md`. The `parent` field must be added BEFORE
+this deploy. The v5-only notes below are kept for history.
+
+**Prepared locally 10 Oct** (`talks/tools/backend_v5.py`; nothing deployed, v0 chat untouched):
+
+- `talks/backend/app.py` → build **4bc0845998eb**. The deployed c91d3d11afc1 source is saved as
+  `talks/staged/app-c91d3d11afc1.py`.
+- **Tests:** 38 pass.
+- **New tests:** `test_settings_fail_closed` (a missing entry, an empty, "TRUE" or "yes" value, and no entry at all are
+  all closed for posts and replies, with nothing written) and `test_no_diag_and_404` (no forwarding headers are
+  echoed). Both FAIL against c91d3d11, which proves they catch the old behaviour.
+- **To deploy, with the owner's OK:** update the v0 chat files (`chats_updateFiles`: app.py), the owner clicks
+  Publish, then check `/api/talks` shows build 4bc0845998eb and `GET /apps/talks` shows `{"open": false}`.
 
 Prepare and test it locally, update the v0 chat files only after the owner's OK, and check the new build string on
 `/api/talks` before step 2.

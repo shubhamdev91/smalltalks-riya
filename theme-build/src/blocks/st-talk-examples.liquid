@@ -7,9 +7,9 @@
 
 <div class="st-talks" {{ block.shopify_attributes }}>
   <h2 class="st-talks__heading visually-hidden">{{ 'small_talk.talks.examples_heading' | t }}</h2>
-  <ul class="st-talks__list" role="list">
+  <div class="st-talks__list">
     {% content_for 'blocks' %}
-  </ul>
+  </div>
 </div>
 
 {% stylesheet %}

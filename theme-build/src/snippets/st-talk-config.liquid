@@ -1,52 +1,581 @@
 {% doc %}
-  Settings and copy for st-talks.js (posting, replies, reports), rendered once per talks page as JSON. Every string is
-  a locale value (small_talk.talks.live.*, register TLK-1xx), so the script holds no shopper-visible copy.
+  Settings and copy for st-talks.js (posting, replies, reports, folds), rendered once per talks page as JSON. Every
+  string is a locale value (small_talk.talks.live.v4.*, st-copy register v1.7), so the script holds no shopper-visible
+  copy. Avatars use the hero's HD sheets (assets/st-hd-nails-<set>.webp, one file per set site-wide).
+  It also carries the talks' SHARED styles (tokens, labels, the writing box and reply box, buttons): Shopify ships a
+  file's stylesheet block only on pages that render it, and this snippet is the one every talks page renders. The inert
+  <template> renders st-talk-avatar so its styles ship even where no avatar is on the page yet (her first talk on an
+  empty topic).
 
   @param {string} [endpoint] - Where posts go. Default /apps/talks (Shopify App Proxy to the talks backend).
+  @param {boolean} [live] - Posting is switched on (snippet st-talk-live). Off: only the thread folds run.
 
   @example
-  {% render 'st-talk-config', endpoint: section.settings.endpoint %}
+  {% render 'st-talk-config', endpoint: section.settings.endpoint, live: live %}
 {% enddoc %}
 
 {%- liquid
   assign sets = 'on-me,brainwave,diet-cherry,green-flag,shaadi-shift,wild-card,pinky-promise' | split: ','
   assign adjectives = 'small_talk.talks.live.alias_adjectives' | t | split: ','
   assign nouns = 'small_talk.talks.live.alias_nouns' | t | split: ','
-  assign error_keys = 'need_topic,too_short,too_long,blocked_contact,blocked_link,blocked_handle,blocked_words,bad_alias,rate_limited,duplicate,closed,not_found,server' | split: ','
-  assign string_keys = 'posting_as,replying_as,change,posting,posted,view,held,held_tag,failed,retry,edit,left,reply,reply_to_label,replying_to,cancel,report_confirm,report_yes,reported,hidden_for_you,show' | split: ','
+  assign starter_topics = 'plot-twists,tiny-wins,second-opinions,just-venting,nail-talk' | split: ','
+  assign error_keys = 'need_topic,too_short,too_long,blocked_contact,blocked_link,blocked_handle,blocked_words,bad_alias,rate_limited,duplicate,closed,not_found,might_name,busy,server' | split: ','
+  assign string_keys = 'posting_as,replying_as,posting,posted,view,failed,retry,edit,left,reply,reply_to_label,replying_to,cancel,report,report_label,report_confirm,report_yes,reported,hidden_for_you,show,no_replies,more_one,more_other,collapse_label,expand_label,continue' | split: ','
 -%}
 <script type="application/json" id="st-talks-config">
   {
+    "live": {% if live %}true{% else %}false{% endif %},
     "endpoint": {{ endpoint | default: '/apps/talks' | json }},
     "sets": {{ sets | json }},
     "sprites": {
       {%- for s in sets -%}
-        {{ s | json }}: {{ 'st-nails-' | append: s | append: '.webp' | asset_url | json }}{% unless forloop.last %},{% endunless %}
+        {{ s | json }}: {{ 'st-hd-nails-' | append: s | append: '.webp' | asset_url | json }}{% unless forloop.last %},{% endunless %}
       {%- endfor -%}
     },
     "lightInk": ["brainwave", "diet-cherry", "green-flag", "pinky-promise"],
-    "max": { "thread": 1200, "reply": 800, "alias": 24, "own": 30 },
+    "max": { "thread": 1200, "reply": 800, "alias": 24, "own": 30, "depth": 8 },
     "adjectives": [
       {%- for w in adjectives -%}{{ w | strip | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}
     ],
     "nouns": [
       {%- for w in nouns -%}{{ w | strip | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}
     ],
+    "nudges": {{ 'small_talk.talks.live.v4.nudges' | t | split: '|' | json }},
+    "starters": {
+      {%- for s in starter_topics -%}
+        {%- assign key = 'small_talk.talks.live.v4.starters.' | append: s | replace: '-', '_' -%}
+        {{ s | json }}: {{ key | t | split: '|' | json }}{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    },
     "strings": {
       {%- for k in string_keys -%}
-        {%- assign key = 'small_talk.talks.live.' | append: k -%}
+        {%- assign key = 'small_talk.talks.live.v4.' | append: k -%}
         {{ k | json }}: {{ key | t: alias: '__alias__', count: '__n__' | json }},
       {%- endfor -%}
-      "report": {{ 'small_talk.talks.thread.report' | t | json }},
-      "first_reply": {{ 'small_talk.talks.hub.first_reply' | t | json }},
       "reply_one": {{ 'small_talk.talks.replies.one' | t | json }},
       "reply_other": {{ 'small_talk.talks.replies.other' | t: count: '__n__' | json }},
       "errors": {
         {%- for k in error_keys -%}
-          {%- assign key = 'small_talk.talks.live.errors.' | append: k -%}
+          {%- assign key = 'small_talk.talks.live.v4.errors.' | append: k -%}
           {{ k | json }}: {{ key | t: max: '__max__' | json }}{% unless forloop.last %},{% endunless %}
         {%- endfor -%}
       }
     }
   }
 </script>
+<template data-st-avatar-styles>{%- render 'st-talk-avatar', set: '' , alias: '' -%}</template>
+
+{% stylesheet %}
+  /* ---------- the talks UX v4: shared tokens (hub, topic pages, threads, house rules) ---------- */
+  .tk {
+    --tk-ink: #1a1a2e;
+    --tk-muted: #5d5562;          /* 7.1:1 on white, 6.6:1 on the cream */
+    --tk-line: #efe6d8;
+    --tk-chip: #fdf0f0;
+    --tk-chip-ink: #a31a33;       /* 6.9:1 on the chip */
+    --tk-accent: #c3021d;         /* CTA, active chip, focus; white on it 6.3:1 */
+    color: var(--tk-ink);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .tk :is(h1, h2, h3) {
+    font-family: var(--font-ui);
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  .tk-lc {
+    text-transform: lowercase;
+  }
+
+  .tk-label {
+    margin: 0;
+    color: var(--tk-muted);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+  }
+
+  .tk-more {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .tk-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 20px;
+    border: 1.5px solid var(--tk-chip-ink);
+    border-radius: 999px;
+    color: var(--tk-chip-ink);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .tk-btn-ghost:focus-visible {
+    outline: 2px solid var(--tk-ink);
+    outline-offset: 3px;
+  }
+
+  .tk-side {
+    display: none;
+  }
+
+  .tk-meta {
+    color: var(--tk-muted);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .tk-meta b {
+    color: var(--tk-ink);
+    font-weight: 600;
+  }
+
+  .tk-act {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 0;
+    background: none;
+    color: var(--tk-muted);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .tk-act--strong {
+    color: var(--tk-chip-ink);
+  }
+
+  .tk-act:focus-visible {
+    outline: 2px solid var(--tk-accent);
+    outline-offset: -2px;
+  }
+
+  @media screen and (min-width: 1280px) {
+    .tk-side__in {
+      position: sticky;
+      top: calc(var(--st-header-h, 76px) + 24px);
+    }
+  }
+
+  /* The hero box (hub top, ~5 lines of room) and, smaller, every reply box (.tk-hero--reply). */
+  .tk-hero {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 12px;
+    border: 1px solid var(--tk-line);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 8px 24px -16px rgb(60 30 10 / 0.35);
+  }
+
+  .tk-hero__box {
+    position: relative;
+    display: grid;
+    border: 1.5px solid #eadfd8;
+    border-radius: 14px;
+    background: #fffefb;
+  }
+
+  .tk-hero__box:focus-within {
+    border-color: var(--tk-accent);
+    box-shadow: 0 0 0 3px rgb(195 2 29 / 0.12);
+  }
+
+  .tk-hero__input {
+    display: block;
+    width: 100%;
+    min-height: 196px;
+    margin: 0;
+    padding: 14px 16px 52px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: var(--tk-ink);
+    font: inherit;
+    font-size: 17px;
+    line-height: 1.5;
+    resize: none;
+    field-sizing: content;
+    max-height: 60vh;
+  }
+
+  .tk-hero__input:focus {
+    outline: none;
+  }
+
+  .tk-hero__input::placeholder {
+    color: transparent;
+  }
+
+  /* The two-line placeholder (TLK-173) as a visual layer; it goes the moment she types. */
+  .tk-hero__ph {
+    position: absolute;
+    inset: 14px 16px auto;
+    margin: 0;
+    color: var(--tk-muted);
+    font-size: 17px;
+    line-height: 1.5;
+    pointer-events: none;
+  }
+
+  .tk-hero__ph small {
+    display: block;
+    margin-top: 2px;
+    font-size: 14px;
+  }
+
+  .tk-hero__input:not(:placeholder-shown) + .tk-hero__ph {
+    display: none;
+  }
+
+  .tk-hero__nudge {
+    position: absolute;
+    left: 8px;
+    bottom: 4px;
+  }
+
+  .tk-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--tk-chip-ink);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .tk-pill > span,
+  .tk-topic select {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: var(--tk-chip);
+    color: var(--tk-chip-ink);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .tk-pill--ghost > span {
+    border: 1.5px dashed #d9c3c8;
+    background: transparent;
+    font-weight: 500;
+  }
+
+  .tk-pill svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* The topic: ONE pre-selected chip ("plot twists ▾"), a native select for keyboard and screen readers. */
+  .tk-topic select {
+    min-width: 0;
+    max-width: 52vw;
+    padding-right: 30px;
+    border: 0;
+    text-overflow: ellipsis;
+    appearance: none;
+    field-sizing: content;
+    text-transform: lowercase;
+    cursor: pointer;
+  }
+
+  .tk-topic svg {
+    position: absolute;
+    right: 12px;
+    pointer-events: none;
+  }
+
+  .tk-pill:focus-visible,
+  .tk-topic select:focus-visible,
+  .tk-post:focus-visible,
+  .tk-link:focus-visible {
+    outline: 2px solid var(--tk-accent);
+    outline-offset: 2px;
+  }
+
+  .tk-pill:focus-visible {
+    outline: none;
+  }
+
+  .tk-pill:focus-visible > span {
+    outline: 2px solid var(--tk-accent);
+    outline-offset: 2px;
+  }
+
+  .tk-hero__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .tk-hero__row > span:last-child:not(.tk-topic) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tk-post {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 112px;
+    min-height: 44px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--tk-accent);
+    color: #fff;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .tk-post[aria-disabled='true'] {
+    opacity: 0.7;
+  }
+
+  .tk-field {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid #e3d8cf;
+    border-radius: 12px;
+    background: #fff;
+    color: var(--tk-ink);
+    font: inherit;
+    font-size: 16px;
+  }
+
+  .tk-field::placeholder {
+    color: var(--tk-muted);
+    opacity: 1;
+  }
+
+  .tk-field:focus-visible {
+    outline: 2px solid var(--tk-accent);
+    outline-offset: 1px;
+  }
+
+  .tk-hero__own[hidden] {
+    display: none;
+  }
+
+  /* Honeypot: off-screen for people, there for bots (the backend answers a filled one with a silent fake success). */
+  .st-hp {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .tk-status {
+    margin: 0;
+    color: var(--tk-ink);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .tk-status:empty {
+    display: none;
+  }
+
+  .tk-status[data-tone='error'] {
+    color: #b00818;
+  }
+
+  .tk-status a {
+    color: var(--tk-chip-ink);
+  }
+
+  .tk-hero__fine {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: var(--tk-muted);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .tk-hero__fine p {
+    margin: 0;
+  }
+
+  .tk-hero__fine b {
+    color: var(--tk-ink);
+    font-weight: 600;
+  }
+
+  .tk-link {
+    display: inline;
+    padding: 12px 2px;
+    margin: -12px 0;
+    border: 0;
+    background: none;
+    color: var(--tk-chip-ink);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .tk-soon {
+    margin: 14px 0 0;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--tk-chip);
+    color: var(--tk-muted);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  /* The reply version: the same box, smaller, inline under any comment (and under the talk itself). */
+  .tk-hero--reply {
+    margin-top: 8px;
+    padding: 10px;
+    gap: 8px;
+    box-shadow: none;
+  }
+
+  .tk-hero--reply .tk-hero__input {
+    min-height: 92px;
+    padding-bottom: 14px;
+    font-size: 16px;
+  }
+
+  .tk-hero--reply .tk-hero__input::placeholder {
+    color: var(--tk-muted);
+  }
+
+  .tk-hero--reply .tk-post {
+    min-width: 88px;
+  }
+
+  .tk-hero--reply .tk-hero__fine {
+    flex-direction: row;
+  }
+
+  .tk-to {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    color: var(--tk-muted);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .tk-to[hidden] {
+    display: none;
+  }
+
+  .tk-to b {
+    color: var(--tk-ink);
+  }
+
+  .tk-to button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 32px;
+    margin-right: -10px;
+    border: 0;
+    background: none;
+    color: var(--tk-muted);
+    cursor: pointer;
+  }
+
+  .tk-to svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .tk-cancel {
+    min-height: 44px;
+    padding: 0 12px;
+    border: 0;
+    background: none;
+    color: var(--tk-muted);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .tk-cancel[hidden] {
+    display: none;
+  }
+
+  .tk-cancel:focus-visible,
+  .tk-to button:focus-visible {
+    outline: 2px solid var(--tk-accent);
+    outline-offset: 2px;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .tk-hero {
+      padding: 14px;
+    }
+
+    .tk-hero__input,
+    .tk-hero__ph {
+      font-size: 18px;
+    }
+
+    .tk-hero__input {
+      min-height: 216px;
+    }
+
+    .tk-hero__fine {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 2px 10px;
+    }
+
+    .tk-topic select {
+      max-width: none;
+    }
+
+    .tk-hero--reply .tk-hero__input {
+      min-height: 96px;
+      font-size: 17px;
+    }
+  }
+{% endstylesheet %}

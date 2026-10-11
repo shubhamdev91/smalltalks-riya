@@ -1,0 +1,44 @@
+{
+  "sections": {
+    "main": {
+      "type": "st-talks-list",
+      "settings": {
+        "blog_handle": "the-talks",
+        "hub_url": "/blogs/the-talks",
+        "heading": "the talks",
+        "tagline": "a little less filtered.",
+        "subheading": "for the good days, and the other ones.",
+        "cta_label": "spill your tea ↗",
+        "all_label": "all",
+        "chip_order": "plot-twists, tiny-wins, second-opinions, just-venting, nail-talk",
+        "hidden_topics": "something-else",
+        "list_label": "latest",
+        "per_page": 10,
+        "panel_text": "different thoughts. same energy. ♡",
+        "endpoint": "/apps/talks"
+      }
+    },
+    "rules": {
+      "type": "st-talks-rules",
+      "settings": {
+        "blog_handle": "the-talks",
+        "heading": "house rules",
+        "rule_1": "talk about situations, not people.",
+        "rule_2": "no real names, numbers, handles or links. nothing that could identify anyone.",
+        "rule_3": "no hate, harassment or bullying. no selling.",
+        "rule_4": "your alias is the only name anyone sees. we don’t ask for a name, email or account.",
+        "privacy": "to stop spam, we keep a scrambled code for your device (never your IP address) and delete it within 30 days.",
+        "moderation_prelaunch": "once posting opens, talks and replies go live straight away. we take down whatever breaks these rules.",
+        "moderation": "talks and replies go live straight away. we take down whatever breaks these rules.",
+        "report": "tap report on anything that breaks these rules. three reports from different people and it’s hidden until we’ve checked it. something here about you? email {email} with the link and we’ll take it down.",
+        "support": "if a talk gets heavy, you don’t have to carry it alone. call Tele-MANAS, India’s free 24×7 mental health helpline, on 14416 or 1800-891-4416.",
+        "support_tel_1": "14416",
+        "support_tel_2": "1800-891-4416"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rules"
+  ]
+}

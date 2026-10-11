@@ -1,0 +1,45 @@
+{% doc %}
+  "Example conversations" for the talks page. Each child block is one written example, always labelled
+  as an example on the card (PG-069/073/077), with no reply counts, likes or timestamps (nothing that implies
+  real activity). The list heading (PG-068) is kept for structure but visually hidden, since every card
+  already carries the same label.
+{% enddoc %}
+
+<div class="st-talks" {{ block.shopify_attributes }}>
+  <h2 class="st-talks__heading visually-hidden">{{ 'small_talk.talks.examples_heading' | t }}</h2>
+  <div class="st-talks__list">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .st-talks__heading {
+    margin: 0 0 0.75rem;
+    color: var(--st-muted);
+    font-family: var(--st-font-sans);
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+
+  .st-talks__list {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-talks__note {
+    margin: 0.75rem 0 0;
+    color: var(--st-muted);
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Small Talk talk examples",
+  "blocks": [{ "type": "st-talk-example" }],
+  "presets": [{ "name": "Small Talk talk examples" }]
+}
+{% endschema %}

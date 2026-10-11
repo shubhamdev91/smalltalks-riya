@@ -1,4 +1,5 @@
-/* the talks: PROPOSED UX v1 (lab, 10 Oct), built to st-fable's qa/talks-ux/DIRECTION.md and st-copy v1.5.1.
+/* the talks: PROPOSED UX v3 = v1 (APPROVED in st-fable's REVIEW-2) + its render fixes: real state only, no DRAFT
+   text, and the desktop composer opening at the top of the feed. Built to DIRECTION.md and st-copy v1.5.1.
    Two families only: Caveat 600 for the "the talks" wordmark, DM Sans for everything else (the "spill your tea"
    CTA is Barlow Semi Condensed 600). Flat rows with dividers, no cards. One accent: #c3021d. 4 px grid. */
 
@@ -146,7 +147,7 @@
 .tk-starter { display: inline-flex; align-items: center; min-height: 44px; }
 .tk-starter > span { display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border: 1.5px dashed #d9c3c8; border-radius: 999px; color: var(--tk-chip-ink); font-size: 15px; font-weight: 500; white-space: nowrap; }
 .tk-input { padding: 13px 16px; border: 1px solid #e3d8cf; border-radius: 12px; background: #fff; color: var(--tk-muted); font-size: 16px; line-height: 1.5; }
-.tk-input--title { color: var(--tk-muted); font-weight: 500; }
+.tk-input--title { min-height: 52px; color: var(--tk-muted); font-weight: 500; }
 .tk-input--details { min-height: 96px; }
 .tk-fields { display: grid; gap: 8px; }
 .tk-as { display: flex; align-items: center; justify-content: space-between; color: var(--tk-muted); font-size: 15px; }
@@ -164,7 +165,6 @@
     width: min(1240px, 100% - 2 * clamp(32px, 4vw, 64px)); margin: 0 auto; padding: 32px 0 64px;
   }
   .tk-rail { display: grid; gap: 16px; position: sticky; top: calc(var(--st-header-h, 76px) + 24px); }
-  .tk-rail:has(.tk-panel) { position: static; }  /* the open composer can be taller than the screen: let the page scroll it */
   .tk-main .tk-rules { display: none; }           /* the rail carries the rules on desktop */
   .tk-dock { display: none; }
   .tk .tk-wordmark { font-size: 72px; }
@@ -195,7 +195,12 @@
   /* z-index back to auto: a grid item with a z-index is stacked even when static, and would ride over the sticky header */
   .tk-sheet { position: static; z-index: auto; max-height: none; padding: 0; border-radius: 0; background: none; box-shadow: none; overflow: visible; }
   .tk-scrim, .tk-grab { display: none; }
-  .tk-panel { padding: 18px; border: 1px solid var(--tk-line); border-radius: 16px; background: #fff; }
+  /* REVIEW-2: on desktop the composer opens inline at the top of the feed (720 wide; chips in one row, the whole form
+     in one screen); the rail's "spill your tea" scrolls there and opens it. The rail stays sticky. */
+  .tk-panel { padding: 18px 20px; border: 1px solid var(--tk-line); border-radius: 16px; background: #fff; box-shadow: 0 10px 28px -18px rgb(60 30 10 / 0.35); }
+  .tk-main > .tk-panel { gap: 10px; margin-bottom: 16px; padding-top: 14px; }
+  .tk-panel .tk-input--details { min-height: 60px; }
+  .tk-panel .tk-picks .tk-chip, .tk-panel .tk-starter { min-height: 44px; }
   .tk-panel .tk-x { margin-right: -10px; }
 }
 @media screen and (min-width: 1280px) {
@@ -211,3 +216,96 @@
 @media screen and (min-width: 1680px) {
   .tk-page { width: min(1440px, 100% - 2 * clamp(32px, 4vw, 64px)); }
 }
+
+/* ======================================================================================================================
+   v4 (owner round 2): the writing box is the hero; Reddit-style threads (a line per depth, fold, reply under ANY
+   comment). Starting a thread and replying use the same friendly box.
+   ====================================================================================================================== */
+
+/* ---------- the hero box: start a thread (hub top) / reply (smaller, inline) ---------- */
+.tk-hero {
+  display: grid; gap: 10px; margin-top: 14px; padding: 12px; border: 1px solid var(--tk-line); border-radius: 18px;
+  background: #fff; box-shadow: 0 8px 24px -16px rgb(60 30 10 / 0.35);
+}
+.tk-hero__box {
+  position: relative; min-height: 148px; padding: 14px 16px; border: 1.5px solid #eadfd8; border-radius: 14px; background: #fffefb;
+  color: var(--tk-ink); font-size: 17px; line-height: 1.5;
+}
+.tk-hero__ph { color: var(--tk-muted); }
+.tk-hero__ph small { display: block; margin-top: 2px; font-size: 14px; }
+.tk-hero--focus .tk-hero__box { border-color: var(--tk-accent); box-shadow: 0 0 0 3px rgb(195 2 29 / 0.12); }
+.tk-caret { display: inline-block; width: 1.5px; height: 1.15em; margin-left: 1px; vertical-align: -0.2em; background: var(--tk-accent); }
+.tk-hero__row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tk-pill { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+.tk-pill > span { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 999px; background: var(--tk-chip); color: var(--tk-chip-ink); font-size: 14px; font-weight: 600; white-space: nowrap; }
+.tk-pill--ghost > span { background: transparent; border: 1.5px dashed #d9c3c8; font-weight: 500; }
+.tk-pill svg { width: 12px; height: 12px; stroke-width: 2; }
+.tk-post { display: inline-flex; align-items: center; justify-content: center; min-width: 112px; min-height: 44px; padding: 0 20px; border-radius: 999px; background: var(--tk-accent); color: #fff; font-size: 16px; font-weight: 700; }
+.tk-hero__fine { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 10px; color: var(--tk-muted); font-size: 13px; line-height: 1.4; }
+.tk-hero__fine b { color: var(--tk-ink); font-weight: 600; }
+.tk-hero__fine a { color: var(--tk-chip-ink); font-weight: 600; }
+/* the reply version: same box, smaller */
+.tk-hero--reply { margin-top: 8px; padding: 10px; gap: 8px; box-shadow: none; }
+.tk-hero--reply .tk-hero__box { min-height: 92px; font-size: 16px; }
+.tk-hero--reply .tk-post { min-width: 88px; }
+.tk-to { display: flex; align-items: center; justify-content: space-between; color: var(--tk-muted); font-size: 13px; font-weight: 500; }
+.tk-to b { color: var(--tk-ink); }
+.tk-to button { display: grid; place-items: center; width: 44px; height: 32px; margin-right: -10px; color: var(--tk-muted); }
+.tk-to svg { width: 14px; height: 14px; stroke-width: 2; }
+.tk-cancel { min-height: 44px; padding: 0 12px; color: var(--tk-muted); font-size: 14px; font-weight: 600; }
+
+/* ---------- Reddit-style comments: a flat list in display order, one vertical line per ancestor ---------- */
+.tk-comments { --step: 16px; --line: #e6dbd3; margin-top: 4px; }
+.tk-c {
+  position: relative; padding: 8px 0 2px calc(var(--d) * var(--step));
+  /* one line per ancestor level, continuous across consecutive comments */
+  background-image: repeating-linear-gradient(to right, transparent 0 11px, var(--line) 11px 12.5px, transparent 12.5px var(--step));
+  background-size: calc(var(--d) * var(--step)) 100%; background-repeat: no-repeat;
+}
+.tk-c__head { display: flex; align-items: center; gap: 8px; min-height: 24px; color: var(--tk-muted); font-size: 13px; font-weight: 500; }
+.tk-c__head b { color: var(--tk-ink); font-weight: 600; }
+.tk-c__av { display: grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--c, #fcb939); color: var(--tk-ink); font-size: 12px; font-weight: 700; }
+.tk-c__av--light { color: #fff; }
+.tk-c__body { margin: 4px 0 0 32px; font-size: 16px; line-height: 1.5; }
+.tk-c__to { color: var(--tk-muted); font-weight: 500; }
+.tk-c__acts { display: flex; gap: 2px; margin: 0 0 0 20px; }
+.tk-c__acts .tk-act { min-height: 40px; }
+/* the comment's own thread line runs down from its avatar to its last reply; it is the fold toggle (44 px wide hit) */
+.tk-c--parent::after {
+  content: ""; position: absolute; left: calc(var(--d) * var(--step) + 11px); top: 34px; bottom: 0; width: 1.5px; background: var(--line);
+}
+.tk-c__fold { position: absolute; left: calc(var(--d) * var(--step) - 10px); top: 32px; bottom: 0; width: 44px; }
+.tk-c--folded .tk-c__head::after { content: attr(data-more); margin-left: 4px; color: var(--tk-chip-ink); font-weight: 600; }
+.tk-c--folded .tk-c__body, .tk-c--folded .tk-c__acts { display: none; }
+.tk-c__fold-ico { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--line); color: var(--tk-muted); font-size: 14px; font-weight: 700; background: #fff; }
+.tk-continue { display: inline-flex; align-items: center; min-height: 40px; margin-left: calc(var(--d) * var(--step) + 4px); color: var(--tk-chip-ink); font-size: 14px; font-weight: 700; }
+.tk-c .tk-hero--reply { margin-left: 20px; }
+
+@media screen and (min-width: 1024px) {
+  .tk-hero { margin-top: 0; padding: 14px; }
+  .tk-hero__box { min-height: 156px; font-size: 18px; }
+  .tk-comments { --step: 22px; }
+  .tk-c { background-image: repeating-linear-gradient(to right, transparent 0 11px, var(--line) 11px 12.5px, transparent 12.5px var(--step)); }
+  .tk-c__body { font-size: 17px; max-width: 68ch; }
+  .tk-hero--reply .tk-hero__box { min-height: 96px; font-size: 17px; }
+}
+
+/* v4 fixes: the nudge sits inside the box (bottom-left); the row under the box is just topic + post; small print stacks */
+.tk-hero__box { padding-bottom: 52px; }
+.tk-hero__box .tk-pill--ghost { position: absolute; left: 8px; bottom: 4px; }
+.tk-hero--reply .tk-hero__box { padding-bottom: 14px; }
+.tk-hero__fine { flex-direction: column; }
+.tk-hero__row > span:last-child { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+@media screen and (min-width: 1024px) { .tk-hero__fine { flex-direction: row; } }
+.tk-hero__box { min-height: 196px; }            /* about 5 lines of writing room on phones (owner: "we need them to spill") */
+.tk-typing .tk-dock { display: none; }          /* the dock hides while she types (keyboard up) */
+@media screen and (min-width: 1024px) { .tk-hero__box { min-height: 188px; } }
+
+/* v1.6 fold toggles (TLK-179): "−" sits on the comment's own thread line under the avatar; folded = "+ n" pill */
+.tk-c__fold { position: absolute; left: calc(var(--d) * var(--step) - 10px); top: 30px; width: 44px; height: 44px; display: grid; place-items: start center; padding-top: 4px; }
+.tk-c__fold-ico { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line); background: #fffdf6; color: var(--tk-muted); font-size: 14px; font-weight: 700; line-height: 1; }
+.tk-c--parent::after { top: 56px; }
+.tk-c__more { display: inline-flex; align-items: center; min-height: 32px; margin-left: 6px; padding: 0 10px; border-radius: 999px; background: var(--tk-chip); color: var(--tk-chip-ink); font-size: 13px; font-weight: 700; }
+.tk-c--folded .tk-c__head::after { content: none; }
+/* REVIEW-4: ≥ 5 lines of writing room on desktop (18 px / 27 px lines; the nudge chip sits inside the box) */
+@media screen and (min-width: 1024px) { .tk-hero__box { min-height: 216px; } }

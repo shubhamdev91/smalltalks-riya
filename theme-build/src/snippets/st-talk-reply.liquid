@@ -1,15 +1,16 @@
 {% doc %}
-  One reply on a thread (conversation.md "Reply"): red thread rule, an initial avatar on her set's colour (white ink
-  on brainwave / diet-cherry / green-flag / pinky-promise, ink on the others), "{alias} · {date}" (TLK-024), the
-  reply, and "Reply" / "Report" (TLK-133 / TLK-039). Nested replies (depth 1) sit indented under their parent, with
-  "Replying to {alias}" (TLK-134). No hearts, likes or ••• (T56). st-talks.js builds the same markup for her own
-  new reply (keep the two in step).
+  One comment on a thread, talks UX v4 (Reddit-style): the thread's `replies` list is already in display order (each
+  reply follows its parent's subtree), so comments render flat with `--d` = depth (0-8) and one thin line per ancestor
+  level. A 24 px initial avatar on her set's colour (white ink on brainwave / diet-cherry / green-flag / pinky-promise),
+  "alias · time" (TLK-024), the reply, and "reply · report" (TLK-133 / TLK-039). A reply whose parent was hidden by
+  moderation says so (TLK-180). st-talks.js adds the fold toggles (TLK-179) and "continue this thread ›" (TLK-178), and
+  builds the same markup for her own new reply (keep the two in step).
 
   @param {object} reply - A talk_reply metaobject.
-  @param {boolean} [live] - Posting is switched on; off hides Reply / Report (they need the backend).
+  @param {boolean} [live] - Posting is switched on; off hides reply / report (they need the backend).
 
   @example
-  {% render 'st-talk-reply', reply: reply %}
+  {% render 'st-talk-reply', reply: reply, live: live %}
 {% enddoc %}
 
 {%- liquid
@@ -32,47 +33,53 @@
     assign colour = palette[colour_index]
   endunless
   assign depth = reply.depth.value | default: 0 | plus: 0
-  assign reply_label = 'small_talk.talks.live.reply_to_label' | t: alias: '@@A@@' | replace: '@@A@@', r_alias
-  assign report_label = 'small_talk.talks.thread.report_label' | t: alias: '@@A@@' | replace: '@@A@@', r_alias
+  if depth > 8
+    assign depth = 8
+  endif
+  assign parent_handle = ''
+  if reply.parent.value
+    assign parent_handle = reply.parent.value.system.handle
+  endif
+  assign reply_label = 'small_talk.talks.live.v4.reply_to_label' | t: alias: '@@A@@' | replace: '@@A@@', r_alias
+  assign report_label = 'small_talk.talks.live.v4.report_label' | t: alias: '@@A@@' | replace: '@@A@@', r_alias
 -%}
 <li
-  class="st-reply-item{% if depth > 0 %} st-reply-item--nested{% endif %}"
+  class="tk-c"
   id="reply-{{ r_handle | escape }}"
+  style="--d: {{ depth }}"
+  aria-level="{{ depth | plus: 1 }}"
   data-st-reply="{{ r_handle | escape }}"
   data-depth="{{ depth }}"
   data-alias="{{ r_alias | escape }}"
+  {% if parent_handle != blank %}data-parent="{{ parent_handle | escape }}"{% endif %}
 >
-  <span
-    class="st-reply-item__avatar{% if light_ink contains colour %} st-reply-item__avatar--light{% endif %}"
-    style="--st-reply-bg: var(--st-tile-{{ colour }})"
-    aria-hidden="true"
-  >
-    {{- initial | escape -}}
-  </span>
-  <div class="st-reply-item__text">
-    <p class="st-reply-item__meta">
-      <span class="st-reply-item__alias">{{ r_alias | escape }}</span>
-      {{ ' · ' }}
-      {%- if reply.posted_at.value != blank -%}
-        {%- render 'st-talk-time', at: reply.posted_at.value -%}
-      {%- endif -%}
-      {%- if depth > 0 and reply.reply_to.value != blank -%}
-        {%- assign escaped_to = reply.reply_to.value | escape -%}
-        <span class="st-reply-item__to">{{ 'small_talk.talks.live.replying_to' | t: alias: '@@A@@' | replace: '@@A@@', escaped_to }}</span>
-      {%- endif -%}
-    </p>
-    <div class="st-reply-item__body"><p>{{ reply.body.value | escape | newline_to_br }}</p></div>
-    {%- if live -%}
-    <div class="st-reply-item__acts">
-      <button type="button" class="st-act" data-st-reply-to="{{ r_handle | escape }}" aria-label="{{ reply_label | escape }}">
-        {{- 'small_talk.talks.live.reply' | t -}}
+  <p class="tk-c__head">
+    <span
+      class="tk-c__av{% if light_ink contains colour %} tk-c__av--light{% endif %}"
+      style="--c: var(--st-tile-{{ colour }})"
+      aria-hidden="true"
+    >
+      {{- initial | escape -}}
+    </span>
+    <b class="tk-c__alias">{{ r_alias | escape }}</b>
+    {%- if reply.posted_at.value != blank -%}
+      <span class="tk-c__when">· {% render 'st-talk-time', at: reply.posted_at.value %}</span>
+    {%- endif -%}
+  </p>
+  {%- if depth > 0 and parent_handle == blank -%}
+    <p class="tk-c__to">{{ 'small_talk.talks.live.v4.parent_hidden' | t }}</p>
+  {%- endif -%}
+  <div class="tk-c__body"><p>{{ reply.body.value | escape | newline_to_br }}</p></div>
+  {%- if live -%}
+    <div class="tk-c__acts">
+      <button type="button" class="tk-act" data-st-reply-to="{{ r_handle | escape }}" aria-label="{{ reply_label | escape }}">
+        {{- 'small_talk.talks.live.v4.reply' | t -}}
       </button>
       {%- unless reply.by_brand.value == true -%}
-        <button type="button" class="st-act" data-st-report="reply:{{ r_handle | escape }}" aria-label="{{ report_label | escape }}">
-          {{- 'small_talk.talks.thread.report' | t -}}
+        <button type="button" class="tk-act" data-st-report="reply:{{ r_handle | escape }}" aria-label="{{ report_label | escape }}">
+          {{- 'small_talk.talks.live.v4.report' | t -}}
         </button>
       {%- endunless -%}
     </div>
-    {%- endif -%}
-  </div>
+  {%- endif -%}
 </li>

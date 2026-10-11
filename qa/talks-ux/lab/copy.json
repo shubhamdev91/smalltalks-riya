@@ -1,5 +1,5 @@
 {
- "_status": "st-copy register v1.5.1 (copy/07-talks.md). Two DRAFT lines (title_ph, details_ph) are pending st-copy because DIRECTION.md splits the composer into a title and optional details.",
+ "_status": "st-copy register v1.5.2 (TLK-170/171 placeholders, TLK-101/172 hidden labels). No DRAFT lines.",
  "wordmark": "the talks",
  "promise": "for the good days, and the other ones.",
  "cta": "spill your tea",
@@ -100,8 +100,6 @@
    "random thought…"
   ]
  },
- "title_ph": "DRAFT · your headline",
- "details_ph": "DRAFT · the rest of the tea (optional)",
  "posting_as": "posting as {alias} · shuffle",
  "rules_short": "talk about situations, not people. no names, numbers, handles or links.",
  "post": "post it",
@@ -112,5 +110,36 @@
   "no real names, numbers, handles or links. nothing that could identify anyone.",
   "no hate, harassment or bullying. no selling."
  ],
- "rules_all": "all rules ›"
+ "rules_all": "all rules ›",
+ "tagline": "for the good days, and the other ones.",
+ "box_ph": "spill it. your first line is the headline.",
+ "zero_open": "no replies yet. be the first.",
+ "example_band": "example replies: layout preview, not real posts",
+ "how_h": "how it works",
+ "how": [
+  "you post under an alias. no name, email or login.",
+  "anything that might name a real person gets a quick check first.",
+  "three reports and a talk is hidden until we look."
+ ],
+ "rules_open": "read them",
+ "rules_link": "house rules",
+ "title_ph": "what’s the tea, in one line?",
+ "details_ph": "the rest of the tea (optional)",
+ "title_label": "headline",
+ "details_label": "details (optional)",
+ "v4": {
+  "_status": "st-copy register v1.7 (TLK-173 two lines, TLK-026 every inline box, TLK-134 context, TLK-179 folds, TLK-180, TLK-135).",
+  "nudge": "need a nudge?",
+  "reply_ph": "add your two cents…",
+  "continue": "continue this thread ›",
+  "cancel": "cancel",
+  "reply_btn": "reply",
+  "fold_open": "−",
+  "hero_ph1": "what’s the tea? start from the beginning…",
+  "hero_ph2": "your first line becomes the headline.",
+  "replying_to": "replying to {alias}",
+  "more_one": "1 more reply",
+  "more_n": "{n} more replies",
+  "hidden_parent": "replying to a hidden comment"
+ }
 }

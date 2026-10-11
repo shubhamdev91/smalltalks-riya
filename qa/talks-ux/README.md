@@ -1,143 +1,112 @@
-# the talks: UX pass (v0 draft, 10 Oct). st-talks leads; st-fable sets type/layout and accepts; st-copy writes
+# the talks: UX v4 (owner round 2, 10 Oct)
 
-**Status:** lab only, no theme writes. These are DRAFT renders for st-fable's direction. Copy is marked DRAFT until
-st-copy signs it off (slots U1–U17, `lab/copy.json`).
+**Roles:** st-talks leads; st-fable does the wordmark and acceptance; st-copy writes.
 
-## The owner's ask (relayed by the orchestrator)
+**Status:** lab only, no theme, data or deploy changes. v3 (approved by st-fable, not by the owner) is archived in
+`renders/v3-owner-set/` and `README-v3.md`.
 
-Reddit-like but softer, for college-going young women:
+**The owner's asks (relayed by the orchestrator):**
 
-- a clear topic list, and threads with alias + avatar + time + reply count;
-- nested replies;
-- an obvious one-tap "spill your tea" composer with short guided prompts;
-- a friendly empty state;
-- minimal chrome, and a tight type scale: a catchy display font for headers only, a readable sans for posts, no
-  giant headings;
-- a lowercase candid voice, strong contrast, thumb-friendly.
+- Reddit-style threads: a vertical line per level, and reply to any comment mid-thread.
+- A simpler, inviting composer with the WRITING BOX AS THE HERO ("we need them to spill").
+- Writing inside threads should feel the same as starting one.
+- A new "the talks" wordmark.
+- Minimal copy.
 
-It also absorbs QA Tier B (9 rows as a single stack, about 2.2 folds, 13–15 px text).
+## Sheets (`renders/compare-*`, CURRENT | PROPOSED, 390 × 844 and 1536 × 703)
 
-## Renders
+| Sheet | What it shows |
+|---|---|
+| compare-hub | The hero writing box at the top of the hub, then topic filters, then the feed (9 real threads, 0 replies). |
+| compare-composer | Starting a thread: the same hero box, focused (the typed starter is her own draft, not activity). |
+| compare-thread | Reddit-style nesting, under the visible band "example replies: layout preview, not real posts". |
+| compare-inline-reply | "reply" on a mid-thread comment opens the same box, smaller, right under it (banded example). |
+| compare-header-wordmark-{390,1536} | NOW vs V2 (refined original Caveat + swash + ↗) in the site header. Every other frame uses V2. |
 
-All are in `renders/`. The **compare** sheets put the current build and the proposal side by side.
+**CURRENT:**
 
-| Screen | 390 × 844 | 1536 × 703 |
-|---|---|---|
-| Hub | `compare-hub-390x844.png` | `compare-hub-1536x703.png` |
-| Composer ("spill your tea") | `compare-composer-390x844.png` | `compare-composer-1536x703.png` |
-| Thread | `compare-thread-390x844.png` (+ `compare-thread-replies-390x844.png`) | `compare-thread-1536x703.png` |
-| Landing teaser | `compare-teaser-390x844.png` | `compare-teaser-1536x703.png` |
-| Extra states (proposed only) | `proposed-hub-prelaunch-390x844.png`, `proposed-empty-390x844.png` | |
+- Hub and composer: the build in the posting-ON state.
+- Thread and inline reply: today's markup with the same banded examples. Today only 2 levels exist, and "Reply" jumps
+  to the bottom form.
 
-**How these were made:**
+## What changes
 
-- **CURRENT** (`lab/current_capture.py`): the build preview.
-  - The composer, the reply box and replies are injected with the exact markup the Liquid renders once posting is
-    ON. Posting is off on the build today, so they can't otherwise be seen.
-- **PROPOSED** (`lab/proposed_capture.py` + `lab/proposed.css`): the same preview pages (real header, footer, fonts,
-  nail sheets) with the talks area swapped for the proposed markup.
-- **Data:** the 9 real threads (`lab/data.json`).
-- **Sample content** (review only, never shipped): the thread's 3 replies, and the "3 replies" count on the first card.
-  They exist so nesting and counts can be seen.
-- Renders show the posting-ON state. The pre-launch variant is shown on the phone hub.
+**Hero box, start a thread:**
 
-## Proposal
+- A big box at the top of the hub (≈ 5 lines of writing room on phone (196 px) and desktop (216 px, 18 px text)) with a warm two-line placeholder; the first
+  line becomes the headline.
+- **Inside the box:** one "need a nudge?" chip that drops in a starter.
+- **Under the box:** the topic as ONE pre-selected chip ("plot twists ▾") and a big "post it".
+- **Small print:** "posting as {alias} · shuffle" and one rules line.
+- **Phone:** the sticky "spill your tea" scrolls to the box and focuses it; it hides while typing.
 
-**1. One feed of compact cards (the hub)**
+**Threads, Reddit-style:**
 
-- **Header:** "the talks" in Caveat (40 px phone / 52 desktop), with the one-liner next to it. This replaces the 95 px
-  serif H1, the italic tagline, the sub and the big pill.
-- **The one-tap bar** sits under the header: the shopper's own nail avatar, "spill your tea…", and a red ↗.
-  - One tap opens the composer.
-  - While posting is off, the bar turns dashed and quiet, with the pre-launch line.
-- **Topic chips:** lowercase, 44 px tall, the teaser's pink/burgundy. They scroll sideways on phones; the selected
-  chip is scrolled into view.
-- **Feed:** "latest · n talks", then cards. Each card has:
-  - avatar 32 + alias (600) · short time + a topic tag;
-  - the title (DM Sans 700, 17/19 px);
-  - one or two lines of the body (15/16 px muted);
-  - "💬 n replies" or "no replies yet".
-  - The whole card is one link.
-- **House rules:** collapsed into one row ("house rules · 30-second read ›"). The full text stays on the page, inside
-  `<details>`.
-- **Sign-off:** a small handwritten line ("different thoughts. same energy. ♡").
+- A flat list in display order, with one thin line per ancestor level (16 px phone / 22 px desktop).
+- **Fold:** each comment's own line is its fold toggle. Folded, it reads "{n} more replies".
+- **Depth:** 4 levels visible on phone, then "continue this thread ›".
+- **Each comment:** a 24 px initial avatar, "alias · time", the body, and "reply · report".
+- **Reply anywhere:** "reply" opens the same friendly box, smaller, inline under that comment, with
+  "replying to {alias} ✕", "cancel" and "reply".
+- **Under the original post:** the same small box for replying to the talk itself.
 
-**2. Composer, "spill your tea"**
+**Copy:** st-copy register v1.7, with no drafts left.
 
-- **Phone:** a bottom sheet. **Desktop:** a 560 px dialog.
-- **Step 1, "what's it about?":** the topic chips + "your own".
-- **The box:** "first line = your headline. then the tea." The first line still becomes the title, exactly as the
-  backend splits it today.
-- **Guided starters:** 2 dashed chips per topic, which drop a starter into the box.
-- **Alias:** "posting as {alias} · shuffle". The alias is generated per device, as now.
-- **Button:** a full-width "post it" (#c3021d, 52 px), then "no name, no login. just your alias." and a house rules
-  link.
-- **After posting:** the card appears at the top of the feed at once (optimistic, as now).
+- **Hero placeholder (TLK-173):** "what's the tea? start from the beginning…" / "your first line becomes the
+  headline."
+- **Nudge (TLK-175):** "need a nudge?"
+- **Every inline box:** TLK-026 "add your two cents…", with TLK-134 "replying to {alias} ✕".
+- **Threads:**
+  - TLK-178 "continue this thread ›";
+  - TLK-179 "−" / "+ {n} more replies";
+  - TLK-180 "replying to a hidden comment".
+- **Rules:** one short line, plus the rail card the owner liked.
 
-**3. Thread, Reddit-style**
+**Wordmark:** the owner rejected A/B/C and kept the ORIGINAL Caveat, refined. Every frame uses st-fable's recommended
+**V2**:
 
-- **Top:** "← the talks", then the original post as a card: avatar 44, alias · time · topic, title 22/28, body 17/18,
-  "n replies" and a quiet "report".
-- **Replies:** a light list.
-  - Each reply has an initial avatar 28 on her set colour, alias · time, the body (16/17 px), and "reply · report".
-  - **Nesting:** one indented level with a soft pink connector and "↪ alias".
-- **Phone reply bar:** sticky at the bottom ("add your two cents…" + ↗, "replying as {alias} · shuffle").
-- **"got your own tea? spill it ›" card:** this replaces the big Start-a-talk panel.
+- **The lockup:** Caveat 700, −0.015em, "the" + 0.2 em + "talks", rotated −3°, ink #0d0b10, with a soft red swash under
+  "talks".
+- **Site header:** adds a small ↗ (DM Sans 500, 0.5 em, aria-hidden, inside the 44 px link).
+- **Hub title:** 40/52, no arrow.
+- **Spec:** `wordmark/CAVEAT-REFINE.md`.
+- **Fonts:** a lab-only data-URI font. Production is an outlined SVG mark; the arrow stays live text.
 
-**4. Desktop (≥ 1024), a Reddit-like 3-column layout in the shared frame (min(1240 px, 100% − 2 gutters))**
+**For the owner:**
 
-- **Left, sticky (220 px):** "the talks", the one-liner, and the topic nav with counts.
-- **Centre (≤ 680 px):** the bar + the feed (or the thread).
-- **Right, sticky (300 px):** "how it works" (3 lines: alias / quick check / 3 reports), then the house rules link and
-  the grievance line. On a thread it also has the "spill your tea" bar.
+- `renders/compare-header-wordmark-{390,1536}.png` (NOW vs V2 + arrow);
+- st-fable's `wordmark/caveat-sheet.png` and `wordmark/caveat-1536-header-2x.png`, so the owner can also pick V1, V3
+  or V2 at +10 %.
+- `options-sheet.png` (A/B/C) is NOT in the owner set.
 
-**5. Landing teaser:** same heading. The board rows become the same cards, and the CTA becomes the same one-tap bar +
-"see all talks ›". It is one component everywhere.
+**Topics:** locked by the owner (TLK-006): plot twists · tiny wins · second opinions · just venting · nail talk.
+"Something else" stays hidden as the home of "your own" posts. The 2 new topic entries get created in the talks window.
 
-**Type scale:** only fonts already on the site, so no new downloads.
+## Data and backend (owner approval needed with the design)
 
-| Role | Font | Phone | Desktop |
-|---|---|---|---|
-| Display (headers only) | Caveat 600–700 | 40 / 34 / 30 / 24 | 52 / 34 / 28 |
-| Card title | DM Sans 700 | 17 | 19 |
-| Original-post title | DM Sans 800 | 22 | 28 |
-| Body | DM Sans 400 / lh 1.5 | 16–17 | 17–18 (≤ 64 ch) |
-| Meta | DM Sans 400/600 | 13 | 13–14 |
-| Chips / buttons | DM Sans 600 | 14 / 15–16 | 14 / 15–16 |
+- **Nesting:** `talks/staged/nesting/PROPOSAL.md`. ONE new optional talk_reply field, `parent`
+  (metaobject_reference → talk_reply). There are 0 replies today, so nothing to migrate.
+- **No review queue + security:** `talks/backend/SECURITY-v5.md`.
+  - Might name someone → refused at submit (TLK-181), nothing saved.
+  - Flood → refused (TLK-182).
+  - Every security item has a test.
+- **One backend deploy:** local build **b27475e7fe2b** (v5 + v6 + v7), 53 tests passing.
 
-- **Colours:** ink #1a1a2e, muted #5d5562 (6.6 : 1), chip #fdf0f0 / #a31a33 (6.9 : 1), CTA #c3021d (6.3 : 1 white).
-- **Targets:** every target is ≥ 44 px, except reply/report (40 px, with 10 px padding on both sides).
+## Unchanged
 
-**Density, measured with the 9 real threads** (QA Tier B):
+- Anonymous; no name, email or login; no IP.
+- The device key and burst guard.
+- Moderation as built.
+- The kill switch.
+- No fabricated activity in any unbanded frame.
+- 0 new font bytes (unless st-fable's wordmark needs a font).
 
-| Viewport | Talks in the first screen, current → proposed | Feed length in screens, current → proposed |
-|---|---|---|
-| 390 × 844 | 1 → 3 | 2.51 → 1.90 |
-| 1536 × 703 | 1 → 3 | 2.25 → 2.04 |
-| 1680 × 1050 | 3 → 5 | 1.48 → 1.37 |
-| 1920 × 1080 | 3 → 5 | 1.47 → 1.33 |
+## Files
 
-Text goes up from 13–15 px to 16–19 px for titles and bodies.
-
-## Constraints, unchanged by this pass
-
-- **Privacy:** anonymous; no name, email or login; no IP.
-- **Spam limits:** the decision-A device key, the burst guard, rate limits, duplicate check and flood hold.
-- **Moderation:** blocked contact details / links / slurs; held possible real names; 3 reports auto-hide; owner
-  Draft/Active.
-- **Backend and data model:** unchanged. This is a theme-only pass: no new fields, and post = text + topic + alias +
-  avatar as now.
-- **Nesting depth:** 2 levels, i.e. a reply plus one nested level.
-  - A reply to a nested reply stays at that level with "↪ alias". This is how the backend already stores
-    `depth` 0/1 and orders a reply after its parent's block.
-  - Deeper indents would crowd a 390 screen.
-- **Topic counts:** from the topic lists the theme already reads.
-- **Short times (1d / 3h):** use the st-talk-ago module.
-
-## Implementation sketch (after the owner's approval; pairs with the posting-ON window)
-
-- **Files:** st-talks-list / -thread / -rules / -start, st-talk-row, st-talk-reply, st-talk-composer and st-talks.js.
-- **st-talks.js additions:** sheet open/close with focus trap and Esc, starter insertion, and the sticky reply bar.
-- **st-foundation:** the teaser rows and CTA in st-teaser.
-- **Locale:** the U-slots, insert-only.
-- **Checks:** phones are re-baselined, because this pass intentionally changes them.
+- `lab/proposed.css` (v4 is appended to the v3 base)
+- `lab/proposed_capture.py` (v4)
+- `lab/current_capture.py` (`examples` mode)
+- `lab/compose_sheets.py`
+- `lab/copy.json` (`v4` keys)
+- Superseded: `proposed-v0/v1/v2-cards/v3.css`, `proposed_capture_v3.py`, `proposed_capture_v2_cards.py`,
+  `renders/archive-v2-cards/`, `renders/v3-owner-set/`.

@@ -1,0 +1,14 @@
+/* st-fable: "the talks" wordmark V2 (refined original Caveat) + header arrow. Lab CSS; build = outlined SVG for the mark.
+   Markup: <a class="st-header__talks"><span class="wmc"><span class="t">the</span><span class="k">talks</span></span>
+           <span class="wmc-arr" aria-hidden="true">↗</span></a>   (hub title: the same .wmc, no arrow)
+   Font: Caveat variable (OFL) from spec/fonts/caveat/Caveat[wght].ttf, weight 700. */
+.wmc { display: inline-flex; align-items: baseline; white-space: nowrap; line-height: 1; color: #0d0b10;
+       font-family: 'Caveat', cursive; font-weight: 700; letter-spacing: -0.015em; transform: rotate(-3deg); }
+.wmc .t, .wmc .k { display: inline-block; }
+.wmc .t { margin-right: 0.2em; }
+.wmc .k { padding-bottom: 0.16em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 C 25 3, 55 2, 98 6' fill='none' stroke='%23c3021d' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") left bottom / 100% 0.3em no-repeat; }
+.wmc-arr { font-family: var(--font-ui, 'DM Sans'), sans-serif; font-weight: 500; font-size: 0.5em; line-height: 1;
+           margin-left: 0.22em; align-self: center; transform: translateY(-0.12em); color: #0d0b10; }
+/* sizes: header = today's .st-header__talks font-size (23.8 px; 19.5 at 320). Hub title: 40 px phone / 52 px desktop + */
+h1 .wmc { margin-bottom: 0.22em; }

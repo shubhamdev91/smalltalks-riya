@@ -1,0 +1,50 @@
+......................................C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:609: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\app.py' mode='r' encoding='utf-8'>
+  src = open(talks.__file__, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+......C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:617: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\app.py' mode='r' encoding='utf-8'>
+  src = open(talks.__file__, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\sections\\st-talks-list.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\sections\\st-talks-rules.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\sections\\st-talks-start.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\sections\\st-talks-thread.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\snippets\\st-talk-alias.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\snippets\\st-talk-avatar.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\snippets\\st-talk-composer.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\snippets\\st-talk-config.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\snippets\\st-talk-live.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\snippets\\st-talk-reply.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\snippets\\st-talk-row.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:551: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\snippets\\st-talk-time.liquid' mode='r' encoding='utf-8'>
+  for m in user.finditer(open(f, encoding='utf-8').read()):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\SSTS\Desktop\Riya\talks\backend\tests\test_talks.py:556: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\SSTS\\Desktop\\Riya\\talks\\backend\\tests\\..\\..\\..\\theme-build\\src\\assets\\st-talks.js' mode='r' encoding='utf-8'>
+  js = open(os.path.join(root, 'assets', 'st-talks.js'), encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+......
+----------------------------------------------------------------------
+Ran 53 tests in 0.153s
+
+OK

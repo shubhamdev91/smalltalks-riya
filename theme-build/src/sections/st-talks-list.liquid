@@ -1,19 +1,18 @@
 {% comment %}
   Section contract.
-  the talks hub (blog template) and topic pages (metaobject/talk_topic template), board 4 frame 1 (spec/talks.md).
-  - Header: the blog title as the H1 (TLK-001), the tagline (TLK-002), the sub (TLK-003) and "Start a talk ↗"
-    (TLK-004), which focuses the composer.
-  - Topic chips: "All" (TLK-005) and the talk_topic entries (labels TLK-006), in "chip_order" then any newer topic.
-    Each topic is its own page (/pages/talks/<handle>); the current one carries aria-current.
-  - The composer is the first row of the list (st-talk-composer, mode "row"): anonymous, one tap, live at once.
-  - "Latest talks" (TLK-007), then one row per thread (st-talk-row), newest first, from the topic's `threads` list
-    (talk_topic "all" on the hub). Draft entries (held, hidden or reported) never render.
-  - Honest empty states (TLK-013/014), "More talks" (TLK-015), then the handwritten panel (TLK-016).
-  - Desktop (≥ 1024, qa/desktop/STORE-DESKTOP-SPEC.md §2): #MainContent becomes the page grid (8fr | 4fr) and this
-    section joins it through subgrid: the header across both columns, chips and .st-talks__feed (label → panel) left,
-    the composer card right with the house-rules section (a sibling section) directly under it.
-    Phones and 990–1023 are unchanged; .st-talks__feed is a neutral wrapper there.
-  - Any other blog on this template (news) gets its title and plain article rows.
+  the talks hub (blog template) and topic pages (metaobject/talk_topic template), talks UX v4 (owner-approved
+  10 Oct, qa/talks-ux/README.md).
+  - Header: the "the talks" wordmark as the H1 (TLK-001; V1, the owner's pick: snippets/st-talks-wordmark, the outlined
+    SVG drawn from the header's sprite, with the heading as visually hidden text) and the promise (TLK-003).
+  - The writing box is the hero (st-talk-composer): start a talk with no name, email or login.
+  - Topic chips (TLK-005/006: all + the locked topics, st-talk-topics; "something else" never shows), "latest"
+    (TLK-007), then one flat row per thread (st-talk-row), newest first, from the topic's `threads` list (talk_topic
+    "all" on the hub). Draft entries never render. Honest empty states (TLK-013/161/163-165), "more talks" (TLK-015)
+    and the sign-off (TLK-016).
+  - Phones: a sticky "spill your tea" (TLK-004) scrolls to the box and focuses it; it hides while she types.
+  - Desktop (1024+): #MainContent becomes the page grid: this section in a 720 px column, the house rules (a sibling
+    section) in a 300 px rail; from 1280 the topics move to a side nav on the left.
+  - Any other blog on this template (news) keeps its title and plain article rows (unchanged).
   @example
   <!-- templates/blog.json (blogs without a template suffix) and templates/metaobject/talk_topic.json -->
 {% endcomment %}
@@ -24,8 +23,6 @@
   if live_flag == 'on'
     assign live = true
   endif
--%}
-{%- liquid
   assign is_talks = false
   assign feed = nil
   assign current_topic = ''
@@ -45,143 +42,132 @@
     assign hub_url = blog.url
   endif
   assign heading = blog.title | default: section.settings.heading
+  assign cta_label = section.settings.cta_label | remove: '↗' | strip
+  assign panel_text = section.settings.panel_text
+-%}
 
-  assign chip_handles = ''
-  assign chip_order = section.settings.chip_order | split: ','
-  for wanted_raw in chip_order
-    assign wanted = wanted_raw | strip
-    if wanted != blank and wanted != 'all'
-      assign chip_handles = chip_handles | append: wanted | append: ','
-    endif
-  endfor
-  if is_talks
-    for topic in shop.metaobjects.talk_topic.values
-      assign marker = topic.system.handle | append: ','
-      if topic.system.handle != 'all'
-        unless chip_handles contains marker
-          assign chip_handles = chip_handles | append: marker
+{%- if is_talks -%}
+  {%- liquid
+    assign hidden = section.settings.hidden_topics | default: 'something-else' | remove: ' ' | split: ','
+    assign pickable = ''
+    assign wanted = section.settings.chip_order | remove: ' ' | split: ','
+    for h in wanted
+      if h != blank and h != 'all'
+        unless hidden contains h
+          assign pickable = pickable | append: h | append: ','
         endunless
       endif
     endfor
-  endif
-  assign chips = chip_handles | split: ','
+    assign topic_label = ''
+    if current_topic != blank
+      assign topic_label = feed.label.value | escape | prepend: '<span class="tk-lc">' | append: '</span>'
+    endif
+  -%}
+  <section
+    class="tk tk-hub{% unless live %} tk-hub--closed{% endunless %}"
+    aria-labelledby="StTalks-{{ section.id }}"
+    data-st-feed="{{ current_topic | default: 'all' }}"
+    data-st-ago-strings
+    data-ago-now="{{ 'small_talk.talks.live.v4.time.just_now' | t | escape }}"
+    data-ago-minutes="{{ 'small_talk.talks.live.v4.time.minutes' | t: count: '__n__' | escape }}"
+    data-ago-hours="{{ 'small_talk.talks.live.v4.time.hours' | t: count: '__n__' | escape }}"
+    data-ago-days="{{ 'small_talk.talks.live.v4.time.days' | t: count: '__n__' | escape }}"
+  >
+    <aside class="tk-side">
+      <div class="tk-side__in">
+        {%- render 'st-talk-topics', variant: 'side', order: section.settings.chip_order, hide: section.settings.hidden_topics, current: current_topic, hub_url: hub_url, all_label: section.settings.all_label -%}
+      </div>
+    </aside>
 
-  assign cta_label = section.settings.cta_label | remove: '↗' | strip
-  assign panel_text = section.settings.panel_text | remove: '♡' | strip
--%}
+    <div class="tk-main">
+      <header class="tk-head">
+        <h1 class="tk-wordmark" id="StTalks-{{ section.id }}">
+          <span class="visually-hidden">{{ heading | escape }}</span>
+          {%- render 'st-talks-wordmark' -%}
+        </h1>
+        {%- if section.settings.subheading != blank -%}
+          <p class="tk-promise">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </header>
 
-<section
-  class="st-talks"
-  aria-labelledby="StTalks-{{ section.id }}"
-  data-st-ago-strings
-  data-ago-now="{{ 'small_talk.talks.time.just_now' | t | escape }}"
-  data-ago-minutes="{{ 'small_talk.talks.time.minutes' | t: count: '__n__' | escape }}"
-  data-ago-hours="{{ 'small_talk.talks.time.hours' | t: count: '__n__' | escape }}"
-  data-ago-days="{{ 'small_talk.talks.time.days' | t: count: '__n__' | escape }}"
-  {% if is_talks %}data-st-feed="{{ current_topic | default: 'all' }}"{% endif %}
->
-  <header class="st-talks__header">
-    <h1 class="st-talks__title" id="StTalks-{{ section.id }}">{{ heading | escape }}</h1>
-    {%- if is_talks -%}
-      {%- if section.settings.tagline != blank -%}
-        <p class="st-talks__tagline">{{ section.settings.tagline | escape }}</p>
-      {%- endif -%}
-      {%- if section.settings.subheading != blank -%}
-        <p class="st-talks__sub">{{ section.settings.subheading | escape }}</p>
-      {%- endif -%}
-      {%- if cta_label != blank -%}
-        <a class="st-talks__cta" href="#start-a-talk" data-st-start>
-          {{- cta_label | escape -}}
-          <svg class="st-talks__cta-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 12 L12 4 M5.5 4 H12 V10.5"/></svg>
-        </a>
-      {%- endif -%}
-    {%- endif -%}
-  </header>
+      <div id="start-a-talk" class="tk-start">
+        {%- render 'st-talk-composer', topics: pickable, current: current_topic, id: section.id, live: live -%}
+      </div>
 
-  {%- if is_talks -%}
-    <nav class="st-talks__chips" aria-label="{{ 'small_talk.talks.hub.topics_label' | t | escape }}">
-      <ul role="list">
-        <li>
-          <a href="{{ hub_url }}" class="st-chip"{% if current_topic == blank %} aria-current="page"{% endif %}>
-            {{- section.settings.all_label | escape -}}
-          </a>
-        </li>
-        {%- for h in chips -%}
-          {%- assign topic = metaobjects.talk_topic[h] -%}
-          {%- if topic -%}
-            <li>
-              <a href="{{ topic.system.url }}" class="st-chip"{% if h == current_topic %} aria-current="page"{% endif %}>
-                {{- topic.label.value | escape -}}
-              </a>
-            </li>
-          {%- endif -%}
-        {%- endfor -%}
-      </ul>
-    </nav>
+      {%- render 'st-talk-topics', variant: 'chips', order: section.settings.chip_order, hide: section.settings.hidden_topics, current: current_topic, hub_url: hub_url, all_label: section.settings.all_label -%}
 
-    <div id="start-a-talk" class="st-talks__compose">
-      {%- render 'st-talk-composer', mode: 'row', topics: chip_handles, current: current_topic, id: section.id, live: live -%}
-    </div>
+      <div class="tk-feedhead">
+        <h2 class="tk-label">{{ section.settings.list_label | escape }}</h2>
+      </div>
 
-    <div class="st-talks__feed">
-      {%- if section.settings.list_label != blank -%}
-        <h2 class="st-talks__label">{{ section.settings.list_label | escape }}</h2>
-      {%- endif -%}
+      {%- capture empty_state -%}
+        {%- if current_topic != blank -%}
+          <div class="tk-empty" data-st-empty>
+            {%- if live -%}
+              <p class="tk-empty__h">{{ 'small_talk.talks.live.v4.empty_title' | t }}</p>
+              <p class="tk-empty__p">{{ 'small_talk.talks.live.v4.empty_line' | t: topic: '@@T@@' | replace: '@@T@@', topic_label }}</p>
+              <a class="tk-cta tk-cta--inline" href="#start-a-talk" data-st-start>{{ 'small_talk.talks.live.v4.empty_cta' | t }}</a>
+            {%- else -%}
+              <p class="tk-empty__p">{{ 'small_talk.talks.live.v4.empty_topic_closed' | t: topic: '@@T@@' | replace: '@@T@@', topic_label }}</p>
+            {%- endif -%}
+          </div>
+        {%- else -%}
+          <div class="tk-empty" data-st-empty>
+            <p class="tk-empty__p">
+              {%- if live -%}{{ 'small_talk.talks.live.v4.empty' | t }}{%- else -%}{{ 'small_talk.talks.live.v4.prelaunch' | t }}{%- endif -%}
+            </p>
+          </div>
+        {%- endif -%}
+      {%- endcapture -%}
 
       {%- if feed and feed.threads.value != blank -%}
         {%- paginate feed.threads.value by section.settings.per_page -%}
           {%- assign shown = 0 -%}
-          <ul class="st-talks__list" role="list" data-st-list data-page="{{ paginate.current_page }}">
+          <ul class="tk-rows" role="list" data-st-list data-page="{{ paginate.current_page }}">
             {%- for thread in feed.threads.value -%}
               {%- if thread == blank or thread.title.value == blank -%}{%- continue -%}{%- endif -%}
               {%- assign shown = shown | plus: 1 -%}
               {%- render 'st-talk-row', thread: thread -%}
             {%- endfor -%}
           </ul>
-          {%- if shown == 0 and paginate.current_page == 1 -%}
-            {%- if current_topic != blank -%}
-              {%- assign escaped_topic = feed.label.value | escape -%}
-              <p class="st-talks__empty" data-st-empty>
-                {{- 'small_talk.talks.hub.empty_topic' | t: topic: '@@T@@' | replace: '@@T@@', escaped_topic }}
-                <a href="#start-a-talk" data-st-start>{{ 'small_talk.talks.hub.empty_topic_link' | t }}</a>
-              </p>
-            {%- else -%}
-              <p class="st-talks__empty" data-st-empty>{{ 'small_talk.talks.live.empty' | t }}</p>
-            {%- endif -%}
-          {%- endif -%}
+          {%- if shown == 0 and paginate.current_page == 1 -%}{{ empty_state }}{%- endif -%}
           {%- if paginate.previous or paginate.next -%}
-            <nav class="st-talks__more" aria-label="{{ 'content.pagination.nav_label' | t | escape }}">
+            <nav class="tk-more" aria-label="{{ 'content.pagination.nav_label' | t | escape }}">
               {%- if paginate.previous -%}
-                <a href="{{ paginate.previous.url }}" class="st-talks__more-link st-talks__more-link--prev">{{ 'content.pagination.previous' | t }}</a>
+                <a href="{{ paginate.previous.url }}" class="tk-btn-ghost">{{ 'content.pagination.previous' | t }}</a>
               {%- endif -%}
               {%- if paginate.next -%}
-                <a href="{{ paginate.next.url }}" class="st-talks__more-link">{{ 'small_talk.talks.hub.more' | t }}</a>
+                <a href="{{ paginate.next.url }}" class="tk-btn-ghost">{{ 'small_talk.talks.live.v4.more' | t }}</a>
               {%- endif -%}
             </nav>
           {%- endif -%}
         {%- endpaginate -%}
       {%- else -%}
-        <ul class="st-talks__list" role="list" data-st-list data-page="1"></ul>
-        {%- if current_topic != blank -%}
-          {%- assign escaped_topic = feed.label.value | escape -%}
-          <p class="st-talks__empty" data-st-empty>
-            {{- 'small_talk.talks.hub.empty_topic' | t: topic: '@@T@@' | replace: '@@T@@', escaped_topic }}
-            <a href="#start-a-talk" data-st-start>{{ 'small_talk.talks.hub.empty_topic_link' | t }}</a>
-          </p>
-        {%- else -%}
-          <p class="st-talks__empty" data-st-empty>{{ 'small_talk.talks.live.empty' | t }}</p>
-        {%- endif -%}
+        <ul class="tk-rows" role="list" data-st-list data-page="1"></ul>
+        {{ empty_state }}
       {%- endif -%}
+
       {%- if panel_text != blank -%}
-        <div class="st-talks__panel">
-          <p class="st-talks__hand">
-            {%- render 'st-sentences', text: panel_text -%}
-            <svg class="st-talks__heart" viewBox="0 0 40 36" aria-hidden="true" focusable="false"><path d="M20 33 C 12 26, 3 20, 4 11 C 5 4, 14 2, 19.5 10 C 24 2, 35 3, 36 11 C 37 19, 28 26, 20 33 Z"/></svg>
-          </p>
-        </div>
+        <p class="tk-sign">{{ panel_text | escape }}</p>
       {%- endif -%}
     </div>
-  {%- else -%}
+
+    {%- if live and cta_label != blank -%}
+      <div class="tk-dock">
+        <a class="tk-cta" href="#start-a-talk" data-st-start>
+          {{- cta_label | escape -}}
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 12 L12 4 M5.5 4 H12 V10.5"/></svg>
+        </a>
+      </div>
+    {%- endif -%}
+  </section>
+  {%- render 'st-talk-config', endpoint: section.settings.endpoint, live: live -%}
+  <script type="module" src="{{ 'st-talks.js' | asset_url }}" fetchpriority="low"></script>
+{%- else -%}
+  <section class="st-talks" aria-labelledby="StTalks-{{ section.id }}">
+    <header class="st-talks__header">
+      <h1 class="st-talks__title" id="StTalks-{{ section.id }}">{{ heading | escape }}</h1>
+    </header>
     {%- paginate blog.articles by section.settings.per_page -%}
       <ul class="st-talks__list" role="list">
         {%- for article in blog.articles -%}
@@ -205,21 +191,403 @@
         </nav>
       {%- endif -%}
     {%- endpaginate -%}
-  {%- endif -%}
-</section>
-
-{%- if is_talks and live -%}
-  {%- render 'st-talk-config', endpoint: section.settings.endpoint -%}
+  </section>
+  <script type="module" src="{{ 'st-talks.js' | asset_url }}" fetchpriority="low"></script>
 {%- endif -%}
-<script type="module" src="{{ 'st-talks.js' | asset_url }}" fetchpriority="low"></script>
 
 {% stylesheet %}
-  /* Board 4 frame 1 at 390 (spec/talks.md). */
+  /* ---------- the hub ---------- */
+  .tk-hub {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 12px 16px 96px;
+  }
+
+  .tk-hub--closed {
+    padding-bottom: 32px;
+  }
+
+  /* The wordmark (TLK-001), V1 (owner's pick; qa/talks-ux/wordmark/V1-FINAL.md): the outlined SVG at 0.8377em of
+     40 px (52 px desktop), ink, no swash, no arrow. */
+  .tk .tk-wordmark {
+    display: block;
+    margin: 0 0 4px;
+    color: #0d0b10;
+    font-size: 40px;
+    line-height: 1;
+  }
+
+  .tk-promise {
+    margin: 4px 0 0;
+    color: var(--tk-muted);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .tk-start {
+    scroll-margin-block-start: calc(var(--st-header-h, 69px) + 16px);
+  }
+
+  .tk-feedhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 16px 0 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--tk-line);
+  }
+
+  .tk-empty {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding: 36px 16px 32px;
+    border-bottom: 1px solid var(--tk-line);
+    text-align: center;
+  }
+
+  .tk-empty[hidden] {
+    display: none;
+  }
+
+  .tk-empty p {
+    margin: 0;
+  }
+
+  .tk-empty__h {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .tk-empty__p {
+    color: var(--tk-muted);
+  }
+
+  .tk-sign {
+    margin: 20px 0 0;
+    color: var(--tk-muted);
+    font-size: 14px;
+    text-align: center;
+  }
+
+  /* "spill your tea" (TLK-004): the phone's sticky bar; safe-area aware; hidden while she types. */
+  .tk-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 52px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: var(--tk-accent);
+    color: #fff;
+    font-family: var(--font-pill);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .tk-cta svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tk-cta--inline {
+    width: auto;
+    margin-top: 8px;
+  }
+
+  .tk-cta:focus-visible {
+    outline: 2px solid var(--tk-ink);
+    outline-offset: 3px;
+  }
+
+  .tk-dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--tk-line);
+    background: rgb(255 253 246 / 0.96);
+  }
+
+  .tk-typing .tk-dock {
+    display: none;
+  }
+
+  /* Rows: flat, 1 px dividers; avatar 40 (44 desktop), meta, title (2 lines), reply count. */
+  .tk-rows {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tk-r {
+    border-bottom: 1px solid var(--tk-line);
+    content-visibility: auto;
+    contain-intrinsic-size: auto 104px;
+  }
+
+  .tk-row {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 0 12px;
+    padding: 12px 0;
+    color: inherit;
+    text-decoration: none;
+    --st-tavatar-size: 40px;
+  }
+
+  .tk-row:focus-visible {
+    outline: 2px solid var(--tk-accent);
+    outline-offset: 2px;
+  }
+
+  .tk-row:hover .tk-row__title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .tk-row__av {
+    padding-top: 2px;
+  }
+
+  .tk-row__text {
+    display: grid;
+    min-width: 0;
+  }
+
+  .tk-row__title {
+    display: -webkit-box;
+    margin-top: 2px;
+    overflow: hidden;
+    color: var(--tk-ink);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .tk-row__ex {
+    display: none;
+  }
+
+  .tk-foot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    color: var(--tk-muted);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .tk-foot svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tk-r.is-mine {
+    animation: tk-in 420ms ease-out;
+  }
+
+  @keyframes tk-in {
+    from { background: #fdecec; }
+    to { background: transparent; }
+  }
+
+  .tk-r.is-pending .tk-row {
+    cursor: default;
+  }
+
+  .tk-r.is-pending .tk-row__title {
+    opacity: 0.65;
+  }
+
+  .tk-r__fail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 8px;
+    padding: 0 0 12px 52px;
+    color: #b00818;
+    font-size: 14px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tk-r.is-mine {
+      animation: none;
+    }
+  }
+
+  /* Desktop: meta + count on one line, the title on one line, a one-line excerpt. */
+  @media screen and (min-width: 1024px) {
+    .tk-row {
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 0 14px;
+      --st-tavatar-size: 44px;
+    }
+
+    .tk-row__text {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 16px;
+    }
+
+    .tk-row__text > .tk-meta {
+      grid-column: 1;
+      grid-row: 1;
+      font-size: 14px;
+    }
+
+    .tk-row__text > .tk-foot {
+      grid-column: 2;
+      grid-row: 1;
+      margin-top: 0;
+      font-size: 14px;
+    }
+
+    .tk-row__title,
+    .tk-row__ex {
+      grid-column: 1 / -1;
+    }
+
+    .tk-row__title {
+      font-size: 19px;
+      -webkit-line-clamp: 1;
+    }
+
+    .tk-row__ex {
+      display: -webkit-box;
+      margin-top: 2px;
+      overflow: hidden;
+      color: var(--tk-muted);
+      font-size: 17px;
+      line-height: 1.45;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+    }
+
+    .tk-r__fail {
+      padding-left: 58px;
+    }
+  }
+
+  /* ---------- desktop: 720 px column + 300 px rail (house rules); side nav from 1280 ---------- */
+  @media screen and (min-width: 1024px) {
+    #MainContent:has(> .st-talks-section > .tk-hub) {
+      display: grid;
+      grid-template-columns: minmax(0, 720px) 300px;
+      justify-content: center;
+      align-items: start;
+      column-gap: 40px;
+      padding-inline: clamp(32px, 4vw, 64px);
+    }
+
+    #MainContent > .st-talks-section:has(> .tk-hub) {
+      grid-column: 1;
+      grid-row: 1;
+      min-width: 0;
+    }
+
+    #MainContent:has(> .st-talks-section > .tk-hub) > .st-trules-section {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: stretch;
+    }
+
+    .tk-hub {
+      max-width: none;
+      padding: 32px 0 64px;
+    }
+
+    .tk-dock {
+      display: none;
+    }
+
+    .tk .tk-wordmark {
+      font-size: 52px;
+    }
+
+    .tk-promise {
+      font-size: 17px;
+    }
+
+    .tk-label {
+      font-size: 15px;
+    }
+
+    .tk-hub .tk-hero {
+      margin-top: 16px;
+    }
+  }
+
+  @media screen and (min-width: 1280px) {
+    #MainContent:has(> .st-talks-section > .tk-hub) {
+      grid-template-columns: 220px minmax(0, 720px) 300px;
+    }
+
+    #MainContent > .st-talks-section:has(> .tk-hub) {
+      grid-column: 1 / 3;
+      display: grid;
+      grid-template-columns: subgrid;
+    }
+
+    #MainContent:has(> .st-talks-section > .tk-hub) > .st-trules-section {
+      grid-column: 3;
+    }
+
+    .tk-hub {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+    }
+
+    .tk-hub > .tk-side {
+      display: block;
+      grid-column: 1;
+    }
+
+    .tk-hub > .tk-main {
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    .tk-hub .tk-chips {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: 1680px) {
+    #MainContent:has(> .st-talks-section > .tk-hub) {
+      column-gap: 56px;
+    }
+  }
+
+  /* ---------- any other blog on this template (news): unchanged plain rows ---------- */
   .st-talks {
     display: grid;
     max-width: 40rem;
     margin-inline: auto;
-    padding: 73px 0 28px; /* H1 ink top at y 154 under the 69 px header */
+    padding: 73px 0 28px;
     color: #111;
     font-family: var(--font-ui);
   }
@@ -235,9 +603,6 @@
     text-align: center;
   }
 
-  /* H1 x 45–350, y 150–228 (ink 300 × 70 on the board): spec says Source Serif 4 Bold 74 px, but the board ink is the
-     Black cut at ~95 px, −0.06em (fitted 302 × 70), with a vertical burgundy shade sampled from the board (every stop
-     is over 7:1 on white). Lowercase from the blog title. */
   .st-talks__title {
     margin: 0;
     color: var(--st-burgundy);
@@ -257,112 +622,6 @@
     }
   }
 
-  /* Tagline x 95–300, y 233–262: tokens round 10 (true italic, wght 400 / opsz 20, 28 px at 390, −0.01em, #c0142f). */
-  .st-talks__tagline {
-    margin: -6px 0 0;
-    color: var(--color-talks-tagline, #c0142f);
-    font-family: var(--font-talks-tagline, 'Source Serif 4', Georgia, serif);
-    font-weight: 400;
-    font-style: italic;
-    font-size: min(var(--fs-talks-tagline, 28px), 7.18vw);
-    line-height: 1.1;
-    letter-spacing: var(--ls-talks-tagline, -0.01em);
-  }
-
-  /* Sub x 30–362, y 268–292: the board sets it in the serif (spec said DM Sans); Source Serif 4 500, 20 px. */
-  .st-talks__sub {
-    margin: 2px 0 0;
-    color: #1a1a2e;
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-weight: 500;
-    font-size: min(20px, 5.13vw);
-    line-height: 1.3;
-  }
-
-  /* Pill x 73–318, y 318–370: #920324, white Barlow Semi Condensed 600, 22 px, ↗. */
-  .st-talks__cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    inline-size: min(245px, 100%);
-    min-block-size: 52px;
-    margin-block-start: 29px;
-    padding-inline: 20px;
-    border-radius: var(--st-radius-pill);
-    background: var(--st-pill);
-    color: var(--st-pill-ink);
-    font-family: var(--font-pill);
-    font-weight: 600;
-    font-size: 22px;
-    line-height: 1;
-    text-decoration: none;
-  }
-
-  .st-talks__cta-icon {
-    inline-size: 14px;
-    block-size: 14px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .st-talks__cta:focus-visible,
-  .st-chip:focus-visible,
-  .st-trow__link:focus-visible,
-  .st-talks__more-link:focus-visible {
-    outline: 2px solid var(--st-burgundy);
-    outline-offset: 3px;
-  }
-
-  /* Chips y 403–442 (44 tall for touch): All selected #c0142f, topics #fdf0f0; scroll sideways when they overflow. */
-  .st-talks__chips {
-    margin-block-start: 31px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .st-talks__chips ul {
-    display: flex;
-    gap: 9px;
-    inline-size: max-content;
-    margin: 0;
-    padding: 0 18px 0 20px;
-    list-style: none;
-  }
-
-  .st-chip {
-    display: inline-flex;
-    align-items: center;
-    min-block-size: 44px;
-    padding-inline: 15px;
-    border-radius: var(--st-radius-pill);
-    background: #fdf0f0;
-    color: var(--st-muted-text);
-    font-weight: 600;
-    font-size: 13px;
-    line-height: 1;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .st-chip[aria-current='page'] {
-    background: #c0142f;
-    color: #fff;
-  }
-
-  /* "Latest talks" x 20, y 497–515: DM Sans 400, 15 px, muted. */
-  .st-talks__label {
-    margin: 52px 20px 0;
-    color: var(--st-muted-text);
-    font-family: var(--font-ui);
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 1.2;
-  }
-
   .st-talks__list {
     display: grid;
     margin: 4px 0 0;
@@ -374,7 +633,6 @@
     border-block-start: 1px solid #efe9ea;
   }
 
-  /* Row: avatar Ø 90 at x 18–108; text x 128–370; pitch ~200. */
   .st-trow__link {
     display: grid;
     grid-template-columns: 90px minmax(0, 1fr);
@@ -418,38 +676,15 @@
     letter-spacing: -0.01em;
   }
 
-  /* The board breaks excerpts at x ~354 ("…the stories / I never finished."); titles use the full column. */
-  .st-trow__excerpt {
-    max-inline-size: 226px;
-    margin-block-start: 6px;
-    color: #373f8b;
-    font-size: 17px;
-    line-height: 1.4;
-  }
-
-  .st-trow__count {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-    margin-block-start: 12px;
-    color: var(--st-muted-text);
-    font-size: 15px;
-    line-height: 1.3;
-  }
-
-  .st-trow__count svg {
-    inline-size: 8px;
-    block-size: 14px;
-    fill: none;
-    stroke: #111;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
   a.st-trow__link:hover .st-trow__title {
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+
+  .st-trow__link:focus-visible,
+  .st-talks__more-link:focus-visible {
+    outline: 2px solid var(--st-burgundy);
+    outline-offset: 3px;
   }
 
   .st-talks__more {
@@ -474,245 +709,9 @@
     text-decoration: none;
   }
 
-  .st-talks__empty {
-    margin: 48px 20px 0;
-    color: #1a1a2e;
-    font-size: 17px;
-    line-height: 1.4;
-    text-align: center;
-  }
-
-  .st-talks__empty a {
-    color: var(--st-burgundy);
-    text-underline-offset: 3px;
-  }
-
-  /* Handwritten panel x 18–375, y 1140–1295, radius 12, #fdecec: Kalam Light 34 px, #2b39c4, −6°, + heart. */
-  .st-talks__panel {
-    display: grid;
-    place-items: center;
-    min-block-size: 155px;
-    margin: 30px 15px 0 18px;
-    padding: 16px 12px;
-    border-radius: 12px;
-    background: #fdecec;
-  }
-
-  .st-talks__hand {
-    position: relative;
-    margin: 0;
-    padding-inline-end: 36px;
-    color: #2b39c4;
-    font-family: var(--font-annotation);
-    font-weight: 300;
-    font-size: min(34px, 8.7vw);
-    line-height: 1.25;
-    text-align: center;
-    rotate: -6deg;
-  }
-
-  .st-talks__heart {
-    position: absolute;
-    inset-inline-end: 0;
-    inset-block-end: 0.15em;
-    inline-size: 30px;
-    block-size: 27px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
   @media screen and (min-width: 750px) {
     .st-talks {
       padding-block-start: 80px;
-    }
-  }
-  /* Live talks: composer row, her own new rows (posting / held / failed) and rows below the fold. */
-  .st-talks__compose {
-    scroll-margin-block-start: 90px;
-  }
-
-  .st-talks__list:empty {
-    display: none;
-  }
-
-  .st-trow {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 200px;
-  }
-
-  .st-trow.is-mine {
-    animation: st-trow-in 420ms ease-out;
-  }
-
-  @keyframes st-trow-in {
-    from { background: #fdecec; }
-    to { background: transparent; }
-  }
-
-  .st-trow.is-pending .st-trow__link,
-  .st-trow.is-held .st-trow__link {
-    cursor: default;
-  }
-
-  .st-trow.is-pending .st-trow__title,
-  .st-trow.is-pending .st-trow__excerpt {
-    opacity: 0.65;
-  }
-
-  .st-trow__state {
-    flex: none;
-    color: var(--st-muted-text);
-    font-size: 13px;
-    font-style: italic;
-  }
-
-  /* Held tag (TLK-149) is long: let it take its own line under the alias instead of pushing it out. */
-  .st-trow.is-held .st-trow__meta {
-    flex-wrap: wrap;
-    row-gap: 4px;
-  }
-
-  .st-trow.is-held .st-trow__state {
-    flex: 0 1 auto;
-    white-space: normal;
-    padding: 2px 10px;
-    border-radius: var(--st-radius-pill);
-    background: #fdf0f0;
-    color: #8a0619;
-    font-style: normal;
-    font-weight: 600;
-  }
-
-  .st-trow__fail {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px 12px;
-    padding: 0 20px 16px 128px;
-    color: #b00818;
-    font-size: 14px;
-  }
-
-  .st-trow__fail button {
-    min-block-size: 44px;
-    padding: 0 6px;
-    border: 0;
-    background: none;
-    color: var(--st-burgundy);
-    font: inherit;
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .st-trow.is-mine {
-      animation: none;
-    }
-  }
-
-  @media screen and (max-width: 359px) {
-    .st-trow__fail {
-      padding-inline-start: 18px;
-    }
-  }
-
-  /* Label → panel in one wrapper, so desktop can place the feed as one column. Neutral below 1024: the same grid
-     flow as .st-talks. base.css zeroes the top margin of a first-child heading or paragraph, so restate them. */
-  .st-talks__feed {
-    display: grid;
-  }
-
-  .st-talks__feed > * {
-    min-width: 0;
-  }
-
-  .st-talks__feed > .st-talks__label {
-    margin-block-start: 52px;
-  }
-
-  .st-talks__feed > .st-talks__empty {
-    margin-block-start: 48px;
-  }
-
-  /* Desktop (qa/desktop/STORE-DESKTOP-SPEC.md §2, talks hub). #MainContent is the page grid in the shared frame:
-     header across, chips + feed left (8fr); right (4fr) the composer card with the house rules (a sibling section)
-     directly under it, in normal flow (st-fable, 10 Oct). The chips row has a fixed height, so a growing card (the
-     open composer) only moves the rules, never the feed. */
-  @media screen and (min-width: 1024px) {
-    #MainContent:has(> .st-talks-section > .st-talks[data-st-feed]) {
-      display: grid;
-      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-      grid-template-rows: [head] auto [chips] calc(31px + 44px) [card] auto [rules] 1fr;
-      column-gap: clamp(32px, 4vw, 72px);
-      align-items: start;
-      padding-inline: max(var(--pg-gutter, clamp(32px, 4vw, 64px)), (100% - var(--pg-max, 1240px)) / 2);
-    }
-
-    #MainContent > .st-talks-section:has(> .st-talks[data-st-feed]),
-    .st-talks-section > .st-talks[data-st-feed] {
-      display: grid;
-      grid-column: 1 / -1;
-      grid-row: 1 / -1;
-      grid-template-columns: subgrid;
-      grid-template-rows: subgrid;
-    }
-
-    .st-talks[data-st-feed] {
-      max-width: none;
-      margin: 0;
-      padding-block: 56px 48px;
-    }
-
-    .st-talks[data-st-feed] > .st-talks__header {
-      grid-column: 1 / -1;
-      grid-row: head;
-    }
-
-    .st-talks[data-st-feed] > .st-talks__chips {
-      grid-column: 1;
-      grid-row: chips;
-    }
-
-    .st-talks[data-st-feed] > .st-talks__feed {
-      grid-column: 1;
-      grid-row: card / -1;
-    }
-
-    .st-talks[data-st-feed] > .st-talks__compose {
-      grid-column: 2;
-      grid-row: chips / rules;
-      padding-block-start: 31px;
-    }
-
-    .st-talks[data-st-feed] > .st-talks__compose > .st-compose {
-      margin: 0;
-    }
-
-    #MainContent:has(> .st-talks-section > .st-talks[data-st-feed]) > .st-trules-section {
-      grid-column: 2;
-      grid-row: rules;
-    }
-
-    .st-talks[data-st-feed] .st-talks__chips ul {
-      padding-inline: 18px;
-    }
-
-    .st-talks[data-st-feed] .st-talks__label {
-      margin-block-start: 36px;
-    }
-
-    .st-talks[data-st-feed] .st-trow__title {
-      font-size: 24px;
-    }
-
-    .st-talks[data-st-feed] .st-trow__excerpt {
-      max-inline-size: 62ch;
-      font-size: 18px;
     }
   }
 {% endstylesheet %}
@@ -725,14 +724,15 @@
     { "type": "text", "id": "blog_handle", "label": "Talks blog handle", "default": "the-talks", "info": "This blog's page is the talks hub (all threads)." },
     { "type": "text", "id": "hub_url", "label": "Hub link (for topic pages)", "default": "/blogs/the-talks" },
     { "type": "text", "id": "heading", "label": "Heading on topic pages (TLK-001)", "default": "the talks" },
-    { "type": "text", "id": "tagline", "label": "Tagline (TLK-002)", "default": "a little less filtered." },
-    { "type": "text", "id": "subheading", "label": "Sub (TLK-003)", "default": "Small moments. Open conversations." },
-    { "type": "text", "id": "cta_label", "label": "Button (TLK-004)", "default": "Start a talk ↗" },
-    { "type": "text", "id": "all_label", "label": "Chip: all (TLK-005)", "default": "All" },
-    { "type": "text", "id": "chip_order", "label": "Topic chip order (talk topic handles, comma-separated)", "default": "plot-twists, tiny-wins, nail-talk, something-else", "info": "Topics not listed here follow in admin order." },
-    { "type": "text", "id": "list_label", "label": "List label (TLK-007)", "default": "Latest talks" },
+    { "type": "text", "id": "tagline", "label": "Tagline (TLK-002)", "default": "a little less filtered.", "info": "Not shown in the talks v4 layout." },
+    { "type": "text", "id": "subheading", "label": "Promise under the wordmark (TLK-003)", "default": "for the good days, and the other ones." },
+    { "type": "text", "id": "cta_label", "label": "Phone button (TLK-004)", "default": "spill your tea ↗" },
+    { "type": "text", "id": "all_label", "label": "Chip: all (TLK-005)", "default": "all" },
+    { "type": "text", "id": "chip_order", "label": "Topic order (talk topic handles, comma-separated)", "default": "plot-twists, tiny-wins, second-opinions, just-venting, nail-talk", "info": "Topics not listed here follow in admin order." },
+    { "type": "text", "id": "hidden_topics", "label": "Topics never shown as chips (handles, comma-separated)", "default": "something-else", "info": "something-else is the hidden home of “your own” posts." },
+    { "type": "text", "id": "list_label", "label": "List label (TLK-007)", "default": "latest" },
     { "type": "range", "id": "per_page", "label": "Threads per page", "min": 4, "max": 20, "step": 1, "default": 10 },
-    { "type": "text", "id": "panel_text", "label": "Handwritten panel (TLK-016)", "default": "Different thoughts. Same energy. ♡" },
+    { "type": "text", "id": "panel_text", "label": "Sign-off (TLK-016)", "default": "different thoughts. same energy. ♡" },
     { "type": "text", "id": "endpoint", "label": "Posting endpoint", "default": "/apps/talks", "info": "The App Proxy path of the talks backend. Change only if the backend moves." }
   ]
 }

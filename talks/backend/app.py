@@ -2,8 +2,8 @@
 
 Vercel entrypoint: this file's WSGI `app` (pyproject.toml [tool.vercel] entrypoint = "app:app"); every path comes here.
   GET  /                 info page (no data)
-  GET  /api/talks        health: {"ok", "service", "build", "configured"}; ?diag=ip echoes the caller's own forwarding
-                         headers (to check whether the shopper IP survives the App Proxy); ?task=prune = daily cron
+  GET  /api/talks        health: {"ok", "service", "build", "configured"}; ?task=prune = daily cron; through the
+                         App Proxy: {"ok", "open"} (what the posting switch reads)
   POST /api/talks        post | reply | report (App Proxy signature required)
 
 Storefront  POST /apps/talks  (Shopify App Proxy, HMAC-signed)  ->  this app at /api/talks
@@ -60,7 +60,7 @@ LIMITS = {
     'reply': (8, 60),
     'report': (10, 20),
 }
-FLOOD_PER_HOUR = {'post': 40, 'reply': 200}  # store-wide; above this new posts are held, not lost
+FLOOD_PER_HOUR = {'post': 40, 'reply': 200}  # store-wide; above this new posts are refused for a while (busy)
 REPORTS_TO_HIDE = 3
 THREAD_MIN, THREAD_MAX = 3, 1200
 REPLY_MIN, REPLY_MAX = 1, 800
@@ -72,6 +72,7 @@ MIN_COMPOSE_MS = 2000  # faster than this from opening the composer = bot
 MAX_BODY_BYTES = 16 * 1024
 SIGNAL_DAYS = 7  # talk_signal retention; the shopper-facing promise (TLK-148) is "within 30 days"
 PRUNE_BATCH = 25
+MAX_DEPTH = 8  # stored nesting cap; deeper replies stay at this depth (the theme shows 4 levels on phones)
 
 
 def env(name: str, default: str = '') -> str:
@@ -543,7 +544,8 @@ def lines_to_set(value: str | None) -> set[str]:
 def settings() -> dict:
     def load():
         s = STORE.by_handle('talk_settings', 'main') or {}
-        return {'open': s.get('posting_open', 'true') != 'false', 'hold_all': s.get('hold_all') == 'true',
+        # fail closed: only an explicit "true" opens posting (a missing entry or field keeps it shut)
+        return {'open': s.get('posting_open') == 'true', 'hold_all': s.get('hold_all') == 'true',
                 'blocked': lines_to_set(s.get('extra_blocked')), 'held': lines_to_set(s.get('extra_held'))}
     return cached('settings', 60, load)
 
@@ -568,7 +570,7 @@ def _q(value: str) -> str:
 
 
 def check_limits(kind: str, ip_key: str, device_key: str, body_key: str = '') -> bool:
-    """Raises rate_limited / duplicate. Returns True when the store-wide flood guard says: hold for review."""
+    """Raises rate_limited / duplicate. Returns True when the store-wide flood guard trips (the caller refuses: busy)."""
     burst_guard(f'{kind}:{device_key}')
     if ip_key:  # only in direct (CORS) mode; behind the App Proxy there is no network key at all (decision A)
         burst_guard(f'{kind}:{ip_key}', limit=6)
@@ -642,14 +644,16 @@ def list_add(owner_id: str, key: str, gid: str, place) -> list[str]:
     return current
 
 
-def reply_place(new_id: str, parent_id: str | None):
+def reply_place(new_id: str, parent_id: str | None, parent_depth: int = 0):
+    """New top-level replies go last; a nested reply goes at the end of its parent's subtree (the run of following
+    entries deeper than the parent), so the flat list stays in display order with siblings oldest first."""
     def place(current: list[str]) -> list[str]:
         if not parent_id or parent_id not in current:
             return current + [new_id]
         i = current.index(parent_id)
         after = current[i + 1:]
-        depths = STORE.states(after)
-        j = next((k for k, rid in enumerate(after) if depths.get(rid, {}).get('depth', 0) == 0), len(after))
+        states = STORE.states(after)
+        j = next((k for k, rid in enumerate(after) if states.get(rid, {}).get('depth', 0) <= parent_depth), len(after))
         return current[:i + 1] + after[:j] + [new_id] + after[j:]
     return place
 
@@ -693,20 +697,22 @@ def action_post(p: dict, ctx: dict) -> dict:
     avatar = p.get('avatar') if p.get('avatar') in SETS else random.choice(SETS)
     own = clean_text(p.get('topic_own') or '', keep_newlines=False)[:TOPIC_OWN_MAX]
     topic_handle = OWN_TOPIC if own else str(p.get('topic') or '')
+    if topic_handle == OWN_TOPIC and not own:
+        raise TalkError('need_topic')  # the hidden home of "your own" posts is never picked directly
     topic = topics().get(topic_handle)
     if not topic or topic.get('pickable') != 'true':
         raise TalkError('need_topic')
     code, reasons = moderate(f'{own}\n{text}', s['blocked'], s['held'])
     if code:
         raise TalkError(code)
+    if reasons:  # owner, 10 Oct: no review queue. Might name someone -> refused at submit, nothing saved (TLK-181)
+        raise TalkError('might_name')
     if is_bot(p):
         return {'thread': {'handle': '', 'url': '', 'status': 'live'}}
     body_key = keyed(re.sub(r'\W+', '', text.lower()), 'text')
-    flood = check_limits('post', ip_key, device_key, body_key)
-    if flood:
-        reasons.append('flood guard')
-    if s['hold_all']:
-        reasons.append('hold all')
+    if check_limits('post', ip_key, device_key, body_key):
+        raise TalkError('busy', 429, retry_after=600)  # store-wide flood: refused (TLK-182), never held
+    reasons = ['hold all'] if s['hold_all'] else []  # the owner's emergency lever; "false" = no review queue
     status = 'DRAFT' if reasons else 'ACTIVE'
     title, body = split_title(text)
     stamp = iso(now_utc())
@@ -752,37 +758,40 @@ def action_reply(p: dict, ctx: dict) -> dict:
     parent = None
     if p.get('parent'):
         parent = STORE.by_handle('talk_reply', str(p['parent']))
-        if not parent or parent.get('thread') != thread['_id']:
+        if not parent or parent.get('thread') != thread['_id'] or parent['_status'] != 'ACTIVE':
             raise TalkError('not_found', 404)
+    parent_depth = int(parent.get('depth') or 0) if parent else -1
+    depth = min(parent_depth + 1, MAX_DEPTH)
     code, reasons = moderate(text, s['blocked'], s['held'])
     if code:
         raise TalkError(code)
+    if reasons:  # no review queue: refused at submit, nothing saved (TLK-181)
+        raise TalkError('might_name')
     if is_bot(p):
         return {'reply': {'handle': '', 'status': 'live'}}
     body_key = keyed(thread['_id'] + re.sub(r'\W+', '', text.lower()), 'text')
     if check_limits('reply', ip_key, device_key, body_key):
-        reasons.append('flood guard')
-    if s['hold_all']:
-        reasons.append('hold all')
+        raise TalkError('busy', 429, retry_after=600)
+    reasons = ['hold all'] if s['hold_all'] else []
     status = 'DRAFT' if reasons else 'ACTIVE'
     stamp = iso(now_utc())
     created = STORE.create('talk_reply', f'r-{rand_suffix(10)}', {
-        'thread': thread['_id'], 'body': text, 'alias': alias, 'avatar': avatar,
-        'reply_to': parent.get('alias') if parent else None, 'depth': '1' if parent else '0', 'by_brand': 'false',
+        'thread': thread['_id'], 'parent': parent['_id'] if parent else None, 'body': text, 'alias': alias, 'avatar': avatar,
+        'reply_to': parent.get('alias') if parent else None, 'depth': str(depth), 'by_brand': 'false',
         'posted_at': stamp, 'report_count': '0', 'mod_note': ('held: ' + ', '.join(reasons))[:250] if reasons else None,
     }, status)
     gid = created['id']
     with ThreadPoolExecutor(max_workers=3) as pool:
         sig = pool.submit(record_signal, 'reply', ip_key, device_key, gid, body_key)
         pool.submit(prune_quietly)
-        ids = list_add(thread['_id'], 'replies', gid, reply_place(gid, parent['_id'] if parent else None))
+        ids = list_add(thread['_id'], 'replies', gid, reply_place(gid, parent['_id'] if parent else None, max(parent_depth, 0)))
         sig.result()
     fields = {'reply_count': str(recount_replies(thread, ids))}
     if status == 'ACTIVE':
         fields['last_reply_at'] = stamp
     STORE.update(thread['_id'], fields)
     return {'reply': {'handle': created['handle'], 'thread': thread['_handle'], 'body': text, 'alias': alias,
-                      'avatar': avatar, 'depth': 1 if parent else 0, 'parent': parent['_handle'] if parent else None,
+                      'avatar': avatar, 'depth': depth, 'parent': parent['_handle'] if parent else None,
                       'reply_to': parent.get('alias') if parent else None, 'posted_at': stamp,
                       'status': 'held' if reasons else 'live'}}
 
@@ -842,12 +851,6 @@ def handle_request(method: str, path: str, headers, body: bytes) -> tuple[int, d
                 return 200, {'ok': True, 'pruned': prune_signals()}, {}
             except TalkError:
                 return 200, {'ok': False}, {}
-        if 'diag=ip' in query:  # what this app sees of the caller's own address (nothing stored or logged)
-            chain = [p.strip() for p in (headers.get('x-forwarded-for') or '').split(',') if p.strip()]
-            return 200, {'ok': True, 'via_proxy': bool(proxy), 'x_forwarded_for': chain,
-                         'x_real_ip': headers.get('x-real-ip') or '',
-                         'x_vercel_forwarded_for': headers.get('x-vercel-forwarded-for') or '',
-                         'network_key_used': (not proxy) and bool(client_ip(headers, False))}, cors
         if not (proxy or cors):
             configured = all(env(k) for k in ('SHOPIFY_SHOP', 'SHOPIFY_CLIENT_ID', 'SHOPIFY_CLIENT_SECRET'))
             return 200, {'ok': True, 'service': 'talks', 'build': BUILD, 'configured': configured}, {}

@@ -1,10 +1,14 @@
 {% comment %}
   Section contract.
   Small Talk header: menu button (mobile drawer), stacked blue "small talk" logo,
-  desktop navigation, "the talks" in handwritten lettering, and the bag with live count.
+  desktop navigation, "the talks" wordmark (V1, the owner's pick 11 Oct: outlined Caveat 700 SVG + a small ↗), and the
+  bag with live count.
   Board 2 header at 390 (spec/hero.md): 69 px on paper, no rule; hamburger x 14-42, logo centred at x 137 (~84x56),
   "the talks" from x 212 (Caveat 600 34 px, near-black), bag x 338-374, icons in the logo blue. Columns are % of the width.
   :root --st-header-h is the header's real height (hero CONTRACT v3).
+  "the talks" (qa/talks-ux/wordmark/V1-FINAL.md): the link keeps its accessible name as visually hidden text; the mark
+  is snippets/st-talks-wordmark (defined once here, drawn with <use> in the bar, the drawer and the talks hub), so
+  Caveat is no longer downloaded for the header.
   The drawer is Horizon's `dialog-component` around a native modal <dialog>, which gives
   focus containment, Escape to close and focus return to the menu button.
   The bag reuses Horizon's `cart-icon` + `cart-bubble`, so the count updates on add to cart.
@@ -23,6 +27,7 @@
 <script type="module" src="{{ 'cart-icon.js' | asset_url }}" fetchpriority="low"></script>
 <script type="module" src="{{ 'st-header.js' | asset_url }}" fetchpriority="low"></script>
 
+{%- render 'st-talks-wordmark', as: 'def' -%}
 <header class="st-header{% if section.settings.sticky %} st-header--sticky{% endif %}">
   <div class="st-header__bar">
     <dialog-component class="st-header__menu" id="StMenu-{{ section.id }}">
@@ -75,7 +80,10 @@
               {%- endfor -%}
               {%- if section.settings.talks_link != blank -%}
                 <li>
-                  <a href="{{ section.settings.talks_link }}" class="st-drawer__link st-drawer__talks">{{ talks_label | escape }}</a>
+                  <a href="{{ section.settings.talks_link }}" class="st-drawer__link st-drawer__talks">
+                    <span class="visually-hidden">{{ talks_label | escape }}</span>
+                    {%- render 'st-talks-wordmark' -%}
+                  </a>
                 </li>
               {%- endif -%}
             </ul>
@@ -129,7 +137,13 @@
 
     <div class="st-header__actions">
       {%- if section.settings.talks_link != blank -%}
-        <a href="{{ section.settings.talks_link }}" class="st-header__talks">{{ talks_label | escape }}</a>
+        <a href="{{ section.settings.talks_link }}" class="st-header__talks">
+          <span class="visually-hidden">{{ talks_label | escape }}</span>
+          <span class="st-header__talks-mark">
+            {%- render 'st-talks-wordmark' -%}
+            <span class="st-header__talks-arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
       {%- endif -%}
 
       <a
@@ -254,26 +268,41 @@
     display: contents;
   }
 
+  /* "the talks" V1: the SVG mark is 0.8377em tall at the old wordmark size (owner 10 Oct: ~30 % smaller at every
+     breakpoint, 34 -> 23.8 px; the token stays), so the lockup keeps its footprint. The hidden name is set in the UI
+     face, so Caveat is never fetched for the header. */
   .st-header__talks {
     grid-column: 3;
     justify-self: start;
     display: inline-flex;
     align-items: center;
     min-height: var(--minimum-touch-target);
-    font-family: var(--font-talks);
-    font-weight: var(--fw-talks);
-    font-size: min(calc(var(--fs-talks) * 0.7), 6.1vw); /* owner 10 Oct: ~30 % smaller at every breakpoint (34 -> 23.8 px); the token stays */
-    letter-spacing: var(--ls-talks);
+    font-family: var(--font-ui);
+    font-size: min(calc(var(--fs-talks) * 0.7), 6.1vw);
     line-height: 1;
     color: var(--st-talks-ink);
     text-decoration: none;
     white-space: nowrap;
   }
 
-  .st-header__talks:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.15em;
+  .st-header__talks-mark {
+    display: inline-flex;
+    align-items: center;
+    padding-block-end: 1px;
+    border-block-end: 1px solid transparent;
+  }
+
+  .st-header__talks:hover .st-header__talks-mark {
+    border-block-end-color: currentColor;
+  }
+
+  .st-header__talks-arrow {
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 0.5em;
+    line-height: 1;
+    margin-inline-start: 0.22em;
+    transform: translateY(-0.12em);
   }
 
   .st-header__bag {
@@ -432,8 +461,7 @@
   }
 
   .st-drawer__talks {
-    font-family: var(--font-talks);
-    font-weight: var(--fw-talks);
+    font-family: var(--font-ui);
     font-size: 2.1rem;
   }
 

@@ -1,9 +1,10 @@
 {% doc %}
   One written example conversation (alias, title, text, topic, optional campaign nail as avatar).
-  Rendered with an "Example conversation" label.
+  Rendered with an "Example conversation" label. An <article>, not an <li>: content_for wraps every theme block in a
+  div.shopify-block, so a list item here could never sit directly in a list (axe listitem/list).
 {% enddoc %}
 
-<li class="st-talk" {{ block.shopify_attributes }}>
+<article class="st-talk" {{ block.shopify_attributes }}>
   <span class="st-talk__avatar" aria-hidden="true">
     {%- if block.settings.campaign != blank -%}
       {% render 'st-nail', campaign: block.settings.campaign, role: 'signature', sizes: '700px' %}
@@ -21,7 +22,7 @@
       <p class="st-talk__text">{{ block.settings.text | escape }}</p>
     {%- endif -%}
   </div>
-</li>
+</article>
 
 {% stylesheet %}
   .st-talk {

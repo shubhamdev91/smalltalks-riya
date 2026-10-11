@@ -1,13 +1,15 @@
-// the talks: relative times (TLK-009) and anonymous posting (TLK-1xx): the composer, replies and reports.
-// Posts go to the talks backend through the App Proxy (cfg.endpoint, /apps/talks); nothing is sent anywhere else.
-// Her alias, avatar set and device id live in localStorage on her device only. All copy comes from
-// #st-talks-config (locale small_talk.talks.live.*) and data attributes, so no shopper-visible text lives here.
+// the talks, UX v4: relative times (TLK-009), Reddit-style threads (fold TLK-179, "continue this thread" TLK-178) and
+// anonymous posting (the hero writing box, inline replies under any comment, reports). Posts go to the talks backend
+// through the App Proxy (cfg.endpoint, /apps/talks); nothing is sent anywhere else. Her alias, avatar set and device id
+// live in localStorage on her device only. All copy comes from #st-talks-config (locale small_talk.talks.live.v4.*)
+// and data attributes, so no shopper-visible text lives here. User text only ever goes in as text nodes.
 // Markup built here mirrors snippets/st-talk-row.liquid and st-talk-reply.liquid (keep them in step).
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Relative times: "9 Oct" from Liquid becomes "just now · n min ago · nh ago · nd ago" under 7 days. */
+/* Relative times: "9 Oct" from Liquid becomes "just now · 5m · 2h · 3d" under 7 days. */
 const agoStrings = /** @type {HTMLElement | null} */ ($('[data-st-ago-strings]'))?.dataset ?? {};
 const fillN = (pattern, n) => (pattern ? pattern.replace('__n__', String(n)) : null);
 
@@ -26,7 +28,6 @@ function relTime(el) {
 
 $$('time[data-st-ago]').forEach(relTime);
 
-/* Live talks */
 let cfg = null;
 try {
   cfg = JSON.parse($('#st-talks-config')?.textContent || 'null');
@@ -35,15 +36,15 @@ try {
 }
 if (cfg && !window.__stTalksLive) {
   window.__stTalksLive = true;
-  live(cfg);
+  talks(cfg);
 }
 
-function live(cfg) {
+function talks(cfg) {
   const S = cfg.strings;
   const E = S.errors;
   const DWELL_MS = 2600; // the backend treats faster submits as bots
   const MINE_TTL = 30 * 60 * 1000;
-  const HELD_TTL = 24 * 60 * 60 * 1000;
+  const desktop = matchMedia('(min-width: 1024px)');
 
   /* Storage that never throws (private mode, blocked storage): falls back to memory for this page. */
   const memory = new Map();
@@ -82,7 +83,7 @@ function live(cfg) {
   }
 
   function newAlias() {
-    let a = pick(cfg.adjectives);
+    const a = pick(cfg.adjectives);
     let n = pick(cfg.nouns);
     for (let i = 0; i < 5 && a === n; i++) n = pick(cfg.nouns);
     return `${a}${n}`.replace(/\s+/g, '').slice(0, cfg.max.alias);
@@ -127,20 +128,12 @@ function live(cfg) {
     return null;
   }
 
-  function aliasProblem(value) {
-    const flat = value.toLowerCase().replace(/[\s._-]+/g, ' ').trim();
-    if (value.length < 2 || value.length > cfg.max.alias) return true;
-    if (!/^[\p{L}\p{N} ._'-]+$/u.test(value)) return true;
-    if (/small ?talk/.test(flat) || ['admin', 'mod', 'moderator', 'official', 'team', 'support', 'staff', 'owner'].includes(flat)) return true;
-    return Boolean(contactCode(value));
-  }
-
   /** The backend's headline rule: first line, or its first sentence (≤ 110 characters). */
   function splitTitle(text) {
     const nl = text.indexOf('\n');
     const first = (nl < 0 ? text : text.slice(0, nl)).trim();
     const rest = nl < 0 ? '' : text.slice(nl + 1).trim();
-    if (first.length <= 110) return [first, rest];
+    if (first.length <= 110) return { title: first, body: rest };
     const m = first.match(/^(.{8,110}?[.?!…])(?:\s|$)/);
     let title;
     let remainder;
@@ -153,7 +146,7 @@ function live(cfg) {
       title = `${first.slice(0, cut).replace(/[ ,;:-]+$/, '')}…`;
       remainder = `…${first.slice(cut).trimStart()}`;
     }
-    return [title, [remainder, rest].filter(Boolean).join('\n')];
+    return { title, body: [remainder, rest].filter(Boolean).join('\n') };
   }
 
   /* DOM helpers: user text only ever goes in as text nodes. */
@@ -170,9 +163,20 @@ function live(cfg) {
     return el;
   }
 
-  /** Replace a row in place; if it had focus, its replacement takes it (screen readers hear the new state). */
+  function svg(viewBox, d) {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    el.setAttribute('viewBox', viewBox);
+    el.setAttribute('aria-hidden', 'true');
+    el.setAttribute('focusable', 'false');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d);
+    el.append(path);
+    return el;
+  }
+
+  /** Replace an element in place; if it had focus, its replacement takes it (screen readers hear the new state). */
   function swap(oldEl, newEl) {
-    const hadFocus = document.activeElement === oldEl;
+    const hadFocus = oldEl.contains(document.activeElement);
     oldEl.replaceWith(newEl);
     if (hadFocus) {
       newEl.tabIndex = -1;
@@ -182,6 +186,12 @@ function live(cfg) {
   }
 
   const withBreaks = (text) => String(text).split('\n').flatMap((line, i) => (i ? [h('br'), line] : [line]));
+
+  /** "posting as {alias}" with the alias in bold (TLK-104 / TLK-103). */
+  function asLine(pattern, alias) {
+    const [before, after = ''] = String(pattern ?? '').split('__alias__');
+    return [before, h('b', {}, alias), after];
+  }
 
   function avatar(set) {
     const disc = h('span', { class: 'st-tavatar', 'aria-hidden': 'true' }, h('span', { class: 'st-tavatar__nail' }));
@@ -226,75 +236,19 @@ function live(cfg) {
     statusEl.append(...(Array.isArray(text) ? text : [text]).filter(Boolean));
   }
 
-  /* Her alias and avatar everywhere: "Posting as …", "Replying as …" and the discs next to the fields. */
+  /* Her alias everywhere: "posting as …" (composer) and "replying as …" (reply box). */
   function paintMe() {
     const m = me();
-    for (const slot of $$('[data-st-me-avatar]')) slot.replaceChildren(avatar(m.avatar));
     for (const slot of $$('[data-st-as]')) {
       const replying = slot.closest('[data-st-reply-form]');
-      slot.textContent = fmt(replying ? S.replying_as : S.posting_as, { alias: m.alias });
+      slot.replaceChildren(...asLine(replying ? S.replying_as : S.posting_as, m.alias));
     }
   }
 
-  function wireAlias(form) {
-    const toggle = $('[data-st-alias-toggle]', form);
-    const panel = $('[data-st-alias-panel]', form);
-    const input = /** @type {HTMLInputElement | null} */ ($('[data-st-alias-input]', form));
-    const hint = $('[data-st-alias-hint]', form);
-    if (!toggle || !panel || !input) return;
-    const hintText = hint?.textContent ?? '';
-    const close = (focusToggle) => {
-      panel.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
-      if (focusToggle) toggle.focus();
-    };
-    toggle.addEventListener('click', () => {
-      if (!panel.hidden) return close(false);
-      panel.hidden = false;
-      toggle.setAttribute('aria-expanded', 'true');
-      input.value = me().alias;
-      input.focus();
-      input.select();
-    });
-    $('[data-st-alias-shuffle]', form)?.addEventListener('click', () => {
-      input.value = newAlias();
-      input.focus();
-    });
-    const save = () => {
-      const value = input.value.trim().replace(/^@+/, '');
-      if (aliasProblem(value)) {
-        if (hint) {
-          hint.textContent = E.bad_alias;
-          hint.dataset.tone = 'error';
-        }
-        input.setAttribute('aria-invalid', 'true');
-        input.focus();
-        return;
-      }
-      if (hint) {
-        hint.textContent = hintText;
-        delete hint.dataset.tone;
-      }
-      input.removeAttribute('aria-invalid');
-      store.set('st-talks-me', { ...me(), alias: value });
-      paintMe();
-      close(true);
-    };
-    $('[data-st-alias-save]', form)?.addEventListener('click', save);
-    input.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        save();
-      } else if (event.key === 'Escape') {
-        close(true);
-      }
-    });
-  }
+  /* ---------- Threads list: the hub / topic feed and the hero box ---------- */
 
-  /* ---------- Threads: the hub list and the composer ---------- */
-
-  const section = $('[data-st-feed]');
-  const feed = section?.dataset.stFeed ?? '';
+  const hub = $('[data-st-feed]');
+  const feed = hub?.dataset.stFeed ?? '';
   const list = $('[data-st-list]');
   const firstPage = !list || list.dataset.page === '1';
 
@@ -305,40 +259,27 @@ function live(cfg) {
 
   function rowFor(t, state) {
     const linked = Boolean(t.url) && !state;
-    const inner = h(linked ? 'a' : 'div', { class: 'st-trow__link', href: linked ? t.url : null });
-    const stateEl =
-      state === 'pending'
-        ? h('span', { class: 'st-trow__state' }, S.posting)
-        : state === 'held'
-          ? h('span', { class: 'st-trow__state' }, S.held_tag)
-          : state === 'failed'
-            ? h('span', { class: 'st-trow__state' }, S.failed)
-            : timeEl(t.posted_at);
-    inner.append(
-      avatar(t.avatar),
+    const meta = h('span', { class: 'tk-meta' }, h('b', {}, t.alias), ' · ', state ? (state === 'pending' ? S.posting : S.failed) : timeEl(t.posted_at));
+    const inner = h(
+      linked ? 'a' : 'div',
+      { class: 'tk-row', href: linked ? t.url : null },
+      h('span', { class: 'tk-row__av' }, avatar(t.avatar)),
       h(
         'span',
-        { class: 'st-trow__text' },
-        h('span', { class: 'st-trow__meta' }, h('span', { class: 'st-trow__author' }, t.alias), stateEl),
-        h('span', { class: 'st-trow__title' }, t.title),
-        t.body ? h('span', { class: 'st-trow__excerpt' }, t.body.replace(/\s+/g, ' ').slice(0, 160)) : null,
-        linked ? h('span', { class: 'st-trow__count' }, S.first_reply) : null,
+        { class: 'tk-row__text' },
+        meta,
+        h('span', { class: 'tk-row__title' }, t.title),
+        t.body ? h('span', { class: 'tk-row__ex' }, t.body.replace(/\s+/g, ' ').slice(0, 160)) : null,
+        h('span', { class: 'tk-foot' }, svg('0 0 16 16', 'M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z'), S.no_replies),
       ),
     );
-    if (linked) {
-      const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      chevron.setAttribute('viewBox', '0 0 8 14');
-      chevron.setAttribute('aria-hidden', 'true');
-      chevron.innerHTML = '<path d="M1.5 1.5 L6.5 7 L1.5 12.5"/>';
-      $('.st-trow__count', inner)?.append(chevron);
-    }
-    return h('li', { class: `st-trow is-mine${state ? ` is-${state}` : ''}`, 'data-st-thread': t.handle || null }, inner);
+    return h('li', { class: `tk-r is-mine${state ? ` is-${state}` : ''}`, 'data-st-thread': t.handle || null }, inner);
   }
 
   function showInList(row) {
     if (!list) return;
     list.prepend(row);
-    $('[data-st-empty]')?.setAttribute('hidden', '');
+    $('[data-st-empty]', hub ?? document)?.setAttribute('hidden', '');
   }
 
   function remember(key, item, max = 12) {
@@ -353,36 +294,29 @@ function live(cfg) {
     const now = Date.now();
     const keep = [];
     for (const t of store.get('st-talks-mine', [])) {
-      const ttl = t.status === 'held' ? HELD_TTL : MINE_TTL;
-      if (!t.handle || now - t.saved > ttl) continue;
+      if (!t.handle || now - t.saved > MINE_TTL) continue;
       if (list.querySelector(`[data-st-thread="${CSS.escape(t.handle)}"]:not(.is-mine)`)) continue; // Shopify has it
       keep.push(t);
-      if (feedTakes(t.topic) && !list.querySelector(`[data-st-thread="${CSS.escape(t.handle)}"]`)) {
-        showInList(rowFor(t, t.status === 'held' ? 'held' : null));
-      }
+      if (feedTakes(t.topic) && !list.querySelector(`[data-st-thread="${CSS.escape(t.handle)}"]`)) showInList(rowFor(t, null));
     }
     store.set('st-talks-mine', keep);
   }
 
   function wireComposer(form) {
     const ta = /** @type {HTMLTextAreaElement} */ ($('textarea[name="text"]', form));
+    const topicSel = /** @type {HTMLSelectElement} */ ($('[data-st-topic]', form));
+    const ownBox = $('[data-st-own]', form);
     const own = /** @type {HTMLInputElement} */ ($('input[name="topic_own"]', form));
     const status = $('[data-st-status]', form);
-    const left = $('[data-st-left]', form);
-    const postBtn = $('.st-compose__post', form);
-    const isRow = form.classList.contains('st-compose--row');
+    const postBtn = $('.tk-post', form);
     let openedAt = 0;
     let busy = false;
+    let lastNudge = '';
+    let nudgeIndex = -1;
 
-    const topicChoice = () => /** @type {HTMLInputElement | null} */ ($('input[name="topic"]:checked', form))?.value ?? '';
+    const topicChoice = () => topicSel?.value ?? '';
     const open = () => {
       if (!openedAt) openedAt = performance.now();
-      form.dataset.open = '';
-    };
-    const counter = () => {
-      if (!left) return;
-      const remaining = cfg.max.thread - ta.value.length;
-      left.textContent = remaining < 120 ? fmt(S.left, { n: remaining }) : '';
     };
     const saveDraft = () => store.set('st-talks-draft', { text: ta.value, topic: topicChoice(), own: own?.value ?? '' });
     const clearError = () => {
@@ -396,25 +330,33 @@ function live(cfg) {
         field.focus();
       }
     };
+    const syncOwn = () => {
+      if (ownBox) ownBox.hidden = topicChoice() !== '__own';
+    };
     const setTopic = (value, ownText) => {
-      const radio = /** @type {HTMLInputElement | null} */ ($(`input[name="topic"][value="${CSS.escape(value || '')}"]`, form));
-      if (radio) radio.checked = true;
-      own.hidden = value !== '__own';
-      if (ownText != null) own.value = ownText;
+      if (topicSel && [...topicSel.options].some((o) => o.value === value)) topicSel.value = value;
+      syncOwn();
+      if (ownText != null && own) own.value = ownText;
     };
 
     const draft = store.get('st-talks-draft', null);
     if (draft?.text && !ta.value) {
       ta.value = draft.text;
       if (draft.topic) setTopic(draft.topic, draft.own);
-      if (isRow) form.dataset.open = '';
-      counter();
     }
 
-    form.addEventListener('focusin', open);
+    /* The phone's "spill your tea" bar hides while she types (keyboard up). */
+    form.addEventListener('focusin', () => {
+      open();
+      hub?.classList.add('tk-typing');
+    });
+    form.addEventListener('focusout', () => {
+      setTimeout(() => {
+        if (!form.contains(document.activeElement)) hub?.classList.remove('tk-typing');
+      }, 0);
+    });
     ta.addEventListener('input', () => {
       open();
-      counter();
       saveDraft();
       clearError();
     });
@@ -422,21 +364,35 @@ function live(cfg) {
       saveDraft();
       clearError();
     });
-    form.addEventListener('change', (event) => {
-      const target = /** @type {HTMLInputElement} */ (event.target);
-      if (target.name !== 'topic') return;
-      own.hidden = target.value !== '__own';
-      if (!own.hidden) own.focus();
+    topicSel?.addEventListener('change', () => {
+      syncOwn();
+      if (topicChoice() === '__own') own?.focus();
       clearError();
       saveDraft();
     });
-    if (isRow) {
-      form.addEventListener('focusout', () => {
-        setTimeout(() => {
-          if (!form.contains(document.activeElement) && !ta.value.trim() && !busy) delete form.dataset.open;
-        }, 0);
-      });
-    }
+
+    /* "need a nudge?" (TLK-175): a starter for the chosen topic (TLK-158), or the flat list (TLK-176); never over her
+       own words. Each tap shows the next one. */
+    $('[data-st-nudge]', form)?.addEventListener('click', () => {
+      const lines = cfg.starters[topicChoice()] ?? cfg.nudges;
+      if (!lines?.length) return;
+      if (ta.value.trim() && ta.value !== lastNudge) {
+        ta.focus();
+        return;
+      }
+      nudgeIndex = (nudgeIndex + 1) % lines.length;
+      lastNudge = `${lines[nudgeIndex]} `;
+      ta.value = lastNudge;
+      open();
+      saveDraft();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+
+    $('[data-st-shuffle]', form)?.addEventListener('click', () => {
+      store.set('st-talks-me', { ...me(), alias: newAlias() });
+      paintMe();
+    });
 
     async function send(payload, row) {
       const waited = performance.now() - openedAt;
@@ -445,24 +401,26 @@ function live(cfg) {
       try {
         const { thread } = await api(payload);
         store.set('st-talks-draft', null);
+        lastNudge = '';
         const t = { ...thread, topic: payload.topic || '__own' };
         if (thread.handle) remember('st-talks-mine', t);
-        const held = thread.status === 'held';
-        if (row) swap(row, rowFor(t, held ? 'held' : null));
-        if (held) say(status, S.held);
-        else if (row) say(status, S.posted);
-        else if (thread.url) say(status, [`${S.posted} · `, h('a', { href: thread.url }, S.view)]);
-        else say(status, S.posted);
+        if (row) {
+          swap(row, rowFor(t, null));
+          say(status, S.posted);
+        } else if (thread.url) {
+          say(status, [`${S.posted} `, h('a', { href: thread.url }, S.view)]);
+        } else {
+          say(status, S.posted);
+        }
       } catch (error) {
-        const failed = error.transient;
-        if (row && failed) {
-          const failedRow = rowFor({ ...payload, ...splitParts(payload.text), posted_at: null }, 'failed');
-          const retry = h('button', { type: 'button' }, S.retry);
-          const edit = h('button', { type: 'button' }, S.edit);
-          failedRow.append(h('div', { class: 'st-trow__fail' }, E.server, retry, edit));
+        if (row && error.transient) {
+          const failedRow = rowFor({ ...payload, ...splitTitle(payload.text) }, 'failed');
+          const retry = h('button', { type: 'button', class: 'tk-act tk-act--strong' }, S.retry);
+          const edit = h('button', { type: 'button', class: 'tk-act' }, S.edit);
+          failedRow.append(h('div', { class: 'tk-r__fail' }, E.server, retry, edit));
           swap(row, failedRow);
           retry.addEventListener('click', () => {
-            const again = rowFor({ ...payload, ...splitParts(payload.text) }, 'pending');
+            const again = rowFor({ ...payload, ...splitTitle(payload.text) }, 'pending');
             swap(failedRow, again);
             send(payload, again);
           });
@@ -470,18 +428,17 @@ function live(cfg) {
             failedRow.remove();
             ta.value = payload.text;
             setTopic(payload.topic || '__own', payload.topic_own);
-            open();
             ta.focus();
           });
           say(status, E.server, 'error');
         } else {
+          // Refused (might name someone, blocked, busy, slow down…): nothing was saved, her words stay in the box.
           row?.remove();
           if (!ta.value.trim()) {
             ta.value = payload.text;
             setTopic(payload.topic || '__own', payload.topic_own);
           }
-          open();
-          showError(error.code, error.code === 'bad_alias' ? $('[data-st-alias-toggle]', form) : ta);
+          showError(error.code, ta);
         }
       } finally {
         busy = false;
@@ -489,28 +446,23 @@ function live(cfg) {
       }
     }
 
-    const splitParts = (text) => {
-      const [title, body] = splitTitle(text);
-      return { title, body };
-    };
-
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (busy) return;
       clearError();
       const text = ta.value.trim();
       const choice = topicChoice();
-      const ownText = choice === '__own' ? own.value.trim() : '';
-      if (text.length < 3) return showError('too_short', ta);
+      const ownText = choice === '__own' ? (own?.value ?? '').trim() : '';
+      if (text.length < 3 || text === lastNudge.trim()) return showError('too_short', ta);
       if (text.length > cfg.max.thread) return showError('too_long', ta);
-      if (!choice) return showError('need_topic', $('input[name="topic"]', form));
+      if (!choice) return showError('need_topic', topicSel);
       if (choice === '__own' && !ownText) return showError('need_topic', own);
       const blocked = contactCode(`${ownText}\n${text}`);
       if (blocked) return showError(blocked, ownText && contactCode(ownText) ? own : ta);
 
       busy = true;
       postBtn?.setAttribute('aria-disabled', 'true');
-      if (!openedAt) openedAt = performance.now();
+      open();
       const m = me();
       const payload = {
         action: 'post',
@@ -525,96 +477,192 @@ function live(cfg) {
       };
       let row = null;
       if (feedTakes(choice)) {
-        row = rowFor({ ...payload, ...splitParts(text), handle: '' }, 'pending');
+        row = rowFor({ ...payload, ...splitTitle(text), handle: '' }, 'pending');
         showInList(row);
       }
       ta.value = '';
-      own.value = '';
-      counter();
+      if (own) own.value = '';
       say(status, S.posting);
-      if (isRow && row) {
-        // Fold the composer and bring her new row into view: it carries "Posting…" and then her talk.
-        delete form.dataset.open;
+      if (row) {
         row.tabIndex = -1;
         row.focus({ preventScroll: true });
-        row.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        row.scrollIntoView({ block: 'nearest', behavior: reduceMotion() ? 'auto' : 'smooth' });
       }
       await send(payload, row);
     });
   }
 
-  /* ---------- Replies ---------- */
+  /* ---------- Replies: Reddit-style tree on a flat list ---------- */
 
   const replies = $('[data-st-replies]');
+  const folded = new Set();
+  const continued = new Set();
+  const depthOf = (li) => Number(li.dataset.depth) || 0;
+  const limit = () => (desktop.matches ? 6 : 4); // levels visible before "continue this thread ›"
+
+  /** Ancestors (nearest last) and descendant counts from display order and depth. */
+  function tree() {
+    const items = $$(':scope > .tk-c', replies);
+    const stack = [];
+    for (const li of items) {
+      const d = depthOf(li);
+      while (stack.length && depthOf(stack[stack.length - 1]) >= d) stack.pop();
+      li._anc = [...stack];
+      stack.push(li);
+    }
+    items.forEach((li, i) => {
+      let n = 0;
+      for (let j = i + 1; j < items.length && depthOf(items[j]) > depthOf(li); j++) n++;
+      li._desc = n;
+    });
+    return items;
+  }
+
+  /** The ancestor that "continue this thread" opens for a deep comment: its deepest ancestor above the limit. */
+  const gateOf = (li, L) => [...li._anc].reverse().find((a) => depthOf(a) < L) ?? null;
+
+  function foldToggle(li) {
+    let btn = $(':scope > .tk-c__fold', li);
+    if (!btn) {
+      btn = h('button', { type: 'button', class: 'tk-c__fold', 'aria-expanded': 'true' }, h('span', { 'aria-hidden': 'true' }, '−'));
+      btn.addEventListener('click', () => {
+        folded.add(li);
+        layout();
+        $(':scope > .tk-c__head > .tk-c__more', li)?.focus();
+      });
+      li.prepend(btn);
+    }
+    btn.setAttribute('aria-label', fmt(S.collapse_label, { alias: li.dataset.alias ?? '' }));
+    return btn;
+  }
+
+  function morePill(li) {
+    const head = $(':scope > .tk-c__head', li);
+    let pill = $(':scope > .tk-c__more', head);
+    if (!pill) {
+      pill = h('button', { type: 'button', class: 'tk-c__more', 'aria-expanded': 'false' });
+      pill.addEventListener('click', () => {
+        folded.delete(li);
+        layout();
+        $(':scope > .tk-c__fold', li)?.focus();
+      });
+      head?.append(pill);
+    }
+    const n = li._desc;
+    pill.textContent = `+ ${n === 1 ? S.more_one : fmt(S.more_other, { n })}`;
+    pill.setAttribute('aria-label', fmt(S.expand_label, { alias: li.dataset.alias ?? '', n }));
+    return pill;
+  }
+
+  /** Recompute folds, "continue" rows and what is visible. Runs on load, on every change and on resize. */
+  function layout() {
+    if (!replies) return;
+    for (const row of $$(':scope > .tk-continue-row', replies)) row.remove();
+    const items = tree();
+    const L = limit();
+    let lastGate = null;
+    for (const li of items) {
+      if (!li.isConnected) continue;
+      const parent = li._desc > 0;
+      li.classList.toggle('tk-c--parent', parent && !folded.has(li));
+      li.classList.toggle('tk-c--folded', parent && folded.has(li));
+      if (!parent) folded.delete(li);
+      if (parent) foldToggle(li).setAttribute('aria-expanded', String(!folded.has(li)));
+      else $(':scope > .tk-c__fold', li)?.remove();
+      if (parent && folded.has(li)) morePill(li);
+      else $(':scope > .tk-c__head > .tk-c__more', li)?.remove();
+
+      const hiddenByFold = li._anc.some((a) => folded.has(a));
+      const gate = depthOf(li) >= L ? gateOf(li, L) : null;
+      const hiddenByDepth = Boolean(gate) && !continued.has(gate);
+      li.hidden = hiddenByFold || hiddenByDepth;
+      // One "continue this thread ›" before each run of comments the depth limit hides (TLK-178).
+      if (hiddenByDepth && !hiddenByFold && gate !== lastGate) {
+        const btn = h('button', { type: 'button', class: 'tk-continue' }, S.continue);
+        const row = h('li', { class: 'tk-continue-row', style: `--d: ${Math.min(depthOf(gate) + 1, L)}` }, btn);
+        btn.addEventListener('click', () => {
+          continued.add(gate);
+          layout();
+          const first = items.find((x) => x._anc.includes(gate) && !x.hidden);
+          if (first) {
+            first.tabIndex = -1;
+            first.focus({ preventScroll: false });
+          }
+        });
+        li.before(row);
+      }
+      lastGate = hiddenByDepth ? gate : null;
+    }
+  }
+
+  /** Make a comment visible: unfold its ancestors and open "continue" above it. */
+  function reveal(li) {
+    tree();
+    for (const a of li._anc ?? []) folded.delete(a);
+    const L = limit();
+    if (depthOf(li) >= L) {
+      const gate = gateOf(li, L);
+      if (gate) continued.add(gate);
+    }
+    layout();
+  }
 
   function replyFor(r, state) {
     const colour = cfg.sets.includes(r.avatar) ? r.avatar : 'on-me';
     const initial = (r.alias || '?').replace(/^@/, '').trim().slice(0, 1).toUpperCase();
-    const disc = h(
-      'span',
-      { class: `st-reply-item__avatar${cfg.lightInk.includes(colour) ? ' st-reply-item__avatar--light' : ''}`, 'aria-hidden': 'true' },
-      initial,
-    );
-    disc.style.setProperty('--st-reply-bg', `var(--st-tile-${colour})`);
-    const stateEl =
-      state === 'pending'
-        ? h('span', { class: 'st-reply-item__state' }, S.posting)
-        : state === 'held'
-          ? h('span', { class: 'st-reply-item__state' }, S.held_tag)
-          : state === 'failed'
-            ? h('span', { class: 'st-reply-item__state' }, S.failed)
-            : timeEl(r.posted_at);
-    const acts = h('div', { class: 'st-reply-item__acts' });
+    const disc = h('span', { class: `tk-c__av${cfg.lightInk.includes(colour) ? ' tk-c__av--light' : ''}`, 'aria-hidden': 'true' }, initial);
+    disc.style.setProperty('--c', `var(--st-tile-${colour})`);
+    const when = state ? (state === 'pending' ? S.posting : S.failed) : timeEl(r.posted_at);
+    const acts = h('div', { class: 'tk-c__acts' });
     if (!state && r.handle) {
       acts.append(
-        h('button', { type: 'button', class: 'st-act', 'data-st-reply-to': r.handle, 'aria-label': fmt(S.reply_to_label, { alias: r.alias }) }, S.reply),
+        h('button', { type: 'button', class: 'tk-act', 'data-st-reply-to': r.handle, 'aria-label': fmt(S.reply_to_label, { alias: r.alias }) }, S.reply),
       );
     }
-    return h(
+    const depth = Math.min(Number(r.depth) || 0, cfg.max.depth);
+    const li = h(
       'li',
       {
-        class: `st-reply-item is-mine${r.depth ? ' st-reply-item--nested' : ''}${state ? ` is-${state}` : ''}`,
+        class: `tk-c is-mine${state ? ` is-${state}` : ''}`,
         id: r.handle ? `reply-${r.handle}` : null,
+        'aria-level': depth + 1,
         'data-st-reply': r.handle || null,
-        'data-depth': r.depth ? 1 : 0,
+        'data-depth': depth,
         'data-alias': r.alias,
+        'data-parent': r.parent || null,
       },
-      disc,
-      h(
-        'div',
-        { class: 'st-reply-item__text' },
-        h(
-          'p',
-          { class: 'st-reply-item__meta' },
-          h('span', { class: 'st-reply-item__alias' }, r.alias),
-          ' · ',
-          stateEl,
-          r.depth && r.reply_to ? h('span', { class: 'st-reply-item__to' }, fmt(S.replying_to, { alias: r.reply_to })) : null,
-        ),
-        h('div', { class: 'st-reply-item__body' }, h('p', {}, withBreaks(r.body ?? r.text ?? ''))),
-        acts,
-      ),
+      h('p', { class: 'tk-c__head' }, disc, h('b', { class: 'tk-c__alias' }, r.alias), h('span', { class: 'tk-c__when' }, '· ', when)),
+      h('div', { class: 'tk-c__body' }, h('p', {}, withBreaks(r.body ?? r.text ?? ''))),
+      acts,
     );
+    li.style.setProperty('--d', String(depth));
+    return li;
   }
 
-  /** Where a reply goes: after its parent's block (the parent and its nested replies), else at the end. */
+  /** Where a new reply goes (mirrors the backend): at the end of its parent's subtree, else at the end. */
   function placeReply(li, parentHandle) {
     if (!replies) return;
-    const parent = parentHandle ? replies.querySelector(`[data-st-reply="${CSS.escape(parentHandle)}"]`) : null;
+    const parent = parentHandle ? $(`:scope > [data-st-reply="${CSS.escape(parentHandle)}"]`, replies) : null;
     if (!parent) {
       replies.append(li);
     } else {
+      const pd = depthOf(parent);
       let anchor = parent;
-      while (anchor.nextElementSibling && anchor.nextElementSibling.getAttribute('data-depth') === '1') anchor = anchor.nextElementSibling;
+      for (let next = anchor.nextElementSibling; next; next = next.nextElementSibling) {
+        if (next.classList.contains('tk-continue-row')) continue;
+        if (depthOf(next) <= pd) break;
+        anchor = next;
+      }
       anchor.after(li);
     }
     $('[data-st-empty]', replies.parentElement ?? document)?.setAttribute('hidden', '');
+    reveal(li);
   }
 
   function bumpCount() {
     const el = $('[data-st-count]');
     if (!el) return;
-    const n = (Number(el.dataset.n) || Number((el.textContent || '').replace(/\D/g, '')) || 0) + 1;
+    const n = (Number(el.dataset.n) || 0) + 1;
     el.dataset.n = String(n);
     el.textContent = n === 1 ? S.reply_one : fmt(S.reply_other, { n });
     el.hidden = false;
@@ -622,12 +670,15 @@ function live(cfg) {
 
   function wireReplyForm(form) {
     const threadHandle = form.dataset.thread;
+    const home = $('[data-st-reply-home]');
     const ta = /** @type {HTMLTextAreaElement} */ ($('textarea[name="text"]', form));
     const status = $('[data-st-status]', form);
     const bar = $('[data-st-reply-to-bar]', form);
     const barText = $('[data-st-reply-to-text]', form);
-    const submit = $('.st-reply__submit', form);
+    const cancels = $$('[data-st-reply-cancel]', form);
+    const submit = $('.tk-post', form);
     let parent = null;
+    let opener = null;
     let openedAt = 0;
     let busy = false;
     const draftKey = `st-talks-reply:${threadHandle}`;
@@ -646,22 +697,41 @@ function live(cfg) {
 
     const setParent = (handle, alias) => {
       parent = handle ? { handle, alias } : null;
-      if (bar && barText) {
-        bar.hidden = !parent;
-        barText.textContent = parent ? fmt(S.replying_to, { alias }) : '';
-      }
+      if (bar) bar.hidden = !parent;
+      if (barText) barText.replaceChildren(...(parent ? asLine(S.replying_to, alias) : []));
+      for (const c of cancels) if (c.classList.contains('tk-cancel')) c.hidden = !parent;
     };
+
+    /* "reply" on any comment opens this same box right under it; one box at a time. */
+    const openUnder = (li, btn) => {
+      setParent(li.dataset.stReply, li.dataset.alias ?? '');
+      opener = btn;
+      li.append(form);
+      say(status, '');
+      ta.focus({ preventScroll: true });
+      form.scrollIntoView({ block: 'nearest', behavior: reduceMotion() ? 'auto' : 'smooth' });
+    };
+    /** Back under the talk; focus returns to the "reply" that opened it (unless told where to go). */
+    const close = (focusOpener = true) => {
+      const back = opener;
+      setParent(null);
+      opener = null;
+      if (home && form.previousElementSibling !== home) home.after(form);
+      if (focusOpener && back?.isConnected) back.focus();
+    };
+
     document.addEventListener('click', (event) => {
       const btn = /** @type {HTMLElement} */ (event.target).closest?.('[data-st-reply-to]');
       if (!btn) return;
-      const li = btn.closest('[data-st-reply]');
-      setParent(btn.getAttribute('data-st-reply-to'), li?.getAttribute('data-alias') ?? '');
-      form.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-      ta.focus({ preventScroll: true });
+      const li = btn.closest('.tk-c');
+      if (li) openUnder(li, btn);
     });
-    $('[data-st-reply-cancel]', form)?.addEventListener('click', () => {
-      setParent(null);
-      ta.focus();
+    for (const c of cancels) c.addEventListener('click', () => close(true));
+    form.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && parent) {
+        event.preventDefault();
+        close(true);
+      }
     });
 
     async function send(payload, li) {
@@ -671,35 +741,39 @@ function live(cfg) {
       try {
         const { reply } = await api(payload);
         store.set(draftKey, null);
-        const held = reply.status === 'held';
-        const done = replyFor({ ...reply, body: payload.text }, held ? 'held' : null);
+        const done = replyFor({ ...reply, body: payload.text }, null);
         swap(li, done);
+        layout();
         if (reply.handle) remember(`st-talks-replies:${threadHandle}`, { ...reply, body: payload.text }, 20);
-        if (held) say(status, S.held);
-        else {
-          bumpCount();
-          say(status, S.posted);
-        }
+        bumpCount();
+        say(status, S.posted);
       } catch (error) {
         if (error.transient) {
           const failedLi = replyFor({ ...payload }, 'failed');
-          const retry = h('button', { type: 'button', class: 'st-act st-act--strong' }, S.retry);
-          const edit = h('button', { type: 'button', class: 'st-act' }, S.edit);
-          $('.st-reply-item__acts', failedLi)?.append(E.server, retry, edit);
+          const retry = h('button', { type: 'button', class: 'tk-act tk-act--strong' }, S.retry);
+          const edit = h('button', { type: 'button', class: 'tk-act' }, S.edit);
+          $('.tk-c__acts', failedLi)?.append(E.server, retry, edit);
           swap(li, failedLi);
+          layout();
           retry.addEventListener('click', () => {
             const again = replyFor({ ...payload }, 'pending');
             swap(failedLi, again);
+            layout();
             send(payload, again);
           });
           edit.addEventListener('click', () => {
             failedLi.remove();
+            layout();
             ta.value = payload.text;
             ta.focus();
           });
           say(status, E.server, 'error');
         } else {
+          // Refused: nothing was saved; the box goes back to where she was writing, with her words.
           li.remove();
+          layout();
+          const back = payload.parent ? $(`:scope > [data-st-reply="${CSS.escape(payload.parent)}"]`, replies) : null;
+          if (back) openUnder(back, $('[data-st-reply-to]', back));
           if (!ta.value.trim()) ta.value = payload.text;
           say(status, fmt(E[error.code] ?? E.server, { max: cfg.max.reply }), 'error');
           ta.setAttribute('aria-invalid', 'true');
@@ -715,18 +789,20 @@ function live(cfg) {
       event.preventDefault();
       if (busy) return;
       const text = ta.value.trim();
-      if (!text) return say(status, E.too_short, 'error'), ta.focus();
-      if (text.length > cfg.max.reply) return say(status, fmt(E.too_long, { max: cfg.max.reply }), 'error'), ta.focus();
-      const blocked = contactCode(text);
-      if (blocked) {
-        say(status, E[blocked], 'error');
+      const fail = (code) => {
+        say(status, fmt(E[code], { max: cfg.max.reply }), 'error');
         ta.setAttribute('aria-invalid', 'true');
-        return ta.focus();
-      }
+        ta.focus();
+      };
+      if (!text) return fail('too_short');
+      if (text.length > cfg.max.reply) return fail('too_long');
+      const blocked = contactCode(text);
+      if (blocked) return fail(blocked);
       busy = true;
       submit?.setAttribute('aria-disabled', 'true');
       if (!openedAt) openedAt = performance.now();
       const m = me();
+      const parentLi = parent ? $(`:scope > [data-st-reply="${CSS.escape(parent.handle)}"]`, replies) : null;
       const payload = {
         action: 'reply',
         thread: threadHandle,
@@ -737,13 +813,15 @@ function live(cfg) {
         device: m.device,
         hp: /** @type {HTMLInputElement | null} */ (form.elements.namedItem('website'))?.value ?? '',
         t: 0,
-        depth: parent ? 1 : 0,
-        reply_to: parent?.alias ?? null,
+        depth: parentLi ? Math.min(depthOf(parentLi) + 1, cfg.max.depth) : 0,
       };
       const li = replyFor(payload, 'pending');
-      placeReply(li, parent?.handle);
       ta.value = '';
-      setParent(null);
+      close(false);
+      placeReply(li, payload.parent);
+      li.tabIndex = -1;
+      li.focus({ preventScroll: true });
+      li.scrollIntoView({ block: 'nearest', behavior: reduceMotion() ? 'auto' : 'smooth' });
       say(status, S.posting);
       await send(payload, li);
     });
@@ -756,13 +834,10 @@ function live(cfg) {
     const now = Date.now();
     const keep = [];
     for (const r of store.get(key, [])) {
-      const ttl = r.status === 'held' ? HELD_TTL : MINE_TTL;
-      if (!r.handle || now - r.saved > ttl) continue;
-      if (replies.querySelector(`[data-st-reply="${CSS.escape(r.handle)}"]:not(.is-mine)`)) continue;
+      if (!r.handle || now - r.saved > MINE_TTL) continue;
+      if ($(`:scope > [data-st-reply="${CSS.escape(r.handle)}"]:not(.is-mine)`, replies)) continue; // Shopify has it
       keep.push(r);
-      if (!replies.querySelector(`[data-st-reply="${CSS.escape(r.handle)}"]`)) {
-        placeReply(replyFor(r, r.status === 'held' ? 'held' : null), r.parent);
-      }
+      if (!$(`:scope > [data-st-reply="${CSS.escape(r.handle)}"]`, replies)) placeReply(replyFor(r, null), r.parent);
     }
     store.set(key, keep);
   }
@@ -771,16 +846,14 @@ function live(cfg) {
 
   const findItem = (target) => {
     const [kind, handle] = target.split(':');
-    return kind === 'reply'
-      ? $(`[data-st-reply="${CSS.escape(handle)}"]`)
-      : $(`[data-st-item="${CSS.escape(target)}"]`);
+    return kind === 'reply' ? $(`[data-st-reply="${CSS.escape(handle)}"]`) : $(`[data-st-item="${CSS.escape(target)}"]`);
   };
 
-  function fold(item, justNow) {
+  function foldReported(item, justNow) {
     if (!item || item.classList.contains('is-reported')) return;
     let note = $(':scope > .st-folded', item);
     if (!note) {
-      const show = h('button', { type: 'button', class: 'st-act st-act--strong' }, S.show);
+      const show = h('button', { type: 'button', class: 'tk-act tk-act--strong' }, S.show);
       note = h('p', { class: 'st-folded', role: justNow ? 'status' : null }, justNow ? S.reported : S.hidden_for_you, ' ', show);
       show.addEventListener('click', () => item.classList.remove('is-reported'));
       item.append(note);
@@ -788,52 +861,77 @@ function live(cfg) {
     item.classList.add('is-reported');
   }
 
-  for (const target of store.get('st-talks-reported', [])) fold(findItem(target), false);
-
-  document.addEventListener('click', (event) => {
-    const btn = /** @type {HTMLElement} */ (event.target).closest?.('[data-st-report]');
-    if (!btn || btn.hidden) return;
-    const target = btn.getAttribute('data-st-report') ?? '';
-    const yes = h('button', { type: 'button', class: 'st-act st-act--strong' }, S.report_yes);
-    const no = h('button', { type: 'button', class: 'st-act' }, S.cancel);
-    const ask = h('span', { class: 'st-confirm', role: 'group' }, h('span', {}, S.report_confirm), yes, no);
-    btn.hidden = true;
-    btn.after(ask);
-    yes.focus();
-    no.addEventListener('click', () => {
-      ask.remove();
-      btn.hidden = false;
-      btn.focus();
-    });
-    yes.addEventListener('click', async () => {
-      if (yes.getAttribute('aria-disabled')) return;
-      yes.setAttribute('aria-disabled', 'true');
-      try {
-        await api({ action: 'report', target, device: me().device });
-        const reported = store.get('st-talks-reported', []);
-        if (!reported.includes(target)) store.set('st-talks-reported', [target, ...reported].slice(0, 200));
+  function wireReports() {
+    for (const target of store.get('st-talks-reported', [])) foldReported(findItem(target), false);
+    document.addEventListener('click', (event) => {
+      const btn = /** @type {HTMLElement} */ (event.target).closest?.('[data-st-report]');
+      if (!btn || btn.hidden) return;
+      const target = btn.getAttribute('data-st-report') ?? '';
+      const yes = h('button', { type: 'button', class: 'tk-act tk-act--strong' }, S.report_yes);
+      const no = h('button', { type: 'button', class: 'tk-act' }, S.cancel);
+      const ask = h('span', { class: 'tk-confirm', role: 'group' }, h('span', {}, S.report_confirm), yes, no);
+      btn.hidden = true;
+      btn.after(ask);
+      yes.focus();
+      no.addEventListener('click', () => {
         ask.remove();
         btn.hidden = false;
-        fold(findItem(target), true);
-      } catch {
-        yes.removeAttribute('aria-disabled');
-        ask.querySelector('span')?.replaceChildren(E.server);
-      }
+        btn.focus();
+      });
+      yes.addEventListener('click', async () => {
+        if (yes.getAttribute('aria-disabled')) return;
+        yes.setAttribute('aria-disabled', 'true');
+        try {
+          await api({ action: 'report', target, device: me().device });
+          const reported = store.get('st-talks-reported', []);
+          if (!reported.includes(target)) store.set('st-talks-reported', [target, ...reported].slice(0, 200));
+          ask.remove();
+          btn.hidden = false;
+          foldReported(findItem(target), true);
+        } catch (error) {
+          yes.removeAttribute('aria-disabled');
+          ask.querySelector('span')?.replaceChildren(E[error.code] ?? E.server);
+        }
+      });
     });
-  });
+  }
 
   /* ---------- Start ---------- */
 
+  if (replies) {
+    layout();
+    desktop.addEventListener('change', layout);
+  }
+  if (!cfg.live) return;
+
   paintMe();
-  for (const form of $$('[data-st-compose], [data-st-reply-form]')) wireAlias(form);
   for (const form of $$('[data-st-compose]')) wireComposer(form);
   for (const form of $$('[data-st-reply-form]')) wireReplyForm(form);
+  wireReports();
   restoreMine();
   restoreReplies();
 
-  const focusComposer = () => /** @type {HTMLTextAreaElement | null} */ ($('[data-st-compose] textarea'))?.focus({ preventScroll: true });
+  /* "spill your tea" (dock, empty state, "spill it ›" from a thread): scroll to the writing box and focus it. */
+  const focusComposer = (smooth) => {
+    const ta = /** @type {HTMLTextAreaElement | null} */ ($('[data-st-compose] textarea'));
+    if (!ta) return false;
+    ta.closest('.tk-start')?.scrollIntoView({ block: 'start', behavior: smooth && !reduceMotion() ? 'smooth' : 'auto' });
+    ta.focus({ preventScroll: true });
+    return true;
+  };
   for (const link of $$('[data-st-start]')) {
-    link.addEventListener('click', () => setTimeout(focusComposer, 0));
+    link.addEventListener('click', (event) => {
+      if (focusComposer(true)) event.preventDefault();
+    });
   }
-  if (location.hash === '#start-a-talk') focusComposer();
+  if (location.hash === '#start-a-talk') focusComposer(false);
+
+  /* House rules links open the rules where they are. */
+  document.addEventListener('click', (event) => {
+    const a = /** @type {HTMLElement} */ (event.target).closest?.('a[href="#house-rules"]');
+    if (!a) return;
+    const box = $('#house-rules');
+    const details = box && [...box.querySelectorAll('details')].find((d) => d.offsetParent !== null);
+    if (details) details.open = true;
+  });
 }

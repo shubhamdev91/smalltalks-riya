@@ -1,0 +1,40 @@
+{% doc %}
+  One thread row on the talks hub / topic pages (talks UX v4): flat, 1 px divider, the whole row is one link (TLK-011).
+  Set-nail avatar, "alias · time" (TLK-008/009), the title as written, a one-line excerpt (desktop), and the real reply
+  count (TLK-022) or "no replies yet" (TLK-156) at 0. st-talks.js builds the same markup for a shopper's own new
+  talk (keep the two in step).
+
+  @param {object} thread - A talk_thread metaobject.
+
+  @example
+  {% render 'st-talk-row', thread: thread %}
+{% enddoc %}
+
+{%- liquid
+  assign t_alias = thread.alias.value | default: 'small talk'
+  assign replies = thread.reply_count.value | default: 0 | plus: 0
+  assign row_label = 'small_talk.talks.hub.row_label' | t: title: '@@T@@', count: replies | replace: '@@T@@', thread.title.value
+  assign excerpt = thread.body.value | newline_to_br | replace: '<br />', ' ' | strip_newlines | strip
+-%}
+<li class="tk-r" data-st-thread="{{ thread.system.handle | escape }}">
+  <a class="tk-row" href="{{ thread.system.url }}" aria-label="{{ row_label | escape }}">
+    <span class="tk-row__av">{%- render 'st-talk-avatar', set: thread.avatar.value, alias: t_alias -%}</span>
+    <span class="tk-row__text">
+      <span class="tk-meta"><b>{{ t_alias | escape }}</b>
+        {%- if thread.posted_at.value != blank %} · {% render 'st-talk-time', at: thread.posted_at.value %}{% endif -%}
+      </span>
+      <span class="tk-row__title">{{ thread.title.value | escape }}</span>
+      {%- if excerpt != blank -%}
+        <span class="tk-row__ex">{{ excerpt | truncate: 160 | escape }}</span>
+      {%- endif -%}
+      <span class="tk-foot">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg>
+        {%- if replies > 0 -%}
+          {{- 'small_talk.talks.replies' | t: count: replies -}}
+        {%- else -%}
+          {{- 'small_talk.talks.live.v4.no_replies' | t -}}
+        {%- endif -%}
+      </span>
+    </span>
+  </a>
+</li>

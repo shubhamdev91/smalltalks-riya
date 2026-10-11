@@ -1,0 +1,145 @@
+{% doc %}
+  The talks topics (TLK-005/006, locked by the owner: plot twists · tiny wins · second opinions · just venting · nail
+  talk) as links: "chips" = the scrolling pill row (phones and 1024-1279), "side" = the desktop side nav (1280+).
+  "all" first, then the talk_topic entries in `order`, then any newer topic. Handles in `hide` never show
+  (something-else is the hidden home of "your own" posts). The current topic carries aria-current="page".
+
+  @param {string} variant - "chips" or "side".
+  @param {string} order - Topic handles in order, comma-separated.
+  @param {string} [hide] - Topic handles never shown, comma-separated.
+  @param {string} [current] - The current topic handle ('' = all).
+  @param {string} hub_url - The hub link for "all".
+  @param {string} all_label - The "all" label (TLK-005).
+
+  @example
+  {% render 'st-talk-topics', variant: 'chips', order: section.settings.chip_order, hide: section.settings.hidden_topics, current: current_topic, hub_url: hub_url, all_label: section.settings.all_label %}
+{% enddoc %}
+
+{%- liquid
+  assign hidden = hide | default: 'something-else' | remove: ' ' | split: ','
+  assign wanted = order | remove: ' ' | split: ','
+  assign handles = ''
+  for h in wanted
+    if h != blank and h != 'all'
+      unless hidden contains h
+        assign handles = handles | append: h | append: ','
+      endunless
+    endif
+  endfor
+  for topic in shop.metaobjects.talk_topic.values
+    assign h = topic.system.handle
+    assign marker = h | append: ','
+    if h != 'all'
+      unless handles contains marker or hidden contains h
+        assign handles = handles | append: marker
+      endunless
+    endif
+  endfor
+  assign list = handles | split: ','
+  assign label = 'small_talk.talks.hub.topics_label' | t
+-%}
+{%- if variant == 'side' -%}
+  <nav class="tk-nav" aria-label="{{ label | escape }}">
+    <p class="tk-label tk-nav__label" aria-hidden="true">{{ label | escape }}</p>
+    <a href="{{ hub_url }}"{% if current == blank %} aria-current="page"{% endif %}>{{ all_label | escape }}</a>
+    {%- for h in list -%}
+      {%- assign topic = metaobjects.talk_topic[h] -%}
+      {%- if topic -%}
+        <a href="{{ topic.system.url }}"{% if h == current %} aria-current="page"{% endif %}>{{ topic.label.value | escape }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </nav>
+{%- else -%}
+  <nav class="tk-chips" aria-label="{{ label | escape }}">
+    <a class="tk-chip" href="{{ hub_url }}"{% if current == blank %} aria-current="page"{% endif %}><span>{{ all_label | escape }}</span></a>
+    {%- for h in list -%}
+      {%- assign topic = metaobjects.talk_topic[h] -%}
+      {%- if topic -%}
+        <a class="tk-chip" href="{{ topic.system.url }}"{% if h == current %} aria-current="page"{% endif %}><span>{{ topic.label.value | escape }}</span></a>
+      {%- endif -%}
+    {%- endfor -%}
+  </nav>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Topic chips: a 36 px pill inside a 44 px hit area, one scrolling row. */
+  .tk-chips {
+    display: flex;
+    gap: 8px;
+    margin: 12px -16px 0;
+    padding: 0 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tk-chip {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+
+  .tk-chip > span {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: var(--tk-chip);
+    color: var(--tk-chip-ink);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    text-transform: lowercase; /* TLK-006 lowercase; the talk_topic labels keep their case in the data */
+  }
+
+  .tk-chip[aria-current] > span {
+    background: var(--tk-accent);
+    color: #fff;
+  }
+
+  .tk-chip:focus-visible {
+    outline: none;
+  }
+
+  .tk-chip:focus-visible > span {
+    outline: 2px solid var(--tk-accent);
+    outline-offset: 2px;
+  }
+
+  /* Desktop side nav (1280+, placed by the talks sections). */
+  .tk-nav {
+    display: grid;
+    gap: 4px;
+  }
+
+  .tk-nav__label {
+    margin: 8px 0 6px 14px;
+    text-transform: lowercase;
+  }
+
+  .tk-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 12px;
+    color: var(--tk-ink);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    text-transform: lowercase;
+  }
+
+  .tk-nav a:hover {
+    background: var(--tk-chip);
+  }
+
+  .tk-nav a[aria-current] {
+    background: var(--tk-accent);
+    color: #fff;
+    font-weight: 600;
+  }
+{% endstylesheet %}

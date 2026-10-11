@@ -1,17 +1,10 @@
-{% doc %}
+{%- comment -%}
   The talks posting switch: the ONE value that the composer, the reply box, Report, the pre-launch notice (TLK-153)
   and house rule 5 (TLK-075 live / TLK-154 pre-launch) all read, so they can never disagree. Outputs "on" or "off".
-  Turn it on only after the talks backend is set up and verified end to end (talks/OWNER-SETUP.md);
-  talks/set_live.py flips it. The backend's own kill switch after launch is Talks settings → Posting open (TLK-130).
-
-  @example
-  {%- capture live_flag -%}{%- render 'st-talk-live' -%}{%- endcapture -%}
-  {%- liquid
-    assign live = false
-    if live_flag == 'on'
-      assign live = true
-    endif
-  -%}
-{% enddoc %}
-{%- assign st_talks_posting = 'off' -%}
+  Readers capture this snippet's output and compare it with "on" (see sections/st-talks-list.liquid), so its output must
+  be exactly the value: a plain comment, no doc block. Turn it on only after the talks backend is set up and verified
+  end to end (talks/OWNER-SETUP.md); talks/set_live.py flips it. The backend's own kill switch is talk_settings/main
+  posting_open (TLK-130).
+{%- endcomment -%}
+{%- assign st_talks_posting = 'on' -%}
 {{- st_talks_posting -}}
