@@ -19,6 +19,7 @@ V4 = {
     'empty': 'no talks yet. be the first to spill.',
     'empty_title': 'it’s quiet in here…',
     'empty_line': 'no talks in {{ topic }} yet. start it off?',
+    'empty_cta': 'spill your tea',
     'empty_topic_closed': 'nothing in {{ topic }} yet.',
     'prelaunch': 'posting isn’t open yet. read along for now.',
     'box_label': 'what’s the tea? start from the beginning…',
