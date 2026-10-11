@@ -73,6 +73,7 @@ MAX_BODY_BYTES = 16 * 1024
 SIGNAL_DAYS = 7  # talk_signal retention; the shopper-facing promise (TLK-148) is "within 30 days"
 PRUNE_BATCH = 25
 MAX_DEPTH = 8  # stored nesting cap; deeper replies stay at this depth (the theme shows 4 levels on phones)
+FRESH_SCAN = 50  # newest talk_signal rows read straight from the store: Shopify's search index lags new rows by seconds
 
 
 def env(name: str, default: str = '') -> str:
@@ -526,6 +527,7 @@ STORE = Store()
 _cache: dict[str, tuple[float, object]] = {}
 _burst: dict[str, list[float]] = {}
 _burst_lock = threading.Lock()
+_mine: list[dict] = []  # talk_signal rows this warm instance wrote in the last 24 h (the search index can't see them yet)
 
 
 def cached(key: str, ttl: float, load):
@@ -569,6 +571,21 @@ def _q(value: str) -> str:
     return '"' + value.replace('\\', '').replace('"', '') + '"'
 
 
+def with_fresh(rows: list[dict], keep) -> list[dict]:
+    """Search results plus the rows the search index can't see yet: the newest talk_signal rows read straight from the
+    store, and this instance's own fresh signals. Without this, the same talk posted again a few seconds later was
+    saved twice (live E2E, 11 Oct), and a quick burst could slip past the per-device limits."""
+    seen = {r['_id'] for r in rows}
+    out = list(rows)
+    with _burst_lock:
+        mine = list(_mine)
+    for s in STORE.list_type('talk_signal', '', first=FRESH_SCAN) + mine:
+        if s['_id'] not in seen and keep(s):
+            seen.add(s['_id'])
+            out.append(s)
+    return out
+
+
 def check_limits(kind: str, ip_key: str, device_key: str, body_key: str = '') -> bool:
     """Raises rate_limited / duplicate. Returns True when the store-wide flood guard trips (the caller refuses: busy)."""
     burst_guard(f'{kind}:{device_key}')
@@ -577,7 +594,9 @@ def check_limits(kind: str, ip_key: str, device_key: str, body_key: str = '') ->
     since = iso(now_utc() - timedelta(hours=24))
     who = [f'fields.device_key:{_q(device_key)}'] + ([f'fields.ip_key:{_q(ip_key)}'] if ip_key else [])
     query = f'fields.kind:{_q(kind)} AND ({" OR ".join(who)}) AND updated_at:>{_q(since)}'
-    recent = STORE.list_type('talk_signal', query, first=100)
+    recent = with_fresh(STORE.list_type('talk_signal', query, first=100), lambda s: (
+        s.get('kind') == kind and (s.get('at') or '') > since
+        and (s.get('device_key') == device_key or bool(ip_key and s.get('ip_key') == ip_key))))
     ten_min_ago = iso(now_utc() - timedelta(minutes=10))
     short, day = LIMITS[kind]
     last10 = [s for s in recent if (s.get('at') or '') >= ten_min_ago]
@@ -597,9 +616,13 @@ def check_limits(kind: str, ip_key: str, device_key: str, body_key: str = '') ->
 
 
 def record_signal(kind: str, ip_key: str, device_key: str, target: str, body_key: str = '') -> None:
-    STORE.create('talk_signal', f'{kind}-{int(time.time())}-{rand_suffix(6)}', {
-        'kind': kind, 'ip_key': ip_key or None, 'device_key': device_key, 'target': target,
-        'body_key': body_key or None, 'at': iso(now_utc())})
+    fields = {'kind': kind, 'ip_key': ip_key or None, 'device_key': device_key, 'target': target,
+              'body_key': body_key or None, 'at': iso(now_utc())}
+    created = STORE.create('talk_signal', f'{kind}-{int(time.time())}-{rand_suffix(6)}', fields)
+    day_ago = iso(now_utc() - timedelta(hours=24))
+    with _burst_lock:
+        _mine.append({'_id': created['id'], **fields})
+        _mine[:] = [s for s in _mine if (s.get('at') or '') > day_ago][-500:]
 
 
 _last_prune = {'at': 0.0}
@@ -810,7 +833,8 @@ def action_report(p: dict, ctx: dict) -> dict:
     if item.get('by_brand') == 'true':
         return {'hidden': False}  # brand posts are reviewed by the owner directly
     check_limits('report', ip_key, device_key)
-    previous = STORE.list_type('talk_signal', f'fields.kind:"report" AND fields.target:{_q(item["_id"])}', first=100)
+    previous = with_fresh(STORE.list_type('talk_signal', f'fields.kind:"report" AND fields.target:{_q(item["_id"])}', first=100),
+                          lambda s: s.get('kind') == 'report' and s.get('target') == item['_id'])
     reporters = {s.get('device_key') for s in previous} | {s.get('ip_key') for s in previous if s.get('ip_key')}
     if device_key in reporters or (ip_key and ip_key in reporters):
         return {'hidden': item['_status'] != 'ACTIVE'}

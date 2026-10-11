@@ -2,7 +2,8 @@
 
 **Next deploy** = v5 (fail-closed, no diag) + v6 (Reddit nesting) + v7 (no review queue).
 
-- **Local build:** `b27475e7fe2b`, **53 tests pass** (`cd talks/backend && python -m unittest discover -s tests`).
+- **Next build:** `b00440d7cd4a` (= b27475e7fe2b + row 19), **54 tests pass**. b27475e7fe2b is LIVE since 11 Oct ~06:35Z (copy: talks/staged/app-b27475e7fe2b.py).
+- **Earlier local build:** `b27475e7fe2b`, **53 tests pass** (`cd talks/backend && python -m unittest discover -s tests`).
 - **Live today:** `c91d3d11afc1`, with the store kill switch OFF (`talk_settings/main.posting_open = "false"`, verified
   live: `{"open": false}`, and posts/replies return 403 `closed`).
 - **Proof:** every NEW test below was run against the previous build and FAILS there.
@@ -35,6 +36,7 @@
 | 16 | `hold_all` stays "false" | Data: "false" in talk_settings/main (verified) | The owner's emergency lever only | `test_closed_and_hold_all` |
 | 17 | Missing or short device id rejected (no shared bucket) | Yes | n/a | `test_missing_device_is_rejected_not_bucketed` |
 | 18 | Reddit nesting: parent per reply; moderation, reports and auto-hide per reply | No: depth 0/1 only | **Yes**: depth = parent + 1 (cap 8); placed after the parent's subtree; a hidden or foreign parent is refused | **`test_reddit_nesting_depth_order_and_parent`**, **`test_nesting_capped_and_hidden_parent_refused`**, `test_reply_to_hidden_thread_refused` |
+| 19 | Duplicate check and per-device limits see brand-new rows | No: they read Shopify's search index, which lags new talk_signal rows by seconds; the live E2E (11 Oct) saved the same talk twice 3 s apart | **Yes** (build b00440d7cd4a): each check also merges the newest 50 signal rows read straight from the store and this instance's own fresh signals; the report count does too | **`test_search_lag_cannot_bypass_duplicate_or_limits`** (fails on b27475e7fe2b) |
 
 **Theme follow-ups (in the talks window):**
 

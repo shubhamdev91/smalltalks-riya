@@ -30,10 +30,15 @@ class FakeStore:
     def _new_id(self):
         return f'gid://shopify/Metaobject/{next(self.seq)}'
 
+    index_lag = False  # True: like Shopify's search index, a query does not see rows created since (E2E 11 Oct)
+    lagged = None
+
     def add(self, type_, handle, fields, status='ACTIVE'):
         gid = self._new_id()
         self.items[gid] = {'_type': type_, '_id': gid, '_handle': handle, '_status': status,
                            '_updated': talks.iso(talks.now_utc()), **fields}
+        if self.index_lag:
+            self.lagged = (self.lagged or set()) | {gid}
         return gid
 
     def by_handle(self, type_, handle):
@@ -64,7 +69,8 @@ class FakeStore:
         return True
 
     def list_type(self, type_, query='', first=100):
-        rows = [dict(it) for it in self.items.values() if it['_type'] == type_ and self._match(it, query)]
+        rows = [dict(it) for it in self.items.values() if it['_type'] == type_ and self._match(it, query)
+                and not (query and it['_id'] in (self.lagged or ()))]
         return sorted(rows, key=lambda r: int(r['_id'].rsplit('/', 1)[1]), reverse=True)[:first]
 
     def create(self, type_, handle, fields, status=None):
@@ -106,6 +112,7 @@ class Base(unittest.TestCase):
         talks.STORE = self.store
         talks._cache.clear()
         talks._burst.clear()
+        getattr(talks, '_mine', []).clear()
         self.n = 0
 
     def device(self):
@@ -323,6 +330,23 @@ class Flows(Base):
         talks._burst.clear()
         self.assertEqual(self.post('five more talk', ip='203.0.113.7')[0], 201)
         self.assertTrue(all(not s.get('ip_key') for s in self.store.list_type('talk_signal')))
+
+    def test_search_lag_cannot_bypass_duplicate_or_limits(self):
+        # E2E 11 Oct: the same talk posted again 3 s later was saved twice, because Shopify's search index had not yet
+        # seen the first signal row. Both the duplicate check and the per-device limits must count fresh rows too, even
+        # on another warm instance (no shared memory).
+        self.store.index_lag = True
+        d = self.device()
+        self.assertEqual(self.post('the same words again', device=d)[0], 201)
+        getattr(talks, '_mine', []).clear()  # another instance: only the store can tell
+        self.assertEqual(self.post('the same words again', device=d)[1]['code'], 'duplicate')
+        self.assertEqual(self.post('second fresh talk', device=d)[0], 201)
+        self.assertEqual(self.post('third fresh talk', device=d)[0], 201)
+        talks._burst.clear()
+        getattr(talks, '_mine', []).clear()
+        status, body = self.post('fourth fresh talk', device=d)
+        self.assertEqual((status, body['code']), (429, 'rate_limited'))
+        self.assertEqual(len([t for t in self.store.items.values() if t['_type'] == 'talk_thread' and t.get('title') == 'the same words again']), 1)
 
     def test_proxy_has_no_store_wide_bucket(self):
         # behind the App Proxy every shopper arrives from Shopify's address: 12 different devices posting at once
