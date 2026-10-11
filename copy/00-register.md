@@ -262,3 +262,5 @@ Rule from the owner, via the orchestrator: board wording wins, with the listed e
 **v1.6.1 (10 Oct), st-talks v4 slots V1–V7:** TLK-173 now two lines (+ headline hint); TLK-179 collapsed line “{n} more replies”; TLK-177 superseded (every inline box uses TLK-026); new TLK-180 “replying to a hidden comment”. Reused: TLK-175, TLK-178, TLK-133, TLK-135.
 
 **v1.7 (10 Oct), owner decisions:** topics locked (TLK-006). No review queue: TLK-116 and TLK-149 retired; TLK-075 and TLK-154 rewritten (“we take down whatever breaks these rules”); TLK-155 privacy paragraph updated (re-paste if already pasted); FACTS F14 and Terms §6 aligned. New refusals TLK-181 (might name someone) and TLK-182 (busy, optional). Existing refusals TLK-123…130 and TLK-034 kept.
+
+**v1.7.1 (10 Oct):** TLK-183 “all house rules ›”, the desktop rules rail link (accessible name “read all the house rules”).
