@@ -45,10 +45,27 @@ The repository is source and records; these systems hold the live state.
   the build and publishing the copy. Never write the MAIN theme. Check which theme is MAIN before acting.
 - **Theme editor settings.** `config/settings_data.json` is edited by the owner in the theme editor. The copy in
   `theme-build/src/config/` is not authoritative; never upload it.
-- **Store data.** Products, metaobjects (campaign + talks), pages, menus, policies live in Shopify. Changes go as a
-  proposal to the orchestrator and need the owner's approval.
+- **Store data.** Products, metaobjects (campaign + talks), pages, menus, policies, SEO fields, discounts and shipping
+  live in Shopify. Riya (and her ChatGPT) may edit store data freely. Agents' changes go as a proposal to the
+  orchestrator and need the owner's approval. Always re-read the live value before changing anything: the store is
+  the source of truth over the copy register. When st-copy finds drift, it reconciles the register FROM live and
+  never overwrites live.
 - **Talks backend.** Deployed from the v0 chat to Vercel. The health check
   `https://small-talk-talks-backend.vercel.app/api/talks` reports the `build` hash = first 12 hex of md5(`app.py`).
+
+## Riya's design edits (owner-approved 13 Oct 2026)
+
+- **Build only.** Riya edits the BUILD theme 186651934933 in the theme editor. She never edits the live (MAIN) theme,
+  because editor changes there are wiped at the next duplicate + publish.
+- **Riya holds the lock while she edits.** Before an editor session she (or the parent session for her) says
+  "Riya editing", and the orchestrator records her as the lock holder; when she's finished she says "Riya done". No
+  agent writes while she holds it, and she doesn't edit while an agent window is open.
+- **Drift check before every agent window.** The orchestrator compares all 269 remote checksums with the recorded
+  manifest (`theme-build/manifest/`, baseline `baseline-2026-10-13.json`; tool `theme-build/tools/drift_check.py`).
+  Any file Riya changed is re-fetched and MERGED, never overwritten. That applies especially to `templates/*.json`,
+  the header/footer section groups and `config/settings_data.json`.
+- **Backup.** After each of her sessions the orchestrator commits her changes from an Admin read-back as
+  "Riya: <what changed>" and records a new manifest.
 
 ## Rules
 
