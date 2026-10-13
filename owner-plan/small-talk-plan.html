@@ -402,6 +402,7 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
       <li><b>Riya's "Do this next" order:</b> payments → test order → talks keys → kit facts → preview → publish → Know your visitors → SEO &amp; AEO → Instagram plan → carousels → AI video → UTM → email/WhatsApp → retargeting (after real traffic). Optional and habit tasks are skipped by the next-card.</li>
       <li><b>Instagram:</b> <a href="https://www.instagram.com/smalltalks_com/" target="_blank" rel="noopener">@smalltalks_com</a> (3 posts incl. 1 carousel at 10 Oct). Plan: ~50% Reels (AI-video + simple real-hand), ~30% carousels, ~20% singles, 3–5 Stories daily; ramp 1/day (wk 1–2) → 2/day (wk 3–4) → 2–3/day only if the weekly batch holds quality; monthly ✨ calendar prompt; weekly 10-minute review. D5: Instagram footer link approved by the owner (10 Oct) and going into the theme.</li>
       <li><b>SEO &amp; AEO section</b> (based on <code>seo\STRATEGY.md</code> + <code>copy\05-seo.md</code>): SEO vs AEO explainer; ✨ keyword + question finder (no invented volumes); ✨ monthly answer-first Journal post with FACTS-only claims (Journal template is story-shaped, so new posts stay Hidden until Claude checks rendering); ✨ monthly Search Console CSV review (3 actions max); ✨ title/meta/alt writer using STRATEGY §6–7 rules (titles "{subject} | Small Talk" ≤60, meta 120–155, alt ≤125, no "best"/almond/wear time/reusable/delivery speed/reviews); ✨ creator/blog outreach with ASCI disclosure and no paid positive reviews.</li>
+      <li><b>Riya may edit (owner, 13 Oct):</b> store content any time; design only in 186651934933 via the theme editor, bracketed by "Riya editing" / "Riya done" messages to Shubham (Claude sessions pause, then back up her changes); never the live theme; never theme "Update" buttons; her ChatGPT code changes follow the same rule. Cards d-what / d-theme in Go live; rule 9 in the SOS protocol.</li>
       <li><b>SOS / "Stuck? Copy this" (13 Oct):</b> every one of Riya's tasks has an SOS button that copies a ChatGPT walkthrough prompt built at tap time: a shared WALKTHROUGH protocol (one step at a time, tracker line "📍 task · Step X of N · Screen", max 5 short lines, one question, screen/screenshot recognition, no secrets in chat, "✅ Done!" + next task) followed by the task data (why, numbered steps, careful/note, DONE WHEN, links, NEXT TASK in priority order). Source: <code>owner-plan\src\parts\28-walkthrough.js</code> + <code>taskData()</code>/<code>sosPrompt()</code> in 40-app.js. Interactive creative chats (carousel master, Search Console review, weekly IG review) get short CHAT STYLE rules.</li>
       <li><b>Talks upgrades</b> (reply pings + private signed-in customer link) moved to Our list; Riya sees a "coming soon" line. Brief prompt lives in Our list → Talks setup.</li>
     </ul>
@@ -1759,7 +1760,29 @@ const RIYA = [
       '<b>To undo:</b> Draft themes → the previous live theme → <b>Publish</b>. Products, orders and policies don\'t change when you switch themes.'
     ],
     links: [['Online Store → Themes', A + '/themes'], ['Shopify help: duplicate a theme', 'https://help.shopify.com/en/manual/online-store/themes/managing-themes/duplicating-themes'], ['Shopify help: publish / roll back', 'https://help.shopify.com/en/manual/online-store/themes/managing-themes/publishing-themes']]
-  }
+  },
+  { id: 'd-what', optional: true, t: 'What you (and your ChatGPT) can change', min: '3 min read',
+    why: 'You can run the store yourself. One rule keeps your work safe: design changes only in the Claude build theme, never the live one.',
+    steps: [
+      '<b>Store content: change any time, it\'s live straight away.</b> Products (text, prices, stock, photos), collections, pages, Journal/blog posts, SEO titles, descriptions and alt text, discounts, policies, shipping, payments, apps, email and marketing, talks moderation.',
+      '<b>Design: only in the theme "Small Talk — Claude build (Horizon)".</b> That means layout, sections, colours, images in sections and text in sections. See the next card for how.',
+      '<b>Never change design on the live (published) theme.</b> Edits there are wiped the next time the store is published.',
+      'Same rules when your ChatGPT helps you: content any time; design only in the Claude build, after telling Shubham "Riya editing".'
+    ],
+    links: [['Online Store → Themes', A + '/themes'], ['Products', A + '/products']] },
+  { id: 'd-theme', optional: true, t: 'Changing the design (theme editor)', min: '5 min + your edits',
+    why: 'Claude sessions also work on the Claude build. Telling Shubham before and after means nothing you do gets overwritten.',
+    steps: [
+      'Tell Shubham <b>"Riya editing"</b> before you start, so the Claude sessions pause.',
+      '<b>Online Store → Themes</b> → "<b>Small Talk — Claude build (Horizon)</b>" → <b>Customize</b>. Not the live theme.',
+      'Easy things there: swap images, edit text, show or hide sections, reorder sections, colours.',
+      'Click <b>Save</b>, then preview on your phone.',
+      'Tell Shubham <b>"Riya done"</b>, so your changes get backed up.',
+      'To make it live: on the Claude build click <b>⋯ → Duplicate</b>, then <b>Publish</b> the copy.',
+      'Never click the blue <b>Update</b> buttons on themes. Code changes made with your ChatGPT follow the same "Riya editing" / "Riya done" rule.'
+    ],
+    warn: 'Never edit the live (published) theme: those changes are wiped at the next publish.',
+    links: [['Online Store → Themes', A + '/themes'], ['Shopify help: theme editor', 'https://help.shopify.com/en/manual/online-store/themes/customizing-themes'], ['Shopify help: duplicate a theme', 'https://help.shopify.com/en/manual/online-store/themes/managing-themes/duplicating-themes']] }
   ]
 },
 {
@@ -2110,6 +2133,8 @@ const PRIORITY = [
   ['P3', 'seo-journal', 'One answer page a month slowly brings free visitors.'],
   ['P3', 'e-wa', 'WhatsApp reaches people in India better than email, with consent.'],
   ['P3', 'g-analytics', 'Five numbers that tell you if the store is working.'],
+  ['P3', 'd-what', 'Know what you can change yourself, and the one rule that keeps it safe.'],
+  ['P3', 'd-theme', 'How to change the design without losing your work.'],
   ['P3', 'f-photos', 'Real photos build trust once the basics run.'],
   ['P4', 'a-start', 'Audiences need 2–4 weeks of pixel data and some traffic first.'],
   ['P4', 'a-camp', 'Spend only once audiences have people in them.'],
@@ -2132,7 +2157,7 @@ OUR.forEach(s => s.tasks.forEach(t => {
 const NEEDS = {
   'pay': [], 'f-confirm': [], 'g-preview': [], 't-email': [], 'g-privacy': [], 'm-biz': [], 'ig-profile': [],
   'e-discount': [], 'r-links': [], 'ig-setup': [], 'v-start': [], 'v-example': [], 'seo-basics': [], 'e-wa': [],
-  'f-photos': [], 'g-domain': [], 'u-build': [], 'p-repaste': [],
+  'f-photos': [], 'g-domain': [], 'u-build': [], 'p-repaste': [], 'd-what': [], 'd-theme': [],
   'g-test': ['pay'],
   'g-publish': ['g-preview', 'g-test', 'f-confirm'],
   't-vercel': ['t-email'],
@@ -2194,9 +2219,10 @@ const WALKTHROUGH = `HOW TO HELP ME (follow these rules in every reply):
 5. My screen: if you can see my page (browser extension) or I send a screenshot, first work out which step that screen belongs to and update the tracker. If I'm ahead, skip ahead. If I'm on the wrong screen, give one line to get back. If you can't see my screen, ask for a screenshot or what the page title says. Remember my step for the whole chat and answer follow-up questions for that step.
 6. If something looks different or shows an error, check ONE likely cause at a time, in short steps. Never list every possibility at once.
 7. Safety: never ask for or accept passwords, OTPs, API keys, bank, card or PAN numbers. If a screen asks for them, I type them myself on the official site, never in this chat. Never suggest skipping security or verification steps.
-8. When "DONE WHEN" below is true, reply "✅ Done!" plus one line: tick this task in my guide, and my next task is the one named under NEXT TASK.`;
+8. When "DONE WHEN" below is true, reply "✅ Done!" plus one line: tick this task in my guide, and my next task is the one named under NEXT TASK.
+9. Never edit the published (live) theme. Design changes only in "Small Talk — Claude build (Horizon)", and only after telling Shubham "Riya editing". Store content (products, pages, blog, discounts, settings) is fine to change any time.`;
 
-const ABOUT_ME = `ABOUT ME: I'm Riya, a first-year student running Small Talk, a press-on nail brand from India. Shopify store https://0nev20-vn.myshopify.com (Basic plan, prices in INR), Instagram @smalltalks_com. Seven sets: On Me, Brainwave, Diet Cherry, Green Flag, Shaadi Shift, Wild Card, Pinky Promise. I don't edit the store's theme code myself.`;
+const ABOUT_ME = `ABOUT ME: I'm Riya, a first-year student running Small Talk, a press-on nail brand from India. Shopify store https://0nev20-vn.myshopify.com (Basic plan, prices in INR), Instagram @smalltalks_com. Seven sets: On Me, Brainwave, Diet Cherry, Green Flag, Shaadi Shift, Wild Card, Pinky Promise.`;
 
 /* short output rules for interactive creative chats (they keep their own formats) */
 const CHAT_RULES = `CHAT STYLE (for anything you say to me besides the output I asked for): short and structured, like explaining to a 12-year-old. Headings and bullets, no long intros, no paragraph longer than 2 short sentences. If you need something from me, ask ONE question at a time and wait.`;

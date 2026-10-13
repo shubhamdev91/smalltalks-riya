@@ -188,7 +188,29 @@ const RIYA = [
       '<b>To undo:</b> Draft themes → the previous live theme → <b>Publish</b>. Products, orders and policies don\'t change when you switch themes.'
     ],
     links: [['Online Store → Themes', A + '/themes'], ['Shopify help: duplicate a theme', 'https://help.shopify.com/en/manual/online-store/themes/managing-themes/duplicating-themes'], ['Shopify help: publish / roll back', 'https://help.shopify.com/en/manual/online-store/themes/managing-themes/publishing-themes']]
-  }
+  },
+  { id: 'd-what', optional: true, t: 'What you (and your ChatGPT) can change', min: '3 min read',
+    why: 'You can run the store yourself. One rule keeps your work safe: design changes only in the Claude build theme, never the live one.',
+    steps: [
+      '<b>Store content: change any time, it\'s live straight away.</b> Products (text, prices, stock, photos), collections, pages, Journal/blog posts, SEO titles, descriptions and alt text, discounts, policies, shipping, payments, apps, email and marketing, talks moderation.',
+      '<b>Design: only in the theme "Small Talk — Claude build (Horizon)".</b> That means layout, sections, colours, images in sections and text in sections. See the next card for how.',
+      '<b>Never change design on the live (published) theme.</b> Edits there are wiped the next time the store is published.',
+      'Same rules when your ChatGPT helps you: content any time; design only in the Claude build, after telling Shubham "Riya editing".'
+    ],
+    links: [['Online Store → Themes', A + '/themes'], ['Products', A + '/products']] },
+  { id: 'd-theme', optional: true, t: 'Changing the design (theme editor)', min: '5 min + your edits',
+    why: 'Claude sessions also work on the Claude build. Telling Shubham before and after means nothing you do gets overwritten.',
+    steps: [
+      'Tell Shubham <b>"Riya editing"</b> before you start, so the Claude sessions pause.',
+      '<b>Online Store → Themes</b> → "<b>Small Talk — Claude build (Horizon)</b>" → <b>Customize</b>. Not the live theme.',
+      'Easy things there: swap images, edit text, show or hide sections, reorder sections, colours.',
+      'Click <b>Save</b>, then preview on your phone.',
+      'Tell Shubham <b>"Riya done"</b>, so your changes get backed up.',
+      'To make it live: on the Claude build click <b>⋯ → Duplicate</b>, then <b>Publish</b> the copy.',
+      'Never click the blue <b>Update</b> buttons on themes. Code changes made with your ChatGPT follow the same "Riya editing" / "Riya done" rule.'
+    ],
+    warn: 'Never edit the live (published) theme: those changes are wiped at the next publish.',
+    links: [['Online Store → Themes', A + '/themes'], ['Shopify help: theme editor', 'https://help.shopify.com/en/manual/online-store/themes/customizing-themes'], ['Shopify help: duplicate a theme', 'https://help.shopify.com/en/manual/online-store/themes/managing-themes/duplicating-themes']] }
   ]
 },
 {

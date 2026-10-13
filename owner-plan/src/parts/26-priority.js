@@ -44,6 +44,8 @@ const PRIORITY = [
   ['P3', 'seo-journal', 'One answer page a month slowly brings free visitors.'],
   ['P3', 'e-wa', 'WhatsApp reaches people in India better than email, with consent.'],
   ['P3', 'g-analytics', 'Five numbers that tell you if the store is working.'],
+  ['P3', 'd-what', 'Know what you can change yourself, and the one rule that keeps it safe.'],
+  ['P3', 'd-theme', 'How to change the design without losing your work.'],
   ['P3', 'f-photos', 'Real photos build trust once the basics run.'],
   ['P4', 'a-start', 'Audiences need 2–4 weeks of pixel data and some traffic first.'],
   ['P4', 'a-camp', 'Spend only once audiences have people in them.'],
