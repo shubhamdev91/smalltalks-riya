@@ -84,26 +84,24 @@ const IG_BIO_PROMPT = `Write 5 Instagram bio options (max 150 characters each) f
 const IG_REVIEW_PROMPT = `Here are my Instagram numbers for the last 7 days for Small Talk (@smalltalks_com): [paste: each post/reel with format, reach, likes, comments, saves, shares, profile visits, link taps; plus follower change]. Also my Shopify/GA4 sessions from Instagram this week: [number].
 In 6 bullets: what worked best and why (format, set, hook), what flopped, and ONE thing to repeat and ONE thing to drop next week. Don't invent numbers.`;
 
-/* ---------- helper prompt pinned at top ---------- */
-function stuckPrompt(cur) {
-  const step = cur ? `"${cur.t}" (part of "${cur.sec.title}")` : 'growing the store';
-  return `Hi! I'm Riya. I run Small Talk, a premium press-on nail brand from India. I'm a first-year student and new to running a store, so please keep answers short and clear.
-
-MY STORE: Shopify (Basic plan, prices in INR), store address 0nev20-vn.myshopify.com. Instagram: @smalltalks_com. Payment providers in India are third-party (Razorpay/PayU/Cashfree). I don't edit the store's theme code myself.
-THE BRAND: seven press-on nail sets, each tied to a small moment where she shows her hand: On Me "Bill idhar.", Brainwave "Haan, mera idea hai.", Diet Cherry "Haan, wohi wali.", Green Flag "Tum aa jao. Main dekh lungi.", Shaadi Shift "Dulhan tu. Duty meri.", Wild Card "Achha. Tum pehle.", Pinky Promise "Haath do. Main hoon." Audience: 18–24 urban Indian women. Voice: warm, witty Hinglish, no hype, no fake reviews.
-WHAT I'M DOING: ${step}.
-WHERE I'M STUCK: [describe what you see, paste the error message, or attach a screenshot]
-
-Please answer in numbered steps with the exact buttons to click (Shopify/Meta/Google as they look in 2026), tell me if a step could affect my live store or cost money, and never ask me for passwords, API keys or secret codes. Tell me where to paste those myself instead.`;
-}
-
 /* ---------- RIYA'S PLAN ---------- */
 const RIYA = [
 {
   id: 's1', set: 'on-me', icon: '💳', title: 'Make the store able to sell',
   sub: 'Payments, a test order, and two policy snippets.',
   tasks: [
-    pick('pay', { lock: true }),
+    pick('pay', { lock: true, t: 'Install and activate Razorpay', min: '15 min',
+      why: 'Shopify shows no payment provider yet, so nobody can pay. Your Razorpay KYC and onboarding are done; the Razorpay app just isn\'t installed or switched on for your store.',
+      steps: [
+        'Log in to the <b>Razorpay Dashboard</b> with the account you did KYC on.',
+        'Find the Shopify app and click <b>Install Now</b>. Choose the store <b>Small Talk (0nev20-vn)</b> and approve the install in Shopify.',
+        'Shopify admin → <b>Settings → Payments</b>. Find <b>"01 Cards, UPI, NB, Wallets by Razorpay"</b> → <b>Activate</b> → <b>Save</b>.',
+        'If <b>Activate</b> is greyed out, Razorpay is still reviewing your KYC. Wait for their email, then try again.',
+        'Check: Settings → Payments shows Razorpay as <b>Active</b>, and checkout no longer says "This store can\'t accept payments right now".'
+      ],
+      done: 'Settings → Payments shows "01 Cards, UPI, NB, Wallets by Razorpay" as Active.',
+      links: [['Razorpay Dashboard', 'https://dashboard.razorpay.com/'], ['Razorpay Secure app (Shopify App Store)', 'https://apps.shopify.com/razorpay-secure'], ['Settings → Payments', A + '/settings/payments'], ['Shopify help: set up a provider', 'https://help.shopify.com/en/manual/payments/third-party-providers/configuring-providers']],
+      warn: 'Your bank details, PAN and any keys or OTPs go only into Razorpay\'s or Shopify\'s own screens. Never paste them into ChatGPT, Claude or any chat.' }),
     pick('g-test'),
     { id: 'p-repaste', t: 'Re-paste 2 updated policy snippets', min: '5 min',
       why: 'The talks have no review queue any more, so two pasted texts that say posts may be "held" need the new wording. Needed only if the old versions are in your policies (they were pasted on 10 Oct).',

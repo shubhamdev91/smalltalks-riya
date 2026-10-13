@@ -88,6 +88,8 @@ async function doCopy(text, btn) {
   if (!ok) toast('Copy blocked here. Long-press the text to copy.');
 }
 document.addEventListener('click', e => {
+  const sos = e.target.closest('[data-sos]');
+  if (sos) { const t = ALL_TASKS.find(x => x.id === sos.dataset.sos); if (t) doCopy(sosPrompt(t, t.sec), sos); return; }
   const b = e.target.closest('[data-copy]');
   if (b) { doCopy(copyTexts[+b.dataset.copy], b); return; }
   const f = e.target.closest('[data-copy-from]');
@@ -140,33 +142,59 @@ function chipsHtml(t) {
   return `<span class="tchips">${c.join('')}</span>`;
 }
 function plain(html) { const d = document.createElement('div'); d.innerHTML = String(html || ''); return d.textContent.replace(/\s+/g, ' ').trim(); }
-function sosPrompt(t, s) {
+function nextAfter(t) {
+  const i = TOPO.findIndex(x => x.id === t.id);
+  const n = TOPO.slice(i + 1).find(x => isFlow(x) && !done[x.id]) || TOPO.find(x => isFlow(x) && x.id !== t.id && !done[x.id]);
+  return n ? n.t : 'none left. You finished your plan!';
+}
+function taskData(t, s) {
   const steps = (t.steps || []).map((x, i) => `${i + 1}. ${plain(x)}`).join('\n');
-  const last = (t.steps || []).length ? plain(t.steps[t.steps.length - 1]) : '';
-  const prompts = [];
-  if (t.prompt && t.prompt.text) prompts.push(`--- ${t.prompt.label} ---\n${t.prompt.text}`);
-  (t.prompts || []).forEach(p => prompts.push(`--- ${p.label} ---\n${p.text}`));
+  const n = (t.steps || []).length;
+  const last = n ? plain(t.steps[n - 1]) : '';
+  const extras = [];
+  if (t.prompt && t.prompt.text) extras.push(t.prompt.label);
+  (t.prompts || []).forEach(p => extras.push(p.label));
+  (t.copy || []).forEach(([l]) => extras.push('copy button: ' + l));
+  if (t.html === 'utm') extras.push('a link builder');
+  if (t.html === 'carousels') extras.push('8 carousel idea prompts');
+  if (t.html === 'tools') extras.push('a table of AI tools and prices');
   const links = (t.links || []).map(([l, u]) => `- ${l}: ${u}`).join('\n');
-  return `Hi! I'm Riya. I run Small Talk, a premium press-on nail brand from India. I'm a first-year student and new to running a store, so please keep it simple.
+  return `TASK: "${t.t}" (part of "${s.title}" in my guide)
+WHY: ${plain(t.why)}
+STEPS (N = ${n}):
+${steps}
+${t.warn ? `CAREFUL: ${plain(t.warn)}\n` : ''}${t.note ? `NOTE: ${plain(t.note)}\n` : ''}DONE WHEN: ${t.done || (last ? `all ${n} steps are finished (the last one: "${last}")` : 'the task is finished')}
+${extras.length ? `IN MY GUIDE FOR THIS TASK (I can paste these if you need them): ${extras.join('; ')}\n` : ''}${links ? `LINKS:\n${links}\n` : ''}${['s10', 's11'].includes(s.id) ? `NAIL CHECK TABLE (each set's five-nail hand, thumb → little finger):\n${SETS.map(x => `- ${x.name}: ${x.nails}`).join('\n')}\n` : ''}NEXT TASK: "${nextAfter(t)}"`;
+}
+function sosPrompt(t, s) {
+  return `${WALKTHROUGH}
 
-MY STORE: Small Talk on Shopify (Basic plan, prices in INR), store address https://0nev20-vn.myshopify.com. Instagram: @smalltalks_com.
-THE 7 SETS: ${SETS.map(x => `${x.name} "${x.line}"`).join(', ')}. Audience: 18–24 urban Indian women. Voice: warm, witty Hinglish, no hype, no fake reviews.
+${ABOUT_ME}
 
-I'M STUCK ON THIS TASK: "${t.t}" (from the part of my plan called "${s.title}").
-WHY IT MATTERS: ${plain(t.why)}
-THE STEPS I WAS GIVEN:
-${steps || '(no numbered steps; see below)'}
-${t.warn ? `IMPORTANT: ${plain(t.warn)}\n` : ''}${t.note ? `NOTE: ${plain(t.note)}\n` : ''}WHAT "DONE" LOOKS LIKE: ${last ? `I've finished every step above, ending with: ${last}` : 'I\'ve finished the task described above.'}
-${links ? `LINKS IN MY PLAN:\n${links}\n` : ''}${prompts.length ? `THE TASK ALSO GIVES ME THIS PROMPT TO USE:\n${prompts.join('\n\n')}\n` : ''}
-WHERE I'M STUCK: [describe what you see, paste the error, or attach a screenshot]
+${taskData(t, s)}
 
-Please walk me through this step by step in simple language. Before each step, ask me what I see on my screen and wait for my answer. Give exact buttons to click (as they look in 2026), tell me if a step could affect my live store or cost money, and never ask me for passwords, API keys or secret codes. Tell me where to paste those myself instead.`;
+Start now with your first reply.`;
+}
+function stuckPrompt(cur) {
+  if (!cur) return `${WALKTHROUGH}
+
+${ABOUT_ME}
+
+TASK: whatever I'm stuck on right now. Ask me ONE question first: which task from my guide (or what I'm trying to do). Then make the steps and follow the rules above.`;
+  return `${WALKTHROUGH}
+
+${ABOUT_ME}
+
+I'm probably stuck on my current step below. If I say it's something else, ask ONE question to find the task, then follow the same rules.
+
+${taskData(cur, cur.sec)}
+
+Start now with your first reply.`;
 }
 function taskHtml(t, s, our) {
   const isDone = !!done[t.id];
   let body = `<p class="why">💡 ${t.why}</p>`;
-  const sosId = our ? -1 : reg(sosPrompt(t, s));
-  if (!our) body += `<div><button class="btn btn-sos" type="button" data-copy="${sosId}" aria-label="SOS: copy a help prompt for ${esc(t.t)}">SOS 🆘 Stuck? Copy this</button></div>`;
+  if (!our) body += `<div><button class="btn btn-sos" type="button" data-sos="${t.id}" aria-label="SOS: copy a help prompt for ${esc(t.t)}">SOS 🆘 Stuck? Copy this</button></div>`;
   if (NEEDS[t.id] && NEEDS[t.id].length || WAITS[t.id]) body += `<p class="waitline" id="wait-${t.id}" hidden></p>`;
   if (!our && TIER_OF[t.id]) body += `<p class="pwhy"><b>${esc(tierLabel(TIER_OF[t.id]))}</b> · ${esc(PWHY[t.id])}</p>`;
   if (t.wwg) body += `<dl class="wwg"><div><dt>What it does</dt><dd>${t.wwg[0]}</dd></div><div><dt>Why it matters</dt><dd>${t.wwg[1]}</dd></div><div><dt>What you get</dt><dd>${t.wwg[2]}</dd></div></dl>`;
@@ -184,7 +212,7 @@ function taskHtml(t, s, our) {
   return `<div class="task${isDone ? ' is-done' : ''}${our ? '' : ' has-sos'}" id="task-${t.id}" style="${setVars(s)}">
     <input class="chk" type="checkbox" id="chk-${t.id}" data-task="${t.id}" ${isDone ? 'checked' : ''} aria-label="Done: ${esc(t.t)}">
     <details id="det-${t.id}"><summary><span class="task-title">${esc(t.t)}</span>${chipsHtml(t)}</summary><div class="task-body">${body}</div></details>${our ? '' : `
-    <button class="sos-mini" type="button" data-copy="${sosId}" aria-label="SOS: copy a help prompt for ${esc(t.t)}" title="Stuck? Copy a help prompt">🆘</button>`}
+    <button class="sos-mini" type="button" data-sos="${t.id}" aria-label="SOS: copy a help prompt for ${esc(t.t)}" title="Stuck? Copy a help prompt">🆘</button>`}
   </div>`;
 }
 
