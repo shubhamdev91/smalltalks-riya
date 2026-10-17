@@ -457,7 +457,7 @@ const OUR = [
       steps: ['<b>Settings → Policies → Shipping policy</b> → delete the "Address changes" paragraph → <b>Save</b>.', 'Tell the orchestrator so Help and FACTS.md stay consistent (F12).'],
       prompt: { label: 'Copy message for the orchestrator', text: 'SD26 / G13 done: the "Address changes" paragraph is removed from the shipping policy (customers cannot change the address after ordering). Please make FACTS.md F12 and Help match.' } }),
     pick('money', { who: 'Claude', status: DONE }),
-    pick('ship', { who: 'Claude', status: DONE, t: 'Rename the shipping rate to "Standard delivery"', note: 'Renamed to "Standard delivery". The ₹379 price and the international zone stay Shubham\'s/Riya\'s decision.' }),
+    pick('ship', { who: 'Claude', status: DONE, t: 'Rename the shipping rate to "Standard delivery"', note: 'Done 10 Oct. Later (13 Oct) the owner switched domestic to a single "Express delivery ₹49"; renaming it "Standard delivery" is proposed. International stays ₹1,800.' }),
     pick('seo', { who: 'Claude', status: DONE, t: 'Homepage title and description', note: 'The social sharing image comes from the theme at the next publish, so nothing to upload.' }),
     pick('logo', { who: 'Claude', status: DONE, t: 'Logo: checkout logo + files in Shopify', steps: ['Checkout logo is set (Settings → Checkout → Customize).', 'Logo files are uploaded to <b>Content → Files</b>.', 'Optional: Settings → Brand → pick the same file as Logo / Square logo so Shopify emails use it.'] }),
     pick('e-checkout', { who: 'Claude', status: WIP }),

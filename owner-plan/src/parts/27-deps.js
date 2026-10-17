@@ -46,7 +46,7 @@ const EXT = {
   const o2 = OUR.find(s => s.id === 'o2');
   if (o2 && !o2.tasks.some(t => t.id === 'x-talks-open')) {
     o2.tasks.splice(o2.tasks.findIndex(t => t.id === 't-privacy'), 0, {
-      id: 'x-talks-open', who: 'Claude', status: 'Waiting', t: 'Talks posting is open on the live store', min: '—',
+      id: 'x-talks-open', who: 'Claude', status: 'Done ✓ 11 Oct', t: 'Talks posting is open on the live store', min: '—',
       why: 'The talks upgrades (and Riya\'s optional look at reported posts) start the day posting opens.',
       steps: ['st-talks runs its posting-ON window (HD avatars, posting on, real end-to-end test, test posts deleted).', 'Tick this when shoppers can post on the live store.']
     });
